@@ -2,7 +2,9 @@ services:
   db:
     container_name: norish-db-local
     ports:
-      - "5432:5432"
+      # cefiro: remapped to 5433 on the host to avoid clashing with another
+      # local project already publishing 5432 (lawrio-db). Container port stays 5432.
+      - "5433:5432"
 
   obscura:
     container_name: norish-obscura-local

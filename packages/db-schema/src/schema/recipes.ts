@@ -7,6 +7,7 @@ import {
   text,
   timestamp,
   unique,
+  uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
 
@@ -15,6 +16,18 @@ import { recipeCategoryEnum } from "./recipe-categories";
 import { versionColumn } from "./shared";
 
 export const measurementSystemEnum = pgEnum("measurement_system", ["metric", "us"]);
+
+/**
+ * Recipe visibility for the social layer (cefiro):
+ * - `private`  — owner/household only (default, preserves norish behaviour).
+ * - `unlisted` — anyone with the `slug` link can view; not listed in discovery.
+ * - `public`   — listed in profiles, feeds and discovery.
+ */
+export const recipeVisibilityEnum = pgEnum("recipe_visibility", [
+  "private",
+  "unlisted",
+  "public",
+]);
 
 export const recipes = pgTable(
   "recipes",
@@ -64,6 +77,12 @@ export const recipes = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
     categories: recipeCategoryEnum("categories").array().notNull().default([]),
+    // Social layer (cefiro): sharing visibility, public URL slug, and the
+    // moment a recipe first became non-private. `slug` is globally unique when
+    // set (Postgres allows many NULLs), so it can back `/r/[slug]` pages.
+    visibility: recipeVisibilityEnum("visibility").notNull().default("private"),
+    slug: text("slug"),
+    publishedAt: timestamp("published_at", { withTimezone: true }),
     ...versionColumn,
   },
   (t) => [
@@ -74,5 +93,8 @@ export const recipes = pgTable(
     index("idx_recipes_total_minutes").on(t.totalMinutes),
     index("idx_recipes_prep_minutes").on(t.prepMinutes),
     index("idx_recipes_cook_minutes").on(t.cookMinutes),
+    uniqueIndex("uq_recipes_slug").on(t.slug),
+    // Discovery: list public recipes newest-first.
+    index("idx_recipes_visibility_published_at").on(t.visibility, t.publishedAt.desc()),
   ]
 );

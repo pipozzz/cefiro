@@ -21,6 +21,7 @@ import { useTranslations } from "next-intl";
 import type { CreateRecipeShareInputDto } from "@norish/shared/contracts";
 
 import { useRecipeContextRequired } from "../context";
+import RecipePublishControl from "./recipe-publish-control";
 
 type Props = {
   open: boolean;
@@ -106,6 +107,8 @@ export default function RecipeSharePanel({ open, onOpenChange }: Props) {
             recipeName: recipe.name,
           })}
         </p>
+
+        <RecipePublishControl recipeId={recipe.id} />
 
         <Card className="bg-surface-secondary/40 border-border border">
           <Card.Content className="gap-3">

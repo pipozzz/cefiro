@@ -1,4 +1,4 @@
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 
 import { db } from "@norish/db/drizzle";
 
@@ -114,4 +114,17 @@ export async function getFavoritesByRecipeIds(
     .where(and(eq(recipeFavorites.userId, userId), inArray(recipeFavorites.recipeId, recipeIds)));
 
   return new Set(results.map((r) => r.recipeId));
+}
+
+/**
+ * Total number of users who have favourited a recipe. In the cefiro social
+ * layer a favourite doubles as a public "like", so this is the like count.
+ */
+export async function countRecipeFavorites(recipeId: string): Promise<number> {
+  const [row] = await db
+    .select({ c: sql<number>`count(*)::int` })
+    .from(recipeFavorites)
+    .where(eq(recipeFavorites.recipeId, recipeId));
+
+  return row?.c ?? 0;
 }

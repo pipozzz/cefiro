@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { BrandLogo } from "@/components/brand/brand-logo";
 import MobileNav from "@/components/navbar/mobile-nav";
 import NavbarUserMenu from "@/components/navbar/navbar-user-menu";
+import { NotificationBell } from "@/components/navbar/notification-bell";
 import { useAutoHide } from "@/hooks/auto-hide";
 import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
@@ -81,7 +82,7 @@ export const Navbar = () => {
                       }`}
                       href={item.href}
                     >
-                      {t(navLabelKeys[item.href] ?? "home")}
+                      {navLabelKeys[item.href] ? t(navLabelKeys[item.href]) : item.label}
                     </NextLink>
                   </li>
                 );
@@ -90,7 +91,8 @@ export const Navbar = () => {
           </div>
 
           {/* Right */}
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-end gap-1">
+            <NotificationBell />
             <NavbarUserMenu />
           </div>
         </nav>

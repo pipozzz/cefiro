@@ -22,3 +22,7 @@ export * from "@norish/db/repositories/planned-items";
 export * from "@norish/db/repositories/site-auth-tokens";
 export * from "@norish/db/repositories/recipe-shares";
 export * from "@norish/db/repositories/api-logs";
+export * from "@norish/db/repositories/user-profiles";
+export * from "@norish/db/repositories/follows";
+export * from "@norish/db/repositories/recipe-comments";
+export * from "@norish/db/repositories/notifications";

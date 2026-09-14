@@ -1,0 +1,611 @@
+import { TRPCError } from "@trpc/server";
+
+import type { FullRecipeDTO } from "@norish/shared/contracts";
+import type { PublicRecipeViewDTO } from "@norish/shared/contracts/dto/recipe-shares";
+import {
+  addFavorite,
+  countRecipeFavorites,
+  isFavorite,
+  removeFavorite,
+} from "@norish/db/repositories/favorites";
+import {
+  countUnreadNotifications,
+  createNotification,
+  listNotifications,
+  markAllNotificationsRead,
+} from "@norish/db/repositories/notifications";
+import {
+  addComment,
+  countCommentsForRecipe,
+  deleteComment,
+  getCommentOwnership,
+  listCommentsForRecipe,
+} from "@norish/db/repositories/recipe-comments";
+import { getRecipeFull } from "@norish/db/repositories/recipes";
+import {
+  getProfileByHandle,
+  getProfileByUserId,
+  getRecipePublishState,
+  getViewableRecipeRefById,
+  getViewableRecipeRefBySlug,
+  isHandleAvailable,
+  listPublicRecipesByUserId,
+  setRecipeVisibility,
+  upsertProfile,
+  type PublicProfile,
+} from "@norish/db/repositories/user-profiles";
+import {
+  followUser,
+  getFollowCounts,
+  isFollowing,
+  listDiscoverRecipes,
+  listFeedRecipes,
+  unfollowUser,
+  type FeedRecipeRow,
+} from "@norish/db/repositories/follows";
+import { trpcLogger as log } from "@norish/shared-server/logger";
+import { PublicRecipeViewSchema } from "@norish/shared/contracts/zod/recipe-shares";
+import {
+  AddCommentInputSchema,
+  CheckHandleInputSchema,
+  DeleteCommentInputSchema,
+  DiscoverInputSchema,
+  FeedInputSchema,
+  FollowByHandleInputSchema,
+  GetProfileByHandleInputSchema,
+  GetPublicRecipeBySlugInputSchema,
+  LikeStatusInputSchema,
+  ListCommentsInputSchema,
+  ListNotificationsInputSchema,
+  ListPublicRecipesByHandleInputSchema,
+  SetRecipeVisibilityInputSchema,
+  ToggleLikeInputSchema,
+  UpsertProfileInputSchema,
+} from "@norish/shared/contracts/zod";
+
+import { authedProcedure } from "../../middleware";
+import { publicProcedure, router } from "../../trpc";
+
+/**
+ * Rewrite an owner-scoped `/recipes/{id}/...` media URL to the public
+ * slug-scoped route so anonymous viewers can load images without auth.
+ * Mirrors `toSharedMediaUrl` (share links) for the slug-based flow.
+ */
+function toSlugMediaUrl(url: string | null | undefined, slug: string): string | null {
+  if (!url) {
+    return null;
+  }
+
+  if (!url.startsWith("/recipes/")) {
+    return url;
+  }
+
+  const [pathname] = url.split("?", 1);
+  const stepMatch = pathname?.match(/^\/recipes\/[^/]+\/steps\/([^/]+)$/);
+
+  if (stepMatch?.[1]) {
+    return `/r/${slug}/steps/${stepMatch[1]}`;
+  }
+
+  const mediaMatch = pathname?.match(/^\/recipes\/[^/]+\/([^/]+)$/);
+
+  if (mediaMatch?.[1]) {
+    return `/r/${slug}/media/${mediaMatch[1]}`;
+  }
+
+  return url;
+}
+
+function mapRecipeToPublicSlugView(recipe: FullRecipeDTO, slug: string): PublicRecipeViewDTO {
+  return PublicRecipeViewSchema.parse({
+    name: recipe.name,
+    description: recipe.description ?? null,
+    notes: recipe.notes ?? null,
+    url: recipe.url ?? null,
+    image: toSlugMediaUrl(recipe.image, slug),
+    dishColor: recipe.dishColor ?? null,
+    servings: recipe.servings,
+    prepMinutes: recipe.prepMinutes ?? null,
+    cookMinutes: recipe.cookMinutes ?? null,
+    totalMinutes: recipe.totalMinutes ?? null,
+    systemUsed: recipe.systemUsed,
+    calories: recipe.calories ?? null,
+    fat: recipe.fat ?? null,
+    carbs: recipe.carbs ?? null,
+    protein: recipe.protein ?? null,
+    categories: recipe.categories ?? [],
+    tags: (recipe.tags ?? []).map((tag) => ({ name: tag.name })),
+    recipeIngredients: (recipe.recipeIngredients ?? []).map((ingredient) => ({
+      ingredientName: ingredient.ingredientName,
+      amount: ingredient.amount,
+      unit: ingredient.unit ?? null,
+      systemUsed: ingredient.systemUsed,
+      order: ingredient.order,
+    })),
+    steps: (recipe.steps ?? []).map((step) => ({
+      step: step.step,
+      systemUsed: step.systemUsed,
+      order: step.order,
+      images: (step.images ?? []).map((image) => ({
+        image: toSlugMediaUrl(image.image, slug),
+        order: image.order,
+      })),
+      stepIngredients: step.stepIngredients ?? [],
+    })),
+    // Public authorship comes from the cefiro profile, never the encrypted user
+    // record, so it is attached separately by the caller — not here.
+    author: null,
+    images: (recipe.images ?? []).map((image) => ({
+      image: toSlugMediaUrl(image.image, slug),
+      order: image.order,
+    })),
+    videos: (recipe.videos ?? []).map((video) => ({
+      video: toSlugMediaUrl(video.video, slug),
+      thumbnail: toSlugMediaUrl(video.thumbnail ?? null, slug),
+      duration: video.duration ?? null,
+      order: video.order,
+    })),
+  });
+}
+
+function toPublicProfileDto(profile: PublicProfile) {
+  return {
+    handle: profile.handle,
+    displayName: profile.displayName,
+    bio: profile.bio,
+    avatarUrl: profile.avatarUrl,
+    location: profile.location,
+    websiteUrl: profile.websiteUrl,
+    memberSince: profile.createdAt,
+  };
+}
+
+function toFeedCard(row: FeedRecipeRow) {
+  return {
+    slug: row.slug,
+    name: row.name,
+    description: row.description,
+    image: row.slug ? toSlugMediaUrl(row.image, row.slug) : null,
+    dishColor: row.dishColor,
+    totalMinutes: row.totalMinutes,
+    publishedAt: row.publishedAt,
+    favoriteCount: row.favoriteCount,
+    author: row.authorHandle
+      ? {
+          handle: row.authorHandle,
+          displayName: row.authorDisplayName,
+          avatarUrl: row.authorAvatarUrl,
+        }
+      : null,
+  };
+}
+
+// --- Profile management (authenticated) ---------------------------------
+
+const getMyProfile = authedProcedure.query(async ({ ctx }) => {
+  const profile = await getProfileByUserId(ctx.user.id);
+
+  return { profile };
+});
+
+const checkHandle = authedProcedure
+  .input(CheckHandleInputSchema)
+  .query(async ({ ctx, input }) => {
+    const available = await isHandleAvailable(input.handle, ctx.user.id);
+
+    return { handle: input.handle, available };
+  });
+
+const upsertMyProfile = authedProcedure
+  .input(UpsertProfileInputSchema)
+  .mutation(async ({ ctx, input }) => {
+    const available = await isHandleAvailable(input.handle, ctx.user.id);
+
+    if (!available) {
+      throw new TRPCError({ code: "CONFLICT", message: "That handle is already taken" });
+    }
+
+    const profile = await upsertProfile(ctx.user.id, input);
+
+    log.info({ userId: ctx.user.id, handle: profile.handle }, "Upserted public profile");
+
+    return { profile };
+  });
+
+// --- Recipe publishing (authenticated, owner only) ----------------------
+
+const getPublishState = authedProcedure
+  .input(SetRecipeVisibilityInputSchema.pick({ recipeId: true }))
+  .query(async ({ ctx, input }) => {
+    const state = await getRecipePublishState(ctx.user.id, input.recipeId);
+
+    if (!state) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Recipe not found" });
+    }
+
+    return state;
+  });
+
+const setVisibility = authedProcedure
+  .input(SetRecipeVisibilityInputSchema)
+  .mutation(async ({ ctx, input }) => {
+    const result = await setRecipeVisibility(ctx.user.id, input.recipeId, input.visibility);
+
+    if (!result) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Recipe not found or you do not have permission to publish it",
+      });
+    }
+
+    log.info(
+      { userId: ctx.user.id, recipeId: input.recipeId, visibility: input.visibility },
+      "Set recipe visibility"
+    );
+
+    return result;
+  });
+
+// --- Public reads (unauthenticated) -------------------------------------
+
+const getProfile = publicProcedure
+  .input(GetProfileByHandleInputSchema)
+  .query(async ({ input }) => {
+    const profile = await getProfileByHandle(input.handle);
+
+    if (!profile || !profile.isPublic) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Profile not found" });
+    }
+
+    const counts = await getFollowCounts(profile.userId);
+
+    return { profile: toPublicProfileDto(profile), counts };
+  });
+
+// --- Follow graph (authenticated) ---------------------------------------
+
+async function resolveFolloweeId(handle: string): Promise<{ userId: string }> {
+  const profile = await getProfileByHandle(handle);
+
+  if (!profile) {
+    throw new TRPCError({ code: "NOT_FOUND", message: "Profile not found" });
+  }
+
+  return { userId: profile.userId };
+}
+
+const follow = authedProcedure
+  .input(FollowByHandleInputSchema)
+  .mutation(async ({ ctx, input }) => {
+    const { userId } = await resolveFolloweeId(input.handle);
+
+    if (userId === ctx.user.id) {
+      throw new TRPCError({ code: "BAD_REQUEST", message: "You cannot follow yourself" });
+    }
+
+    await followUser(ctx.user.id, userId);
+    await createNotification({ userId, actorId: ctx.user.id, type: "follow" });
+
+    return { handle: input.handle, isFollowing: true };
+  });
+
+const unfollow = authedProcedure
+  .input(FollowByHandleInputSchema)
+  .mutation(async ({ ctx, input }) => {
+    const { userId } = await resolveFolloweeId(input.handle);
+
+    await unfollowUser(ctx.user.id, userId);
+
+    return { handle: input.handle, isFollowing: false };
+  });
+
+/** The current viewer's follow relationship to a handle (self => null). */
+const getFollowStatus = authedProcedure
+  .input(FollowByHandleInputSchema)
+  .query(async ({ ctx, input }) => {
+    const profile = await getProfileByHandle(input.handle);
+
+    if (!profile) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Profile not found" });
+    }
+
+    const isSelf = profile.userId === ctx.user.id;
+    const following = isSelf ? false : await isFollowing(ctx.user.id, profile.userId);
+
+    return { handle: input.handle, isSelf, isFollowing: following };
+  });
+
+// --- Feed & discovery ---------------------------------------------------
+
+const feed = authedProcedure.input(FeedInputSchema).query(async ({ ctx, input }) => {
+  const { items, nextCursor } = await listFeedRecipes(ctx.user.id, input.limit, input.cursor);
+
+  return { recipes: items.map(toFeedCard), nextCursor };
+});
+
+const discover = publicProcedure.input(DiscoverInputSchema).query(async ({ input }) => {
+  const { items, nextCursor } = await listDiscoverRecipes({
+    sort: input.sort,
+    category: input.category,
+    limit: input.limit,
+    cursor: input.cursor,
+  });
+
+  return { recipes: items.map(toFeedCard), nextCursor };
+});
+
+// --- Likes (favourites double as public likes) --------------------------
+
+const getLikeStatus = authedProcedure
+  .input(LikeStatusInputSchema)
+  .query(async ({ ctx, input }) => {
+    const liked = await isFavorite(ctx.user.id, input.recipeId);
+
+    return { recipeId: input.recipeId, liked };
+  });
+
+const toggleLike = authedProcedure
+  .input(ToggleLikeInputSchema)
+  .mutation(async ({ ctx, input }) => {
+    const ref = await getViewableRecipeRefById(input.recipeId);
+
+    if (!ref) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Recipe not found" });
+    }
+
+    if (input.liked) {
+      await addFavorite(ctx.user.id, input.recipeId);
+
+      if (ref.userId) {
+        await createNotification({
+          userId: ref.userId,
+          actorId: ctx.user.id,
+          type: "like",
+          recipeId: input.recipeId,
+        });
+      }
+    } else {
+      await removeFavorite(ctx.user.id, input.recipeId);
+    }
+
+    const favoriteCount = await countRecipeFavorites(input.recipeId);
+
+    return { recipeId: input.recipeId, liked: input.liked, favoriteCount };
+  });
+
+// --- Comments -----------------------------------------------------------
+
+function toCommentDto(row: {
+  id: string;
+  body: string;
+  createdAt: Date;
+  userId: string;
+  authorHandle: string | null;
+  authorDisplayName: string | null;
+  authorAvatarUrl: string | null;
+}) {
+  return {
+    id: row.id,
+    body: row.body,
+    createdAt: row.createdAt,
+    author: row.authorHandle
+      ? {
+          handle: row.authorHandle,
+          displayName: row.authorDisplayName,
+          avatarUrl: row.authorAvatarUrl,
+        }
+      : null,
+  };
+}
+
+const getComments = publicProcedure.input(ListCommentsInputSchema).query(async ({ input }) => {
+  const { items, nextCursor } = await listCommentsForRecipe(
+    input.recipeId,
+    input.limit,
+    input.cursor
+  );
+
+  return { comments: items.map(toCommentDto), nextCursor };
+});
+
+const postComment = authedProcedure.input(AddCommentInputSchema).mutation(async ({ ctx, input }) => {
+  const ref = await getViewableRecipeRefById(input.recipeId);
+
+  if (!ref) {
+    throw new TRPCError({ code: "NOT_FOUND", message: "Recipe not found" });
+  }
+
+  // Author display comes from the public profile, so a handle is required.
+  const profile = await getProfileByUserId(ctx.user.id);
+
+  if (!profile) {
+    throw new TRPCError({
+      code: "PRECONDITION_FAILED",
+      message: "Create your public profile before commenting",
+    });
+  }
+
+  const { id } = await addComment(ctx.user.id, input.recipeId, input.body);
+
+  if (ref.userId) {
+    await createNotification({
+      userId: ref.userId,
+      actorId: ctx.user.id,
+      type: "comment",
+      recipeId: input.recipeId,
+    });
+  }
+
+  log.info({ userId: ctx.user.id, recipeId: input.recipeId, commentId: id }, "Added comment");
+
+  return { id };
+});
+
+const removeComment = authedProcedure
+  .input(DeleteCommentInputSchema)
+  .mutation(async ({ ctx, input }) => {
+    const ownership = await getCommentOwnership(input.commentId);
+
+    if (!ownership) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Comment not found" });
+    }
+
+    // The comment author or the recipe owner may delete it.
+    const isCommentAuthor = ownership.userId === ctx.user.id;
+    const publishState = await getRecipePublishState(ctx.user.id, ownership.recipeId);
+    const isRecipeOwner = publishState !== null;
+
+    if (!isCommentAuthor && !isRecipeOwner && !ctx.isServerAdmin) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "You cannot delete this comment" });
+    }
+
+    await deleteComment(input.commentId);
+
+    return { id: input.commentId };
+  });
+
+// --- Notifications -------------------------------------------------------
+
+function toNotificationDto(row: {
+  id: string;
+  type: "follow" | "like" | "comment";
+  createdAt: Date;
+  readAt: Date | null;
+  actorHandle: string | null;
+  actorDisplayName: string | null;
+  actorAvatarUrl: string | null;
+  recipeSlug: string | null;
+  recipeName: string | null;
+}) {
+  return {
+    id: row.id,
+    type: row.type,
+    createdAt: row.createdAt,
+    read: row.readAt !== null,
+    actor: row.actorHandle
+      ? {
+          handle: row.actorHandle,
+          displayName: row.actorDisplayName,
+          avatarUrl: row.actorAvatarUrl,
+        }
+      : null,
+    recipe: row.recipeSlug ? { slug: row.recipeSlug, name: row.recipeName } : null,
+  };
+}
+
+const getNotifications = authedProcedure
+  .input(ListNotificationsInputSchema)
+  .query(async ({ ctx, input }) => {
+    const { items, nextCursor } = await listNotifications(ctx.user.id, input.limit, input.cursor);
+
+    return { notifications: items.map(toNotificationDto), nextCursor };
+  });
+
+const getUnreadNotificationCount = authedProcedure.query(async ({ ctx }) => {
+  const count = await countUnreadNotifications(ctx.user.id);
+
+  return { count };
+});
+
+const markNotificationsRead = authedProcedure.mutation(async ({ ctx }) => {
+  await markAllNotificationsRead(ctx.user.id);
+
+  return { ok: true };
+});
+
+const listProfileRecipes = publicProcedure
+  .input(ListPublicRecipesByHandleInputSchema)
+  .query(async ({ input }) => {
+    const profile = await getProfileByHandle(input.handle);
+
+    if (!profile || !profile.isPublic) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Profile not found" });
+    }
+
+    const { items, nextCursor } = await listPublicRecipesByUserId(
+      profile.userId,
+      input.limit,
+      input.cursor
+    );
+
+    // Rewrite the card thumbnail to the public slug route.
+    const recipes = items.map((item) => ({
+      slug: item.slug,
+      name: item.name,
+      description: item.description,
+      image: item.slug ? toSlugMediaUrl(item.image, item.slug) : null,
+      dishColor: item.dishColor,
+      totalMinutes: item.totalMinutes,
+      publishedAt: item.publishedAt,
+    }));
+
+    return { recipes, nextCursor };
+  });
+
+const getPublicRecipe = publicProcedure
+  .input(GetPublicRecipeBySlugInputSchema)
+  .query(async ({ input }) => {
+    const ref = await getViewableRecipeRefBySlug(input.slug);
+
+    if (!ref) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Recipe not found" });
+    }
+
+    const full = await getRecipeFull(ref.recipeId);
+
+    if (!full) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Recipe not found" });
+    }
+
+    const recipe = mapRecipeToPublicSlugView(full, input.slug);
+
+    // Attach the public author profile (if the owner has one and it is public).
+    let author: ReturnType<typeof toPublicProfileDto> | null = null;
+
+    if (ref.userId) {
+      const profile = await getProfileByUserId(ref.userId);
+
+      if (profile?.isPublic) {
+        author = toPublicProfileDto(profile);
+      }
+    }
+
+    const [favoriteCount, commentCount] = await Promise.all([
+      countRecipeFavorites(ref.recipeId),
+      countCommentsForRecipe(ref.recipeId),
+    ]);
+
+    return {
+      recipeId: ref.recipeId,
+      slug: input.slug,
+      visibility: ref.visibility,
+      recipe,
+      author,
+      favoriteCount,
+      commentCount,
+    };
+  });
+
+export const socialProcedures = router({
+  getMyProfile,
+  checkHandle,
+  upsertMyProfile,
+  getPublishState,
+  setVisibility,
+  getProfile,
+  listProfileRecipes,
+  getPublicRecipe,
+  follow,
+  unfollow,
+  getFollowStatus,
+  feed,
+  discover,
+  getLikeStatus,
+  toggleLike,
+  getComments,
+  postComment,
+  removeComment,
+  getNotifications,
+  getUnreadNotificationCount,
+  markNotificationsRead,
+});

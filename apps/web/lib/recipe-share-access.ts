@@ -6,8 +6,25 @@ export function isRecipeSharePagePath(pathname: string): boolean {
   return pathname.startsWith("/share/");
 }
 
+/**
+ * cefiro social layer: public, signed-out pages served without auth —
+ * public recipes (`/r/…`), public profiles (`/u/…`) and the pretty
+ * `/@handle` alias (rewritten to `/u/handle`).
+ */
+export function isPublicSocialPath(pathname: string): boolean {
+  return (
+    pathname.startsWith("/r/") ||
+    pathname.startsWith("/u/") ||
+    pathname.startsWith("/@") ||
+    pathname === "/discover" ||
+    pathname.startsWith("/discover/")
+  );
+}
+
 export function shouldBypassAuthProxy(request: NextRequest): boolean {
-  return isRecipeSharePagePath(request.nextUrl.pathname);
+  const pathname = request.nextUrl.pathname;
+
+  return isRecipeSharePagePath(pathname) || isPublicSocialPath(pathname);
 }
 
 export async function getSharedRecipeByToken(token: string) {

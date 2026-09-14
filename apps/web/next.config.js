@@ -69,6 +69,17 @@ export default withSerwist(
       NEXT_PUBLIC_APP_VERSION: packageJson.version,
     },
     serverExternalPackages: ["pino", "pino-pretty", "thread-stream", "playwright-core"],
+    async rewrites() {
+      return {
+        // cefiro: pretty public profile URLs — /@handle serves /u/handle.
+        beforeFiles: [
+          {
+            source: "/@:handle",
+            destination: "/u/:handle",
+          },
+        ],
+      };
+    },
     async headers() {
       return [
         {
