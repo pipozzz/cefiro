@@ -379,6 +379,13 @@
       "when": 1789407280838,
       "tag": "0053_certain_red_hulk",
       "breakpoints": true
+    },
+    {
+      "idx": 54,
+      "version": "7",
+      "when": 1789413960292,
+      "tag": "0054_free_bedlam",
+      "breakpoints": true
     }
   ]
 }

@@ -96,5 +96,29 @@ export const ListPublicRecipesByHandleInputSchema = z.object({
   cursor: z.string().optional(),
 });
 
+// --- Follow graph, feed & discovery -------------------------------------
+
+export const FollowByHandleInputSchema = z.object({
+  handle: z.string().trim().toLowerCase().min(1).max(30),
+});
+
+export const FeedInputSchema = z.object({
+  limit: z.number().int().min(1).max(50).default(24),
+  cursor: z.string().optional(),
+});
+
+export const discoverSortValues = ["newest", "trending"] as const;
+export const DiscoverSortSchema = z.enum(discoverSortValues);
+
+export const recipeCategoryValues = ["Breakfast", "Lunch", "Dinner", "Snack"] as const;
+
+export const DiscoverInputSchema = z.object({
+  sort: DiscoverSortSchema.default("newest"),
+  category: z.enum(recipeCategoryValues).optional(),
+  limit: z.number().int().min(1).max(50).default(24),
+  cursor: z.string().optional(),
+});
+
 export type UpsertProfileInput = z.infer<typeof UpsertProfileInputSchema>;
 export type RecipeVisibility = z.infer<typeof RecipeVisibilitySchema>;
+export type DiscoverSort = z.infer<typeof DiscoverSortSchema>;

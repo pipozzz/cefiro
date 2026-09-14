@@ -81,7 +81,7 @@ export const Navbar = () => {
                       }`}
                       href={item.href}
                     >
-                      {t(navLabelKeys[item.href] ?? "home")}
+                      {navLabelKeys[item.href] ? t(navLabelKeys[item.href]) : item.label}
                     </NextLink>
                   </li>
                 );

@@ -4,6 +4,7 @@ import { use } from "react";
 import Link from "next/link";
 import { useTRPC } from "@/app/providers/trpc-provider";
 import { NotFoundView } from "@/components/shared/not-found-view";
+import { FollowButton } from "@/components/social/follow-button";
 import { useQuery } from "@tanstack/react-query";
 
 type Props = {
@@ -84,7 +85,7 @@ function ProfileContent({ handle }: { handle: string }) {
     return <NotFoundView title="Profile not found" message="This profile is private or does not exist." />;
   }
 
-  const { profile } = profileQuery.data;
+  const { profile, counts } = profileQuery.data;
   const displayName = profile.displayName ?? `@${profile.handle}`;
   const recipes = recipesQuery.data?.recipes ?? [];
 
@@ -106,8 +107,27 @@ function ProfileContent({ handle }: { handle: string }) {
         )}
 
         <div className="flex-1">
-          <h1 className="text-2xl font-bold text-foreground md:text-3xl">{displayName}</h1>
-          <p className="text-default-500">@{profile.handle}</p>
+          <div className="flex flex-col items-center gap-3 md:flex-row md:justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-foreground md:text-3xl">{displayName}</h1>
+              <p className="text-default-500">@{profile.handle}</p>
+            </div>
+            <FollowButton handle={profile.handle} />
+          </div>
+
+          <div className="mt-3 flex items-center justify-center gap-5 text-sm md:justify-start">
+            <span>
+              <span className="font-semibold text-foreground">{counts.followers}</span>{" "}
+              <span className="text-default-500">
+                {counts.followers === 1 ? "follower" : "followers"}
+              </span>
+            </span>
+            <span>
+              <span className="font-semibold text-foreground">{counts.following}</span>{" "}
+              <span className="text-default-500">following</span>
+            </span>
+          </div>
+
           {profile.bio ? (
             <p className="mt-3 max-w-2xl text-default-600">{profile.bio}</p>
           ) : null}

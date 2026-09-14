@@ -14,10 +14,22 @@ import {
   upsertProfile,
   type PublicProfile,
 } from "@norish/db/repositories/user-profiles";
+import {
+  followUser,
+  getFollowCounts,
+  isFollowing,
+  listDiscoverRecipes,
+  listFeedRecipes,
+  unfollowUser,
+  type FeedRecipeRow,
+} from "@norish/db/repositories/follows";
 import { trpcLogger as log } from "@norish/shared-server/logger";
 import { PublicRecipeViewSchema } from "@norish/shared/contracts/zod/recipe-shares";
 import {
   CheckHandleInputSchema,
+  DiscoverInputSchema,
+  FeedInputSchema,
+  FollowByHandleInputSchema,
   GetProfileByHandleInputSchema,
   GetPublicRecipeBySlugInputSchema,
   ListPublicRecipesByHandleInputSchema,
@@ -122,6 +134,26 @@ function toPublicProfileDto(profile: PublicProfile) {
   };
 }
 
+function toFeedCard(row: FeedRecipeRow) {
+  return {
+    slug: row.slug,
+    name: row.name,
+    description: row.description,
+    image: row.slug ? toSlugMediaUrl(row.image, row.slug) : null,
+    dishColor: row.dishColor,
+    totalMinutes: row.totalMinutes,
+    publishedAt: row.publishedAt,
+    favoriteCount: row.favoriteCount,
+    author: row.authorHandle
+      ? {
+          handle: row.authorHandle,
+          displayName: row.authorDisplayName,
+          avatarUrl: row.authorAvatarUrl,
+        }
+      : null,
+  };
+}
+
 // --- Profile management (authenticated) ---------------------------------
 
 const getMyProfile = authedProcedure.query(async ({ ctx }) => {
@@ -199,8 +231,81 @@ const getProfile = publicProcedure
       throw new TRPCError({ code: "NOT_FOUND", message: "Profile not found" });
     }
 
-    return { profile: toPublicProfileDto(profile) };
+    const counts = await getFollowCounts(profile.userId);
+
+    return { profile: toPublicProfileDto(profile), counts };
   });
+
+// --- Follow graph (authenticated) ---------------------------------------
+
+async function resolveFolloweeId(handle: string): Promise<{ userId: string }> {
+  const profile = await getProfileByHandle(handle);
+
+  if (!profile) {
+    throw new TRPCError({ code: "NOT_FOUND", message: "Profile not found" });
+  }
+
+  return { userId: profile.userId };
+}
+
+const follow = authedProcedure
+  .input(FollowByHandleInputSchema)
+  .mutation(async ({ ctx, input }) => {
+    const { userId } = await resolveFolloweeId(input.handle);
+
+    if (userId === ctx.user.id) {
+      throw new TRPCError({ code: "BAD_REQUEST", message: "You cannot follow yourself" });
+    }
+
+    await followUser(ctx.user.id, userId);
+
+    return { handle: input.handle, isFollowing: true };
+  });
+
+const unfollow = authedProcedure
+  .input(FollowByHandleInputSchema)
+  .mutation(async ({ ctx, input }) => {
+    const { userId } = await resolveFolloweeId(input.handle);
+
+    await unfollowUser(ctx.user.id, userId);
+
+    return { handle: input.handle, isFollowing: false };
+  });
+
+/** The current viewer's follow relationship to a handle (self => null). */
+const getFollowStatus = authedProcedure
+  .input(FollowByHandleInputSchema)
+  .query(async ({ ctx, input }) => {
+    const profile = await getProfileByHandle(input.handle);
+
+    if (!profile) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Profile not found" });
+    }
+
+    const isSelf = profile.userId === ctx.user.id;
+    const following = isSelf ? false : await isFollowing(ctx.user.id, profile.userId);
+
+    return { handle: input.handle, isSelf, isFollowing: following };
+  });
+
+// --- Feed & discovery ---------------------------------------------------
+
+const feed = authedProcedure.input(FeedInputSchema).query(async ({ ctx, input }) => {
+  const { items, nextCursor } = await listFeedRecipes(ctx.user.id, input.limit, input.cursor);
+
+  return { recipes: items.map(toFeedCard), nextCursor };
+});
+
+const discover = publicProcedure.input(DiscoverInputSchema).query(async ({ input }) => {
+  const { items, nextCursor } = await listDiscoverRecipes({
+    sort: input.sort,
+    category: input.category,
+    limit: input.limit,
+    cursor: input.cursor,
+  });
+
+  return { recipes: items.map(toFeedCard), nextCursor };
+});
 
 const listProfileRecipes = publicProcedure
   .input(ListPublicRecipesByHandleInputSchema)
@@ -271,4 +376,9 @@ export const socialProcedures = router({
   getProfile,
   listProfileRecipes,
   getPublicRecipe,
+  follow,
+  unfollow,
+  getFollowStatus,
+  feed,
+  discover,
 });

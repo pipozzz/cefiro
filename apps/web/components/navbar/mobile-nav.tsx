@@ -9,7 +9,9 @@ import {
   CalendarDaysIcon,
   ClipboardDocumentListIcon,
   Cog6ToothIcon,
+  GlobeAltIcon,
   HomeIcon,
+  NewspaperIcon,
 } from "@heroicons/react/20/solid";
 import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
@@ -96,10 +98,16 @@ export const MobileNav = () => {
                 const Icon =
                   item.href === "/"
                     ? HomeIcon
-                    : item.href.startsWith("/calendar")
-                      ? CalendarDaysIcon
-                      : ClipboardDocumentListIcon;
-                const label = tNav(navLabelKeys[item.href] ?? "home");
+                    : item.href.startsWith("/feed")
+                      ? NewspaperIcon
+                      : item.href.startsWith("/discover")
+                        ? GlobeAltIcon
+                        : item.href.startsWith("/calendar")
+                          ? CalendarDaysIcon
+                          : ClipboardDocumentListIcon;
+                const label = navLabelKeys[item.href]
+                  ? tNav(navLabelKeys[item.href])
+                  : item.label;
 
                 return (
                   <li key={item.href}>
