@@ -12,6 +12,7 @@ import { permissionsRouter } from "./routers/permissions";
 import { ratingsRouter } from "./routers/ratings";
 import { recipesRouter } from "./routers/recipes";
 import { siteAuthTokensRouter } from "./routers/site-auth-tokens";
+import { socialRouter } from "./routers/social";
 import { storesRouter } from "./routers/stores";
 import { userRouter } from "./routers/user";
 import { router } from "./trpc";
@@ -34,6 +35,7 @@ export const appRouter = router({
   ratings: ratingsRouter,
   stores: storesRouter,
   siteAuthTokens: siteAuthTokensRouter,
+  social: socialRouter,
 });
 
 // Export type definition of API

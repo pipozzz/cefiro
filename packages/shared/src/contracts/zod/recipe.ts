@@ -19,6 +19,12 @@ export const recipeCategorySchema = z.enum(["Breakfast", "Lunch", "Dinner", "Sna
 
 export const RecipeSelectBaseSchema = createSelectSchema(recipes).extend({
   userId: z.string().nullable(),
+  // cefiro social columns: present on the table but not selected by every
+  // read projection, so keep them optional here to avoid breaking the
+  // existing recipe reads (getRecipeFull, dashboard, …) that omit them.
+  visibility: z.enum(["private", "unlisted", "public"]).optional(),
+  slug: z.string().nullable().optional(),
+  publishedAt: z.date().nullable().optional(),
 });
 export const RecipeInsertBaseSchema = createInsertSchema(recipes).omit({
   id: true,
