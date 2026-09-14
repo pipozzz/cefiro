@@ -314,6 +314,29 @@ export async function isRecipeViewableById(recipeId: string): Promise<boolean> {
 }
 
 /**
+ * Viewable-recipe reference by id (public or unlisted), including the owner id
+ * so callers can attribute likes/comments (e.g. for notifications). Null when
+ * the recipe is missing or private.
+ */
+export async function getViewableRecipeRefById(recipeId: string): Promise<PublicRecipeRef | null> {
+  const [row] = await db
+    .select({
+      recipeId: recipes.id,
+      userId: recipes.userId,
+      visibility: recipes.visibility,
+    })
+    .from(recipes)
+    .where(eq(recipes.id, recipeId))
+    .limit(1);
+
+  if (!row || row.visibility === "private") {
+    return null;
+  }
+
+  return row;
+}
+
+/**
  * List a user's PUBLIC recipes (excludes unlisted/private), newest first,
  * cursor-paginated by publishedAt. Cursor is an ISO timestamp.
  */

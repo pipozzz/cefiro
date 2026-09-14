@@ -393,6 +393,13 @@
       "when": 1789414926782,
       "tag": "0055_military_vertigo",
       "breakpoints": true
+    },
+    {
+      "idx": 56,
+      "version": "7",
+      "when": 1789415676013,
+      "tag": "0056_polite_vanisher",
+      "breakpoints": true
     }
   ]
 }

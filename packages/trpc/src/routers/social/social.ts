@@ -9,6 +9,12 @@ import {
   removeFavorite,
 } from "@norish/db/repositories/favorites";
 import {
+  countUnreadNotifications,
+  createNotification,
+  listNotifications,
+  markAllNotificationsRead,
+} from "@norish/db/repositories/notifications";
+import {
   addComment,
   countCommentsForRecipe,
   deleteComment,
@@ -20,9 +26,9 @@ import {
   getProfileByHandle,
   getProfileByUserId,
   getRecipePublishState,
+  getViewableRecipeRefById,
   getViewableRecipeRefBySlug,
   isHandleAvailable,
-  isRecipeViewableById,
   listPublicRecipesByUserId,
   setRecipeVisibility,
   upsertProfile,
@@ -50,6 +56,7 @@ import {
   GetPublicRecipeBySlugInputSchema,
   LikeStatusInputSchema,
   ListCommentsInputSchema,
+  ListNotificationsInputSchema,
   ListPublicRecipesByHandleInputSchema,
   SetRecipeVisibilityInputSchema,
   ToggleLikeInputSchema,
@@ -277,6 +284,7 @@ const follow = authedProcedure
     }
 
     await followUser(ctx.user.id, userId);
+    await createNotification({ userId, actorId: ctx.user.id, type: "follow" });
 
     return { handle: input.handle, isFollowing: true };
   });
@@ -339,12 +347,23 @@ const getLikeStatus = authedProcedure
 const toggleLike = authedProcedure
   .input(ToggleLikeInputSchema)
   .mutation(async ({ ctx, input }) => {
-    if (!(await isRecipeViewableById(input.recipeId))) {
+    const ref = await getViewableRecipeRefById(input.recipeId);
+
+    if (!ref) {
       throw new TRPCError({ code: "NOT_FOUND", message: "Recipe not found" });
     }
 
     if (input.liked) {
       await addFavorite(ctx.user.id, input.recipeId);
+
+      if (ref.userId) {
+        await createNotification({
+          userId: ref.userId,
+          actorId: ctx.user.id,
+          type: "like",
+          recipeId: input.recipeId,
+        });
+      }
     } else {
       await removeFavorite(ctx.user.id, input.recipeId);
     }
@@ -390,7 +409,9 @@ const getComments = publicProcedure.input(ListCommentsInputSchema).query(async (
 });
 
 const postComment = authedProcedure.input(AddCommentInputSchema).mutation(async ({ ctx, input }) => {
-  if (!(await isRecipeViewableById(input.recipeId))) {
+  const ref = await getViewableRecipeRefById(input.recipeId);
+
+  if (!ref) {
     throw new TRPCError({ code: "NOT_FOUND", message: "Recipe not found" });
   }
 
@@ -405,6 +426,15 @@ const postComment = authedProcedure.input(AddCommentInputSchema).mutation(async 
   }
 
   const { id } = await addComment(ctx.user.id, input.recipeId, input.body);
+
+  if (ref.userId) {
+    await createNotification({
+      userId: ref.userId,
+      actorId: ctx.user.id,
+      type: "comment",
+      recipeId: input.recipeId,
+    });
+  }
 
   log.info({ userId: ctx.user.id, recipeId: input.recipeId, commentId: id }, "Added comment");
 
@@ -433,6 +463,55 @@ const removeComment = authedProcedure
 
     return { id: input.commentId };
   });
+
+// --- Notifications -------------------------------------------------------
+
+function toNotificationDto(row: {
+  id: string;
+  type: "follow" | "like" | "comment";
+  createdAt: Date;
+  readAt: Date | null;
+  actorHandle: string | null;
+  actorDisplayName: string | null;
+  actorAvatarUrl: string | null;
+  recipeSlug: string | null;
+  recipeName: string | null;
+}) {
+  return {
+    id: row.id,
+    type: row.type,
+    createdAt: row.createdAt,
+    read: row.readAt !== null,
+    actor: row.actorHandle
+      ? {
+          handle: row.actorHandle,
+          displayName: row.actorDisplayName,
+          avatarUrl: row.actorAvatarUrl,
+        }
+      : null,
+    recipe: row.recipeSlug ? { slug: row.recipeSlug, name: row.recipeName } : null,
+  };
+}
+
+const getNotifications = authedProcedure
+  .input(ListNotificationsInputSchema)
+  .query(async ({ ctx, input }) => {
+    const { items, nextCursor } = await listNotifications(ctx.user.id, input.limit, input.cursor);
+
+    return { notifications: items.map(toNotificationDto), nextCursor };
+  });
+
+const getUnreadNotificationCount = authedProcedure.query(async ({ ctx }) => {
+  const count = await countUnreadNotifications(ctx.user.id);
+
+  return { count };
+});
+
+const markNotificationsRead = authedProcedure.mutation(async ({ ctx }) => {
+  await markAllNotificationsRead(ctx.user.id);
+
+  return { ok: true };
+});
 
 const listProfileRecipes = publicProcedure
   .input(ListPublicRecipesByHandleInputSchema)
@@ -526,4 +605,7 @@ export const socialProcedures = router({
   getComments,
   postComment,
   removeComment,
+  getNotifications,
+  getUnreadNotificationCount,
+  markNotificationsRead,
 });

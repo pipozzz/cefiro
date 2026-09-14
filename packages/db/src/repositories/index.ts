@@ -25,3 +25,4 @@ export * from "@norish/db/repositories/api-logs";
 export * from "@norish/db/repositories/user-profiles";
 export * from "@norish/db/repositories/follows";
 export * from "@norish/db/repositories/recipe-comments";
+export * from "@norish/db/repositories/notifications";

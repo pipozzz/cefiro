@@ -145,6 +145,13 @@ export const DeleteCommentInputSchema = z.object({
   commentId: z.uuid(),
 });
 
+// --- Notifications -------------------------------------------------------
+
+export const ListNotificationsInputSchema = z.object({
+  limit: z.number().int().min(1).max(50).default(20),
+  cursor: z.string().optional(),
+});
+
 export type UpsertProfileInput = z.infer<typeof UpsertProfileInputSchema>;
 export type RecipeVisibility = z.infer<typeof RecipeVisibilitySchema>;
 export type DiscoverSort = z.infer<typeof DiscoverSortSchema>;

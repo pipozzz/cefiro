@@ -36,3 +36,4 @@ export * from "./aisles";
 export * from "./user-profiles";
 export * from "./follows";
 export * from "./recipe-comments";
+export * from "./notifications";

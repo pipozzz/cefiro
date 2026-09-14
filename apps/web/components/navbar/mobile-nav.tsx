@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import NavbarUserMenu from "@/components/navbar/navbar-user-menu";
+import { NotificationBell } from "@/components/navbar/notification-bell";
 import { useAutoHide } from "@/hooks/auto-hide";
 import {
   CalendarDaysIcon,
@@ -132,6 +133,10 @@ export const MobileNav = () => {
                   </li>
                 );
               })}
+
+              <li>
+                <NotificationBell variant="mobile" />
+              </li>
 
               <li>
                 <NextLink
