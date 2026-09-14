@@ -119,6 +119,32 @@ export const DiscoverInputSchema = z.object({
   cursor: z.string().optional(),
 });
 
+// --- Likes & comments ---------------------------------------------------
+
+export const ToggleLikeInputSchema = z.object({
+  recipeId: z.uuid(),
+  liked: z.boolean(),
+});
+
+export const LikeStatusInputSchema = z.object({
+  recipeId: z.uuid(),
+});
+
+export const ListCommentsInputSchema = z.object({
+  recipeId: z.uuid(),
+  limit: z.number().int().min(1).max(50).default(20),
+  cursor: z.string().optional(),
+});
+
+export const AddCommentInputSchema = z.object({
+  recipeId: z.uuid(),
+  body: z.string().trim().min(1, "Comment cannot be empty").max(2000),
+});
+
+export const DeleteCommentInputSchema = z.object({
+  commentId: z.uuid(),
+});
+
 export type UpsertProfileInput = z.infer<typeof UpsertProfileInputSchema>;
 export type RecipeVisibility = z.infer<typeof RecipeVisibilitySchema>;
 export type DiscoverSort = z.infer<typeof DiscoverSortSchema>;

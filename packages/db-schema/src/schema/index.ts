@@ -35,3 +35,4 @@ export * from "./store-products";
 export * from "./aisles";
 export * from "./user-profiles";
 export * from "./follows";
+export * from "./recipe-comments";

@@ -300,6 +300,20 @@ export async function getViewableRecipeRefBySlug(slug: string): Promise<PublicRe
 }
 
 /**
+ * Whether a recipe is viewable by anyone (public or unlisted). Used to gate
+ * likes and comments by recipe id.
+ */
+export async function isRecipeViewableById(recipeId: string): Promise<boolean> {
+  const [row] = await db
+    .select({ visibility: recipes.visibility })
+    .from(recipes)
+    .where(eq(recipes.id, recipeId))
+    .limit(1);
+
+  return !!row && row.visibility !== "private";
+}
+
+/**
  * List a user's PUBLIC recipes (excludes unlisted/private), newest first,
  * cursor-paginated by publishedAt. Cursor is an ISO timestamp.
  */

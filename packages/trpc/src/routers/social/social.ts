@@ -2,6 +2,19 @@ import { TRPCError } from "@trpc/server";
 
 import type { FullRecipeDTO } from "@norish/shared/contracts";
 import type { PublicRecipeViewDTO } from "@norish/shared/contracts/dto/recipe-shares";
+import {
+  addFavorite,
+  countRecipeFavorites,
+  isFavorite,
+  removeFavorite,
+} from "@norish/db/repositories/favorites";
+import {
+  addComment,
+  countCommentsForRecipe,
+  deleteComment,
+  getCommentOwnership,
+  listCommentsForRecipe,
+} from "@norish/db/repositories/recipe-comments";
 import { getRecipeFull } from "@norish/db/repositories/recipes";
 import {
   getProfileByHandle,
@@ -9,6 +22,7 @@ import {
   getRecipePublishState,
   getViewableRecipeRefBySlug,
   isHandleAvailable,
+  isRecipeViewableById,
   listPublicRecipesByUserId,
   setRecipeVisibility,
   upsertProfile,
@@ -26,14 +40,19 @@ import {
 import { trpcLogger as log } from "@norish/shared-server/logger";
 import { PublicRecipeViewSchema } from "@norish/shared/contracts/zod/recipe-shares";
 import {
+  AddCommentInputSchema,
   CheckHandleInputSchema,
+  DeleteCommentInputSchema,
   DiscoverInputSchema,
   FeedInputSchema,
   FollowByHandleInputSchema,
   GetProfileByHandleInputSchema,
   GetPublicRecipeBySlugInputSchema,
+  LikeStatusInputSchema,
+  ListCommentsInputSchema,
   ListPublicRecipesByHandleInputSchema,
   SetRecipeVisibilityInputSchema,
+  ToggleLikeInputSchema,
   UpsertProfileInputSchema,
 } from "@norish/shared/contracts/zod";
 
@@ -307,6 +326,114 @@ const discover = publicProcedure.input(DiscoverInputSchema).query(async ({ input
   return { recipes: items.map(toFeedCard), nextCursor };
 });
 
+// --- Likes (favourites double as public likes) --------------------------
+
+const getLikeStatus = authedProcedure
+  .input(LikeStatusInputSchema)
+  .query(async ({ ctx, input }) => {
+    const liked = await isFavorite(ctx.user.id, input.recipeId);
+
+    return { recipeId: input.recipeId, liked };
+  });
+
+const toggleLike = authedProcedure
+  .input(ToggleLikeInputSchema)
+  .mutation(async ({ ctx, input }) => {
+    if (!(await isRecipeViewableById(input.recipeId))) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Recipe not found" });
+    }
+
+    if (input.liked) {
+      await addFavorite(ctx.user.id, input.recipeId);
+    } else {
+      await removeFavorite(ctx.user.id, input.recipeId);
+    }
+
+    const favoriteCount = await countRecipeFavorites(input.recipeId);
+
+    return { recipeId: input.recipeId, liked: input.liked, favoriteCount };
+  });
+
+// --- Comments -----------------------------------------------------------
+
+function toCommentDto(row: {
+  id: string;
+  body: string;
+  createdAt: Date;
+  userId: string;
+  authorHandle: string | null;
+  authorDisplayName: string | null;
+  authorAvatarUrl: string | null;
+}) {
+  return {
+    id: row.id,
+    body: row.body,
+    createdAt: row.createdAt,
+    author: row.authorHandle
+      ? {
+          handle: row.authorHandle,
+          displayName: row.authorDisplayName,
+          avatarUrl: row.authorAvatarUrl,
+        }
+      : null,
+  };
+}
+
+const getComments = publicProcedure.input(ListCommentsInputSchema).query(async ({ input }) => {
+  const { items, nextCursor } = await listCommentsForRecipe(
+    input.recipeId,
+    input.limit,
+    input.cursor
+  );
+
+  return { comments: items.map(toCommentDto), nextCursor };
+});
+
+const postComment = authedProcedure.input(AddCommentInputSchema).mutation(async ({ ctx, input }) => {
+  if (!(await isRecipeViewableById(input.recipeId))) {
+    throw new TRPCError({ code: "NOT_FOUND", message: "Recipe not found" });
+  }
+
+  // Author display comes from the public profile, so a handle is required.
+  const profile = await getProfileByUserId(ctx.user.id);
+
+  if (!profile) {
+    throw new TRPCError({
+      code: "PRECONDITION_FAILED",
+      message: "Create your public profile before commenting",
+    });
+  }
+
+  const { id } = await addComment(ctx.user.id, input.recipeId, input.body);
+
+  log.info({ userId: ctx.user.id, recipeId: input.recipeId, commentId: id }, "Added comment");
+
+  return { id };
+});
+
+const removeComment = authedProcedure
+  .input(DeleteCommentInputSchema)
+  .mutation(async ({ ctx, input }) => {
+    const ownership = await getCommentOwnership(input.commentId);
+
+    if (!ownership) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Comment not found" });
+    }
+
+    // The comment author or the recipe owner may delete it.
+    const isCommentAuthor = ownership.userId === ctx.user.id;
+    const publishState = await getRecipePublishState(ctx.user.id, ownership.recipeId);
+    const isRecipeOwner = publishState !== null;
+
+    if (!isCommentAuthor && !isRecipeOwner && !ctx.isServerAdmin) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "You cannot delete this comment" });
+    }
+
+    await deleteComment(input.commentId);
+
+    return { id: input.commentId };
+  });
+
 const listProfileRecipes = publicProcedure
   .input(ListPublicRecipesByHandleInputSchema)
   .query(async ({ input }) => {
@@ -364,7 +491,20 @@ const getPublicRecipe = publicProcedure
       }
     }
 
-    return { slug: input.slug, visibility: ref.visibility, recipe, author };
+    const [favoriteCount, commentCount] = await Promise.all([
+      countRecipeFavorites(ref.recipeId),
+      countCommentsForRecipe(ref.recipeId),
+    ]);
+
+    return {
+      recipeId: ref.recipeId,
+      slug: input.slug,
+      visibility: ref.visibility,
+      recipe,
+      author,
+      favoriteCount,
+      commentCount,
+    };
   });
 
 export const socialProcedures = router({
@@ -381,4 +521,9 @@ export const socialProcedures = router({
   getFollowStatus,
   feed,
   discover,
+  getLikeStatus,
+  toggleLike,
+  getComments,
+  postComment,
+  removeComment,
 });

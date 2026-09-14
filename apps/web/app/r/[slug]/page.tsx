@@ -4,6 +4,8 @@ import { use } from "react";
 import Link from "next/link";
 import { useTRPC } from "@/app/providers/trpc-provider";
 import { NotFoundView } from "@/components/shared/not-found-view";
+import { CommentsSection } from "@/components/social/comments-section";
+import { LikeButton } from "@/components/social/like-button";
 import RecipeSkeleton from "@/components/skeleton/recipe-skeleton";
 import { useQuery } from "@tanstack/react-query";
 
@@ -81,7 +83,7 @@ function PublicRecipeContent({ slug }: { slug: string }) {
     return <NotFoundView title="Recipe not found" message="This recipe is private or does not exist." />;
   }
 
-  const { recipe, author } = data;
+  const { recipe, author, recipeId, favoriteCount } = data;
 
   const timePills = [
     recipe.prepMinutes ? { label: "Prep", value: `${recipe.prepMinutes} min` } : null,
@@ -158,6 +160,10 @@ function PublicRecipeContent({ slug }: { slug: string }) {
           ))}
         </div>
       )}
+
+      <div className="mt-6">
+        <LikeButton recipeId={recipeId} slug={slug} initialCount={favoriteCount} />
+      </div>
 
       {/* Ingredients + steps */}
       <div className="mt-10 grid gap-10 md:grid-cols-[minmax(0,20rem)_1fr]">
@@ -244,6 +250,8 @@ function PublicRecipeContent({ slug }: { slug: string }) {
           </a>
         </p>
       ) : null}
+
+      <CommentsSection recipeId={recipeId} slug={slug} />
     </article>
   );
 }
