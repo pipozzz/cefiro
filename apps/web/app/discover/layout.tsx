@@ -1,7 +1,24 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { BrandLogo } from "@/components/brand/brand-logo";
 
 import { BaseProviders } from "../providers/base-providers";
+
+export const metadata: Metadata = {
+  title: "Discover recipes",
+  description: "Explore recipes shared by the Norish community.",
+  openGraph: {
+    type: "website",
+    title: "Discover recipes",
+    description: "Explore recipes shared by the Norish community.",
+    siteName: "Norish",
+  },
+  twitter: {
+    card: "summary",
+    title: "Discover recipes",
+    description: "Explore recipes shared by the Norish community.",
+  },
+};
 
 export default function DiscoverLayout({ children }: { children: React.ReactNode }) {
   return (
