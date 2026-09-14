@@ -22,6 +22,7 @@ import { steps } from "./steps";
 import { ingredientStorePreferences, stores } from "./stores";
 import { tags } from "./tags";
 import { userAllergies } from "./user-allergies";
+import { userProfiles } from "./user-profiles";
 
 export const recipesRelations = relations(recipes, ({ many }) => ({
   ingredients: many(recipeIngredients),
@@ -54,11 +55,22 @@ export const cookbookRecipesRelations = relations(cookbookRecipes, ({ one }) => 
   }),
 }));
 
-export const userRelations = relations(users, ({ many }) => ({
+export const userRelations = relations(users, ({ one, many }) => ({
   sessions: many(sessions),
   accounts: many(accounts),
   apiKeys: many(apiKeys),
   recipeShares: many(recipeShares),
+  profile: one(userProfiles, {
+    fields: [users.id],
+    references: [userProfiles.userId],
+  }),
+}));
+
+export const userProfilesRelations = relations(userProfiles, ({ one }) => ({
+  user: one(users, {
+    fields: [userProfiles.userId],
+    references: [users.id],
+  }),
 }));
 
 export const sessionRelations = relations(sessions, ({ one }) => ({
