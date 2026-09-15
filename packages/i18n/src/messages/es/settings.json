@@ -27,7 +27,7 @@
     },
     "apiKeys": {
       "title": "Claves API",
-      "description": "Las claves API permiten acceso programático a la API de Norish. Úsalas para integraciones, atajos y automatizaciones.",
+      "description": "Las claves API permiten acceso programático a la API de Cefiro. Úsalas para integraciones, atajos y automatizaciones.",
       "docsLink": "Abrir documentación de la API",
       "keyNameLabel": "Nombre de la clave (opcional)",
       "keyNamePlaceholder": "p. ej., Atajo iOS",
@@ -61,7 +61,7 @@
     },
     "archiveImport": {
       "title": "Importar archivo de recetas",
-      "description": "Importa recetas desde exportes de Norish (.norishrecipes), Mela (.melarecipes), Paprika (.paprikarecipes) o Mealie/Tandoor (.zip)"
+      "description": "Importa recetas desde exportes de Cefiro (.norishrecipes), Mela (.melarecipes), Paprika (.paprikarecipes) o Mealie/Tandoor (.zip)"
     },
     "archiveExport": {
       "title": "Exportar archivo de recetas",

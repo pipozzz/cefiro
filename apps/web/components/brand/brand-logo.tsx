@@ -21,7 +21,7 @@ export function BrandLogo({
 
   return (
     <Image
-      alt="Norish logo"
+      alt="Cefiro logo"
       className={classes}
       height={height}
       priority={priority}

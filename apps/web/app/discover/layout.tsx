@@ -6,17 +6,17 @@ import { BaseProviders } from "../providers/base-providers";
 
 export const metadata: Metadata = {
   title: "Discover recipes",
-  description: "Explore recipes shared by the Norish community.",
+  description: "Explore recipes shared by the Cefiro community.",
   openGraph: {
     type: "website",
     title: "Discover recipes",
-    description: "Explore recipes shared by the Norish community.",
-    siteName: "Norish",
+    description: "Explore recipes shared by the Cefiro community.",
+    siteName: "Cefiro",
   },
   twitter: {
     card: "summary",
     title: "Discover recipes",
-    description: "Explore recipes shared by the Norish community.",
+    description: "Explore recipes shared by the Cefiro community.",
   },
 };
 

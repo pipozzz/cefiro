@@ -8,7 +8,7 @@ export const maxDuration = 300;
 
 const apiReference = ApiReference({
   url: "/api/openapi.json",
-  pageTitle: "Norish API",
+  pageTitle: "Cefiro API",
 });
 
 export async function GET(req: Request) {

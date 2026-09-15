@@ -95,10 +95,10 @@
     "chooseSlot": "Vælg tidsrum"
   },
   "connection": {
-    "connecting": "Opretter forbindelse til Norish...",
+    "connecting": "Opretter forbindelse til Cefiro...",
     "checkInternet": "Tjek venligst din internetforbindelse",
     "offlineBanner": "Du er offline og ser cachelagrede data",
-    "serverUnreachableBanner": "Norish-serveren er ikke tilgængelig, ser cachelagrede data",
+    "serverUnreachableBanner": "Cefiro-serveren er ikke tilgængelig, ser cachelagrede data",
     "live": "Forbundet",
     "offline": "Offline",
     "openDetails": "Connection details"
@@ -228,8 +228,8 @@
       "live": "Live",
       "offline": "Offline",
       "forced": "Offline (forced)",
-      "liveDescription": "Connected to Norish. Changes sync as you make them.",
-      "offlineDescription": "Can't reach Norish. Showing cached data; changes are queued and sync when you're back.",
+      "liveDescription": "Connected to Cefiro. Changes sync as you make them.",
+      "offlineDescription": "Can't reach Cefiro. Showing cached data; changes are queued and sync when you're back.",
       "forcedDescription": "Offline is forced for development. The backend is reachable but every request is blocked.",
       "devBadge": "dev"
     },
@@ -277,17 +277,17 @@
     "title": "Nora er også offline.",
     "body": "Denne side er ikke gemt til offline — sider, du har besøgt for nylig, er her stadig.",
     "backOnlineTitle": "Nora har fundet forbindelsen!",
-    "backOnlineBody": "Norish kan nås igen — prøv at indlæse denne side igen.",
+    "backOnlineBody": "Cefiro kan nås igen — prøv at indlæse denne side igen.",
     "retry": "Prøv igen",
-    "home": "Åbn Norish"
+    "home": "Åbn Cefiro"
   },
   "queuedOffline": {
     "title": "Du er offline",
-    "description": "Sat i kø — Norish fuldfører dette automatisk, når du er online igen."
+    "description": "Sat i kø — Cefiro fuldfører dette automatisk, når du er online igen."
   },
   "storageUnavailable": {
     "title": "Kunne ikke starte",
-    "description": "Norish kunne ikke læse sin sikre lagring og ved derfor ikke, hvilken server appen hører til. Intet er ændret. Prøv igen, eller genstart appen.",
+    "description": "Cefiro kunne ikke læse sin sikre lagring og ved derfor ikke, hvilken server appen hører til. Intet er ændret. Prøv igen, eller genstart appen.",
     "detailsLabel": "Tekniske detaljer"
   }
 }

@@ -95,10 +95,10 @@
     "chooseSlot": "Wybierz posiłek"
   },
   "connection": {
-    "connecting": "Łączenie z Norish...",
+    "connecting": "Łączenie z Cefiro...",
     "checkInternet": "Sprawdź połączenie internetowe",
     "offlineBanner": "Jesteś offline, wyświetlane są dane z pamięci podręcznej",
-    "serverUnreachableBanner": "Nie można połączyć się z serwerem Norish, wyświetlane są dane z pamięci podręcznej",
+    "serverUnreachableBanner": "Nie można połączyć się z serwerem Cefiro, wyświetlane są dane z pamięci podręcznej",
     "live": "Połączono",
     "offline": "Offline",
     "openDetails": "Connection details"
@@ -228,8 +228,8 @@
       "live": "Live",
       "offline": "Offline",
       "forced": "Offline (forced)",
-      "liveDescription": "Connected to Norish. Changes sync as you make them.",
-      "offlineDescription": "Can't reach Norish. Showing cached data; changes are queued and sync when you're back.",
+      "liveDescription": "Connected to Cefiro. Changes sync as you make them.",
+      "offlineDescription": "Can't reach Cefiro. Showing cached data; changes are queued and sync when you're back.",
       "forcedDescription": "Offline is forced for development. The backend is reachable but every request is blocked.",
       "devBadge": "dev"
     },
@@ -277,17 +277,17 @@
     "title": "Nora też jest offline.",
     "body": "Ta strona nie jest zapisana do trybu offline — ostatnio odwiedzane strony wciąż tu są.",
     "backOnlineTitle": "Nora znalazła połączenie!",
-    "backOnlineBody": "Norish znów jest osiągalny — spróbuj ponownie wczytać tę stronę.",
+    "backOnlineBody": "Cefiro znów jest osiągalny — spróbuj ponownie wczytać tę stronę.",
     "retry": "Spróbuj ponownie",
-    "home": "Otwórz Norish"
+    "home": "Otwórz Cefiro"
   },
   "queuedOffline": {
     "title": "Jesteś offline",
-    "description": "Dodano do kolejki — Norish dokończy to automatycznie, gdy wrócisz online."
+    "description": "Dodano do kolejki — Cefiro dokończy to automatycznie, gdy wrócisz online."
   },
   "storageUnavailable": {
     "title": "Nie można uruchomić",
-    "description": "Norish nie mógł odczytać bezpiecznego magazynu, więc nie wie, do którego serwera należy ta aplikacja. Nic nie zostało zmienione. Spróbuj ponownie lub uruchom aplikację jeszcze raz.",
+    "description": "Cefiro nie mógł odczytać bezpiecznego magazynu, więc nie wie, do którego serwera należy ta aplikacja. Nic nie zostało zmienione. Spróbuj ponownie lub uruchom aplikację jeszcze raz.",
     "detailsLabel": "Szczegóły techniczne"
   }
 }

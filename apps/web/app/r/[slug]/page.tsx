@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     imgPath && origin ? (imgPath.startsWith("http") ? imgPath : `${origin}${imgPath}`) : undefined;
 
   const title = full.name;
-  const description = full.description?.trim() || "A recipe shared on Norish.";
+  const description = full.description?.trim() || "A recipe shared on Cefiro.";
 
   return {
     title,
@@ -66,7 +66,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "article",
       title,
       description,
-      siteName: "Norish",
+      siteName: "Cefiro",
       url,
       images: image ? [{ url: image, alt: title }] : undefined,
     },
