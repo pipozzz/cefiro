@@ -17,7 +17,9 @@ export function isPublicSocialPath(pathname: string): boolean {
     pathname.startsWith("/u/") ||
     pathname.startsWith("/@") ||
     pathname === "/discover" ||
-    pathname.startsWith("/discover/")
+    pathname.startsWith("/discover/") ||
+    pathname === "/sitemap.xml" ||
+    pathname === "/robots.txt"
   );
 }
 

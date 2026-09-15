@@ -1,0 +1,46 @@
+import type { MetadataRoute } from "next";
+import { headers } from "next/headers";
+import {
+  listPublicProfileHandles,
+  listPublicRecipeSlugs,
+} from "@norish/db/repositories/user-profiles";
+
+// Built per-request from the (forwarded) host so it works behind the proxy.
+export const dynamic = "force-dynamic";
+
+async function siteOrigin(): Promise<string> {
+  const h = await headers();
+  const proto = h.get("x-forwarded-proto") ?? "http";
+  const host = h.get("x-forwarded-host") ?? h.get("host");
+
+  return host ? `${proto}://${host}` : "";
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const base = await siteOrigin();
+
+  if (!base) {
+    return [];
+  }
+
+  const [recipes, profiles] = await Promise.all([
+    listPublicRecipeSlugs(),
+    listPublicProfileHandles(),
+  ]);
+
+  return [
+    { url: `${base}/discover`, changeFrequency: "daily", priority: 0.8 },
+    ...recipes.map((r) => ({
+      url: `${base}/r/${r.slug}`,
+      lastModified: r.updatedAt,
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    })),
+    ...profiles.map((p) => ({
+      url: `${base}/u/${p.handle}`,
+      lastModified: p.updatedAt,
+      changeFrequency: "weekly" as const,
+      priority: 0.5,
+    })),
+  ];
+}
