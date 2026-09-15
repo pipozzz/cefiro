@@ -28,7 +28,7 @@ import {
   getCommentOwnership,
   listCommentsForRecipe,
 } from "@norish/db/repositories/recipe-comments";
-import { getRecipeFull } from "@norish/db/repositories/recipes";
+import { createRecipeWithRefs, getRecipeFull } from "@norish/db/repositories/recipes";
 import {
   getProfileByHandle,
   getProfileByUserId,
@@ -67,6 +67,7 @@ import {
   ListPublicRecipesByHandleInputSchema,
   MyRatingInputSchema,
   RateRecipeInputSchema,
+  SaveRecipeInputSchema,
   SetRecipeVisibilityInputSchema,
   ToggleLikeInputSchema,
   UpsertProfileInputSchema,
@@ -635,6 +636,80 @@ const setRecipeRating = authedProcedure
     return { recipeId: input.recipeId, rating: input.rating, ...toRatingDto(stats) };
   });
 
+// --- Save / fork a public recipe into your own library ------------------
+
+const saveRecipe = authedProcedure
+  .input(SaveRecipeInputSchema)
+  .mutation(async ({ ctx, input }) => {
+    const ref = await getViewableRecipeRefById(input.recipeId);
+
+    if (!ref) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Recipe not found" });
+    }
+
+    const full = await getRecipeFull(input.recipeId);
+
+    if (!full) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Recipe not found" });
+    }
+
+    // Deep-copy the content into a new private recipe the caller owns. Media
+    // (images/videos) and step-ingredient links are not copied — they belong
+    // to the source recipe's storage.
+    const dto = {
+      name: full.name,
+      description: full.description ?? null,
+      notes: full.notes ?? null,
+      servings: full.servings,
+      prepMinutes: full.prepMinutes ?? null,
+      cookMinutes: full.cookMinutes ?? null,
+      totalMinutes: full.totalMinutes ?? null,
+      systemUsed: full.systemUsed,
+      calories: full.calories ?? null,
+      fat: full.fat ?? null,
+      carbs: full.carbs ?? null,
+      protein: full.protein ?? null,
+      originCountry: full.originCountry ?? null,
+      originCountryName: full.originCountryName ?? null,
+      originRegion: full.originRegion ?? null,
+      provenanceNote: full.provenanceNote ?? null,
+      categories: full.categories ?? [],
+      recipeIngredients: (full.recipeIngredients ?? []).map((i, idx) => ({
+        ingredientName: i.ingredientName,
+        ingredientId: i.ingredientId ?? null,
+        amount: i.amount ?? null,
+        unit: i.unit ?? null,
+        systemUsed: i.systemUsed,
+        order: i.order ?? idx,
+      })),
+      tags: (full.tags ?? []).map((t) => t.name),
+      cuisines: (full.cuisines ?? []).map((c) => c.id),
+      steps: (full.steps ?? []).map((s, idx) => ({
+        step: s.step,
+        systemUsed: s.systemUsed,
+        order: s.order ?? idx,
+        images: [],
+        stepIngredients: [],
+      })),
+      images: [],
+      videos: [],
+    };
+
+    const newId = crypto.randomUUID();
+    const created = await createRecipeWithRefs(newId, ctx.user.id, dto);
+
+    if (!created) {
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to save recipe" });
+    }
+
+    log.info(
+      { userId: ctx.user.id, sourceRecipeId: input.recipeId, newRecipeId: created.recipeId },
+      "Saved (forked) recipe"
+    );
+
+    return { recipeId: created.recipeId };
+  });
+
 export const socialProcedures = router({
   getMyProfile,
   checkHandle,
@@ -659,4 +734,5 @@ export const socialProcedures = router({
   markNotificationsRead,
   getMyRecipeRating,
   setRecipeRating,
+  saveRecipe,
 });
