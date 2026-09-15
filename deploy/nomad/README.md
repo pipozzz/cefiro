@@ -79,6 +79,29 @@ curl -sf https://recipes.example.com/api/v1/health
 On first load the app runs the first-user setup (password auth) — the first
 account becomes the server owner.
 
+## Continuous deploy (GitHub Actions → Nomad)
+
+The `Build & push Docker image` workflow has a `deploy` job that runs
+`nomad job run` after the image is pushed. It is **skipped** until you opt in.
+
+1. In **Settings → Secrets and variables → Actions**, add:
+   - **Variables:** `DEPLOY_ENABLED=true`, `CEFIRO_DOMAIN=recipes.example.com`
+   - **Secrets:** `NOMAD_ADDR` (e.g. `https://nomad.internal:4646`),
+     `NOMAD_TOKEN` (an ACL token that can submit the job), and `GHCR_TOKEN`
+     (a `read:packages` token — omit if the package is public).
+2. Make sure the runner can **reach `NOMAD_ADDR`**. GitHub-hosted runners only
+   see it if it is publicly reachable. For a private Nomad, either:
+   - use a **self-hosted runner** on your network (change `runs-on` in the
+     `deploy` job), or
+   - uncomment the **Tailscale** step in the workflow and set the
+     `TS_OAUTH_CLIENT_ID` / `TS_OAUTH_SECRET` secrets.
+3. Optionally protect the `production` GitHub Environment with required
+   reviewers so each deploy needs approval.
+
+The job deploys the exact image just built (`image_tag=sha-<short>`). Nomad's
+own rolling `update {}` + health check gate the rollout and auto-revert on
+failure.
+
 ## Notes
 
 - Migrations run automatically on container start (`runMigrations`).
