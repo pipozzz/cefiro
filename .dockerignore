@@ -58,3 +58,7 @@ apps/quick-import-extension/**
 
 # Docs — not needed in Docker build
 docs/
+
+# Deploy specs (cefiro) — not needed in the image, and /deploy would collide
+# with the Dockerfile's `pnpm deploy --prod /app/deploy` target.
+/deploy/
