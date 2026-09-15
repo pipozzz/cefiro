@@ -79,28 +79,31 @@ curl -sf https://recipes.example.com/api/v1/health
 On first load the app runs the first-user setup (password auth) — the first
 account becomes the server owner.
 
-## Continuous deploy (GitHub Actions → Nomad)
+## Deployment (pull-based, via nomploy)
 
-The `Build & push Docker image` workflow has a `deploy` job that runs
-`nomad job run` after the image is pushed. It is **skipped** until you opt in.
+GitHub does **not** connect to Nomad. The pipeline only builds and publishes
+`ghcr.io/pipozzz/cefiro:latest`; deployment is pull-based through the **nomploy**
+UI (nomploy.spertulo.sk), which runs the service on Nomad and pulls the image.
 
-1. In **Settings → Secrets and variables → Actions**, add:
-   - **Variables:** `DEPLOY_ENABLED=true`, `CEFIRO_DOMAIN=recipes.example.com`
-   - **Secrets:** `NOMAD_ADDR` (e.g. `https://nomad.internal:4646`),
-     `NOMAD_TOKEN` (an ACL token that can submit the job), and `GHCR_TOKEN`
-     (a `read:packages` token — omit if the package is public).
-2. Make sure the runner can **reach `NOMAD_ADDR`**. GitHub-hosted runners only
-   see it if it is publicly reachable. For a private Nomad, either:
-   - use a **self-hosted runner** on your network (change `runs-on` in the
-     `deploy` job), or
-   - uncomment the **Tailscale** step in the workflow and set the
-     `TS_OAUTH_CLIENT_ID` / `TS_OAUTH_SECRET` secrets.
-3. Optionally protect the `production` GitHub Environment with required
-   reviewers so each deploy needs approval.
+This job spec is the source of truth for the service to create there — either
+paste the HCL if nomploy accepts a raw jobspec, or fill the equivalent fields:
 
-The job deploys the exact image just built (`image_tag=sha-<short>`). Nomad's
-own rolling `update {}` + health check gate the rollout and auto-revert on
-failure.
+| Field | Value |
+|---|---|
+| Image | `ghcr.io/pipozzz/cefiro:latest` |
+| Port | container `3000` |
+| Health check | HTTP `GET /api/v1/health` |
+| Env | `AUTH_URL=https://<domain>`, `REDIS_URL`, `OBSCURA_ENDPOINT`, `UPLOADS_DIR=/app/uploads`, `TRUSTED_ORIGINS` |
+| Secrets | `MASTER_KEY`, `DATABASE_URL` (see §3) |
+| Volumes | `/app/uploads`, plus Postgres data if you co-locate the DB |
+| Dependencies | Postgres, Redis, Obscura (co-located here, or external) |
+
+**Make the GHCR package public** (repo → Packages → `cefiro` → Change
+visibility → Public) so nomploy/Nomad can pull it without registry
+credentials — otherwise configure a GHCR pull token on the Nomad clients.
+
+New images: each push to `main` publishes a fresh `latest` (and `sha-<short>`);
+redeploy from nomploy (or point it at an immutable `sha-<short>` tag to pin).
 
 ## Notes
 

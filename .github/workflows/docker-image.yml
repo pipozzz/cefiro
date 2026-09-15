@@ -95,64 +95,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=min
 
-  # ---------------------------------------------------------------------------
-  # CD: roll the freshly-built image out to Nomad. Skipped until you opt in by
-  # setting the repo variable DEPLOY_ENABLED=true and the secrets/vars below.
-  #
-  #   Variables (Settings → Secrets and variables → Actions → Variables):
-  #     DEPLOY_ENABLED = "true"          # master switch for this job
-  #     CEFIRO_DOMAIN  = "recipes.example.com"
-  #   Secrets:
-  #     NOMAD_ADDR   = "https://nomad.internal:4646"
-  #     NOMAD_TOKEN  = "<nomad ACL token>"
-  #     GHCR_TOKEN   = "<read:packages token>"  # omit if the package is public
-  #
-  # The runner must be able to reach NOMAD_ADDR. If Nomad is on a private
-  # network, use a self-hosted runner (change runs-on) or the Tailscale step.
-  # ---------------------------------------------------------------------------
-  deploy:
-    name: Deploy to Nomad
-    needs: build-and-push
-    if: github.ref == 'refs/heads/main' && vars.DEPLOY_ENABLED == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    environment: production
-    concurrency:
-      group: nomad-deploy
-      cancel-in-progress: false
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      # Reach a private Nomad by joining your tailnet. Uncomment + set the
-      # TS_OAUTH_* secrets (or use a self-hosted runner instead).
-      # - name: Connect Tailscale
-      #   uses: tailscale/github-action@v3
-      #   with:
-      #     oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
-      #     oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
-      #     tags: tag:ci
-
-      - name: Install Nomad CLI
-        env:
-          NOMAD_VERSION: "1.9.7"
-        run: |
-          curl -fsSL -o /tmp/nomad.zip \
-            "https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/nomad_${NOMAD_VERSION}_linux_amd64.zip"
-          sudo unzip -o /tmp/nomad.zip -d /usr/local/bin >/dev/null
-          nomad version
-
-      - name: Deploy job to Nomad
-        env:
-          NOMAD_ADDR:  ${{ secrets.NOMAD_ADDR }}
-          NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
-          # For an mTLS API, also write NOMAD_CACERT / NOMAD_CLIENT_CERT /
-          # NOMAD_CLIENT_KEY from secrets and export those paths here.
-        run: |
-          # Deploy the exact image just built (matches the metadata "sha-<short>"
-          # tag). Use image_tag=latest instead for the floating main image.
-          nomad job run \
-            -var "image_tag=sha-${GITHUB_SHA::7}" \
-            -var "domain=${{ vars.CEFIRO_DOMAIN }}" \
-            -var "registry_password=${{ secrets.GHCR_TOKEN }}" \
-            deploy/nomad/cefiro.nomad.hcl
+  # Deployment is pull-based: the "nomploy" UI (nomploy.spertulo.sk) runs the
+  # Cefiro service on Nomad and pulls ghcr.io/pipozzz/cefiro:latest. GitHub only
+  # builds and publishes the image; it does not connect to Nomad directly.
+  # deploy/nomad/cefiro.nomad.hcl documents the service to configure there.
