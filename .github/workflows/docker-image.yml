@@ -8,6 +8,12 @@ on:
   push:
     branches: [main]
     tags: ["v*"]
+    # Doc/deploy-only changes don't affect the image — skip the build for them.
+    # (A commit that also touches code still builds; workflow_dispatch always runs.)
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+      - "deploy/**"
   workflow_dispatch:
 
 concurrency:
