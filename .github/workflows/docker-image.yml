@@ -30,6 +30,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # The monorepo image is large; the default runner disk (~14GB free) fills
+      # up mid-build. Reclaim ~20-30GB of preinstalled tooling we don't need.
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup \
+            /usr/local/lib/android /opt/hostedtoolcache/CodeQL \
+            /usr/local/share/boost "$AGENT_TOOLSDIRECTORY" || true
+          sudo docker image prune --all --force || true
+          df -h /
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -77,4 +87,4 @@ jobs:
           build-args: |
             NORISH_VERSION_REPORT_JSON=${{ steps.ver.outputs.json }}
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-to: type=gha,mode=min
