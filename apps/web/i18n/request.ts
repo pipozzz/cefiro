@@ -74,12 +74,49 @@ async function resolveLocale(): Promise<Locale> {
  * Request configuration for next-intl
  * This is called on every request to determine locale and load messages
  */
+/** Deep-merge translation catalogs: values in `override` win, objects merge. */
+function deepMergeMessages(
+  base: Record<string, unknown>,
+  override: Record<string, unknown>
+): Record<string, unknown> {
+  const out: Record<string, unknown> = { ...base };
+
+  for (const [key, value] of Object.entries(override)) {
+    const existing = out[key];
+
+    if (
+      existing &&
+      typeof existing === "object" &&
+      !Array.isArray(existing) &&
+      value &&
+      typeof value === "object" &&
+      !Array.isArray(value)
+    ) {
+      out[key] = deepMergeMessages(
+        existing as Record<string, unknown>,
+        value as Record<string, unknown>
+      );
+    } else {
+      out[key] = value;
+    }
+  }
+
+  return out;
+}
+
 export default getRequestConfig(async () => {
   const locale = await resolveLocale();
   const messages = await loadLocaleMessages(locale);
 
+  // Fall back to the default locale for any key a translation is missing, so a
+  // partially translated locale never shows raw message keys.
+  const finalMessages =
+    locale === DEFAULT_LOCALE
+      ? messages
+      : deepMergeMessages(await loadLocaleMessages(DEFAULT_LOCALE), messages);
+
   return {
     locale,
-    messages,
+    messages: finalMessages,
   };
 });

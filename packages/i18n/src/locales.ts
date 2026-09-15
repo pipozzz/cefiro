@@ -1,5 +1,6 @@
 export const LOCALE_CATALOG = {
   en: { name: "English" },
+  sk: { name: "Slovenčina" },
   nl: { name: "Nederlands" },
   "de-formal": { name: "Deutsch (Sie)" },
   "de-informal": { name: "Deutsch (Du)" },
