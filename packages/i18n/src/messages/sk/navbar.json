@@ -1,0 +1,63 @@
+{
+  "userMenu": {
+    "newRecipe": {
+      "title": "Nový recept",
+      "description": "Napíšte vlastný recept"
+    },
+    "importUrl": {
+      "title": "Importovať z URL",
+      "description": "Vložte odkaz na recept"
+    },
+    "settings": {
+      "title": "Nastavenia",
+      "description": "Spravujte svoj účet"
+    },
+    "logout": "Odhlásiť sa",
+    "signOutConfirm": {
+      "title": "Zahodiť nesynchronizované zmeny?",
+      "description": "{count, plural, one {# zmena vykonaná offline sa ešte nedostala na server.} few {# zmeny vykonané offline sa ešte nedostali na server.} many {# zmeny vykonané offline sa ešte nedostali na server.} other {# zmien vykonaných offline sa ešte nedostalo na server.}} Odhlásením natrvalo zahodíte túto zaradenú prácu a odstránite offline údaje svojho účtu z tohto zariadenia."
+    },
+    "version": {
+      "updateAvailable": "k dispozícii v{version}"
+    }
+  },
+  "theme": {
+    "title": "Motív",
+    "loading": "Načítava sa…",
+    "light": "Svetlý režim",
+    "dark": "Tmavý režim",
+    "system": "Predvolené systémom"
+  },
+  "nav": {
+    "home": "Recepty",
+    "calendar": "Kalendár",
+    "groceries": "Nákupy"
+  },
+  "mobile": {
+    "searchPlaceholder": "Hľadať recepty...",
+    "toggleSearch": "Prepnúť vyhľadávanie",
+    "goBack": "Späť"
+  },
+  "archiveImporter": {
+    "uploading": "Nahráva sa…",
+    "uploadFile": "Nahrať súbor",
+    "dragDrop": "alebo presuňte a pustite",
+    "formats": ".norishrecipes (Cefiro), .melarecipes (Mela), .paprikarecipes (Paprika), .zip (Mealie/Tandoor)",
+    "dropzoneLabel": "Nahrajte archívny súbor s receptami",
+    "uploadingFile": "Nahráva sa súbor…",
+    "processing": "Spracúva sa: {details}",
+    "complete": "Hotovo: {details}",
+    "imported": "{count} importovaných",
+    "errors": "{count, plural, one {# chyba} few {# chyby} many {# chyby} other {# chýb}}",
+    "ofTotal": "{current} z {total}",
+    "progressLabel": "Priebeh importu",
+    "showNotes": "Zobraziť {count, plural, one {# poznámku k importu} few {# poznámky k importu} many {# poznámky k importu} other {# poznámok k importu}}",
+    "hideNotes": "Skryť {count, plural, one {# poznámku k importu} few {# poznámky k importu} many {# poznámky k importu} other {# poznámok k importu}}",
+    "toasts": {
+      "startTitle": "Import receptov sa spustil",
+      "startDescription": "{count, plural, one {Importuje sa # recept…} few {Importujú sa # recepty…} many {Importuje sa # receptu…} other {Importuje sa # receptov…}}",
+      "completeTitle": "Import receptov dokončený",
+      "completeDescription": "{imported, plural, one {Importovaný # recept} few {Importované # recepty} many {Importované # receptu} other {Importovaných # receptov}}{notes, plural, =0 {} one {, # s poznámkou} few {, # s poznámkami} many {, # s poznámkami} other {, # s poznámkami}}{errors, plural, =0 {} one {, # chyba} few {, # chyby} many {, # chyby} other {, # chýb}}"
+    }
+  }
+}

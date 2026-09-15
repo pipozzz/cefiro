@@ -1,0 +1,906 @@
+{
+  "page": {
+    "title": "Nastavenia",
+    "ariaLabel": "Karty nastavení"
+  },
+  "tabs": {
+    "user": "Používateľ",
+    "household": "Domácnosť",
+    "caldav": "CalDAV",
+    "admin": "Správca"
+  },
+  "user": {
+    "profile": {
+      "title": "Profil",
+      "nameLabel": "Meno",
+      "namePlaceholder": "Vaše meno",
+      "emailLabel": "E-mail",
+      "avatarHint": "Kliknutím na avatara zmeníte obrázok",
+      "deleteAvatar": "Odstrániť profilový obrázok",
+      "saveChanges": "Uložiť zmeny"
+    },
+    "allergies": {
+      "title": "Alergie",
+      "description": "Pridajte svoje potravinové alergie, aby ste dostávali upozornenia pri plánovaní receptov obsahujúcich alergény. Tieto informácie sa používajú na upozornenie, keď plánovaný recept obsahuje suroviny zodpovedajúce vašim alergiám.",
+      "placeholder": "Zadajte alergie (napr. lepok, orechy, mliečne výrobky)...",
+      "saveButton": "Uložiť alergie"
+    },
+    "apiKeys": {
+      "title": "API kľúče",
+      "description": "API kľúče umožňujú programový prístup k Cefiro API. Použite ich na integrácie, skratky a automatizáciu.",
+      "docsLink": "Otvoriť dokumentáciu API",
+      "keyNameLabel": "Názov kľúča (voliteľné)",
+      "keyNamePlaceholder": "napr. iOS Shortcut",
+      "createKey": "Vytvoriť kľúč",
+      "yourKeys": "Vaše API kľúče",
+      "noKeys": "Zatiaľ žiadne API kľúče. Vytvorte si jeden a začnite.",
+      "tableHeaders": {
+        "name": "NÁZOV",
+        "keyPrefix": "PREFIX KĽÚČA",
+        "created": "VYTVORENÉ",
+        "status": "STAV",
+        "actions": "AKCIE"
+      },
+      "unnamed": "Bez názvu",
+      "active": "Aktívny",
+      "disabled": "Zakázaný",
+      "disableKey": "Zakázať kľúč",
+      "enableKey": "Povoliť kľúč",
+      "deleteKey": "Odstrániť kľúč",
+      "generatedModal": {
+        "title": "API kľúč vygenerovaný",
+        "warning": "Uložte si tento kľúč teraz! Znova ho už neuvidíte. Ukladáme len hash a tento kľúč nedokážeme obnoviť.",
+        "hint": "Použite tento kľúč v hlavičke <code>x-api-key</code> pri odosielaní požiadaviek na API.",
+        "confirmButton": "Uložil som si ho"
+      },
+      "deleteModal": {
+        "title": "Odstrániť API kľúč",
+        "message": "Naozaj chcete odstrániť tento API kľúč? Všetky aplikácie, ktoré ho používajú, okamžite stratia prístup. Túto akciu nie je možné vrátiť späť.",
+        "confirmButton": "Odstrániť kľúč"
+      }
+    },
+    "archiveImport": {
+      "title": "Importovať archív receptov",
+      "description": "Importujte recepty z exportov Cefiro (.norishrecipes), Mela (.melarecipes), Paprika (.paprikarecipes) alebo Mealie/Tandoor (.zip)"
+    },
+    "archiveExport": {
+      "title": "Exportovať archív receptov",
+      "description": "Stiahnite si všetky recepty, ktoré vidíte.",
+      "button": "Exportovať"
+    },
+    "siteAuthTokens": {
+      "title": "Autentifikačné tokeny stránok",
+      "description": "Pridajte hlavičky alebo súbory cookie, ktoré sa odošlú pri importe receptov z konkrétnych stránok. Užitočné pre stránky vyžadujúce prihlásenie (napr. Instagram, Facebook).",
+      "accountsDescription": "Pomenujte účet, ak máte pre stránku viac ako jedno prihlásenie. Každý import potom použije jeden z účtov danej stránky, vybraný náhodne, takže jedno prihlásenie neobslúži každý import. Token ponechaný bez názvu účtu sa odosiela s každým importom pre svoju doménu.",
+      "domain": "Doména",
+      "domainPlaceholder": "napr. instagram.com",
+      "account": "Účet",
+      "accountPlaceholder": "napr. moje_meno (voliteľné)",
+      "accountShared": "Všetky účty",
+      "name": "Názov",
+      "namePlaceholder": "napr. Cookie alebo Authorization",
+      "value": "Hodnota",
+      "valuePlaceholder": "Hodnota tokenu alebo cookie",
+      "type": "Typ",
+      "typeHeader": "Hlavička",
+      "typeCookie": "Cookie",
+      "addButton": "Pridať token",
+      "noTokens": "Nie sú nakonfigurované žiadne autentifikačné tokeny stránok.",
+      "tableHeaders": {
+        "domain": "DOMÉNA",
+        "account": "ÚČET",
+        "name": "NÁZOV",
+        "type": "TYP",
+        "created": "VYTVORENÉ",
+        "actions": "AKCIE"
+      },
+      "deleteModal": {
+        "title": "Odstrániť token",
+        "message": "Naozaj chcete odstrániť tento autentifikačný token? Importy z tejto stránky môžu prestať fungovať.",
+        "confirmButton": "Odstrániť token"
+      }
+    },
+    "dangerZone": {
+      "title": "Nebezpečná zóna",
+      "description": "Po odstránení účtu niet cesty späť. Buďte si istí.",
+      "deleteButton": "Odstrániť môj účet",
+      "deleteModal": {
+        "title": "Odstrániť účet",
+        "permanentWarning": "Táto akcia je trvalá a nie je možné ju vrátiť späť!",
+        "dataWarning": "Vaše osobné údaje vrátane potravín, položiek kalendára a poznámok budú natrvalo odstránené.",
+        "recipesNote": "Recepty, ktoré ste vytvorili, zostanú zachované, ale už nebudú prepojené s vaším účtom.",
+        "adminNote": "Ak ste správcom domácnosti s ďalšími členmi, musíte najprv previesť práva správcu.",
+        "confirmButton": "Odstrániť môj účet"
+      }
+    },
+    "preferences": {
+      "title": "Predvoľby",
+      "description": "Prispôsobte si svoje prostredie.",
+      "language": {
+        "title": "Jazyk",
+        "description": "Vyberte si preferovaný jazyk"
+      },
+      "hidden": {
+        "title": "Skryté položky",
+        "description": "Vyberte, čo by ste radšej nevideli. Predvolene sa zobrazuje všetko a toto zmení len vaše vlastné zobrazenie.",
+        "placeholder": "Nič nie je skryté",
+        "options": {
+          "provenance": "Pôvod",
+          "nutrition": "Výživové hodnoty",
+          "notes": "Poznámky",
+          "rating": "Hodnotenia",
+          "favorites": "Obľúbené",
+          "conversion": "Prepočet surovín",
+          "timers": "Časovače receptov",
+          "cookbooks": "Kuchárske knihy"
+        }
+      },
+      "todaySection": {
+        "title": "Sekcia Dnes",
+        "description": "Vyberte, ako sa na tomto zariadení zobrazuje sekcia Dnes na nástenke",
+        "options": {
+          "always": "Vždy viditeľné",
+          "planned": "Len naplánované jedlá",
+          "hidden": "Skryté"
+        }
+      },
+      "recipePageColor": {
+        "title": "Farba stránky receptu",
+        "description": "Zafarbite každú stránku receptu podľa farby jej vlastnej fotky, alebo na tomto zariadení ponechajte jednoduché farby motívu",
+        "options": {
+          "dish": "Z fotky jedla",
+          "theme": "Jednoduché farby motívu"
+        }
+      },
+      "applyError": "Predvoľbu sa nepodarilo použiť"
+    },
+    "shareLinks": {
+      "title": "Odkazy na zdieľanie receptov",
+      "description": "Prezrite si a spravujte každý verejný odkaz na recept, ktorý ste vytvorili.",
+      "empty": "Nenašli sa žiadne odkazy na zdieľanie.",
+      "table": {
+        "recipe": "RECEPT",
+        "status": "STAV",
+        "created": "VYTVORENÉ",
+        "expires": "VYPRŠÍ",
+        "actions": "AKCIE"
+      },
+      "revokeModal": {
+        "title": "Zrušiť odkaz",
+        "message": "Tento odkaz na {recipeName} prestane fungovať, kým ho znova neaktivujete.",
+        "confirm": "Zrušiť"
+      },
+      "reactivateModal": {
+        "title": "Znova aktivovať odkaz",
+        "message": "Tento odkaz na {recipeName} sa opäť aktivuje.",
+        "confirm": "Znova aktivovať"
+      },
+      "deleteModal": {
+        "title": "Odstrániť odkaz",
+        "message": "Odstrániť tento odkaz na zdieľanie pre {recipeName}? Túto akciu nie je možné vrátiť späť.",
+        "confirm": "Odstrániť odkaz"
+      }
+    }
+  },
+  "household": {
+    "pageTitle": "Nastavenia domácnosti",
+    "info": {
+      "yourRole": "Vaša rola",
+      "admin": "Správca",
+      "member": "Člen",
+      "members": "Členovia",
+      "leaveButton": "Opustiť domácnosť",
+      "leaveModal": {
+        "title": "Opustiť domácnosť",
+        "confirmMessage": "Naozaj chcete opustiť domácnosť {name}?",
+        "adminWarning": "Ste správca. Pred odchodom musíte previesť práva správcu.",
+        "confirmButton": "Opustiť domácnosť"
+      }
+    },
+    "members": {
+      "title": "Členovia",
+      "tableHeaders": {
+        "name": "MENO",
+        "role": "ROLA",
+        "actions": "AKCIE"
+      },
+      "you": "Vy",
+      "kickButton": "Vyhodiť",
+      "makeAdminButton": "Nastaviť ako správcu",
+      "kickModal": {
+        "title": "Vyhodiť používateľa",
+        "confirmMessage": "Naozaj chcete vyhodiť používateľa {name} z domácnosti?",
+        "warning": "Stratí prístup ku všetkým zdieľaným receptom, potravinám a položkám kalendára.",
+        "confirmButton": "Vyhodiť používateľa"
+      },
+      "transferModal": {
+        "title": "Previesť práva správcu",
+        "confirmMessage": "Naozaj chcete previesť práva správcu na používateľa {name}?",
+        "warning": "Stanete sa bežným členom a už nebudete môcť vyhadzovať používateľov ani spravovať kódy na pripojenie.",
+        "confirmButton": "Previesť práva správcu"
+      },
+      "toasts": {
+        "kickFailed": "Používateľa sa nepodarilo vyhodiť",
+        "transferSuccess": "Práva správcu prevedené na {name}",
+        "transferFailed": "Práva správcu sa nepodarilo previesť"
+      }
+    },
+    "joinCode": {
+      "title": "Kód na pripojenie",
+      "shareDescription": "Zdieľajte tento kód s ostatnými a pozvite ich do svojej domácnosti.",
+      "expiresIn": "Vyprší o:",
+      "regenerateButton": "Vygenerovať znova",
+      "expired": "Vypršaný",
+      "noCodeDescription": "Žiadny aktívny kód na pripojenie. Vygenerujte jeden a pozvite nových členov.",
+      "generateButton": "Vygenerovať kód na pripojenie",
+      "copySuccess": "Kód na pripojenie skopírovaný",
+      "copyFailed": "Kód na pripojenie sa nepodarilo skopírovať"
+    },
+    "create": {
+      "title": "Vytvoriť domácnosť",
+      "description": "Vytvorte novú domácnosť a zdieľajte recepty a potraviny s rodinou alebo priateľmi.",
+      "nameLabel": "Názov domácnosti",
+      "namePlaceholder": "napr. Rodina Novákovcov",
+      "submitButton": "Vytvoriť domácnosť"
+    },
+    "join": {
+      "title": "Pripojiť sa k domácnosti",
+      "description": "Zadajte kód na pripojenie k existujúcej domácnosti.",
+      "codeLabel": "Kód na pripojenie",
+      "codePlaceholder": "8-znakový kód",
+      "submitButton": "Pripojiť sa k domácnosti"
+    }
+  },
+  "caldav": {
+    "setup": {
+      "title": "Nastaviť synchronizáciu CalDAV",
+      "description": "Pripojte svoj kalendár kompatibilný s CalDAV a automaticky synchronizujte plány jedál",
+      "gettingStarted": "Začíname s CalDAV",
+      "providerDescription": "Budete potrebovať kalendárovú službu kompatibilnú s CalDAV. Medzi populárnych poskytovateľov patria:",
+      "serverUrlLabel": "URL servera",
+      "serverUrlDescription": "Základná URL vášho servera CalDAV (napr. https://dav.example.com)",
+      "serverUrlPlaceholder": "https://dav.example.com",
+      "usernameLabel": "Používateľské meno",
+      "usernamePlaceholder": "používateľské meno",
+      "passwordLabel": "Heslo",
+      "passwordPlaceholder": "Zadajte heslo",
+      "calendarLabel": "Kalendár",
+      "calendarPlaceholder": "Vyberte kalendár",
+      "calendarPlaceholderDisabled": "Najprv otestujte pripojenie",
+      "calendarDescription": "Vyberte, s ktorým kalendárom sa majú synchronizovať plány jedál",
+      "calendarDescriptionDisabled": "Otestujte pripojenie a načítajte dostupné kalendáre",
+      "timeFormat": "Formát: HH:MM-HH:MM",
+      "timeFormatError": "Formát musí byť HH:MM-HH:MM",
+      "breakfastTime": "Čas raňajok",
+      "lunchTime": "Čas obeda",
+      "dinnerTime": "Čas večere",
+      "snackTime": "Čas olovrantu",
+      "testConnection": "Otestovať pripojenie",
+      "saveConfiguration": "Uložiť konfiguráciu"
+    },
+    "config": {
+      "title": "Konfigurácia CalDAV",
+      "editTitle": "Upraviť konfiguráciu CalDAV",
+      "serverUrl": "URL servera",
+      "enabled": "Povolené",
+      "disabled": "Zakázané",
+      "editButton": "Upraviť",
+      "deleteButton": "Odstrániť",
+      "saveChanges": "Uložiť zmeny",
+      "advancedSettings": "Rozšírené nastavenia",
+      "timezone": "Časové pásmo: {timezone}",
+      "connectionStatus": {
+        "connected": "Pripojené",
+        "checking": "Kontrola...",
+        "disconnected": "Odpojené",
+        "unknown": "Neznáme"
+      }
+    },
+    "deleteModal": {
+      "title": "Odstrániť konfiguráciu CalDAV",
+      "confirmMessage": "Naozaj chcete odstrániť svoju konfiguráciu CalDAV?",
+      "deleteEventsLabel": "Odstrániť synchronizované udalosti",
+      "deleteEventsDescription": "Odstrániť všetky udalosti vytvorené vo vašom kalendári CalDAV",
+      "confirmButton": "Odstrániť"
+    },
+    "syncStatus": {
+      "title": "Stav synchronizácie",
+      "syncNow": "Synchronizovať teraz",
+      "clearFilter": "Vymazať filter",
+      "clickToFilter": "Kliknutím na odznak filtrujte",
+      "showingItems": "Zobrazuje sa {start}-{end} z {total} položiek",
+      "tableHeaders": {
+        "item": "POLOŽKA",
+        "type": "TYP",
+        "date": "DÁTUM",
+        "meal": "JEDLO",
+        "status": "STAV",
+        "lastSync": "POSLEDNÁ SYNCHRONIZÁCIA",
+        "error": "CHYBA"
+      },
+      "statuses": {
+        "synced": "Synchronizované",
+        "pending": "Čaká sa",
+        "failed": "Zlyhalo",
+        "removed": "Odstránené"
+      },
+      "emptyFiltered": "Nenašli sa žiadne položky so stavom {status}",
+      "emptyDefault": "Nenašli sa žiadne záznamy synchronizácie",
+      "errorDetails": "Podrobnosti chyby",
+      "pagination": "Strana {current} z {total}"
+    }
+  },
+  "admin": {
+    "shareLinks": {
+      "title": "Moderovanie zdieľaných receptov",
+      "description": "Prezrite si verejné odkazy na recepty v rámci celej inštancie a moderujte ich životný cyklus.",
+      "empty": "Nenašli sa žiadne odkazy na zdieľanie.",
+      "table": {
+        "recipe": "RECEPT",
+        "owner": "VLASTNÍK",
+        "status": "STAV",
+        "created": "VYTVORENÉ",
+        "expires": "VYPRŠÍ",
+        "actions": "AKCIE"
+      },
+      "revokeModal": {
+        "title": "Zrušiť odkaz",
+        "message": "Tento odkaz na {recipeName} prestane fungovať, kým sa znova neaktivuje.",
+        "confirm": "Zrušiť"
+      },
+      "reactivateModal": {
+        "title": "Znova aktivovať odkaz",
+        "message": "Tento odkaz na {recipeName} sa opäť aktivuje.",
+        "confirm": "Znova aktivovať"
+      },
+      "deleteModal": {
+        "title": "Odstrániť odkaz",
+        "message": "Odstrániť tento odkaz na zdieľanie pre {recipeName}? Túto akciu nie je možné vrátiť späť.",
+        "confirm": "Odstrániť odkaz"
+      }
+    },
+    "general": {
+      "title": "Všeobecné",
+      "allowRegistration": "Povoliť registráciu nových používateľov",
+      "registrationDescription": "Keď je zakázaná, prihlásiť sa môžu len existujúci používatelia",
+      "locales": "Povolené jazyky",
+      "localesDescription": "Vyberte, z ktorých jazykov si môžu používatelia vybrať",
+      "defaultLocale": "Predvolený jazyk",
+      "defaultLocaleDescription": "Jazyk používaný pre nových používateľov a ako záloha",
+      "saveLocales": "Uložiť nastavenia jazyka",
+      "localesSaved": "Nastavenia jazyka uložené",
+      "localesError": "Nastavenia jazyka sa nepodarilo uložiť",
+      "atLeastOneLocale": "Musí byť povolený aspoň jeden jazyk",
+      "export": {
+        "title": "Archív receptov",
+        "description": "Stiahnite si každý recept na tomto serveri.",
+        "button": "Exportovať archív receptov"
+      }
+    },
+    "users": {
+      "title": "Používatelia",
+      "description": "Spravujte každého, kto má na tomto serveri účet.",
+      "table": {
+        "user": "Používateľ",
+        "role": "Rola",
+        "household": "Domácnosť",
+        "joined": "Pripojený",
+        "actions": "Akcie"
+      },
+      "roles": {
+        "owner": "Vlastník",
+        "admin": "Správca"
+      },
+      "noHousehold": "Žiadna domácnosť",
+      "loading": "Načítavajú sa používatelia…",
+      "empty": "Zatiaľ žiadni používatelia.",
+      "loadFailed": "Zoznam používateľov sa nepodarilo načítať.",
+      "actions": {
+        "makeAdmin": "Nastaviť ako správcu",
+        "revokeAdmin": "Odobrať prístup správcu",
+        "delete": "Odstrániť používateľa"
+      },
+      "deleteTitle": "Odstrániť používateľa {name}?",
+      "deleteConfirm": "Týmto sa natrvalo odstráni účet používateľa a odstráni sa z jeho domácnosti. Túto akciu nie je možné vrátiť späť.",
+      "deleteSuccess": "{name} bol odstránený",
+      "countSummary": "{count, plural, one {# používateľ} few {# používatelia} other {# používateľov}} celkovo"
+    },
+    "registration": {
+      "title": "Registrácia",
+      "allowRegistration": "Povoliť registráciu nových používateľov",
+      "description": "Keď je zakázaná, prihlásiť sa môžu len existujúci používatelia"
+    },
+    "permissions": {
+      "title": "Oprávnenia k receptom",
+      "description": "Ovládajte, kto môže zobrazovať, upravovať a odstraňovať recepty. Správcovia servera majú vždy plný prístup.",
+      "viewRecipes": "Zobrazenie receptov",
+      "viewDescription": "Kto môže vidieť recepty na nástenke",
+      "editRecipes": "Úprava receptov",
+      "editDescription": "Kto môže upravovať podrobnosti receptov",
+      "deleteRecipes": "Odstránenie receptov",
+      "deleteDescription": "Kto môže odstraňovať recepty",
+      "levels": {
+        "everyone": "Všetci",
+        "everyoneDescription": "Všetci overení používatelia",
+        "household": "Domácnosť",
+        "householdDescription": "Vlastník receptu a členovia jeho domácnosti",
+        "owner": "Len vlastník",
+        "ownerDescription": "Len vlastník receptu"
+      },
+      "note": "Poznámka: Položky potravín a kalendára automaticky riadia pravidlá domácnosti, členovia domácnosti môžu vždy upravovať/odstraňovať položky patriace komukoľvek v rovnakej domácnosti."
+    },
+    "system": {
+      "title": "Nastavenia systému",
+      "cleanup": {
+        "title": "Plánovač čistenia",
+        "label": "Mesiace čistenia",
+        "description": "Odstrániť naplánované jedlá staršie ako tento počet mesiacov"
+      },
+      "server": {
+        "title": "Správa servera",
+        "restartLabel": "Reštartovať server",
+        "restartDescription": "Použiť zmeny konfigurácie, ktoré vyžadujú reštart",
+        "restartButton": "Reštartovať server"
+      }
+    },
+    "restart": {
+      "title": "Reštartovať server",
+      "confirmMessage": "Naozaj chcete reštartovať server?",
+      "importantTitle": "Dôležité:",
+      "warning1": "Všetky aktívne pripojenia budú odpojené",
+      "warning2": "Server bude niekoľko sekúnd nedostupný",
+      "warning3": "Uistite sa, že vaše nasadenie má nakonfigurované <code>restart: always</code>, inak sa server automaticky znova nespustí",
+      "confirmButton": "Reštartovať teraz"
+    },
+    "authProviders": {
+      "title": "Poskytovatelia autentifikácie",
+      "requiresRestart": "Vyžaduje reštart",
+      "description": "Nakonfigurujte metódy autentifikácie. Zmeny sa prejavia až po reštarte servera.",
+      "passwordAuth": {
+        "title": "E-mail a heslo",
+        "description": "Umožniť používateľom prihlásiť sa e-mailom a heslom"
+      },
+      "oauthDescription": "Nakonfigurujte poskytovateľov OAuth pre autentifikáciu SSO.",
+      "oidc": {
+        "title": "Poskytovateľ OIDC",
+        "subtitle": "Generický OpenID Connect",
+        "fields": {
+          "name": "Názov poskytovateľa",
+          "namePlaceholder": "napr. Authentik, Keycloak",
+          "issuer": "URL vydavateľa",
+          "issuerPlaceholder": "https://your-idp.com",
+          "clientId": "ID klienta",
+          "clientSecret": "Tajný kľúč klienta",
+          "wellknown": "Well-known URL (voliteľné)",
+          "wellknownPlaceholder": "Automaticky odvodené z vydavateľa, ak nie je nastavené"
+        },
+        "claimMapping": {
+          "title": "Mapovanie claimov",
+          "description": "Automaticky priradiť roly a domácnosti na základe claimov OIDC. Používatelia s admin skupinou získajú práva správcu servera. Používatelia so skupinou domácnosti sú automaticky pripojení k danej domácnosti.",
+          "securityWarning": "Upozornenie: Povolenie mapovania claimov umožňuje vášmu poskytovateľovi identity ovládať práva správcu a členstvo v domácnostiach. Povoľte to len vtedy, ak plne dôverujete svojmu poskytovateľovi OIDC a máte správne nakonfigurované claimy skupín.",
+          "scopes": "Ďalšie rozsahy (scopes)",
+          "scopesPlaceholder": "groups, roles",
+          "scopesDescription": "Čiarkami oddelený zoznam ďalších OAuth rozsahov na vyžiadanie (napr. groups pre Keycloak)",
+          "groupsClaim": "Claim skupín",
+          "groupsClaimDescription": "Názov claimu obsahujúceho skupiny/roly používateľa",
+          "adminGroup": "Admin skupina",
+          "adminGroupDescription": "Názov skupiny, ktorá udeľuje rolu správcu servera (bez ohľadu na veľkosť písmen)",
+          "householdPrefix": "Prefix domácnosti",
+          "householdPrefixDescription": "Prefix pre názvy skupín domácností (napr. norish_household_family => domácnosť 'family')"
+        }
+      },
+      "github": {
+        "title": "GitHub",
+        "subtitle": "GitHub OAuth",
+        "fields": {
+          "clientId": "ID klienta",
+          "clientSecret": "Tajný kľúč klienta"
+        }
+      },
+      "google": {
+        "title": "Google",
+        "subtitle": "Google OAuth",
+        "fields": {
+          "clientId": "ID klienta",
+          "clientIdPlaceholder": "*.apps.googleusercontent.com",
+          "clientSecret": "Tajný kľúč klienta"
+        }
+      },
+      "form": {
+        "testSuccess": "Pripojenie úspešné",
+        "removeTitle": "Odstrániť {provider}",
+        "removeConfirm": "Naozaj chcete odstrániť tohto poskytovateľa?"
+      },
+      "envBadge": {
+        "db": "Spravované cez DB",
+        "env": "Spravované cez env"
+      }
+    },
+    "contentDetection": {
+      "title": "Detekcia obsahu",
+      "description": "Nakonfigurujte, ako sa recepty detegujú a analyzujú z webových stránok.",
+      "contentIndicators": {
+        "title": "Indikátory obsahu",
+        "subtitle": "Kľúčové slová identifikujúce stránky s receptami",
+        "description": "Schéma indikátory detegujú štruktúrované údaje receptov (JSON-LD, mikrodáta). Indikátory obsahu sú kľúčové slová naznačujúce, že stránka obsahuje recept.",
+        "timersEnabled": {
+          "title": "Povoliť časovače receptov",
+          "description": "Detegovať a zobrazovať interaktívne časovače v receptoch"
+        }
+      },
+      "units": {
+        "title": "Merné jednotky",
+        "subtitle": "Definície merných jednotiek pre analýzu",
+        "description": "Definujte merné jednotky s ich skratkou, množným číslom a alternatívnymi zápismi. Používajú sa pri analýze množstiev surovín."
+      },
+      "recurrence": {
+        "title": "Vzory opakovania",
+        "subtitle": "Vzory prirodzeného jazyka pre opakujúce sa položky",
+        "description": "Definujte vzory špecifické pre jazyk na analýzu pravidiel opakovania z prirodzeného jazyka (napr. 'každý týždeň', 'om de dag')."
+      },
+      "timerKeywords": {
+        "title": "Kľúčové slová časovača",
+        "subtitle": "Kľúčové slová časových jednotiek pre detekciu časovača",
+        "description": "Nakonfigurujte kľúčové slová používané na detekciu časovačov v pokynoch receptov. Podporuje viacero jazykov.",
+        "enableToggle": "Povoliť detekciu časovača",
+        "hoursLabel": "Kľúčové slová pre hodiny",
+        "hoursPlaceholder": "hodina, hodiny, hod, h",
+        "hoursHelp": "Kľúčové slová pre hodiny (napr. hodina, stunde, heure, uur)",
+        "minutesLabel": "Kľúčové slová pre minúty",
+        "minutesPlaceholder": "minúta, minúty, min, m",
+        "minutesHelp": "Kľúčové slová pre minúty (napr. minúta, minuten, minuut)",
+        "secondsLabel": "Kľúčové slová pre sekundy",
+        "secondsPlaceholder": "sekunda, sekundy, sek, s",
+        "secondsHelp": "Kľúčové slová pre sekundy (napr. sekunda, sekunde, seconde)",
+        "unsavedChanges": "Neuložené zmeny"
+      }
+    },
+    "aiProcessing": {
+      "title": "AI a spracovanie",
+      "description": "Nakonfigurujte funkcie poháňané AI pre extrakciu receptov a spracovanie videa.",
+      "aiConfig": {
+        "title": "Konfigurácia AI",
+        "subtitle": "Analýza a extrakcia receptov"
+      },
+      "video": {
+        "title": "Spracovanie videa",
+        "subtitle": "Extrakcia a prepis videí zo sociálnych sietí"
+      },
+      "imageGeneration": {
+        "title": "Generovanie obrázkov",
+        "subtitle": "Nakreslite obrázok jedla pre recepty, ktoré ho nemajú"
+      },
+      "prompts": {
+        "title": "Prompty",
+        "subtitle": "Prispôsobte pokyny AI na spracovanie receptov"
+      },
+      "cuisines": {
+        "title": "Kuchyne",
+        "subtitle": "Slovník, z ktorého si recepty a AI vyberajú"
+      },
+      "bulkEnrichment": {
+        "title": "Hromadné obohatenie",
+        "subtitle": "Spustiť povolené obohatenie na každom recepte",
+        "description": "Zaraďte do fronty každý druh obohatenia, ktorého automatický prepínač je povolený, pre všetky recepty na tomto serveri. Medzery sa predvolene doplnia; potvrdenie ponúka prepísanie toho, čo už existuje.",
+        "button": "Obohatiť všetky recepty",
+        "confirmTitle": "Spustiť obohatenie na všetkých receptoch?",
+        "confirmMessage": "Týmto sa zaradí do fronty práca AI pre každý recept na tomto serveri. Každý druh obohatenia, ktorého automatický prepínač je povolený, sa spustí všade, kde údaje chýbajú.",
+        "replaceExisting": "Prepísať existujúce údaje",
+        "replaceExistingDescription": "Znova vytvoriť kategórie, výživové hodnoty, pôvod a suroviny krokov aj tam, kde ich recept už má. Značky a indikácie alergií sa vždy len pridávajú.",
+        "replaceWarning": "Túto akciu nie je možné vrátiť späť. Nahradia sa aj údaje, ktoré ste zadali sami, vrátane surovín krokov, ktoré ste prepojili ručne: nič nezaznamenáva, ktoré hodnoty pochádzajú z AI.",
+        "costWarning": "Môže to byť nákladná operácia: pri mnohých receptoch to môže trvať dlho a u plateného poskytovateľa AI spotrebovať značné množstvo kreditov.",
+        "confirmButton": "Spustiť na všetkých receptoch",
+        "confirmButtonReplace": "Prepísať všetky recepty",
+        "queued": "{queued, plural, =0 {Žiadne behy zaradené} one {# beh zaradený} few {# behy zaradené} other {# behov zaradených}} pre {recipes, plural, one {# recept} few {# recepty} other {# receptov}}",
+        "aiDisabled": "AI je na tomto serveri zakázaná. Najprv povoľte AI.",
+        "error": "Hromadné obohatenie sa nepodarilo spustiť",
+        "imageCount": "{count, plural, =0 {Prehľadávanie nevygeneruje žiadne obrázky.} one {Prehľadávanie vygeneruje # obrázok.} few {Prehľadávanie vygeneruje # obrázky.} other {Prehľadávanie vygeneruje # obrázkov.}}"
+      }
+    },
+    "aiConfig": {
+      "enableAI": "Povoliť funkcie AI",
+      "enableAIDescription": "Použiť AI na extrakciu receptov z neštruktúrovaného obsahu",
+      "configureWarning": "Nakonfigurujte nižšie nastavenia poskytovateľa AI, aby ste povolili funkcie AI.",
+      "provider": "Poskytovateľ AI",
+      "providers": {
+        "openai": "OpenAI",
+        "azure": "Azure OpenAI",
+        "anthropic": "Anthropic",
+        "google": "Google AI",
+        "mistral": "Mistral AI",
+        "deepseek": "DeepSeek",
+        "perplexity": "Perplexity",
+        "groq": "Groq",
+        "ollama": "Ollama (lokálne)",
+        "lmStudio": "LM Studio (lokálne)",
+        "genericOpenai": "Generický kompatibilný s OpenAI"
+      },
+      "endpointUrl": "URL koncového bodu",
+      "azureEndpoint": "URL zdroja Azure (voliteľné)",
+      "azureEndpointDescription": "Vlastný koncový bod Azure OpenAI. Ponechajte prázdne pre predvolený.",
+      "model": "Model",
+      "visionModel": "Vizuálny model (voliteľné)",
+      "visionModelDescription": "Voliteľné: Použite iný model na úlohy s obrázkami/víziou. Ponechajte prázdne, ak chcete použiť model vyššie.",
+      "apiKey": "API kľúč",
+      "apiKeyPlaceholder": "Zadajte API kľúč",
+      "temperature": "Teplota: {value}",
+      "temperatureHint": "Nižšie = viac zamerané, Vyššie = viac kreatívne",
+      "maxTokens": "Max. tokenov",
+      "requestTimeout": "Časový limit požiadavky (ms)",
+      "alwaysUseAI": "Vždy používať import cez AI",
+      "alwaysUseAIDescription": "Preskočiť štruktúrované analyzátory a extrahovať recepty len pomocou AI",
+      "connectionSuccess": "Pripojenie úspešné",
+      "testConnection": "Otestovať pripojenie",
+      "vision": "vízia",
+      "automaticEnrichment": "Automatické obohatenie receptov",
+      "automaticEnrichmentDescription": "Vyberte, ktoré obohatenie AI sa spúšťa automaticky pre novo vytvorené recepty. Členovia môžu každé z nich stále spúšťať ručne, kým je AI povolená.",
+      "automaticEnrichmentPlaceholder": "Nič sa nespúšťa automaticky",
+      "automaticEnrichmentKinds": {
+        "autoTagging": "Automatické značkovanie",
+        "autoTaggingDescription": "Pridať AI navrhované značky k novým receptom bez odstránenia existujúcich značiek",
+        "allergyDetection": "Detekcia alergií",
+        "allergyDetectionDescription": "Automaticky pridávať značky súvisiace s alergiami pri importe receptov",
+        "autoCategorization": "Automatická kategorizácia",
+        "autoCategorizationDescription": "Nastaviť kategórie jedál na nových receptoch, ktoré žiadne nemajú",
+        "nutritionEstimation": "Odhad výživových hodnôt",
+        "nutritionEstimationDescription": "Odhadnúť kalórie, tuky, sacharidy a bielkoviny pre nové recepty, ktoré žiadne neuvádzajú",
+        "recipeProvenance": "Pôvod receptu",
+        "recipeProvenanceDescription": "Zistiť krajinu, región, kuchyne a krátku poznámku pre nové recepty, doplniť len to, čo ešte chýba",
+        "ingredientLinking": "Prepojenie surovín",
+        "ingredientLinkingDescription": "Prepojiť každý krok s riadkami surovín, ktoré používa, pre kroky, ktoré žiadne nemajú",
+        "imageGeneration": "Generovanie obrázkov",
+        "imageGenerationDescription": "Nakresliť obrázok jedla pre nové recepty, ktoré nemajú vôbec žiadny obrázok"
+      },
+      "tagStrategy": "Stratégia značiek",
+      "tagStrategyDescription": "Ktoré značky môže automatické značkovanie použiť, či sa spúšťa automaticky alebo ručne",
+      "tagStrategies": {
+        "predefined": "Len preddefinované značky",
+        "predefinedDb": "Preddefinované + existujúce značky",
+        "freeform": "AI môže vytvárať nové značky"
+      },
+      "cuisineStrategy": "Stratégia kuchýň",
+      "cuisineStrategyDescription": "Či môže odvodzovanie pôvodu pridávať kuchyne do vášho slovníka alebo si len z neho vyberať",
+      "cuisineStrategies": {
+        "existing": "Len existujúce kuchyne",
+        "extend": "AI môže pridávať nové kuchyne"
+      }
+    },
+    "modelListing": {
+      "empty": "Nevrátili sa žiadne modely. Skontrolujte API kľúč alebo koncový bod, alebo zadajte názov modelu.",
+      "refused": "{provider} odmietol požiadavku ({status}). Skontrolujte API kľúč.",
+      "unreachable": "Nepodarilo sa dosiahnuť {provider}. Skontrolujte koncový bod."
+    },
+    "videoConfig": {
+      "enableVideo": "Povoliť analýzu videa",
+      "enableVideoDescription": "Extrahovať recepty z TikToku, Instagramu, YouTube Shorts, Facebooku, Pinterestu a ďalších",
+      "configureWarning": "Nakonfigurujte nižšie poskytovateľa prepisu, aby ste povolili spracovanie videa.",
+      "aiDisabledWarning": "Pred zapnutím spracovania videa povoľte konfiguráciu AI.",
+      "maxLength": "Max. dĺžka videa (sekundy)",
+      "maxLengthDescription": "Dlhšie videá si vyžadujú viac času a zdrojov na spracovanie",
+      "maxFileSize": "Max. veľkosť súboru videa",
+      "maxFileSizeDescription": "Maximálna veľkosť pre stiahnuté súbory videa",
+      "ytDlpVersion": "Verzia yt-dlp",
+      "ytDlpVersionDescription": "Verzia yt-dlp, ktorú tento server používa. Tu ju nie je možné zmeniť.",
+      "ytDlpVersionMissing": "Nenašiel sa žiadny binárny súbor yt-dlp",
+      "ytDlpVersionUnknown": "Nepodarilo sa skontrolovať",
+      "ytDlpVersionLoading": "Kontrola …",
+      "ytDlpProxy": "Proxy yt-dlp",
+      "ytDlpProxyDescription": "HTTP/SOCKS5 proxy pre yt-dlp",
+      "transcription": "Prepis",
+      "transcriptionDescription": "Previesť zvuk videa na text pre extrakciu receptov",
+      "transcriptionProvider": "Poskytovateľ prepisu",
+      "transcriptionProviderDescription": "Prepis Whisper podporujú len OpenAI a koncové body kompatibilné s OpenAI",
+      "transcriptionProviders": {
+        "disabled": "Zakázané",
+        "openai": "OpenAI Whisper",
+        "groq": "Groq Whisper",
+        "azure": "Azure OpenAI Whisper",
+        "ollama": "Ollama",
+        "genericOpenai": "Generický kompatibilný s OpenAI"
+      },
+      "transcriptionEndpoint": "URL koncového bodu",
+      "transcriptionEndpointDescription": "Koncový bod kompatibilný s OpenAI s podporou Whisper, alebo koncový bod Ollama",
+      "transcriptionModel": "Model",
+      "transcriptionModelDescription": "Model Whisper na použitie pri prepise",
+      "transcriptionModelPlaceholder": "Vyberte alebo zadajte názov modelu",
+      "transcriptionApiKey": "API kľúč",
+      "transcriptionApiKeyDescription": "Ak nie je nastavený, použije sa API kľúč z konfigurácie AI",
+      "transcriptionApiKeyPlaceholder": "Ponechajte prázdne pre použitie kľúča z konfigurácie AI",
+      "transcriptionApiKeyOptional": "API kľúč (voliteľné)",
+      "transcriptionApiKeyOptionalDescription": "Väčšina lokálnych serverov Whisper nevyžaduje API kľúč",
+      "transcriptionApiKeyOptionalPlaceholder": "Ponechajte prázdne pre lokálne servery"
+    },
+    "imageGenerationConfig": {
+      "description": "Generovanie obrázkov používa vlastného poskytovateľa, pretože väčšina poskytovateľov AI nedokáže kresliť. Obrázky sa generujú týmto poskytovateľom; poskytovateľ AI vyššie sa stará o všetko ostatné.",
+      "provider": "Poskytovateľ obrázkov",
+      "providers": {
+        "disabled": "Zakázané",
+        "openai": "OpenAI",
+        "google": "Google AI",
+        "azure": "Azure OpenAI",
+        "lmStudio": "LM Studio",
+        "genericOpenai": "Generický kompatibilný s OpenAI"
+      },
+      "endpoint": "URL koncového bodu",
+      "endpointOptional": "Voliteľné: vlastná URL zdroja Azure",
+      "apiKey": "API kľúč",
+      "apiKeyPlaceholder": "Zadajte API kľúč...",
+      "apiKeyInherited": "Používa sa API kľúč z vašej konfigurácie AI.",
+      "model": "Model obrázkov",
+      "modelPlaceholder": "napr. gpt-image-1",
+      "modelDescription": "Model, ktorý kreslí obrázok. Musí to byť obrázkový model, nie textový.",
+      "fallbackHint": "Rovnaký poskytovateľ ako vaša konfigurácia AI: koncový bod a API kľúč sa naň vrátia, kým ich tu nenastavíte."
+    },
+    "promptsConfig": {
+      "recipeExtraction": "Prompt na extrakciu receptu",
+      "recipeExtractionDescription": "Tento prompt sa používa pri extrakcii údajov receptu z webových stránok alebo prepisov videí.",
+      "recipeExtractionPlaceholder": "Zadajte prompt na extrakciu receptu...",
+      "imageExtraction": "Prompt na extrakciu z obrázka",
+      "imageExtractionDescription": "Tento prompt sa používa pri extrakcii údajov receptu z nahraných obrázkov, ako sú fotky kuchárskej knihy alebo receptovej kartičky.",
+      "imageExtractionPlaceholder": "Zadajte prompt na extrakciu z obrázka...",
+      "unitConversion": "Prompt na prepočet jednotiek",
+      "unitConversionDescription": "Tento prompt sa používa pri prepočte mier receptu medzi metrickým a americkým systémom. Dostupné premenné: sourceSystem, targetSystem, units",
+      "unitConversionPlaceholder": "Zadajte prompt na prepočet jednotiek...",
+      "nutritionEstimation": "Prompt na odhad výživových hodnôt",
+      "nutritionEstimationDescription": "Tento prompt sa používa pri odhade výživových informácií receptu. Dostupné premenné: recipeName, servings, ingredients",
+      "nutritionEstimationPlaceholder": "Zadajte prompt na odhad výživových hodnôt...",
+      "autoTagging": "Prompt na automatické značkovanie",
+      "autoTaggingDescription": "Tento prompt sa používa na generovanie značiek pre importované recepty. Definujte pravidlá značkovania a zoznam preddefinovaných značiek.",
+      "autoTaggingPlaceholder": "Zadajte prompt na automatické značkovanie...",
+      "autoCategorization": "Prompt na automatickú kategorizáciu",
+      "autoCategorizationDescription": "Tento prompt sa používa na triedenie receptov do kategórií jedál (raňajky, obed, večera, olovrant).",
+      "autoCategorizationPlaceholder": "Zadajte prompt na automatickú kategorizáciu...",
+      "allergyDetection": "Prompt na detekciu alergií",
+      "allergyDetectionDescription": "Tento prompt sa používa na detekciu nakonfigurovaných alergénov domácnosti v surovinách receptu.",
+      "allergyDetectionPlaceholder": "Zadajte prompt na detekciu alergií...",
+      "recipeProvenance": "Prompt na pôvod receptu",
+      "recipeProvenanceDescription": "Tento prompt sa používa na zistenie, odkiaľ recept pochádza. Poznámka, ktorú vytvorí, je napísaná v jazyku samotného receptu. Dostupné premenné: recipeName, description, ingredients",
+      "recipeProvenancePlaceholder": "Zadajte prompt na pôvod receptu...",
+      "ingredientLinking": "Prompt na prepojenie surovín",
+      "ingredientLinkingDescription": "Používa sa pri prepájaní každého kroku s riadkami surovín, ktoré používa",
+      "ingredientLinkingPlaceholder": "Prompt na prepojenie surovín s krokmi...",
+      "imageGenerationBrief": "Prompt na obrázkový brief",
+      "imageGenerationBriefDescription": "Používa sa na premenu receptu na krátky vizuálny brief pred vygenerovaním jeho obrázka. Recept sa pripojí za prompt.",
+      "imageGenerationBriefPlaceholder": "Prompt na napísanie vizuálneho briefu...",
+      "imageGenerationStyle": "Prompt na štýl obrázka",
+      "imageGenerationStyleDescription": "Odosiela sa obrázkovému modelu, s vizuálnym briefom pripojeným za ním. Nastavuje vzhľad, ktorý zdieľa každý vygenerovaný obrázok.",
+      "imageGenerationStylePlaceholder": "Prompt na štýl obrázka..."
+    },
+    "unsavedChanges": "Neuložené zmeny",
+    "jsonEditor": {
+      "placeholder": "Zadajte konfiguráciu JSON...",
+      "invalidJson": "Neplatný formát JSON",
+      "failedToSave": "Uloženie zlyhalo",
+      "failedToRestore": "Obnovenie predvolených hodnôt zlyhalo"
+    },
+    "jobQueue": {
+      "title": "Fronty úloh",
+      "description": "Monitorujte úlohy na pozadí naprieč všetkými frontami: stav, aktuálny krok, trvanie a zlyhania.",
+      "empty": "Nenašli sa žiadne úlohy",
+      "filters": {
+        "queue": "Fronta",
+        "allQueues": "Všetky fronty"
+      },
+      "status": {
+        "waiting": "Čaká",
+        "active": "Aktívna",
+        "delayed": "Oneskorená",
+        "completed": "Dokončená",
+        "failed": "Zlyhala",
+        "paused": "Pozastavená",
+        "prioritized": "Prioritizovaná",
+        "unknown": "Neznáma",
+        "hanging": "Zaseknutá"
+      },
+      "stepStatus": {
+        "done": "Hotovo",
+        "failed": "Zlyhalo",
+        "running": "Prebieha",
+        "skipped": "Preskočené",
+        "pending": "Čaká sa"
+      },
+      "steps": {
+        "dedupe-check": "Kontrola existujúcich",
+        "fetch-allergies": "Načítať alergie",
+        "parsing": "Analyzovať recept",
+        "saving": "Uložiť recept",
+        "post-processing": "Následné spracovanie",
+        "preparing-images": "Pripraviť obrázky",
+        "ai-extraction": "Extrakcia AI",
+        "parsing-text": "Analyzovať vložený text",
+        "creating-recipes": "Vytvoriť recepty",
+        "ai-request": "Požiadavka na AI",
+        "syncing-event": "Synchronizovať udalosť kalendára",
+        "deleting-event": "Odstrániť udalosť kalendára",
+        "running": "Spustiť úlohu"
+      },
+      "queues": {
+        "recipe-import": "Import receptu",
+        "image-recipe-import": "Import z obrázka",
+        "paste-recipe-import": "Import z vloženia",
+        "nutrition-estimation": "Odhad výživových hodnôt",
+        "auto-tagging": "Automatické značkovanie",
+        "auto-categorization": "Automatická kategorizácia",
+        "allergy-detection": "Detekcia alergií",
+        "recipe-provenance": "Pôvod receptu",
+        "ingredient-linking": "Prepojenie surovín",
+        "caldav-sync": "Synchronizácia CalDAV",
+        "scheduled-tasks": "Naplánované úlohy",
+        "image-generation": "Generovanie obrázkov"
+      },
+      "summary": {
+        "failed": "{count} zlyhalo"
+      },
+      "table": {
+        "job": "Úloha",
+        "status": "Stav",
+        "step": "Krok",
+        "duration": "Trvanie",
+        "created": "Vytvorené",
+        "runsAt": "Spustí sa {time}"
+      },
+      "detail": {
+        "title": "Podrobnosti úlohy",
+        "notFound": "Úloha sa nenašla. Mohla byť vyčistená.",
+        "sections": {
+          "error": "Chyba",
+          "pipelineSteps": "Kroky pipeline",
+          "input": "Vstup",
+          "logs": "Záznamy",
+          "errors": "Chyby"
+        },
+        "fields": {
+          "queue": "Fronta",
+          "jobId": "ID úlohy",
+          "description": "Popis",
+          "recipe": "Recept",
+          "created": "Vytvorené",
+          "started": "Spustené",
+          "finished": "Dokončené",
+          "duration": "Trvanie",
+          "attempts": "Pokusy",
+          "runsAt": "Spustí sa o",
+          "nextRun": "Ďalšie spustenie"
+        },
+        "attempt": "Pokus {number}",
+        "stackTrace": "Zásobník volaní"
+      },
+      "actions": {
+        "retry": "Skúsiť znova",
+        "remove": "Odstrániť"
+      },
+      "removeModal": {
+        "message": "Natrvalo odstrániť túto úlohu?",
+        "confirm": "Odstrániť úlohu"
+      },
+      "retention": {
+        "title": "Uchovávanie úloh",
+        "keepCompleted": "Uchovávať dokončené úlohy",
+        "keepFailed": "Uchovávať zlyhané úlohy",
+        "maxAgeDays": "Max. vek (dni)",
+        "description": "Koľko dokončených úloh sa má uchovávať na frontu pre monitorovanie. Zmeny vyžadujú reštart servera."
+      },
+      "pagination": "Strana {current} z {total}"
+    },
+    "cuisineVocabulary": {
+      "description": "Kuchyne sú kurátorský slovník, ktorý vlastníte. Názvy sa zobrazujú presne tak, ako sú tu napísané, v každom jazyku.",
+      "namePlaceholder": "Názov kuchyne",
+      "addLabel": "Pridať kuchyňu",
+      "renameLabel": "Premenovať {name}",
+      "deleteLabel": "Odstrániť {name}",
+      "deleteConfirm": "Odstrániť „{name}“? Recepty, ktoré ju používajú, ju stratia.",
+      "empty": "Zatiaľ žiadne kuchyne.",
+      "duplicate": "Kuchyňa s takým názvom už existuje.",
+      "saveFailed": "Túto kuchyňu sa nepodarilo uložiť."
+    }
+  },
+  "archiveExport": {
+    "progress": "Exportuje sa… {size}",
+    "errors": {
+      "failedTitle": "Export zlyhal",
+      "failedDescription": "Archív receptov sa nepodarilo stiahnuť. Skúste to znova.",
+      "signedOut": "Vaša relácia vypršala. Prihláste sa znova a exportujte.",
+      "notAllowed": "Nemáte oprávnenie exportovať toto."
+    }
+  }
+}

@@ -1,0 +1,407 @@
+{
+  "dashboard": {
+    "libraryTitle": "Tvoja knižnica",
+    "recipesTitle": "Tvoje recepty",
+    "cookbooksTitle": "Tvoje kuchárske knihy",
+    "searchPlaceholder": "Hľadaj alebo pridaj recept...",
+    "searchRecipesPlaceholder": "Hľadať recepty...",
+    "libraryCount": "{count, plural, one {# položka} few {# položky} other {# položiek}}",
+    "addRecipe": "Pridať recept",
+    "importFromUrl": "URL",
+    "importFromPaste": "Vložiť",
+    "importFromImage": "Obrázok",
+    "searchFields": {
+      "title": "Názov",
+      "description": "Popis",
+      "ingredients": "Ingrediencie",
+      "steps": "Kroky",
+      "tags": "Značky"
+    },
+    "viewMode": {
+      "label": "Zobrazenie receptov",
+      "grid": "Mriežka",
+      "list": "Zoznam"
+    },
+    "libraryType": {
+      "label": "Zobraziť",
+      "all": "Všetko",
+      "recipes": "Recepty",
+      "cookbooks": "Kuchárske knihy"
+    }
+  },
+  "back": {
+    "all": "Späť do knižnice",
+    "recipes": "Späť na recepty",
+    "cookbooks": "Späť na kuchárske knihy",
+    "named": "Späť na {name}",
+    "cookbook": "Späť na kuchársku knihu",
+    "generic": "Späť"
+  },
+  "empty": {
+    "title": "Tvoja knižnica čaká",
+    "description": "Vlož URL adresu receptu do vyhľadávacieho poľa vyššie a sleduj, ako sa deje kúzlo.",
+    "noResults": "Nenašli sa žiadne recepty",
+    "noResultsHint": "Skús upraviť alebo vymazať filtre.",
+    "noCookbooks": "Zatiaľ žiadne kuchárske knihy",
+    "noCookbooksHint": "Kuchárska kniha je pomenovaná zbierka receptov. Vytvor si svoju prvú a daj knižnici poriadok."
+  },
+  "card": {
+    "noImage": "Obrázok nie je k dispozícii",
+    "viewGroceries": "Zobraziť nákupný zoznam",
+    "addToCalendar": "Pridať do kalendára",
+    "deleteRecipe": "Odstrániť recept",
+    "recipeOptions": "Možnosti receptu"
+  },
+  "detail": {
+    "viewOriginal": "Zobraziť pôvodný recept",
+    "ingredients": "Ingrediencie",
+    "ingredientOptions": "Možnosti ingrediencie",
+    "showMore": "Zobraziť viac",
+    "showLess": "Zobraziť menej",
+    "steps": "Kroky",
+    "notes": "Poznámky",
+    "addToGroceries": "Pridať do nákupného zoznamu",
+    "ratingPrompt": "Ako sa ti tento recept páčil?",
+    "notFound": "Recept sa nenašiel",
+    "notFoundMessage": "Tento recept neexistuje alebo nemáš oprávnenie ho zobraziť.",
+    "prep": "príprava",
+    "total": "spolu",
+    "planMeal": "Naplánovať jedlo",
+    "recipeActions": "Akcie receptu",
+    "instructions": "Postup",
+    "cook": "Varenie",
+    "switchToDecimal": "Zobraziť desatinné čísla",
+    "switchToFraction": "Zobraziť zlomky",
+    "servingsCount": "{count, plural, one {# porcia} few {# porcie} other {# porcií}}",
+    "source": "Zdroj",
+    "addedBy": "Pridal {name}",
+    "decreaseServings": "Menej porcií",
+    "increaseServings": "Viac porcií"
+  },
+  "actions": {
+    "plan": "Naplánovať",
+    "groceries": "Nákupný zoznam",
+    "edit": "Upraviť",
+    "delete": "Odstrániť",
+    "share": "Zdieľať",
+    "visitOriginal": "Navštíviť pôvodný recept",
+    "addToCalendar": "Pridať do kalendára",
+    "autoTag": "Automatické značky",
+    "autoTagging": "Generujú sa značky...",
+    "autoCategorize": "Automatická kategorizácia",
+    "detectAllergies": "Zistiť alergény",
+    "detectingAllergies": "Zisťujú sa alergény...",
+    "estimateNutrition": "Odhadnúť výživové hodnoty",
+    "estimatingNutrition": "Odhadujú sa výživové hodnoty...",
+    "screenOn": "Obrazovka zapnutá",
+    "keepScreenOn": "Nechať obrazovku zapnutú",
+    "actionsLabel": "Akcie",
+    "autoCategorizing": "Prebieha automatická kategorizácia…",
+    "inferProvenance": "Zistiť pôvod",
+    "inferringProvenance": "Zisťuje sa pôvod…",
+    "linkIngredients": "Prepojiť ingrediencie s krokmi",
+    "linkingIngredients": "Prepájajú sa ingrediencie…",
+    "enrichmentFailed": "Posledný pokus zlyhal",
+    "generateImage": "Vygenerovať obrázok",
+    "generatingImage": "Generuje sa obrázok…",
+    "cookbooks": "Kuchárske knihy"
+  },
+  "sharePanel": {
+    "title": "Zdieľať recept",
+    "description": "Vytvor a spravuj verejné odkazy pre {recipeName}.",
+    "expiryLabel": "Platnosť odkazu",
+    "createLink": "Vytvoriť odkaz",
+    "latestLink": "Najnovší odkaz",
+    "currentLinks": "Aktuálne odkazy",
+    "empty": "Zatiaľ žiadne odkazy na zdieľanie.",
+    "createSuccess": "Odkaz na zdieľanie bol vytvorený",
+    "copySuccess": "Odkaz skopírovaný",
+    "copyLink": "Kopírovať",
+    "openLink": "Otvoriť",
+    "createdAt": "Vytvorené: {value}",
+    "expiresAt": "Platnosť do: {value}",
+    "lastAccessedAt": "Naposledy otvorené: {value}",
+    "never": "Nikdy",
+    "expiryOptions": {
+      "1day": "1 deň",
+      "1week": "1 týždeň",
+      "1month": "1 mesiac",
+      "1year": "1 rok",
+      "forever": "Nikdy"
+    },
+    "status": {
+      "active": "Aktívny",
+      "expired": "Vypršaný",
+      "revoked": "Zrušený"
+    },
+    "revokeModal": {
+      "title": "Zrušiť odkaz",
+      "message": "Tento odkaz pre {recipeName} prestane fungovať, kým ho znova neaktivuješ.",
+      "confirm": "Zrušiť"
+    },
+    "reactivateModal": {
+      "title": "Znova aktivovať odkaz",
+      "message": "Tento odkaz pre {recipeName} bude opäť aktívny.",
+      "confirm": "Znova aktivovať"
+    },
+    "deleteModal": {
+      "title": "Odstrániť odkaz",
+      "message": "Odstrániť tento odkaz na zdieľanie pre {recipeName}? Túto akciu nie je možné vrátiť späť.",
+      "confirm": "Odstrániť odkaz"
+    }
+  },
+  "convert": {
+    "ariaLabel": "Previesť sústavu jednotiek",
+    "toMetric": "Previesť na metrické",
+    "toUS": "Previesť na americké",
+    "converting": "Prevádza sa…"
+  },
+  "deleteModal": {
+    "title": "Odstrániť recept",
+    "confirmMessage": "Naozaj chceš odstrániť „{recipeName}“?",
+    "warning": "Túto akciu nie je možné vrátiť späť."
+  },
+  "form": {
+    "createTitle": "Vytvoriť recept",
+    "editTitle": "Upraviť recept",
+    "createDescription": "Pridaj nový recept do svojej zbierky",
+    "editDescription": "Aktualizuj podrobnosti receptu",
+    "initializingForm": "Inicializuje sa formulár...",
+    "photo": "Fotka",
+    "basicInfo": "Základné informácie",
+    "ingredients": "Ingrediencie",
+    "instructions": "Postup",
+    "tags": "Značky",
+    "nutrition": "Výživové hodnoty",
+    "nutritionPerServing": "(na porciu, voliteľné)",
+    "details": "Podrobnosti",
+    "additionalInfo": "Ďalšie informácie",
+    "recipeName": "Názov receptu",
+    "recipeNamePlaceholder": "napr. Čokoládové sušienky",
+    "description": "Popis",
+    "descriptionPlaceholder": "Krátky popis toho, čím je tento recept výnimočný...",
+    "notes": "Poznámky",
+    "notesPlaceholder": "Pridaj poznámky k príprave, úpravy alebo tipy na servírovanie tohto receptu...",
+    "ingredientsHelp": "Píš ingrediencie ako „2 hrnčeky múky“ – množstvá a jednotky spracujeme automaticky.",
+    "instructionsHelp": "Píš jasné pokyny krok za krokom. Stlačením Enter prejdeš na ďalší krok.",
+    "tagsHelp": "Píš značky a klikni na návrhy, aby si ich pridal. Značky na recepte sú vyplnené; nové značky majú prerušované orámovanie.",
+    "tagsAndCategories": "Značky a kategórie",
+    "categoriesHelp": "Vyber kategórie jedla pre tento recept.",
+    "category": {
+      "breakfast": "Raňajky",
+      "lunch": "Obed",
+      "dinner": "Večera",
+      "snack": "Desiata"
+    },
+    "calories": "Kalórie",
+    "fat": "Tuky (g)",
+    "carbs": "Sacharidy (g)",
+    "protein": "Bielkoviny (g)",
+    "provenance": "Pôvod",
+    "provenanceHelp": "Odkiaľ tento recept pochádza.",
+    "originCountry": "Krajina",
+    "originCountryPlaceholder": "Žiadna krajina",
+    "originRegion": "Región",
+    "originRegionPlaceholder": "napr. Sicília",
+    "cuisines": "Kuchyne",
+    "cuisinesHelp": "Vyber zo zoznamu tvojho nasadenia. Pri fúznom jedle dáva zmysel viacero.",
+    "provenanceNote": "Poznámka",
+    "provenanceNotePlaceholder": "Pár viet o tom, odkiaľ toto jedlo pochádza…",
+    "servings": "Porcie",
+    "cookingTimes": "Časy varenia",
+    "optional": "(voliteľné)",
+    "sourceUrl": "URL zdroja",
+    "sourceUrlPlaceholder": "https://example.com/recept",
+    "measurementSystemNote": "Sústavu jednotiek automaticky rozpoznáme z tvojich ingrediencií, ale tu ju môžeš zmeniť.",
+    "measurementSystemEditNote": " Poznámka: Toto aktualizuje označenie sústavy, ale neprevádza jednotky. Po uložení použi akciu Previesť.",
+    "createRecipe": "Vytvoriť recept",
+    "saveChanges": "Uložiť zmeny",
+    "uploading": "Nahráva sa...",
+    "clickToUpload": "Klikni na nahranie alebo pretiahni súbor",
+    "pasteToUpload": "na vloženie",
+    "imageFormats": "PNG, JPG, WEBP do 5 MB",
+    "discardChangesConfirm": "Máš neuložené zmeny. Zahodiť ich a opustiť túto stránku?"
+  },
+  "gallery": {
+    "addImage": "Pridať obrázok",
+    "uploading": "Nahráva sa...",
+    "uploadFailed": "Nahrávanie zlyhalo",
+    "dragToReorder": "Pretiahnutím zmeníš poradie",
+    "maxImagesReached": "Povolených je najviac {max} obrázkov",
+    "maxVideosReached": "Povolených je najviac {max} videí",
+    "invalidFileType": "Neplatný typ súboru"
+  },
+  "carousel": {
+    "noImageAvailable": "Obrázok nie je k dispozícii",
+    "noMediaAvailable": "Médium nie je k dispozícii",
+    "videoPlayer": {
+      "mute": "Stlmiť",
+      "unmute": "Zrušiť stlmenie",
+      "fullscreen": "Prejsť na celú obrazovku",
+      "exitFullscreen": "Ukončiť celú obrazovku"
+    }
+  },
+  "validation": {
+    "nameRequired": "Názov receptu je povinný",
+    "ingredientsRequired": "Je potrebná aspoň jedna ingrediencia",
+    "stepsRequired": "Je potrebný aspoň jeden krok",
+    "servingsMin": "Počet porcií musí byť aspoň 1"
+  },
+  "nutrition": {
+    "title": "Výživové hodnoty",
+    "calories": "Kalórie",
+    "fat": "Tuky",
+    "carbs": "Sacharidy",
+    "protein": "Bielkoviny",
+    "showingPortions": "Zobrazujú sa hodnoty pre {count} {count, plural, one {porciu} few {porcie} other {porcií}}",
+    "noInfo": "Nie sú k dispozícii žiadne výživové informácie",
+    "estimateWithAI": "Odhadnúť pomocou AI"
+  },
+  "measurementSystem": {
+    "label": "Sústava jednotiek",
+    "detected": "Rozpoznané: {system}",
+    "metric": "Metrická",
+    "us": "Americká"
+  },
+  "timeInputs": {
+    "prep": "Príprava",
+    "cook": "Varenie",
+    "total": "Spolu"
+  },
+  "stepInput": {
+    "stepPlaceholder": "Krok {number}: Opíš krok...",
+    "stepPlaceholderShort": "Krok {number}"
+  },
+  "stepIngredients": {
+    "rowLabel": "Prepojené ingrediencie",
+    "addLabel": "Prepojiť ingredienciu",
+    "pickerLabel": "Priraď ingredienciu k tomuto kroku",
+    "shareLabel": "Zmeniť podiel {name}",
+    "share": {
+      "full": "Celý riadok",
+      "half": "Polovica",
+      "third": "Tretina",
+      "quarter": "Štvrtina",
+      "custom": "Vlastné…",
+      "amount": "Množstvo…"
+    },
+    "customShareLabel": "Vlastný podiel",
+    "customAmountLabel": "Množstvo",
+    "removeLabel": "Odstrániť {name}"
+  },
+  "ingredientInput": {
+    "placeholder": "napr. 2 hrnčeky múky"
+  },
+  "wakeLock": {
+    "keepScreenOn": "Nechať obrazovku zapnutú",
+    "notSupported": "Udržanie obrazovky zapnutej nie je v tomto prehliadači podporované",
+    "activeTooltip": "Obrazovka zostane počas varenia zapnutá",
+    "inactiveTooltip": "Nechaj obrazovku zapnutú počas sledovania krokov",
+    "ariaLabel": "Nechať obrazovku zapnutú"
+  },
+  "toasts": {
+    "imported": "Recept bol importovaný",
+    "converted": "Miery boli prevedené",
+    "convertedDescription": "Recept prevedený na jednotky {system}",
+    "failed": "Operácia s receptom zlyhala",
+    "failedDescription": "Pri spracovaní tvojho receptu sa niečo pokazilo. Technické podrobnosti nájdeš v konzole prehliadača.",
+    "batchImported": "Recepty boli importované",
+    "batchImportedDescription": "{count} receptov importovaných z archívu",
+    "view": "Zobraziť",
+    "open": "Otvoriť"
+  },
+  "tags": {
+    "panel": {
+      "editTitle": "Upraviť značku",
+      "editPlaceholder": "Zadaj názov značky...",
+      "duplicateTag": "Táto značka už existuje"
+    }
+  },
+  "cookMode": {
+    "steps": "Kroky",
+    "ingredients": "Ingrediencie",
+    "servings": "Porcie",
+    "serving": "{count, plural, one {# porcia} few {# porcie} other {# porcií}}",
+    "stepCounter": "{current} / {total}",
+    "swipeSteps": "Potiahnutím prechádzaj kroky",
+    "swipeIngredients": "Potiahni doľava pre ingrediencie",
+    "swipeBackToSteps": "Potiahni doprava pre kroky",
+    "readyAt": "Hotové okolo {time}",
+    "timers": "Časovače",
+    "nextStep": "Ďalší krok"
+  },
+  "enrichment": {
+    "failed": "Obohatenie zlyhalo",
+    "states": {
+      "queued": "V rade",
+      "processing": "Prebieha",
+      "succeeded": "Dokončené",
+      "failed": "Posledný pokus zlyhal"
+    },
+    "kinds": {
+      "auto-tagging": "Automatické značkovanie",
+      "allergy-detection": "Zisťovanie alergénov",
+      "auto-categorization": "Automatická kategorizácia",
+      "nutrition-estimation": "Odhad výživových hodnôt",
+      "recipe-provenance": "Pôvod receptu",
+      "ingredient-linking": "Prepájanie ingrediencií",
+      "image-generation": "Generovanie obrázka"
+    }
+  },
+  "provenance": {
+    "title": "Pôvod",
+    "region": "Región",
+    "cuisines": "Kuchyne",
+    "inferring": "Zisťuje sa, odkiaľ tento recept pochádza…",
+    "noInfo": "Zatiaľ žiadne informácie o pôvode",
+    "inferWithAI": "Zistiť pomocou AI"
+  },
+  "import": {
+    "alreadyExists": "Tento recept už máš",
+    "openExisting": "Otvoriť"
+  },
+  "glanceBar": {
+    "totalTime": "Celkový čas",
+    "servings": "{count, plural, one {porcia} few {porcie} other {porcií}}"
+  },
+  "cookingTime": {
+    "title": "Čas varenia",
+    "prep": "Príprava",
+    "cook": "Varenie",
+    "other": "Iný čas",
+    "total": "Spolu"
+  },
+  "cookbooks": {
+    "addCookbook": "Pridať kuchársku knihu",
+    "createTitle": "Nová kuchárska kniha",
+    "editTitle": "Upraviť kuchársku knihu",
+    "titleLabel": "Názov",
+    "titlePlaceholder": "napr. Večere počas týždňa",
+    "options": "Možnosti kuchárskej knihy",
+    "deleteTitle": "Odstrániť kuchársku knihu",
+    "deleteConfirm": "Naozaj chceš odstrániť „{title}“?",
+    "deleteKeepsRecipes": "Recepty, ktoré obsahuje, zostanú v tvojej knižnici.",
+    "recipeCount": "{count, plural, one {# recept} few {# recepty} other {# receptov}}",
+    "empty": "Zatiaľ žiadne recepty",
+    "singular": "Kuchárska kniha",
+    "notFound": "Kuchárska kniha sa nenašla",
+    "notFoundHint": "Možno bola odstránená alebo pre teba nie je viditeľná.",
+    "emptyHint": "Pridaj recepty z ponuky rýchlych akcií ktoréhokoľvek receptu.",
+    "panelTitle": "Pridať do kuchárskej knihy",
+    "newWithRecipe": "Nová kuchárska kniha s týmto receptom",
+    "noneEditable": "Zatiaľ nemáš žiadne kuchárske knihy, ktoré môžeš upravovať.",
+    "cardTitle": "V kuchárskych knihách",
+    "removeFromCookbook": "Odstrániť z kuchárskej knihy",
+    "noMatchingMembers": "Žiadne recepty v tejto kuchárskej knihe nezodpovedajú tvojim filtrom.",
+    "membersLabel": "Recepty v tejto kuchárskej knihe",
+    "showMore": "Zobraziť viac",
+    "willBeCreated": "Vytvorí sa pri uložení",
+    "manage": "Spravovať",
+    "addRecipes": "Pridať recepty",
+    "addRecipesTitle": "Pridať recepty do {title}",
+    "searchRecipes": "Hľadať recepty",
+    "noRecipesToAdd": "Nenašli sa žiadne recepty.",
+    "addCount": "{count, plural, one {Pridať # recept} few {Pridať # recepty} other {Pridať # receptov}}",
+    "everythingAlreadyIn": "Každý recept je už v tejto kuchárskej knihe."
+  }
+}

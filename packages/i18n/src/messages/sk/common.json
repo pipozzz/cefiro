@@ -1,0 +1,293 @@
+{
+  "actions": {
+    "save": "Uložiť",
+    "cancel": "Zrušiť",
+    "delete": "Odstrániť",
+    "duplicate": "Duplikovať",
+    "edit": "Upraviť",
+    "create": "Vytvoriť",
+    "add": "Pridať",
+    "remove": "Odstrániť",
+    "close": "Zavrieť",
+    "apply": "Použiť",
+    "reset": "Obnoviť",
+    "clear": "Vymazať",
+    "selectAll": "Vybrať všetko",
+    "deselectAll": "Zrušiť výber",
+    "confirm": "Potvrdiť",
+    "back": "Späť",
+    "next": "Ďalej",
+    "done": "Hotovo",
+    "retry": "Skúsiť znova",
+    "submit": "Odoslať",
+    "search": "Hľadať",
+    "filter": "Filtrovať",
+    "sort": "Zoradiť",
+    "import": "Importovať",
+    "aiImport": "AI import",
+    "importWithAI": "Importovať pomocou AI",
+    "goHome": "Prejsť na domovskú stránku",
+    "test": "Otestovať",
+    "format": "Formátovať",
+    "restoreDefaults": "Obnoviť predvolené",
+    "saveChanges": "Uložiť zmeny"
+  },
+  "secret": {
+    "reveal": "Zobraziť tajný kľúč",
+    "hide": "Skryť tajný kľúč",
+    "keepsCurrent": "Ponechajte prázdne, ak chcete zachovať uloženú hodnotu."
+  },
+  "status": {
+    "loading": "Načítava sa…",
+    "saving": "Ukladá sa…",
+    "deleting": "Odstraňuje sa…",
+    "error": "Chyba",
+    "success": "Úspech",
+    "noResults": "Nenašli sa žiadne výsledky",
+    "changing": "Mení sa…"
+  },
+  "filters": {
+    "title": "Filtre",
+    "search": "Hľadať",
+    "searchIn": "Hľadať v",
+    "sort": "Zoradiť",
+    "mode": "Režim",
+    "modeAll": "Všetky",
+    "modeAny": "Ktorékoľvek",
+    "tags": "Štítky",
+    "searchTags": "Hľadať štítky",
+    "favoritesAndRating": "Obľúbené a hodnotenie",
+    "favorites": "Obľúbené",
+    "cookingTime": "Čas prípravy",
+    "cookingTimeUnder15": "<15 min",
+    "cookingTimeUnder30": "<30 min",
+    "cookingTimeUnder60": "<60 min",
+    "cookingTimeUnder120": "<120 min",
+    "categories": "Kategórie",
+    "category": {
+      "breakfast": "Raňajky",
+      "lunch": "Obed",
+      "dinner": "Večera",
+      "snack": "Občerstvenie"
+    },
+    "sortByTitle": "Názov",
+    "sortByDate": "Dátum",
+    "clearFilters": "Vymazať filtre"
+  },
+  "time": {
+    "minutes": "min",
+    "hours": "hod"
+  },
+  "validation": {
+    "required": "Toto pole je povinné",
+    "invalidUrl": "Zadajte platnú URL adresu"
+  },
+  "errors": {
+    "operationFailed": "Operácia zlyhala",
+    "nameCannotBeEmpty": "Názov nemôže byť prázdny",
+    "technicalDetails": "Niečo sa pokazilo. Technické podrobnosti nájdete v konzole prehliadača."
+  },
+  "slots": {
+    "breakfast": "Raňajky",
+    "lunch": "Obed",
+    "dinner": "Večera",
+    "snack": "Občerstvenie",
+    "chooseSlot": "Vyberte časový úsek"
+  },
+  "connection": {
+    "connecting": "Pripája sa k Cefiro…",
+    "checkInternet": "Skontrolujte svoje internetové pripojenie",
+    "offlineBanner": "Ste offline, zobrazujú sa uložené údaje",
+    "serverUnreachableBanner": "Server Cefiro je nedostupný, zobrazujú sa uložené údaje",
+    "live": "Pripojené",
+    "offline": "Offline",
+    "openDetails": "Podrobnosti o pripojení"
+  },
+  "language": {
+    "title": "Jazyk"
+  },
+  "notFound": {
+    "code": "404",
+    "title": "Nora je zmätená.",
+    "message": "Ňuchá okolo, aby zistila, kam ste sa chceli dostať.",
+    "imageAlt": "Zmätená Nora"
+  },
+  "import": {
+    "url": {
+      "title": "Importovať recept",
+      "label": "URL adresa receptu",
+      "placeholder": "https://example.com/vas-recept",
+      "failed": "Nepodarilo sa importovať recept",
+      "failedWithAI": "Nepodarilo sa importovať recept pomocou AI"
+    },
+    "paste": {
+      "title": "Importovať vložením",
+      "label": "Text receptu alebo JSON-LD",
+      "placeholder": "Sem vložte recept (voľný text) alebo JSON-LD…",
+      "characters": "{count} / {max} znakov",
+      "tooLarge": "Vložený text je príliš veľký",
+      "maxCharacters": "Maximálne {max} znakov na recept",
+      "importing": "Importuje sa recept…",
+      "importingWithAI": "Importuje sa recept pomocou AI…",
+      "inProgress": "Import prebieha, čakajte prosím…",
+      "failed": "Import zlyhal"
+    },
+    "image": {
+      "title": "Importovať z obrázka",
+      "dropzone": "Presuňte sem obrázky alebo kliknite na prehľadávanie",
+      "paste": "na vloženie",
+      "formats": "Podporuje JPG, PNG, WebP. Max. 10 MB na súbor.",
+      "invalidType": "Neplatný typ súboru",
+      "notSupported": "{name} nie je podporovaný formát obrázka",
+      "tooLarge": "Súbor je príliš veľký",
+      "exceeds": "{name} prekračuje limit 10 MB",
+      "tooMany": "Príliš veľa súborov",
+      "maxFiles": "Povolených je maximálne {max} súborov",
+      "importing": "Importuje sa recept z obrázkov…",
+      "analyzing": "Analyzujú sa vaše obrázky, čakajte prosím…",
+      "failed": "Import zlyhal",
+      "selectedCount": "Vybraných {count} obrázkov – budú spojené do jedného receptu",
+      "library": "Knižnica",
+      "takePhoto": "Odfotiť",
+      "counter": "{count} / {max} fotiek",
+      "importFromCount": "Importovať z {count, plural, one {# fotky} few {# fotiek} other {# fotiek}}"
+    },
+    "menu": {
+      "description": "Importujte z URL adresy, naskenujte fotku alebo začnite od začiatku."
+    }
+  },
+  "formatting": {
+    "title": "Tipy na formátovanie",
+    "heading": "Začnite riadok znakom <strong>#</strong> pre nadpis",
+    "bold": "Vložte medzi <strong>**dve hviezdičky**</strong> pre tučné písmo",
+    "recipeLink": "Napíšte <strong>/názov receptu</strong> na prepojenie s iným receptom",
+    "ingredientMention": "Napíšte <strong>@</strong> na pripojenie ingrediencie ku kroku – slovo sa objaví vo vašej vete, odkaz sa stane štítkom pod ňou",
+    "helpAriaLabel": "Pomoc s formátovaním"
+  },
+  "tagInput": {
+    "placeholder": "Píšte štítky oddelené medzerami…"
+  },
+  "recurrence": {
+    "title": "Opakovať",
+    "frequency": "Frekvencia",
+    "interval": "Interval",
+    "onDay": "V deň",
+    "daily": "Denne",
+    "weekly": "Týždenne",
+    "monthly": "Mesačne",
+    "day": "deň",
+    "days": "dni",
+    "week": "týždeň",
+    "weeks": "týždne",
+    "month": "mesiac",
+    "months": "mesiace",
+    "next": "Ďalej:",
+    "every": "Každý",
+    "everyOther": "Každý druhý",
+    "on": "v",
+    "today": "dnes",
+    "tomorrow": "zajtra",
+    "weekdays": {
+      "sun": "Ne",
+      "mon": "Po",
+      "tue": "Ut",
+      "wed": "St",
+      "thu": "Št",
+      "fri": "Pi",
+      "sat": "So"
+    },
+    "weekdaysFull": {
+      "0": "Nedeľa",
+      "1": "Pondelok",
+      "2": "Utorok",
+      "3": "Streda",
+      "4": "Štvrtok",
+      "5": "Piatok",
+      "6": "Sobota"
+    }
+  },
+  "badges": {
+    "new": "Nové"
+  },
+  "timer": {
+    "done": "Hotovo",
+    "done_action": "Hotovo",
+    "one": "Časovač",
+    "other": "Časovače",
+    "label_one": "1 časovač",
+    "label_other": "{count} časovačov",
+    "notification_title": "Časovač dokončený",
+    "notification_body": "{label} je hotové!",
+    "notifications_disabled": "Upozornenia sú vypnuté",
+    "notifications_disabled_hint": "Zapnite upozornenia v nastaveniach prehliadača, aby ste dostávali upozornenia, keď časovače dobehnú na pozadí."
+  },
+  "offlineStatus": {
+    "title": "Pripojenie a offline",
+    "connection": {
+      "heading": "Pripojenie",
+      "live": "Naživo",
+      "offline": "Offline",
+      "forced": "Offline (vynútené)",
+      "liveDescription": "Pripojené k Cefiro. Zmeny sa synchronizujú priebežne.",
+      "offlineDescription": "Cefiro je nedostupné. Zobrazujú sa uložené údaje; zmeny sú zaradené do frontu a synchronizujú sa po obnovení pripojenia.",
+      "forcedDescription": "Offline je vynútené pre vývoj. Backend je dostupný, ale každá požiadavka je blokovaná.",
+      "devBadge": "dev"
+    },
+    "cache": {
+      "heading": "Offline vyrovnávacia pamäť",
+      "recipes": "Recepty",
+      "cookbooks": "Kuchárske knihy",
+      "groceries": "Nákupy",
+      "stores": "Obchody",
+      "planned": "Tento týždeň",
+      "dataAge": "Údaje z {when}",
+      "dataAgeUnknown": "Zatiaľ nenačítané",
+      "wipe": "Vymazať uložené údaje",
+      "wipeConfirmBody": "Odstrániť offline kópiu vašich receptov, nákupov, obchodov a plánu? Vaše zaradené zmeny zostanú zachované.",
+      "wipeConfirmOfflineBody": "Ste offline – vymazanie teraz nezanechá nič na zobrazenie, kým sa znova nepripojíte. Vaše zaradené zmeny zostanú zachované.",
+      "wipeConfirm": "Vymazať",
+      "wipeCancel": "Ponechať"
+    },
+    "outbox": {
+      "heading": "Zaradené zmeny",
+      "empty": "Nič nie je zaradené – všetko je synchronizované.",
+      "pending": "{count, plural, =0 {Žiadne čakajúce zmeny} one {# čakajúca zmena} few {# čakajúce zmeny} other {# čakajúcich zmien}}",
+      "syncing": "{count, plural, =0 {Synchronizuje sa} one {Synchronizuje sa # zmena} few {Synchronizujú sa # zmeny} other {Synchronizuje sa # zmien}}",
+      "syncNow": "Synchronizovať teraz",
+      "retryAll": "Skúsiť všetko znova",
+      "discardAll": "Zahodiť všetko",
+      "discardConfirmBody": "{count, plural, one {Natrvalo zahodiť # zaradenú zmenu? Nebude odoslaná.} few {Natrvalo zahodiť # zaradené zmeny? Nebudú odoslané.} other {Natrvalo zahodiť # zaradených zmien? Nebudú odoslané.}}",
+      "discardConfirm": "Zahodiť",
+      "discardCancel": "Ponechať",
+      "status": {
+        "pending": "Synchronizuje sa",
+        "parked": "Vyžaduje pozornosť",
+        "conflicted": "Konflikt"
+      }
+    },
+    "devToggle": {
+      "heading": "Vývojár",
+      "force": "Vynútiť offline",
+      "description": "Blokuje backendový prenos na otestovanie offline režimu. Iba pre vývojové zostavy.",
+      "on": "Zap.",
+      "off": "Vyp."
+    }
+  },
+  "offlineFallback": {
+    "title": "Nora je tiež offline.",
+    "body": "Táto stránka nie je uložená pre offline – stránky, ktoré ste nedávno navštívili, sú stále tu.",
+    "backOnlineTitle": "Nora našla pripojenie!",
+    "backOnlineBody": "Cefiro je opäť dostupné – skúste načítať túto stránku.",
+    "retry": "Skúsiť znova",
+    "home": "Otvoriť Cefiro"
+  },
+  "queuedOffline": {
+    "title": "Ste offline",
+    "description": "Zaradené – Cefiro to automaticky dokončí, keď budete opäť online."
+  },
+  "storageUnavailable": {
+    "title": "Nepodarilo sa spustiť",
+    "description": "Cefiro nemohlo prečítať svoje zabezpečené úložisko, takže nedokáže určiť, ktorému serveru patrí. Nič sa nezmenilo. Skúste to znova alebo reštartujte aplikáciu.",
+    "detailsLabel": "Technické podrobnosti"
+  }
+}

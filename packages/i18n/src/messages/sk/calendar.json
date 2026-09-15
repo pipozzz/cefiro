@@ -1,0 +1,57 @@
+{
+  "page": {
+    "title": "Kalendár"
+  },
+  "mobile": {
+    "today": "Dnes",
+    "scrollToToday": "Prejsť na dnešok"
+  },
+  "editNote": {
+    "title": "Upraviť poznámku",
+    "noteLabel": "Poznámka",
+    "notePlaceholder": "Zadajte poznámku...",
+    "date": "Dátum",
+    "slot": "Časť dňa"
+  },
+  "navigation": {
+    "previousMonth": "Predchádzajúci mesiac",
+    "nextMonth": "Nasledujúci mesiac",
+    "prev": "Späť",
+    "next": "Ďalej"
+  },
+  "weekdays": {
+    "mon": "Po",
+    "tue": "Ut",
+    "wed": "St",
+    "thu": "Št",
+    "fri": "Pi",
+    "sat": "So",
+    "sun": "Ne"
+  },
+  "timeline": {
+    "noItems": "Nič naplánované",
+    "goToRecipe": "Prejsť na recept",
+    "addItem": "Pridať položku",
+    "untitled": "Bez názvu",
+    "serving": "porcia",
+    "servings": "porcie",
+    "noImage": "Bez obrázka",
+    "recipe": "Recept",
+    "note": "Poznámka"
+  },
+  "editPlannedRecipe": {
+    "title": "Upraviť naplánovaný recept",
+    "date": "Dátum",
+    "slot": "Časť dňa"
+  },
+  "panel": {
+    "addToCalendar": "Pridať do kalendára",
+    "addRecipe": "Pridať recept",
+    "noDaysAvailable": "Nie sú dostupné žiadne dni.",
+    "searchPlaceholder": "Hľadajte recepty alebo pridajte poznámky...",
+    "addNote": "Pridať poznámku: {input}",
+    "randomRecipe": "Náhodný recept",
+    "noRecipesFound": "Nenašli sa žiadne recepty.",
+    "failedToLoadRecipes": "Nepodarilo sa načítať recepty."
+  }
+}
