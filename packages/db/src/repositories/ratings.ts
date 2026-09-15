@@ -108,3 +108,33 @@ export async function getAverageRating(recipeId: string): Promise<RatingStats> {
     ratingCount: Number(row?.ratingCount ?? 0),
   };
 }
+
+/** Average rating + count for many recipes at once (for cards/listings). */
+export async function getAverageRatingsByRecipeIds(
+  recipeIds: string[]
+): Promise<Map<string, RatingStats>> {
+  const map = new Map<string, RatingStats>();
+
+  if (recipeIds.length === 0) {
+    return map;
+  }
+
+  const rows = await db
+    .select({
+      recipeId: recipeRatings.recipeId,
+      averageRating: avg(recipeRatings.rating),
+      ratingCount: count(recipeRatings.id),
+    })
+    .from(recipeRatings)
+    .where(inArray(recipeRatings.recipeId, recipeIds))
+    .groupBy(recipeRatings.recipeId);
+
+  for (const row of rows) {
+    map.set(row.recipeId, {
+      averageRating: row.averageRating ? parseFloat(row.averageRating) : null,
+      ratingCount: Number(row.ratingCount ?? 0),
+    });
+  }
+
+  return map;
+}
