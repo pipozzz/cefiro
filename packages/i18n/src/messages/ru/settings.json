@@ -27,7 +27,7 @@
     },
     "apiKeys": {
       "title": "API-ключи",
-      "description": "API-ключи позволяют программно обращаться к Norish API. Используйте их для интеграций, быстрых команд и автоматизации.",
+      "description": "API-ключи позволяют программно обращаться к Cefiro API. Используйте их для интеграций, быстрых команд и автоматизации.",
       "docsLink": "Открыть документацию API",
       "keyNameLabel": "Название ключа (необязательно)",
       "keyNamePlaceholder": "например, iOS Shortcut",
@@ -61,7 +61,7 @@
     },
     "archiveImport": {
       "title": "Импорт архива рецептов",
-      "description": "Импортируйте рецепты из экспортов Norish (.norishrecipes), Mela (.melarecipes), Paprika (.paprikarecipes) или Mealie/Tandoor (.zip)"
+      "description": "Импортируйте рецепты из экспортов Cefiro (.norishrecipes), Mela (.melarecipes), Paprika (.paprikarecipes) или Mealie/Tandoor (.zip)"
     },
     "archiveExport": {
       "title": "Экспортировать архив рецептов",

@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const url = origin ? `${origin}/u/${profile.handle}` : undefined;
   const displayName = profile.displayName ?? `@${profile.handle}`;
   const title = `${displayName} (@${profile.handle})`;
-  const description = profile.bio?.trim() || `Recipes by @${profile.handle} on Norish.`;
+  const description = profile.bio?.trim() || `Recipes by @${profile.handle} on Cefiro.`;
   const image = profile.avatarUrl ?? undefined;
 
   return {
@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "profile",
       title,
       description,
-      siteName: "Norish",
+      siteName: "Cefiro",
       url,
       images: image ? [{ url: image, alt: displayName }] : undefined,
     },

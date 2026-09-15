@@ -95,10 +95,10 @@
     "chooseSlot": "Scegli fascia"
   },
   "connection": {
-    "connecting": "Connessione a Norish...",
+    "connecting": "Connessione a Cefiro...",
     "checkInternet": "Controlla la tua connessione internet",
     "offlineBanner": "Sei offline, visualizzazione dei dati memorizzati nella cache",
-    "serverUnreachableBanner": "Impossibile raggiungere il server Norish, visualizzazione dei dati memorizzati nella cache",
+    "serverUnreachableBanner": "Impossibile raggiungere il server Cefiro, visualizzazione dei dati memorizzati nella cache",
     "live": "Connesso",
     "offline": "Offline",
     "openDetails": "Connection details"
@@ -228,8 +228,8 @@
       "live": "Live",
       "offline": "Offline",
       "forced": "Offline (forced)",
-      "liveDescription": "Connected to Norish. Changes sync as you make them.",
-      "offlineDescription": "Can't reach Norish. Showing cached data; changes are queued and sync when you're back.",
+      "liveDescription": "Connected to Cefiro. Changes sync as you make them.",
+      "offlineDescription": "Can't reach Cefiro. Showing cached data; changes are queued and sync when you're back.",
       "forcedDescription": "Offline is forced for development. The backend is reachable but every request is blocked.",
       "devBadge": "dev"
     },
@@ -277,17 +277,17 @@
     "title": "Anche Nora è offline.",
     "body": "Questa pagina non è salvata per l'uso offline — le pagine visitate di recente sono ancora qui.",
     "backOnlineTitle": "Nora ha trovato la connessione!",
-    "backOnlineBody": "Norish è di nuovo raggiungibile — riprova a caricare questa pagina.",
+    "backOnlineBody": "Cefiro è di nuovo raggiungibile — riprova a caricare questa pagina.",
     "retry": "Riprova",
-    "home": "Apri Norish"
+    "home": "Apri Cefiro"
   },
   "queuedOffline": {
     "title": "Sei offline",
-    "description": "In coda: Norish completerà automaticamente quando tornerai online."
+    "description": "In coda: Cefiro completerà automaticamente quando tornerai online."
   },
   "storageUnavailable": {
     "title": "Avvio non riuscito",
-    "description": "Norish non è riuscita a leggere l'archivio sicuro e non sa a quale server appartiene questa app. Non è stato modificato nulla. Riprova o riavvia l'app.",
+    "description": "Cefiro non è riuscita a leggere l'archivio sicuro e non sa a quale server appartiene questa app. Non è stato modificato nulla. Riprova o riavvia l'app.",
     "detailsLabel": "Dettagli tecnici"
   }
 }

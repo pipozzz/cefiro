@@ -16,7 +16,7 @@ export default function manifest(): MetadataRoute.Manifest {
         src: "/mockup-norish.png",
         sizes: "1280x720",
         type: "image/png",
-        label: "Norish app desktop and mobile",
+        label: "Cefiro app desktop and mobile",
         form_factor: "wide",
       },
     ],

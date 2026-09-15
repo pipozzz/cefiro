@@ -95,10 +95,10 @@
     "chooseSlot": "Choisir repas"
   },
   "connection": {
-    "connecting": "Connection à Norish...",
+    "connecting": "Connection à Cefiro...",
     "checkInternet": "Veuillez vérifier votre connexion internet",
     "offlineBanner": "Vous êtes hors ligne, affichage des données en cache",
-    "serverUnreachableBanner": "Impossible de contacter le serveur Norish, affichage des données en cache",
+    "serverUnreachableBanner": "Impossible de contacter le serveur Cefiro, affichage des données en cache",
     "live": "Connecté",
     "offline": "Hors ligne",
     "openDetails": "Connection details"
@@ -228,8 +228,8 @@
       "live": "Live",
       "offline": "Offline",
       "forced": "Offline (forced)",
-      "liveDescription": "Connected to Norish. Changes sync as you make them.",
-      "offlineDescription": "Can't reach Norish. Showing cached data; changes are queued and sync when you're back.",
+      "liveDescription": "Connected to Cefiro. Changes sync as you make them.",
+      "offlineDescription": "Can't reach Cefiro. Showing cached data; changes are queued and sync when you're back.",
       "forcedDescription": "Offline is forced for development. The backend is reachable but every request is blocked.",
       "devBadge": "dev"
     },
@@ -277,17 +277,17 @@
     "title": "Nora est hors ligne aussi.",
     "body": "Cette page n'est pas enregistrée pour le hors ligne — les pages visitées récemment sont toujours là.",
     "backOnlineTitle": "Nora a retrouvé la connexion !",
-    "backOnlineBody": "Norish est de nouveau joignable — réessayez de charger cette page.",
+    "backOnlineBody": "Cefiro est de nouveau joignable — réessayez de charger cette page.",
     "retry": "Réessayer",
-    "home": "Ouvrir Norish"
+    "home": "Ouvrir Cefiro"
   },
   "queuedOffline": {
     "title": "Vous êtes hors ligne",
-    "description": "Mis en file d'attente — Norish terminera automatiquement dès que vous serez de nouveau en ligne."
+    "description": "Mis en file d'attente — Cefiro terminera automatiquement dès que vous serez de nouveau en ligne."
   },
   "storageUnavailable": {
     "title": "Démarrage impossible",
-    "description": "Norish n'a pas pu lire son stockage sécurisé et ne sait donc pas à quel serveur cette application est rattachée. Rien n'a été modifié. Réessayez ou redémarrez l'application.",
+    "description": "Cefiro n'a pas pu lire son stockage sécurisé et ne sait donc pas à quel serveur cette application est rattachée. Rien n'a été modifié. Réessayez ou redémarrez l'application.",
     "detailsLabel": "Détails techniques"
   }
 }
