@@ -5,6 +5,7 @@ import { useTRPC } from "@/app/providers/trpc-provider";
 import { NotFoundView } from "@/components/shared/not-found-view";
 import { CommentsSection } from "@/components/social/comments-section";
 import { LikeButton } from "@/components/social/like-button";
+import { RecipeRating } from "@/components/social/recipe-rating";
 import RecipeSkeleton from "@/components/skeleton/recipe-skeleton";
 import { useQuery } from "@tanstack/react-query";
 
@@ -76,7 +77,7 @@ export function PublicRecipeView({ slug }: { slug: string }) {
     );
   }
 
-  const { recipe, author, recipeId, favoriteCount } = data;
+  const { recipe, author, recipeId, favoriteCount, rating } = data;
 
   const timePills = [
     recipe.prepMinutes ? { label: "Prep", value: `${recipe.prepMinutes} min` } : null,
@@ -154,8 +155,14 @@ export function PublicRecipeView({ slug }: { slug: string }) {
         </div>
       )}
 
-      <div className="mt-6">
+      <div className="mt-6 flex flex-wrap items-start gap-x-8 gap-y-4">
         <LikeButton recipeId={recipeId} slug={slug} initialCount={favoriteCount} />
+        <RecipeRating
+          recipeId={recipeId}
+          slug={slug}
+          initialAverage={rating.average}
+          initialCount={rating.count}
+        />
       </div>
 
       {/* Ingredients + steps */}

@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { HeartIcon } from "@heroicons/react/24/solid";
 
+import { StarsDisplay } from "./stars-display";
+
 export type SocialRecipeCardData = {
   slug: string | null;
   name: string;
@@ -11,6 +13,7 @@ export type SocialRecipeCardData = {
   dishColor: string | null;
   totalMinutes: number | null;
   favoriteCount?: number;
+  rating?: { average: number | null; count: number };
   author?: {
     handle: string;
     displayName: string | null;
@@ -59,6 +62,15 @@ export function SocialRecipeCard({ recipe }: { recipe: SocialRecipeCardData }) {
         </Link>
         {recipe.description ? (
           <p className="mt-1 line-clamp-2 text-sm text-default-500">{recipe.description}</p>
+        ) : null}
+
+        {recipe.rating && recipe.rating.average && recipe.rating.count > 0 ? (
+          <div className="mt-2 flex items-center gap-1.5">
+            <StarsDisplay value={recipe.rating.average} size={13} />
+            <span className="text-xs text-default-500">
+              {recipe.rating.average.toFixed(1)} ({recipe.rating.count})
+            </span>
+          </div>
         ) : null}
 
         {recipe.author && authorName ? (

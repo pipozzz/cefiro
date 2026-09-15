@@ -145,6 +145,17 @@ export const DeleteCommentInputSchema = z.object({
   commentId: z.uuid(),
 });
 
+// --- Ratings -------------------------------------------------------------
+
+export const RateRecipeInputSchema = z.object({
+  recipeId: z.uuid(),
+  rating: z.number().int().min(1).max(5),
+});
+
+export const MyRatingInputSchema = z.object({
+  recipeId: z.uuid(),
+});
+
 // --- Notifications -------------------------------------------------------
 
 export const ListNotificationsInputSchema = z.object({

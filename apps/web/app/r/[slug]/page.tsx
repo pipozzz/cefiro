@@ -1,6 +1,7 @@
 import { cache } from "react";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
+import { getAverageRating } from "@norish/db/repositories/ratings";
 import { getRecipeFull } from "@norish/db/repositories/recipes";
 import {
   getProfileByUserId,
@@ -54,8 +55,9 @@ const loadRecipe = cache(async (slug: string) => {
 
   const authorProfile = ref.userId ? await getProfileByUserId(ref.userId) : null;
   const author = authorProfile?.isPublic ? authorProfile : null;
+  const rating = await getAverageRating(ref.recipeId);
 
-  return { ref, full, author };
+  return { ref, full, author, rating };
 });
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -116,7 +118,8 @@ function buildRecipeJsonLd(
   full: FullRecipeDTO,
   slug: string,
   origin: string,
-  author: { handle: string; displayName: string | null } | null
+  author: { handle: string; displayName: string | null } | null,
+  rating: { averageRating: number | null; ratingCount: number }
 ): Record<string, unknown> {
   const abs = (path: string | null): string | undefined =>
     path ? (path.startsWith("http") ? path : origin ? `${origin}${path}` : undefined) : undefined;
@@ -153,6 +156,16 @@ function buildRecipeJsonLd(
             url: `${origin}/u/${author.handle}`,
           }
         : undefined,
+    aggregateRating:
+      rating.averageRating && rating.ratingCount > 0
+        ? {
+            "@type": "AggregateRating",
+            ratingValue: rating.averageRating.toFixed(1),
+            ratingCount: rating.ratingCount,
+            bestRating: "5",
+            worstRating: "1",
+          }
+        : undefined,
     datePublished: full.createdAt ? new Date(full.createdAt).toISOString() : undefined,
     prepTime: toIsoDuration(full.prepMinutes),
     cookTime: toIsoDuration(full.cookMinutes),
@@ -187,7 +200,8 @@ export default async function PublicRecipePage({ params }: Props) {
       data.full,
       slug,
       origin,
-      data.author ? { handle: data.author.handle, displayName: data.author.displayName } : null
+      data.author ? { handle: data.author.handle, displayName: data.author.displayName } : null,
+      data.rating
     );
     // Escape `<` so user content (e.g. a recipe name containing "</script>")
     // can never break out of the JSON-LD script tag.

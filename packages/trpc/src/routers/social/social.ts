@@ -9,6 +9,13 @@ import {
   removeFavorite,
 } from "@norish/db/repositories/favorites";
 import {
+  getAverageRating,
+  getAverageRatingsByRecipeIds,
+  getUserRating,
+  rateRecipe,
+  type RatingStats,
+} from "@norish/db/repositories/ratings";
+import {
   countUnreadNotifications,
   createNotification,
   listNotifications,
@@ -58,6 +65,8 @@ import {
   ListCommentsInputSchema,
   ListNotificationsInputSchema,
   ListPublicRecipesByHandleInputSchema,
+  MyRatingInputSchema,
+  RateRecipeInputSchema,
   SetRecipeVisibilityInputSchema,
   ToggleLikeInputSchema,
   UpsertProfileInputSchema,
@@ -178,6 +187,17 @@ function toFeedCard(row: FeedRecipeRow) {
         }
       : null,
   };
+}
+
+function toRatingDto(stats: RatingStats | undefined): { average: number | null; count: number } {
+  return { average: stats?.averageRating ?? null, count: stats?.ratingCount ?? 0 };
+}
+
+/** Map feed/discover rows to cards, attaching each recipe's average rating. */
+async function toFeedCardsWithRatings(rows: FeedRecipeRow[]) {
+  const ratings = await getAverageRatingsByRecipeIds(rows.map((r) => r.id));
+
+  return rows.map((row) => ({ ...toFeedCard(row), rating: toRatingDto(ratings.get(row.id)) }));
 }
 
 // --- Profile management (authenticated) ---------------------------------
@@ -320,7 +340,7 @@ const getFollowStatus = authedProcedure
 const feed = authedProcedure.input(FeedInputSchema).query(async ({ ctx, input }) => {
   const { items, nextCursor } = await listFeedRecipes(ctx.user.id, input.limit, input.cursor);
 
-  return { recipes: items.map(toFeedCard), nextCursor };
+  return { recipes: await toFeedCardsWithRatings(items), nextCursor };
 });
 
 const discover = publicProcedure.input(DiscoverInputSchema).query(async ({ input }) => {
@@ -331,7 +351,7 @@ const discover = publicProcedure.input(DiscoverInputSchema).query(async ({ input
     cursor: input.cursor,
   });
 
-  return { recipes: items.map(toFeedCard), nextCursor };
+  return { recipes: await toFeedCardsWithRatings(items), nextCursor };
 });
 
 // --- Likes (favourites double as public likes) --------------------------
@@ -528,7 +548,9 @@ const listProfileRecipes = publicProcedure
       input.cursor
     );
 
-    // Rewrite the card thumbnail to the public slug route.
+    const ratings = await getAverageRatingsByRecipeIds(items.map((i) => i.id));
+
+    // Rewrite the card thumbnail to the public slug route + attach rating.
     const recipes = items.map((item) => ({
       slug: item.slug,
       name: item.name,
@@ -537,6 +559,7 @@ const listProfileRecipes = publicProcedure
       dishColor: item.dishColor,
       totalMinutes: item.totalMinutes,
       publishedAt: item.publishedAt,
+      rating: toRatingDto(ratings.get(item.id)),
     }));
 
     return { recipes, nextCursor };
@@ -570,9 +593,10 @@ const getPublicRecipe = publicProcedure
       }
     }
 
-    const [favoriteCount, commentCount] = await Promise.all([
+    const [favoriteCount, commentCount, ratingStats] = await Promise.all([
       countRecipeFavorites(ref.recipeId),
       countCommentsForRecipe(ref.recipeId),
+      getAverageRating(ref.recipeId),
     ]);
 
     return {
@@ -583,7 +607,32 @@ const getPublicRecipe = publicProcedure
       author,
       favoriteCount,
       commentCount,
+      rating: toRatingDto(ratingStats),
     };
+  });
+
+// --- Ratings -------------------------------------------------------------
+
+const getMyRecipeRating = authedProcedure
+  .input(MyRatingInputSchema)
+  .query(async ({ ctx, input }) => {
+    const rating = await getUserRating(ctx.user.id, input.recipeId);
+
+    return { recipeId: input.recipeId, rating };
+  });
+
+const setRecipeRating = authedProcedure
+  .input(RateRecipeInputSchema)
+  .mutation(async ({ ctx, input }) => {
+    if (!(await getViewableRecipeRefById(input.recipeId))) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Recipe not found" });
+    }
+
+    await rateRecipe(ctx.user.id, input.recipeId, input.rating);
+
+    const stats = await getAverageRating(input.recipeId);
+
+    return { recipeId: input.recipeId, rating: input.rating, ...toRatingDto(stats) };
   });
 
 export const socialProcedures = router({
@@ -608,4 +657,6 @@ export const socialProcedures = router({
   getNotifications,
   getUnreadNotificationCount,
   markNotificationsRead,
+  getMyRecipeRating,
+  setRecipeRating,
 });
