@@ -6,6 +6,7 @@ import { NotFoundView } from "@/components/shared/not-found-view";
 import { CommentsSection } from "@/components/social/comments-section";
 import { LikeButton } from "@/components/social/like-button";
 import { RecipeRating } from "@/components/social/recipe-rating";
+import { SaveRecipeButton } from "@/components/social/save-recipe-button";
 import RecipeSkeleton from "@/components/skeleton/recipe-skeleton";
 import { useQuery } from "@tanstack/react-query";
 
@@ -155,8 +156,12 @@ export function PublicRecipeView({ slug }: { slug: string }) {
         </div>
       )}
 
-      <div className="mt-6 flex flex-wrap items-start gap-x-8 gap-y-4">
+      <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4">
         <LikeButton recipeId={recipeId} slug={slug} initialCount={favoriteCount} />
+        <SaveRecipeButton recipeId={recipeId} slug={slug} />
+      </div>
+
+      <div className="mt-4">
         <RecipeRating
           recipeId={recipeId}
           slug={slug}
