@@ -72,6 +72,10 @@ bun.lockb
 
 docker-compose.yml
 
+# cefiro: local deploy compose holds live secrets (MASTER_KEY, DB password) —
+# never commit it to this public repo.
+docker/docker-compose.yaml
+
 # archives
 *.tar.gz
 
