@@ -1,4 +1,4 @@
-import { and, desc, eq, lt, ne, sql } from "drizzle-orm";
+import { and, desc, eq, isNotNull, lt, ne, sql } from "drizzle-orm";
 
 import type { RecipeVisibility } from "@norish/shared/contracts/zod/social";
 
@@ -334,6 +334,32 @@ export async function getViewableRecipeRefById(recipeId: string): Promise<Public
   }
 
   return row;
+}
+
+/** All PUBLIC recipe slugs (for the sitemap), newest first. */
+export async function listPublicRecipeSlugs(
+  limit = 50000
+): Promise<Array<{ slug: string; updatedAt: Date }>> {
+  const rows = await db
+    .select({ slug: recipes.slug, updatedAt: recipes.updatedAt })
+    .from(recipes)
+    .where(and(eq(recipes.visibility, "public"), isNotNull(recipes.slug)))
+    .orderBy(desc(recipes.publishedAt))
+    .limit(limit);
+
+  return rows.filter((r): r is { slug: string; updatedAt: Date } => r.slug !== null);
+}
+
+/** All PUBLIC profile handles (for the sitemap). */
+export async function listPublicProfileHandles(
+  limit = 50000
+): Promise<Array<{ handle: string; updatedAt: Date }>> {
+  return db
+    .select({ handle: userProfiles.handle, updatedAt: userProfiles.updatedAt })
+    .from(userProfiles)
+    .where(eq(userProfiles.isPublic, true))
+    .orderBy(desc(userProfiles.updatedAt))
+    .limit(limit);
 }
 
 /**
