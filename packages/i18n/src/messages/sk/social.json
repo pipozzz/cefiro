@@ -133,6 +133,25 @@
     "heading": "Kuchári na sledovanie",
     "subtitle": "Začni sledovať pár kuchárov a naplň si feed."
   },
+  "welcome": {
+    "title": "Vitaj v Cefiro",
+    "subtitle": "Vyber si handle, aby ťa ľudia našli a mohol si zdieľať recepty.",
+    "handleLabel": "Handle",
+    "handlePlaceholder": "tvojemeno",
+    "handleRule": "3–30 znakov, začni písmenom, len malé písmená, číslice alebo podčiarkovník.",
+    "handleTaken": "Tento handle je obsadený.",
+    "handleAvailable": "Voľné",
+    "displayNameLabel": "Zobrazované meno (voliteľné)",
+    "displayNamePlaceholder": "Tvoje meno",
+    "bioLabel": "Bio (voliteľné)",
+    "bioPlaceholder": "Napíš ľuďom, čo varíš…",
+    "continue": "Pokračovať",
+    "followTitle": "Sleduj pár kuchárov",
+    "followSubtitle": "Ich najnovšie recepty ti naplnia feed.",
+    "done": "Hotovo",
+    "skip": "Preskočiť nateraz",
+    "couldNotSave": "Nepodarilo sa uložiť profil"
+  },
   "notifications": {
     "title": "Notifikácie",
     "empty": "Zatiaľ žiadne notifikácie.",

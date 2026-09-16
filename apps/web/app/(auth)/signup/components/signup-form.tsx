@@ -49,7 +49,15 @@ export function SignupForm({ callbackUrl = "/" }: SignupFormProps) {
       if (result.error) {
         setError(result.error.message || t("errors.createFailed"));
       } else {
-        router.push(callbackUrl);
+        // New accounts go through onboarding first (pick a handle, follow a few
+        // cooks), then on to wherever they were headed. Welcome forwards to
+        // `next` immediately if a profile already exists.
+        const welcome =
+          callbackUrl && callbackUrl !== "/"
+            ? `/welcome?next=${encodeURIComponent(callbackUrl)}`
+            : "/welcome";
+
+        router.push(welcome);
       }
     } catch {
       setError(t("errors.generic"));
