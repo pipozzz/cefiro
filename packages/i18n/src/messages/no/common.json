@@ -30,7 +30,8 @@
     "test": "Test",
     "format": "Formater",
     "restoreDefaults": "Gjenopprett standardinnstillinger",
-    "saveChanges": "Lagre endringer"
+    "saveChanges": "Lagre endringer",
+    "closeImageViewer": "Close image viewer"
   },
   "secret": {
     "reveal": "Vis hemmelighet",
@@ -72,7 +73,8 @@
     },
     "sortByTitle": "Tittel",
     "sortByDate": "Dato",
-    "clearFilters": "Tøm filtre"
+    "clearFilters": "Tøm filtre",
+    "ariaLabel": "Filters"
   },
   "time": {
     "minutes": "min",

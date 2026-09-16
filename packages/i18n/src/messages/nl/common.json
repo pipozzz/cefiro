@@ -30,7 +30,8 @@
     "test": "Test",
     "format": "Formatteren",
     "restoreDefaults": "Resetten",
-    "saveChanges": "Wijzigingen opslaan"
+    "saveChanges": "Wijzigingen opslaan",
+    "closeImageViewer": "Close image viewer"
   },
   "secret": {
     "reveal": "Geheim tonen",
@@ -72,7 +73,8 @@
     },
     "sortByTitle": "Titel",
     "sortByDate": "Datum",
-    "clearFilters": "Filters wissen"
+    "clearFilters": "Filters wissen",
+    "ariaLabel": "Filters"
   },
   "time": {
     "minutes": "min",

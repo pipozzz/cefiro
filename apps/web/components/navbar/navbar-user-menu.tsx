@@ -94,7 +94,7 @@ export default function NavbarUserMenu({
         {trigger === "avatar" ? (
           <Button
             isIconOnly
-            aria-label="Open user menu"
+            aria-label={t("openMenu")}
             className={`relative rounded-full p-0 ${size === "sm" ? "h-11 w-11 min-w-11" : "h-13 w-13"}`}
             variant="ghost"
           >
@@ -139,7 +139,7 @@ export default function NavbarUserMenu({
               <span className="text-muted truncate text-xs">{user.email}</span>
             </div>
           </div>
-          <Dropdown.Menu aria-label="User menu" className="w-full">
+          <Dropdown.Menu aria-label={t("menu")} className="w-full">
             <Dropdown.Item
               key="language"
               className={`py-3 ${cssButtonPill}`}

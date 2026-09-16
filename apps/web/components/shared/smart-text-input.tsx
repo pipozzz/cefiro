@@ -236,7 +236,7 @@ export default function SmartTextInput({
             </div>
           ) : autocomplete?.type === "recipe" && suggestions.length > 0 ? (
             <ListBox
-              aria-label="Recipe suggestions"
+              aria-label={t("recipeSuggestions")}
               items={suggestions}
               onAction={(key) => {
                 const recipe = suggestions.find((r) => r.id === key);
@@ -260,7 +260,7 @@ export default function SmartTextInput({
             </ListBox>
           ) : autocomplete?.type === "ingredient" && ingredientMatches.length > 0 ? (
             <ListBox
-              aria-label="Ingredient suggestions"
+              aria-label={t("ingredientSuggestions")}
               items={ingredientMatches}
               onAction={(key) => {
                 const suggestion = ingredientMatches.find((item) => item.key === key);

@@ -43,7 +43,9 @@
     "noResults": "레시피를 찾을 수 없습니다.",
     "noResultsHint": "필터를 조정하거나 지워보세요.",
     "noCookbooks": "아직 요리책이 없습니다",
-    "noCookbooksHint": "요리책은 제목이 있는 레시피 모음입니다. 첫 요리책을 만들어 라이브러리를 정리해 보세요."
+    "noCookbooksHint": "요리책은 제목이 있는 레시피 모음입니다. 첫 요리책을 만들어 라이브러리를 정리해 보세요.",
+    "recipeSuggestions": "Recipe suggestions",
+    "ingredientSuggestions": "Ingredient suggestions"
   },
   "card": {
     "noImage": "이미지가 없습니다.",
@@ -238,8 +240,10 @@
       "mute": "무음",
       "unmute": "음소거 해제",
       "fullscreen": "전체 화면으로 전환",
-      "exitFullscreen": "전체 화면 종료"
-    }
+      "exitFullscreen": "전체 화면 종료",
+      "progressBar": "Video progress"
+    },
+    "imageAlt": "Recipe image"
   },
   "validation": {
     "nameRequired": "레시피 이름은 필수 항목입니다.",
@@ -403,5 +407,9 @@
     "noRecipesToAdd": "레시피를 찾을 수 없습니다.",
     "addCount": "{count, plural, other {레시피 #개 추가}}",
     "everythingAlreadyIn": "모든 레시피가 이미 이 요리책에 있습니다."
+  },
+  "servingsControl": {
+    "decrease": "Decrease servings",
+    "increase": "Increase servings"
   }
 }

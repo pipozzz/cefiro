@@ -43,7 +43,9 @@
     "noResults": "Няма намерени рецепти",
     "noResultsHint": "Опитай да коригираш или изчистиш филтрите си.",
     "noCookbooks": "Още няма готварски книги",
-    "noCookbooksHint": "Готварската книга е озаглавен набор от рецепти. Създайте първата си, за да подредите библиотеката си."
+    "noCookbooksHint": "Готварската книга е озаглавен набор от рецепти. Създайте първата си, за да подредите библиотеката си.",
+    "recipeSuggestions": "Recipe suggestions",
+    "ingredientSuggestions": "Ingredient suggestions"
   },
   "card": {
     "noImage": "Няма налично изображение",
@@ -238,8 +240,10 @@
       "mute": "Заглуши",
       "unmute": "Включи звука",
       "fullscreen": "Цял екран",
-      "exitFullscreen": "Изход от цял екран"
-    }
+      "exitFullscreen": "Изход от цял екран",
+      "progressBar": "Video progress"
+    },
+    "imageAlt": "Recipe image"
   },
   "validation": {
     "nameRequired": "Името на рецептата е задължително",
@@ -403,5 +407,9 @@
     "noRecipesToAdd": "Няма намерени рецепти.",
     "addCount": "{count, plural, one {Добави # рецепта} other {Добави # рецепти}}",
     "everythingAlreadyIn": "Всички рецепти вече са в тази готварска книга."
+  },
+  "servingsControl": {
+    "decrease": "Decrease servings",
+    "increase": "Increase servings"
   }
 }

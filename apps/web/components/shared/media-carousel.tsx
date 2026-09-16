@@ -110,6 +110,7 @@ function MediaCarouselSlides({
   sortedItems,
 }: MediaCarouselSlidesProps) {
   const { selectedIndex } = useCarousel();
+  const t = useTranslations("recipes.carousel");
   const safeIndex = Math.min(selectedIndex, sortedItems.length - 1);
 
   useEffect(() => {
@@ -157,7 +158,7 @@ function MediaCarouselSlides({
                 <NextImage
                   fill
                   unoptimized
-                  alt={`Recipe media ${index + 1}`}
+                  alt={t("imageAlt")}
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                   sizes="(min-width: 1024px) 60vw, (min-width: 768px) 50vw, 100vw"
                   src={item.src}
@@ -203,7 +204,7 @@ export default function MediaCarousel({
       .filter((item) => item.type === "image")
       .map((item) => ({
         src: item.src,
-        alt: `Recipe media ${item.id || ""}`,
+        alt: t("imageAlt"),
       }));
   }, [sortedItems]);
 
@@ -295,7 +296,7 @@ export default function MediaCarousel({
               <NextImage
                 fill
                 unoptimized
-                alt="Recipe image"
+                alt={t("imageAlt")}
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                 sizes="(min-width: 1024px) 60vw, (min-width: 768px) 50vw, 100vw"
                 src={item.src}

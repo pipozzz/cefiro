@@ -80,13 +80,16 @@
     "following": "sledovaných",
     "recipes": "Recepty",
     "noRecipes": "Zatiaľ žiadne verejné recepty.",
-    "cookbooksHeading": "Kuchárky"
+    "cookbooksHeading": "Kuchárky",
+    "metaDescription": "Recepty od @{handle} na Cefiro.",
+    "ogTagline": "Recepty na Cefiro"
   },
   "cookbook": {
     "notFoundTitle": "Kuchárka sa nenašla",
     "notFoundMessage": "Táto kuchárka je súkromná alebo neexistuje.",
     "recipesCount": "{count, plural, one {# recept} few {# recepty} other {# receptov}}",
-    "empty": "V tejto kuchárke zatiaľ nie sú žiadne verejné recepty."
+    "empty": "V tejto kuchárke zatiaľ nie sú žiadne verejné recepty.",
+    "metaDescription": "Kuchárka s {count, plural, one {# receptom} few {# receptami} other {# receptami}} na Cefiro."
   },
   "cookbookShare": {
     "heading": "Zdieľanie",
@@ -119,7 +122,8 @@
     "protein": "Bielkoviny",
     "carbs": "Sacharidy",
     "fat": "Tuky",
-    "source": "Zdroj:"
+    "source": "Zdroj:",
+    "metaDescription": "Recept zdieľaný na Cefiro."
   },
   "feed": {
     "title": "Tvoj feed",

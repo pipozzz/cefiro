@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { cache } from "react";
 import { headers } from "next/headers";
+import { getTranslations } from "next-intl/server";
 
 import type { FullRecipeDTO } from "@norish/shared/contracts";
 import { getAverageRating } from "@norish/db/repositories/ratings";
@@ -64,9 +65,10 @@ const loadRecipe = cache(async (slug: string) => {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const data = await loadRecipe(slug);
+  const t = await getTranslations("social.recipe");
 
   if (!data) {
-    return { title: "Recipe not found", robots: { index: false, follow: false } };
+    return { title: t("notFoundTitle"), robots: { index: false, follow: false } };
   }
 
   const { ref, full } = data;
@@ -80,7 +82,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const image = photo ?? (origin ? `${origin}/r/${slug}/og` : undefined);
 
   const title = full.name;
-  const description = full.description?.trim() || "A recipe shared on Cefiro.";
+  const description = full.description?.trim() || t("metaDescription");
 
   return {
     title,

@@ -43,7 +43,9 @@
     "noResults": "Nenašli sa žiadne recepty",
     "noResultsHint": "Skús upraviť alebo vymazať filtre.",
     "noCookbooks": "Zatiaľ žiadne kuchárske knihy",
-    "noCookbooksHint": "Kuchárska kniha je pomenovaná zbierka receptov. Vytvor si svoju prvú a daj knižnici poriadok."
+    "noCookbooksHint": "Kuchárska kniha je pomenovaná zbierka receptov. Vytvor si svoju prvú a daj knižnici poriadok.",
+    "recipeSuggestions": "Návrhy receptov",
+    "ingredientSuggestions": "Návrhy ingrediencií"
   },
   "card": {
     "noImage": "Obrázok nie je k dispozícii",
@@ -238,8 +240,10 @@
       "mute": "Stlmiť",
       "unmute": "Zrušiť stlmenie",
       "fullscreen": "Prejsť na celú obrazovku",
-      "exitFullscreen": "Ukončiť celú obrazovku"
-    }
+      "exitFullscreen": "Ukončiť celú obrazovku",
+      "progressBar": "Priebeh videa"
+    },
+    "imageAlt": "Obrázok receptu"
   },
   "validation": {
     "nameRequired": "Názov receptu je povinný",
@@ -403,5 +407,9 @@
     "noRecipesToAdd": "Nenašli sa žiadne recepty.",
     "addCount": "{count, plural, one {Pridať # recept} few {Pridať # recepty} other {Pridať # receptov}}",
     "everythingAlreadyIn": "Každý recept je už v tejto kuchárskej knihe."
+  },
+  "servingsControl": {
+    "decrease": "Znížiť počet porcií",
+    "increase": "Zvýšiť počet porcií"
   }
 }

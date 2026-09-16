@@ -51,13 +51,13 @@ export const Navbar = () => {
       >
         <nav
           className="bg-surface mx-auto flex h-16 w-full items-center justify-between gap-4 rounded-[40px] px-4 shadow-[0_8px_28px_-10px_rgba(0,0,0,0.3)] transition-all"
-          aria-label="Main navigation"
+          aria-label={t("mainNav")}
         >
           {/* Left */}
           <div className="flex min-w-0 items-center justify-start">
             <div className="max-w-fit">
               <NextLink
-                aria-label="Go to home"
+                aria-label={t("goHome")}
                 className="flex items-center"
                 href="/"
                 onClick={(e) => {

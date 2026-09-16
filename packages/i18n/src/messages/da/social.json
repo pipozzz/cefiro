@@ -80,13 +80,16 @@
     "following": "following",
     "recipes": "Recipes",
     "noRecipes": "No public recipes yet.",
-    "cookbooksHeading": "Cookbooks"
+    "cookbooksHeading": "Cookbooks",
+    "metaDescription": "Recipes by @{handle} on Cefiro.",
+    "ogTagline": "Recipes on Cefiro"
   },
   "cookbook": {
     "notFoundTitle": "Cookbook not found",
     "notFoundMessage": "This cookbook is private or does not exist.",
     "recipesCount": "{count, plural, one {# recipe} other {# recipes}}",
-    "empty": "No public recipes in this cookbook yet."
+    "empty": "No public recipes in this cookbook yet.",
+    "metaDescription": "A cookbook of {count, plural, one {# recipe} other {# recipes}} shared on Cefiro."
   },
   "cookbookShare": {
     "heading": "Sharing",
@@ -119,7 +122,8 @@
     "protein": "Protein",
     "carbs": "Carbs",
     "fat": "Fat",
-    "source": "Source:"
+    "source": "Source:",
+    "metaDescription": "A recipe shared on Cefiro."
   },
   "feed": {
     "title": "Your feed",
