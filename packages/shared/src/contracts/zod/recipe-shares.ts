@@ -153,7 +153,10 @@ export const PublicRecipeViewSchema = z.object({
   url: z.string().nullable(),
   image: z.string().nullable(),
   dishColor: z.string().nullable().default(null),
-  servings: z.number().int().positive(),
+  // Imported recipes can arrive with servings unset (0) or missing (null) when
+  // the source didn't state a yield, so the public view treats "unknown" as
+  // null rather than rejecting the whole recipe. Kept positive when present.
+  servings: z.number().int().positive().nullable(),
   prepMinutes: z.number().int().nullable(),
   cookMinutes: z.number().int().nullable(),
   totalMinutes: z.number().int().nullable(),

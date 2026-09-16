@@ -3,6 +3,7 @@ import { and, desc, eq, lt, sql } from "drizzle-orm";
 import { db } from "@norish/db/drizzle";
 
 import { follows, recipeFavorites, recipes, recipeTags, tags, userProfiles } from "../schema";
+import { PRIMARY_IMAGE_SQL } from "./recipes";
 
 export async function followUser(followerId: string, followeeId: string): Promise<void> {
   if (followerId === followeeId) {
@@ -72,7 +73,10 @@ const RECIPE_CARD_COLUMNS = {
   slug: recipes.slug,
   name: recipes.name,
   description: recipes.description,
-  image: recipes.image,
+  // Serve the primary image (first gallery image, legacy scalar as fallback),
+  // exactly like the authed list projections — an imported recipe whose photo
+  // only landed in the gallery must still show a thumbnail on public cards.
+  image: PRIMARY_IMAGE_SQL,
   dishColor: recipes.dishColor,
   totalMinutes: recipes.totalMinutes,
   publishedAt: recipes.publishedAt,

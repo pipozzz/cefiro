@@ -5,6 +5,7 @@ import { db } from "@norish/db/drizzle";
 
 import type { FeedRecipeRow } from "./follows";
 import { cookbookRecipes, cookbooks, recipeFavorites, recipes, userProfiles } from "../schema";
+import { PRIMARY_IMAGE_SQL } from "./recipes";
 
 // --- Slug ----------------------------------------------------------------
 
@@ -142,7 +143,7 @@ const RECIPE_CARD_COLUMNS = {
   slug: recipes.slug,
   name: recipes.name,
   description: recipes.description,
-  image: recipes.image,
+  image: PRIMARY_IMAGE_SQL,
   dishColor: recipes.dishColor,
   totalMinutes: recipes.totalMinutes,
   publishedAt: recipes.publishedAt,
@@ -274,7 +275,7 @@ export async function listPublicCookbooksByUserId(userId: string): Promise<Publi
   const members = await db
     .select({
       cookbookId: cookbookRecipes.cookbookId,
-      image: recipes.image,
+      image: PRIMARY_IMAGE_SQL,
       recipeSlug: recipes.slug,
       publishedAt: recipes.publishedAt,
     })

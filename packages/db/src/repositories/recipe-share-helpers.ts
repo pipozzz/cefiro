@@ -102,7 +102,9 @@ export function mapRecipeToPublicRecipeView(
     // The Dish Colour travels to the share page so a shared link tints the
     // way the app does (ADR-0023); it stays a colour, never a media URL.
     dishColor: recipe.dishColor ?? null,
-    servings: recipe.servings,
+    // Normalise an unstated yield (0 from an import, or null) to null so the
+    // "positive-or-null" contract holds and the view simply hides the pill.
+    servings: recipe.servings && recipe.servings > 0 ? recipe.servings : null,
     prepMinutes: recipe.prepMinutes ?? null,
     cookMinutes: recipe.cookMinutes ?? null,
     totalMinutes: recipe.totalMinutes ?? null,
