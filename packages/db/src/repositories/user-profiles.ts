@@ -4,7 +4,7 @@ import type { RecipeVisibility } from "@norish/shared/contracts/zod/social";
 import { db } from "@norish/db/drizzle";
 
 import { follows, recipes, userProfiles } from "../schema";
-import { PRIMARY_IMAGE_SQL } from "./recipes";
+import { PRIMARY_IMAGE_SQL } from "./recipe-image-sql";
 
 export interface PublicProfile {
   userId: string;

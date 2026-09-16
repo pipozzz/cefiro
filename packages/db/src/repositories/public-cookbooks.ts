@@ -5,7 +5,7 @@ import { db } from "@norish/db/drizzle";
 
 import type { FeedRecipeRow } from "./follows";
 import { cookbookRecipes, cookbooks, recipeFavorites, recipes, userProfiles } from "../schema";
-import { PRIMARY_IMAGE_SQL } from "./recipes";
+import { PRIMARY_IMAGE_SQL } from "./recipe-image-sql";
 
 // --- Slug ----------------------------------------------------------------
 

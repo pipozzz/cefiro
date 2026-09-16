@@ -3,7 +3,7 @@ import { and, desc, eq, lt, sql } from "drizzle-orm";
 import { db } from "@norish/db/drizzle";
 
 import { follows, recipeFavorites, recipes, recipeTags, tags, userProfiles } from "../schema";
-import { PRIMARY_IMAGE_SQL } from "./recipes";
+import { PRIMARY_IMAGE_SQL } from "./recipe-image-sql";
 
 export async function followUser(followerId: string, followeeId: string): Promise<void> {
   if (followerId === followeeId) {
