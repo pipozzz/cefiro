@@ -29,8 +29,14 @@ config), then restart the client:
 client {
   host_volume "cefiro_pgdata"  { path = "/opt/cefiro/pgdata"  read_only = false }
   host_volume "cefiro_uploads" { path = "/opt/cefiro/uploads" read_only = false }
+  host_volume "cefiro_redis"   { path = "/opt/cefiro/redis"   read_only = false }
 }
 ```
+
+**Why a Redis volume?** Login sessions live in Redis (better-auth
+secondaryStorage). All tasks in the group restart together on a redeploy, so
+without a persistent Redis volume + AOF every deploy logs all users out. The job
+enables `--appendonly yes` and mounts this volume at `/data`.
 
 **Ownership matters.** The `web` container runs as a non-root user (**uid 1000**
 by default), and a mounted host volume keeps the host directory's ownership —
