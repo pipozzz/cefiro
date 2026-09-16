@@ -37,9 +37,11 @@ import {
   getViewableRecipeRefBySlug,
   isHandleAvailable,
   listPublicRecipesByUserId,
+  searchPublicProfiles,
   setRecipeVisibility,
   upsertProfile,
   type PublicProfile,
+  type PublicProfileCard,
 } from "@norish/db/repositories/user-profiles";
 import {
   followUser,
@@ -47,6 +49,7 @@ import {
   isFollowing,
   listDiscoverRecipes,
   listFeedRecipes,
+  searchPublicRecipes,
   unfollowUser,
   type FeedRecipeRow,
 } from "@norish/db/repositories/follows";
@@ -68,6 +71,7 @@ import {
   MyRatingInputSchema,
   RateRecipeInputSchema,
   SaveRecipeInputSchema,
+  SearchInputSchema,
   SetRecipeVisibilityInputSchema,
   ToggleLikeInputSchema,
   UpsertProfileInputSchema,
@@ -187,6 +191,16 @@ function toFeedCard(row: FeedRecipeRow) {
           avatarUrl: row.authorAvatarUrl,
         }
       : null,
+  };
+}
+
+function toProfileCard(row: PublicProfileCard) {
+  return {
+    handle: row.handle,
+    displayName: row.displayName,
+    bio: row.bio,
+    avatarUrl: row.avatarUrl,
+    recipeCount: row.recipeCount,
   };
 }
 
@@ -353,6 +367,20 @@ const discover = publicProcedure.input(DiscoverInputSchema).query(async ({ input
   });
 
   return { recipes: await toFeedCardsWithRatings(items), nextCursor };
+});
+
+// --- Search -------------------------------------------------------------
+
+const search = publicProcedure.input(SearchInputSchema).query(async ({ input }) => {
+  const [recipeRows, profileRows] = await Promise.all([
+    searchPublicRecipes(input.q, input.limit),
+    searchPublicProfiles(input.q, input.limit),
+  ]);
+
+  return {
+    recipes: await toFeedCardsWithRatings(recipeRows),
+    profiles: profileRows.map(toProfileCard),
+  };
 });
 
 // --- Likes (favourites double as public likes) --------------------------
@@ -724,6 +752,7 @@ export const socialProcedures = router({
   getFollowStatus,
   feed,
   discover,
+  search,
   getLikeStatus,
   toggleLike,
   getComments,

@@ -182,6 +182,33 @@ export async function listDiscoverRecipes(params: {
   return paginateByPublishedAt(rows, limit);
 }
 
+/** Escape LIKE/ILIKE wildcards so user input is matched literally. */
+function escapeLike(value: string): string {
+  return value.replace(/[\\%_]/g, (ch) => `\\${ch}`);
+}
+
+/**
+ * Full-text-ish search over PUBLIC recipes by name/description, ranked by
+ * favourite count then recency. Case-insensitive substring match; not
+ * cursor-paginated (top-N results).
+ */
+export async function searchPublicRecipes(q: string, limit: number): Promise<FeedRecipeRow[]> {
+  const pattern = `%${escapeLike(q.trim())}%`;
+
+  return db
+    .select({ ...RECIPE_CARD_COLUMNS, favoriteCount: favoriteCountSql })
+    .from(recipes)
+    .leftJoin(userProfiles, eq(userProfiles.userId, recipes.userId))
+    .where(
+      and(
+        eq(recipes.visibility, "public"),
+        sql`(${recipes.name} ILIKE ${pattern} OR ${recipes.description} ILIKE ${pattern})`
+      )
+    )
+    .orderBy(desc(favoriteCountSql), desc(recipes.publishedAt))
+    .limit(limit);
+}
+
 function paginateByPublishedAt(
   rows: FeedRecipeRow[],
   limit: number

@@ -362,6 +362,56 @@ export async function listPublicProfileHandles(
     .limit(limit);
 }
 
+export interface PublicProfileCard {
+  handle: string;
+  displayName: string | null;
+  bio: string | null;
+  avatarUrl: string | null;
+  recipeCount: number;
+}
+
+/** Escape LIKE/ILIKE wildcards so user input is matched literally. */
+function escapeLike(value: string): string {
+  return value.replace(/[\\%_]/g, (ch) => `\\${ch}`);
+}
+
+/**
+ * Search PUBLIC profiles by handle, display name or bio. Case-insensitive
+ * substring match, ranked by public-recipe count then handle; top-N results.
+ */
+export async function searchPublicProfiles(
+  q: string,
+  limit: number
+): Promise<PublicProfileCard[]> {
+  const pattern = `%${escapeLike(q.trim())}%`;
+
+  const recipeCountSql = sql<number>`(
+    SELECT count(*)::int FROM ${recipes}
+    WHERE ${recipes.userId} = ${userProfiles.userId}
+    AND ${recipes.visibility} = 'public'
+  )`;
+
+  return db
+    .select({
+      handle: userProfiles.handle,
+      displayName: userProfiles.displayName,
+      bio: userProfiles.bio,
+      avatarUrl: userProfiles.avatarUrl,
+      recipeCount: recipeCountSql,
+    })
+    .from(userProfiles)
+    .where(
+      and(
+        eq(userProfiles.isPublic, true),
+        sql`(${userProfiles.handle} ILIKE ${pattern}
+          OR ${userProfiles.displayName} ILIKE ${pattern}
+          OR ${userProfiles.bio} ILIKE ${pattern})`
+      )
+    )
+    .orderBy(desc(recipeCountSql), userProfiles.handle)
+    .limit(limit);
+}
+
 /**
  * List a user's PUBLIC recipes (excludes unlisted/private), newest first,
  * cursor-paginated by publishedAt. Cursor is an ISO timestamp.

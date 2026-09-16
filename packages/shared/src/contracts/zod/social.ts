@@ -119,6 +119,13 @@ export const DiscoverInputSchema = z.object({
   cursor: z.string().optional(),
 });
 
+// --- Search -------------------------------------------------------------
+
+export const SearchInputSchema = z.object({
+  q: z.string().trim().min(2, "Search for at least 2 characters").max(100),
+  limit: z.number().int().min(1).max(50).default(20),
+});
+
 // --- Likes & comments ---------------------------------------------------
 
 export const ToggleLikeInputSchema = z.object({
