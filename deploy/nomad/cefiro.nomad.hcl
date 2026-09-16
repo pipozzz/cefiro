@@ -75,6 +75,14 @@ job "cefiro" {
       read_only = false
     }
 
+    # Sessions live in Redis, so its data must outlast a redeploy or everyone
+    # gets logged out. Declare `cefiro_redis` on the client like the others.
+    volume "redisdata" {
+      type      = "host"
+      source    = "cefiro_redis"
+      read_only = false
+    }
+
     # Tasks in a group start together; the web task retries until Postgres,
     # Redis and Obscura are reachable.
     restart {
@@ -124,7 +132,14 @@ job "cefiro" {
       config {
         image   = "redis:8.10.1"
         command = "redis-server"
-        args    = ["--save", "60", "1", "--appendonly", "no"]
+        # AOF on + a persistent volume so sessions (better-auth secondaryStorage)
+        # survive a redeploy. Without this, every deploy logs all users out.
+        args    = ["--appendonly", "yes", "--dir", "/data"]
+      }
+
+      volume_mount {
+        volume      = "redisdata"
+        destination = "/data"
       }
 
       resources {

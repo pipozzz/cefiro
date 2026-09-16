@@ -29,5 +29,11 @@ services:
   redis:
     image: redis:8.10.1
     restart: unless-stopped
+    # Sessions live in Redis (better-auth secondaryStorage). Persist them to a
+    # volume with AOF so a redeploy/restart doesn't log everyone out.
+    command: ["redis-server", "--appendonly", "yes", "--dir", "/data"]
+    volumes:
+      - redis_data:/data
 volumes:
   norish_data:
+  redis_data:
