@@ -1,0 +1,16 @@
+name: CI
+
+# Runs the quality gates (deps, format, locale keys, lint, unit tests, browser
+# E2E) on every PR and on pushes to main, via the reusable _node-ci workflow.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  node-ci:
+    uses: ./.github/workflows/_node-ci.yml

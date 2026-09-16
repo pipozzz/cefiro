@@ -18,7 +18,7 @@ export function SocialProfileCard({ profile }: { profile: SocialProfileCardData 
   return (
     <Link
       href={`/u/${profile.handle}`}
-      className="group flex items-center gap-3 rounded-2xl bg-content1 p-4 shadow-sm ring-1 ring-default-100 transition hover:-translate-y-0.5 hover:shadow-md"
+      className="group bg-content1 ring-default-100 flex items-center gap-3 rounded-2xl p-4 shadow-sm ring-1 transition hover:-translate-y-0.5 hover:shadow-md"
     >
       {profile.avatarUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
@@ -28,21 +28,21 @@ export function SocialProfileCard({ profile }: { profile: SocialProfileCardData 
           className="h-12 w-12 flex-shrink-0 rounded-full object-cover"
         />
       ) : (
-        <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-primary text-lg font-semibold text-primary-foreground">
+        <span className="bg-primary text-primary-foreground flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-lg font-semibold">
           {name.charAt(0).toUpperCase()}
         </span>
       )}
 
       <div className="min-w-0 flex-1">
-        <p className="truncate font-semibold text-foreground group-hover:text-primary">{name}</p>
-        <p className="truncate text-sm text-default-500">@{profile.handle}</p>
+        <p className="text-foreground group-hover:text-primary truncate font-semibold">{name}</p>
+        <p className="text-default-500 truncate text-sm">@{profile.handle}</p>
         {profile.bio ? (
-          <p className="mt-1 line-clamp-1 text-sm text-default-500">{profile.bio}</p>
+          <p className="text-default-500 mt-1 line-clamp-1 text-sm">{profile.bio}</p>
         ) : null}
       </div>
 
       {profile.recipeCount > 0 ? (
-        <span className="flex-shrink-0 text-xs text-default-400">
+        <span className="text-default-400 flex-shrink-0 text-xs">
           {t("recipeCount", { count: profile.recipeCount })}
         </span>
       ) : null}

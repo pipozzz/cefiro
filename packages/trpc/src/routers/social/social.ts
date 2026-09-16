@@ -1,5 +1,9 @@
 import { TRPCError } from "@trpc/server";
 
+import type { FeedRecipeRow } from "@norish/db/repositories/follows";
+import type { PublicCookbookCard } from "@norish/db/repositories/public-cookbooks";
+import type { RatingStats } from "@norish/db/repositories/ratings";
+import type { PublicProfile, PublicProfileCard } from "@norish/db/repositories/user-profiles";
 import type { FullRecipeDTO } from "@norish/shared/contracts";
 import type { PublicRecipeViewDTO } from "@norish/shared/contracts/dto/recipe-shares";
 import {
@@ -9,18 +13,33 @@ import {
   removeFavorite,
 } from "@norish/db/repositories/favorites";
 import {
-  getAverageRating,
-  getAverageRatingsByRecipeIds,
-  getUserRating,
-  rateRecipe,
-  type RatingStats,
-} from "@norish/db/repositories/ratings";
+  followUser,
+  getFollowCounts,
+  isFollowing,
+  listDiscoverRecipes,
+  listFeedRecipes,
+  searchPublicRecipes,
+  unfollowUser,
+} from "@norish/db/repositories/follows";
 import {
   countUnreadNotifications,
   createNotification,
   listNotifications,
   markAllNotificationsRead,
 } from "@norish/db/repositories/notifications";
+import {
+  getCookbookPublishState,
+  getPublicCookbookBySlug,
+  listPublicCookbooksByUserId,
+  setCookbookDescription,
+  setCookbookVisibility,
+} from "@norish/db/repositories/public-cookbooks";
+import {
+  getAverageRating,
+  getAverageRatingsByRecipeIds,
+  getUserRating,
+  rateRecipe,
+} from "@norish/db/repositories/ratings";
 import {
   addComment,
   countCommentsForRecipe,
@@ -43,58 +62,38 @@ import {
   searchPublicProfiles,
   setRecipeVisibility,
   upsertProfile,
-  type PublicProfile,
-  type PublicProfileCard,
 } from "@norish/db/repositories/user-profiles";
-import {
-  followUser,
-  getFollowCounts,
-  isFollowing,
-  listDiscoverRecipes,
-  listFeedRecipes,
-  searchPublicRecipes,
-  unfollowUser,
-  type FeedRecipeRow,
-} from "@norish/db/repositories/follows";
-import {
-  getCookbookPublishState,
-  getPublicCookbookBySlug,
-  listPublicCookbooksByUserId,
-  setCookbookDescription,
-  setCookbookVisibility,
-  type PublicCookbookCard,
-} from "@norish/db/repositories/public-cookbooks";
 import { trpcLogger as log } from "@norish/shared-server/logger";
-import { PublicRecipeViewSchema } from "@norish/shared/contracts/zod/recipe-shares";
 import {
   AddCommentInputSchema,
   CheckHandleInputSchema,
+  CookbookPublishStateInputSchema,
   DeleteCommentInputSchema,
+  DiscoverCooksInputSchema,
   DiscoverInputSchema,
   FeedInputSchema,
   FollowByHandleInputSchema,
   GetProfileByHandleInputSchema,
+  GetPublicCookbookBySlugInputSchema,
   GetPublicRecipeBySlugInputSchema,
   LikeStatusInputSchema,
   ListCommentsInputSchema,
   ListNotificationsInputSchema,
+  ListPublicCookbooksByHandleInputSchema,
   ListPublicRecipesByHandleInputSchema,
   MyRatingInputSchema,
-  CookbookPublishStateInputSchema,
-  DiscoverCooksInputSchema,
-  GetPublicCookbookBySlugInputSchema,
-  ListPublicCookbooksByHandleInputSchema,
   RateRecipeInputSchema,
   ReportCommentInputSchema,
   SaveRecipeInputSchema,
   SearchInputSchema,
-  SuggestedCooksInputSchema,
   SetCookbookDescriptionInputSchema,
   SetCookbookVisibilityInputSchema,
   SetRecipeVisibilityInputSchema,
+  SuggestedCooksInputSchema,
   ToggleLikeInputSchema,
   UpsertProfileInputSchema,
 } from "@norish/shared/contracts/zod";
+import { PublicRecipeViewSchema } from "@norish/shared/contracts/zod/recipe-shares";
 
 import { authedProcedure } from "../../middleware";
 import { rateLimit } from "../../rate-limit-middleware";
@@ -255,13 +254,11 @@ const getMyProfile = authedProcedure.query(async ({ ctx }) => {
   return { profile };
 });
 
-const checkHandle = authedProcedure
-  .input(CheckHandleInputSchema)
-  .query(async ({ ctx, input }) => {
-    const available = await isHandleAvailable(input.handle, ctx.user.id);
+const checkHandle = authedProcedure.input(CheckHandleInputSchema).query(async ({ ctx, input }) => {
+  const available = await isHandleAvailable(input.handle, ctx.user.id);
 
-    return { handle: input.handle, available };
-  });
+  return { handle: input.handle, available };
+});
 
 const upsertMyProfile = authedProcedure
   .use(rateLimit({ name: "social.upsertMyProfile", limit: 10, windowSec: 60 }))
@@ -316,19 +313,17 @@ const setVisibility = authedProcedure
 
 // --- Public reads (unauthenticated) -------------------------------------
 
-const getProfile = publicProcedure
-  .input(GetProfileByHandleInputSchema)
-  .query(async ({ input }) => {
-    const profile = await getProfileByHandle(input.handle);
+const getProfile = publicProcedure.input(GetProfileByHandleInputSchema).query(async ({ input }) => {
+  const profile = await getProfileByHandle(input.handle);
 
-    if (!profile || !profile.isPublic) {
-      throw new TRPCError({ code: "NOT_FOUND", message: "Profile not found" });
-    }
+  if (!profile || !profile.isPublic) {
+    throw new TRPCError({ code: "NOT_FOUND", message: "Profile not found" });
+  }
 
-    const counts = await getFollowCounts(profile.userId);
+  const counts = await getFollowCounts(profile.userId);
 
-    return { profile: toPublicProfileDto(profile), counts };
-  });
+  return { profile: toPublicProfileDto(profile), counts };
+});
 
 // --- Follow graph (authenticated) ---------------------------------------
 
@@ -427,13 +422,11 @@ const suggestedCooks = authedProcedure
     return { cooks: rows.map(toProfileCard) };
   });
 
-const discoverCooks = publicProcedure
-  .input(DiscoverCooksInputSchema)
-  .query(async ({ input }) => {
-    const { items, nextCursor } = await listDiscoverProfiles(input.limit, input.cursor);
+const discoverCooks = publicProcedure.input(DiscoverCooksInputSchema).query(async ({ input }) => {
+  const { items, nextCursor } = await listDiscoverProfiles(input.limit, input.cursor);
 
-    return { cooks: items.map(toProfileCard), nextCursor };
-  });
+  return { cooks: items.map(toProfileCard), nextCursor };
+});
 
 // --- Public cookbooks ---------------------------------------------------
 
@@ -520,13 +513,11 @@ const setCookbookDescriptionProc = authedProcedure
 
 // --- Likes (favourites double as public likes) --------------------------
 
-const getLikeStatus = authedProcedure
-  .input(LikeStatusInputSchema)
-  .query(async ({ ctx, input }) => {
-    const liked = await isFavorite(ctx.user.id, input.recipeId);
+const getLikeStatus = authedProcedure.input(LikeStatusInputSchema).query(async ({ ctx, input }) => {
+  const liked = await isFavorite(ctx.user.id, input.recipeId);
 
-    return { recipeId: input.recipeId, liked };
-  });
+  return { recipeId: input.recipeId, liked };
+});
 
 const toggleLike = authedProcedure
   .use(rateLimit({ name: "social.toggleLike", limit: 60, windowSec: 60 }))
@@ -597,37 +588,37 @@ const postComment = authedProcedure
   .use(rateLimit({ name: "social.postComment", limit: 8, windowSec: 60 }))
   .input(AddCommentInputSchema)
   .mutation(async ({ ctx, input }) => {
-  const ref = await getViewableRecipeRefById(input.recipeId);
+    const ref = await getViewableRecipeRefById(input.recipeId);
 
-  if (!ref) {
-    throw new TRPCError({ code: "NOT_FOUND", message: "Recipe not found" });
-  }
+    if (!ref) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Recipe not found" });
+    }
 
-  // Author display comes from the public profile, so a handle is required.
-  const profile = await getProfileByUserId(ctx.user.id);
+    // Author display comes from the public profile, so a handle is required.
+    const profile = await getProfileByUserId(ctx.user.id);
 
-  if (!profile) {
-    throw new TRPCError({
-      code: "PRECONDITION_FAILED",
-      message: "Create your public profile before commenting",
-    });
-  }
+    if (!profile) {
+      throw new TRPCError({
+        code: "PRECONDITION_FAILED",
+        message: "Create your public profile before commenting",
+      });
+    }
 
-  const { id } = await addComment(ctx.user.id, input.recipeId, input.body);
+    const { id } = await addComment(ctx.user.id, input.recipeId, input.body);
 
-  if (ref.userId) {
-    await createNotification({
-      userId: ref.userId,
-      actorId: ctx.user.id,
-      type: "comment",
-      recipeId: input.recipeId,
-    });
-  }
+    if (ref.userId) {
+      await createNotification({
+        userId: ref.userId,
+        actorId: ctx.user.id,
+        type: "comment",
+        recipeId: input.recipeId,
+      });
+    }
 
-  log.info({ userId: ctx.user.id, recipeId: input.recipeId, commentId: id }, "Added comment");
+    log.info({ userId: ctx.user.id, recipeId: input.recipeId, commentId: id }, "Added comment");
 
-  return { id };
-});
+    return { id };
+  });
 
 const removeComment = authedProcedure
   .use(rateLimit({ name: "social.removeComment", limit: 20, windowSec: 60 }))

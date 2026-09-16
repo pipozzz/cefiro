@@ -4,10 +4,7 @@ import { eq } from "drizzle-orm";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
 import { followUser } from "@norish/db/repositories/follows";
-import {
-  listSuggestedProfiles,
-  searchPublicProfiles,
-} from "@norish/db/repositories/user-profiles";
+import { listSuggestedProfiles, searchPublicProfiles } from "@norish/db/repositories/user-profiles";
 import * as schema from "@norish/db/schema";
 
 import { createTestRecipe, createTestUser, getTestDb } from "../../../helpers/db-test-helpers";

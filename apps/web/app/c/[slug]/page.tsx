@@ -1,6 +1,7 @@
-import { cache } from "react";
 import type { Metadata } from "next";
+import { cache } from "react";
 import { headers } from "next/headers";
+
 import { getPublicCookbookBySlug } from "@norish/db/repositories/public-cookbooks";
 
 import { PublicCookbookView } from "./cookbook-view";

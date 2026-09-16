@@ -89,33 +89,35 @@ export default function DiscoverPage() {
 
   const pill = (active: boolean) =>
     `rounded-full px-4 py-1.5 text-sm font-medium transition ${
-      active ? "bg-primary text-primary-foreground" : "bg-content2 text-default-600 hover:bg-content3"
+      active
+        ? "bg-primary text-primary-foreground"
+        : "bg-content2 text-default-600 hover:bg-content3"
     }`;
 
   return (
     <div className="mx-auto max-w-6xl px-4 pb-24 md:px-6">
       <header className="mb-6">
-        <h1 className="text-3xl font-bold text-foreground">{t("title")}</h1>
+        <h1 className="text-foreground text-3xl font-bold">{t("title")}</h1>
         <p className="text-default-500">{t("subtitle")}</p>
       </header>
 
       {/* Search */}
       <div className="relative mb-6">
-        <MagnifyingGlassIcon className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-default-400" />
+        <MagnifyingGlassIcon className="text-default-400 pointer-events-none absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2" />
         <input
           type="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder={t("searchPlaceholder")}
           aria-label={t("searchAria")}
-          className="w-full rounded-full bg-content2 py-3 pl-12 pr-11 text-foreground outline-none ring-1 ring-transparent transition placeholder:text-default-400 focus:bg-content1 focus:ring-primary"
+          className="bg-content2 text-foreground placeholder:text-default-400 focus:bg-content1 focus:ring-primary w-full rounded-full py-3 pr-11 pl-12 ring-1 ring-transparent transition outline-none"
         />
         {q ? (
           <button
             type="button"
             onClick={() => setQ("")}
             aria-label={t("clearSearch")}
-            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-default-400 hover:text-foreground"
+            className="text-default-400 hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 rounded-full p-1"
           >
             <XMarkIcon className="h-5 w-5" />
           </button>
@@ -150,7 +152,7 @@ export default function DiscoverPage() {
                 <Spinner />
               </div>
             ) : cookList.length === 0 ? (
-              <p className="rounded-2xl bg-content2 p-10 text-center text-default-500">
+              <p className="bg-content2 text-default-500 rounded-2xl p-10 text-center">
                 {t("noCooks")}
               </p>
             ) : (
@@ -171,82 +173,86 @@ export default function DiscoverPage() {
             )
           ) : (
             <>
-          {/* Sort */}
-          <div className="mb-3 flex gap-2">
-            <button type="button" className={pill(sort === "newest")} onClick={() => setSort("newest")}>
-              {t("sortNewest")}
-            </button>
-            <button
-              type="button"
-              className={pill(sort === "trending")}
-              onClick={() => setSort("trending")}
-            >
-              {t("sortTrending")}
-            </button>
-          </div>
-
-          {/* Category filter */}
-          <div className="mb-8 flex flex-wrap gap-2">
-            <button
-              type="button"
-              className={pill(category === null)}
-              onClick={() => setCategory(null)}
-            >
-              {t("categoryAll")}
-            </button>
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                className={pill(category === cat)}
-                onClick={() => setCategory(cat)}
-              >
-                {tCat(cat)}
-              </button>
-            ))}
-          </div>
-
-          {tag ? (
-            <div className="mb-6 flex items-center gap-2">
-              <span className="inline-flex items-center gap-1 rounded-full bg-primary/15 px-3 py-1.5 text-sm font-medium text-primary">
-                #{tag}
+              {/* Sort */}
+              <div className="mb-3 flex gap-2">
                 <button
                   type="button"
-                  onClick={() => setTag(null)}
-                  aria-label={t("clearTag")}
-                  className="ml-0.5 rounded-full hover:text-danger"
+                  className={pill(sort === "newest")}
+                  onClick={() => setSort("newest")}
                 >
-                  <XMarkIcon className="h-4 w-4" />
+                  {t("sortNewest")}
                 </button>
-              </span>
-            </div>
-          ) : null}
+                <button
+                  type="button"
+                  className={pill(sort === "trending")}
+                  onClick={() => setSort("trending")}
+                >
+                  {t("sortTrending")}
+                </button>
+              </div>
 
-          {browse.isLoading ? (
-            <div className="flex min-h-[30vh] items-center justify-center">
-              <Spinner />
-            </div>
-          ) : recipes.length === 0 ? (
-            <p className="rounded-2xl bg-content2 p-10 text-center text-default-500">
-              {t("empty")}
-            </p>
-          ) : (
-            <>
-              <SocialRecipeGrid recipes={recipes} />
-
-              {browse.hasNextPage ? (
-                <div className="mt-8 flex justify-center">
-                  <Button
-                    variant="tertiary"
-                    onPress={() => browse.fetchNextPage()}
-                    isPending={browse.isFetchingNextPage}
+              {/* Category filter */}
+              <div className="mb-8 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  className={pill(category === null)}
+                  onClick={() => setCategory(null)}
+                >
+                  {t("categoryAll")}
+                </button>
+                {CATEGORIES.map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    className={pill(category === cat)}
+                    onClick={() => setCategory(cat)}
                   >
-                    {t("loadMore")}
-                  </Button>
+                    {tCat(cat)}
+                  </button>
+                ))}
+              </div>
+
+              {tag ? (
+                <div className="mb-6 flex items-center gap-2">
+                  <span className="bg-primary/15 text-primary inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-sm font-medium">
+                    #{tag}
+                    <button
+                      type="button"
+                      onClick={() => setTag(null)}
+                      aria-label={t("clearTag")}
+                      className="hover:text-danger ml-0.5 rounded-full"
+                    >
+                      <XMarkIcon className="h-4 w-4" />
+                    </button>
+                  </span>
                 </div>
               ) : null}
-            </>
-          )}
+
+              {browse.isLoading ? (
+                <div className="flex min-h-[30vh] items-center justify-center">
+                  <Spinner />
+                </div>
+              ) : recipes.length === 0 ? (
+                <p className="bg-content2 text-default-500 rounded-2xl p-10 text-center">
+                  {t("empty")}
+                </p>
+              ) : (
+                <>
+                  <SocialRecipeGrid recipes={recipes} />
+
+                  {browse.hasNextPage ? (
+                    <div className="mt-8 flex justify-center">
+                      <Button
+                        variant="tertiary"
+                        onPress={() => browse.fetchNextPage()}
+                        isPending={browse.isFetchingNextPage}
+                      >
+                        {t("loadMore")}
+                      </Button>
+                    </div>
+                  ) : null}
+                </>
+              )}
             </>
           )}
         </>
@@ -282,7 +288,7 @@ function SearchResults({
 
   if (profiles.length === 0 && recipes.length === 0) {
     return (
-      <p className="rounded-2xl bg-content2 p-10 text-center text-default-500">
+      <p className="bg-content2 text-default-500 rounded-2xl p-10 text-center">
         {t("noResults", { term })}
       </p>
     );
@@ -292,14 +298,14 @@ function SearchResults({
     <div className="space-y-10">
       {profiles.length > 0 ? (
         <section>
-          <h2 className="mb-4 text-lg font-semibold text-foreground">{t("sectionPeople")}</h2>
+          <h2 className="text-foreground mb-4 text-lg font-semibold">{t("sectionPeople")}</h2>
           <SocialProfileGrid profiles={profiles} />
         </section>
       ) : null}
 
       {recipes.length > 0 ? (
         <section>
-          <h2 className="mb-4 text-lg font-semibold text-foreground">{t("sectionRecipes")}</h2>
+          <h2 className="text-foreground mb-4 text-lg font-semibold">{t("sectionRecipes")}</h2>
           <SocialRecipeGrid recipes={recipes} />
         </section>
       ) : null}

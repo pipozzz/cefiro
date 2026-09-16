@@ -104,16 +104,16 @@ export default function NotificationsPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
-      <h1 className="mb-6 text-2xl font-bold text-foreground">{t("title")}</h1>
+      <h1 className="text-foreground mb-6 text-2xl font-bold">{t("title")}</h1>
 
       {query.isLoading ? (
         <div className="flex min-h-[30vh] items-center justify-center">
           <Spinner />
         </div>
       ) : notifications.length === 0 ? (
-        <p className="rounded-2xl bg-content2 p-10 text-center text-default-500">{t("empty")}</p>
+        <p className="bg-content2 text-default-500 rounded-2xl p-10 text-center">{t("empty")}</p>
       ) : (
-        <ul className="divide-y divide-default-100 overflow-hidden rounded-2xl bg-content1 ring-1 ring-default-100">
+        <ul className="divide-default-100 bg-content1 ring-default-100 divide-y overflow-hidden rounded-2xl ring-1">
           {notifications.map((n) => {
             const name = n.actor?.displayName ?? (n.actor ? `@${n.actor.handle}` : t("someone"));
             // A report keeps its reporter anonymous: a neutral flag, no name.
@@ -121,31 +121,37 @@ export default function NotificationsPage() {
 
             return (
               <li key={n.id} className={n.read ? "" : "bg-primary/5"}>
-                <Link href={href(n)} className="flex items-center gap-3 p-4 hover:bg-content2">
+                <Link href={href(n)} className="hover:bg-content2 flex items-center gap-3 p-4">
                   {anonymous ? (
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-danger/15 text-danger">
+                    <span className="bg-danger/15 text-danger flex h-9 w-9 shrink-0 items-center justify-center rounded-full">
                       <FlagIcon className="h-4 w-4" />
                     </span>
                   ) : n.actor?.avatarUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={n.actor.avatarUrl} alt="" className="h-9 w-9 rounded-full object-cover" />
+                    <img
+                      src={n.actor.avatarUrl}
+                      alt=""
+                      className="h-9 w-9 rounded-full object-cover"
+                    />
                   ) : (
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
+                    <span className="bg-primary text-primary-foreground flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold">
                       {name.charAt(0).toUpperCase()}
                     </span>
                   )}
-                  <span className="flex-1 text-sm text-default-700">
+                  <span className="text-default-700 flex-1 text-sm">
                     {anonymous ? (
                       actionText(n, t)
                     ) : (
                       <>
-                        <span className="font-medium text-foreground">{name}</span>{" "}
+                        <span className="text-foreground font-medium">{name}</span>{" "}
                         {actionText(n, t)}
                       </>
                     )}
                   </span>
-                  <span className="shrink-0 text-xs text-default-400">{timeAgo(n.createdAt, t)}</span>
-                  {!n.read ? <span className="h-2 w-2 shrink-0 rounded-full bg-primary" /> : null}
+                  <span className="text-default-400 shrink-0 text-xs">
+                    {timeAgo(n.createdAt, t)}
+                  </span>
+                  {!n.read ? <span className="bg-primary h-2 w-2 shrink-0 rounded-full" /> : null}
                 </Link>
               </li>
             );

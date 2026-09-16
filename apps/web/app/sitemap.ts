@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { headers } from "next/headers";
+
 import { listPublicCookbookSlugs } from "@norish/db/repositories/public-cookbooks";
 import {
   listPublicProfileHandles,

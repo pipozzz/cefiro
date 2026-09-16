@@ -13,7 +13,7 @@ export function StarsDisplay({
 
   return (
     <span
-      className={`relative inline-flex whitespace-nowrap leading-none ${className ?? ""}`}
+      className={`relative inline-flex leading-none whitespace-nowrap ${className ?? ""}`}
       style={{ fontSize: size }}
       role="img"
       aria-label={`${value.toFixed(1)} z 5`}

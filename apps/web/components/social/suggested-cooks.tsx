@@ -37,8 +37,8 @@ export function SuggestedCooks({ limit = 6 }: { limit?: number }) {
 
   return (
     <section>
-      <h2 className="text-lg font-semibold text-foreground">{t("heading")}</h2>
-      <p className="mb-4 text-sm text-default-500">{t("subtitle")}</p>
+      <h2 className="text-foreground text-lg font-semibold">{t("heading")}</h2>
+      <p className="text-default-500 mb-4 text-sm">{t("subtitle")}</p>
 
       <CookGrid cooks={cooks} />
     </section>

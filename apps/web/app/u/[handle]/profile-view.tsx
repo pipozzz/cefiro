@@ -27,9 +27,9 @@ function RecipeCardTile({ recipe }: { recipe: RecipeCard }) {
   return (
     <Link
       href={`/r/${recipe.slug}`}
-      className="group flex flex-col overflow-hidden rounded-2xl bg-content1 shadow-sm ring-1 ring-default-100 transition hover:-translate-y-0.5 hover:shadow-md"
+      className="group bg-content1 ring-default-100 flex flex-col overflow-hidden rounded-2xl shadow-sm ring-1 transition hover:-translate-y-0.5 hover:shadow-md"
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-content2">
+      <div className="bg-content2 relative aspect-[4/3] w-full overflow-hidden">
         {recipe.image ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -41,20 +41,20 @@ function RecipeCardTile({ recipe }: { recipe: RecipeCard }) {
           <div className="h-full w-full" style={{ background: recipe.dishColor ?? undefined }} />
         )}
         {recipe.totalMinutes ? (
-          <span className="absolute right-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-xs font-medium text-white backdrop-blur">
+          <span className="absolute top-2 right-2 rounded-full bg-black/60 px-2 py-0.5 text-xs font-medium text-white backdrop-blur">
             {recipe.totalMinutes} min
           </span>
         ) : null}
       </div>
       <div className="flex flex-1 flex-col p-4">
-        <h3 className="line-clamp-2 font-semibold text-foreground">{recipe.name}</h3>
+        <h3 className="text-foreground line-clamp-2 font-semibold">{recipe.name}</h3>
         {recipe.description ? (
-          <p className="mt-1 line-clamp-2 text-sm text-default-500">{recipe.description}</p>
+          <p className="text-default-500 mt-1 line-clamp-2 text-sm">{recipe.description}</p>
         ) : null}
         {recipe.rating && recipe.rating.average && recipe.rating.count > 0 ? (
           <div className="mt-2 flex items-center gap-1.5">
             <StarsDisplay value={recipe.rating.average} size={13} />
-            <span className="text-xs text-default-500">
+            <span className="text-default-500 text-xs">
               {recipe.rating.average.toFixed(1)} ({recipe.rating.count})
             </span>
           </div>
@@ -72,39 +72,33 @@ type CookbookCard = {
   coverImages: string[];
 };
 
-function CookbookTile({
-  cookbook,
-  countLabel,
-}: {
-  cookbook: CookbookCard;
-  countLabel: string;
-}) {
+function CookbookTile({ cookbook, countLabel }: { cookbook: CookbookCard; countLabel: string }) {
   const covers = cookbook.coverImages.slice(0, 4);
 
   return (
     <Link
       href={`/c/${cookbook.slug}`}
-      className="group flex flex-col overflow-hidden rounded-2xl bg-content1 shadow-sm ring-1 ring-default-100 transition hover:-translate-y-0.5 hover:shadow-md"
+      className="group bg-content1 ring-default-100 flex flex-col overflow-hidden rounded-2xl shadow-sm ring-1 transition hover:-translate-y-0.5 hover:shadow-md"
     >
-      <div className="grid aspect-[3/2] w-full grid-cols-2 grid-rows-2 gap-0.5 bg-content2">
+      <div className="bg-content2 grid aspect-[3/2] w-full grid-cols-2 grid-rows-2 gap-0.5">
         {covers.length > 0
           ? Array.from({ length: 4 }).map((_, i) =>
               covers[i] ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img key={i} src={covers[i]} alt="" className="h-full w-full object-cover" />
               ) : (
-                <div key={i} className="h-full w-full bg-content3" />
+                <div key={i} className="bg-content3 h-full w-full" />
               )
             )
           : null}
       </div>
       <div className="flex flex-1 flex-col p-4">
-        <h3 className="line-clamp-1 font-semibold text-foreground group-hover:text-primary">
+        <h3 className="text-foreground group-hover:text-primary line-clamp-1 font-semibold">
           {cookbook.title}
         </h3>
-        <p className="mt-0.5 text-xs text-default-500">{countLabel}</p>
+        <p className="text-default-500 mt-0.5 text-xs">{countLabel}</p>
         {cookbook.description ? (
-          <p className="mt-1 line-clamp-2 text-sm text-default-500">{cookbook.description}</p>
+          <p className="text-default-500 mt-1 line-clamp-2 text-sm">{cookbook.description}</p>
         ) : null}
       </div>
     </Link>
@@ -136,16 +130,14 @@ export function PublicProfileView({ handle }: { handle: string }) {
   if (profileQuery.isLoading) {
     return (
       <div className="mx-auto max-w-5xl animate-pulse px-4 py-10 md:px-6">
-        <div className="h-24 w-24 rounded-full bg-content2" />
-        <div className="mt-4 h-6 w-48 rounded bg-content2" />
+        <div className="bg-content2 h-24 w-24 rounded-full" />
+        <div className="bg-content2 mt-4 h-6 w-48 rounded" />
       </div>
     );
   }
 
   if (profileQuery.isError || !profileQuery.data) {
-    return (
-      <NotFoundView title={t("notFoundTitle")} message={t("notFoundMessage")} />
-    );
+    return <NotFoundView title={t("notFoundTitle")} message={t("notFoundMessage")} />;
   }
 
   const { profile, counts } = profileQuery.data;
@@ -162,10 +154,10 @@ export function PublicProfileView({ handle }: { handle: string }) {
           <img
             src={profile.avatarUrl}
             alt=""
-            className="h-24 w-24 rounded-full object-cover ring-2 ring-default-200"
+            className="ring-default-200 h-24 w-24 rounded-full object-cover ring-2"
           />
         ) : (
-          <span className="flex h-24 w-24 items-center justify-center rounded-full bg-primary text-3xl font-bold text-primary-foreground">
+          <span className="bg-primary text-primary-foreground flex h-24 w-24 items-center justify-center rounded-full text-3xl font-bold">
             {displayName.charAt(0).toUpperCase()}
           </span>
         )}
@@ -173,7 +165,7 @@ export function PublicProfileView({ handle }: { handle: string }) {
         <div className="flex-1">
           <div className="flex flex-col items-center gap-3 md:flex-row md:justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-foreground md:text-3xl">{displayName}</h1>
+              <h1 className="text-foreground text-2xl font-bold md:text-3xl">{displayName}</h1>
               <p className="text-default-500">@{profile.handle}</p>
             </div>
             <FollowButton handle={profile.handle} />
@@ -181,19 +173,19 @@ export function PublicProfileView({ handle }: { handle: string }) {
 
           <div className="mt-3 flex items-center justify-center gap-5 text-sm md:justify-start">
             <span>
-              <span className="font-semibold text-foreground">{counts.followers}</span>{" "}
+              <span className="text-foreground font-semibold">{counts.followers}</span>{" "}
               <span className="text-default-500">
                 {t("followersLabel", { count: counts.followers })}
               </span>
             </span>
             <span>
-              <span className="font-semibold text-foreground">{counts.following}</span>{" "}
+              <span className="text-foreground font-semibold">{counts.following}</span>{" "}
               <span className="text-default-500">{t("following")}</span>
             </span>
           </div>
 
-          {profile.bio ? <p className="mt-3 max-w-2xl text-default-600">{profile.bio}</p> : null}
-          <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-default-500 md:justify-start">
+          {profile.bio ? <p className="text-default-600 mt-3 max-w-2xl">{profile.bio}</p> : null}
+          <div className="text-default-500 mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm md:justify-start">
             {profile.location ? <span>📍 {profile.location}</span> : null}
             {profile.websiteUrl ? (
               <a
@@ -212,7 +204,7 @@ export function PublicProfileView({ handle }: { handle: string }) {
       {/* Cookbooks */}
       {cookbooks.length > 0 ? (
         <section className="mt-10">
-          <h2 className="mb-4 text-lg font-semibold text-foreground">{t("cookbooksHeading")}</h2>
+          <h2 className="text-foreground mb-4 text-lg font-semibold">{t("cookbooksHeading")}</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {cookbooks.map((cookbook) => (
               <CookbookTile
@@ -227,18 +219,18 @@ export function PublicProfileView({ handle }: { handle: string }) {
 
       {/* Recipes grid */}
       <section className="mt-10">
-        <h2 className="mb-4 text-lg font-semibold text-foreground">
+        <h2 className="text-foreground mb-4 text-lg font-semibold">
           {t("recipes")} {recipes.length > 0 ? `(${recipes.length})` : ""}
         </h2>
 
         {recipesQuery.isLoading ? (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="aspect-[4/3] animate-pulse rounded-2xl bg-content2" />
+              <div key={i} className="bg-content2 aspect-[4/3] animate-pulse rounded-2xl" />
             ))}
           </div>
         ) : recipes.length === 0 ? (
-          <p className="rounded-2xl bg-content2 p-8 text-center text-default-500">
+          <p className="bg-content2 text-default-500 rounded-2xl p-8 text-center">
             {t("noRecipes")}
           </p>
         ) : (

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
+
 import { getProfileByHandle } from "@norish/db/repositories/user-profiles";
 
 import { PublicProfileView } from "./profile-view";

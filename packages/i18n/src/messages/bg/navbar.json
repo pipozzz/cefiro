@@ -31,7 +31,11 @@
   "nav": {
     "home": "Рецепти",
     "calendar": "Календар",
-    "groceries": "Продукти"
+    "groceries": "Продукти",
+    "feed": "Feed",
+    "discover": "Discover",
+    "profile": "Profile",
+    "notifications": "Notifications"
   },
   "mobile": {
     "searchPlaceholder": "Търсене на рецепти...",

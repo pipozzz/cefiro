@@ -71,17 +71,17 @@ export function RecipeRating({
         {average ? (
           <>
             <StarsDisplay value={average} size={18} />
-            <span className="text-sm font-medium text-foreground">{average.toFixed(1)}</span>
-            <span className="text-sm text-default-500">({t("countLabel", { count })})</span>
+            <span className="text-foreground text-sm font-medium">{average.toFixed(1)}</span>
+            <span className="text-default-500 text-sm">({t("countLabel", { count })})</span>
           </>
         ) : (
-          <span className="text-sm text-default-500">{t("noRating")}</span>
+          <span className="text-default-500 text-sm">{t("noRating")}</span>
         )}
       </div>
 
       {/* Interactive: your rating */}
       <div className="flex items-center gap-2">
-        <span className="text-xs text-default-500">
+        <span className="text-default-500 text-xs">
           {myRating ? t("yourRating") : t("ratePrompt")}
         </span>
         <span className="inline-flex" onMouseLeave={() => setHover(0)}>

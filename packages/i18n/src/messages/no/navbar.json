@@ -31,7 +31,11 @@
   "nav": {
     "home": "Oppskrifter",
     "calendar": "Kalender",
-    "groceries": "Handleliste"
+    "groceries": "Handleliste",
+    "feed": "Feed",
+    "discover": "Discover",
+    "profile": "Profile",
+    "notifications": "Notifications"
   },
   "mobile": {
     "searchPlaceholder": "Søk oppskrifter...",
