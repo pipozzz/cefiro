@@ -21,10 +21,16 @@ import { cssFloatingDockEndCap, MOBILE_NAV_SHRUNKEN_SCALE } from "@norish/web/co
 import { siteConfig } from "@norish/web/config/site";
 
 // Map hrefs to translation keys (same as navbar.tsx)
-const navLabelKeys: Record<string, "home" | "calendar" | "groceries"> = {
+const navLabelKeys: Record<
+  string,
+  "home" | "calendar" | "groceries" | "feed" | "discover" | "profile"
+> = {
   "/": "home",
   "/groceries": "groceries",
   "/calendar": "calendar",
+  "/feed": "feed",
+  "/discover": "discover",
+  "/profile": "profile",
 };
 
 // Both floating pieces share one solid treatment on the chrome tokens — the

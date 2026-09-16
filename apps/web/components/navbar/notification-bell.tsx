@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useTRPC } from "@/app/providers/trpc-provider";
 import { BellIcon } from "@heroicons/react/24/outline";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 
 /**
  * Notification bell for the navbar: an unread-count badge over a bell that
@@ -14,6 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 export function NotificationBell({ variant = "desktop" }: { variant?: "desktop" | "mobile" }) {
   const trpc = useTRPC();
   const pathname = usePathname();
+  const t = useTranslations("navbar.nav");
 
   const unreadQuery = useQuery({
     ...trpc.social.getUnreadNotificationCount.queryOptions(),
@@ -37,7 +39,12 @@ export function NotificationBell({ variant = "desktop" }: { variant?: "desktop" 
         }`;
 
   return (
-    <NextLink href="/notifications" aria-label="Notifications" title="Notifications" className={`relative ${base}`}>
+    <NextLink
+      href="/notifications"
+      aria-label={t("notifications")}
+      title={t("notifications")}
+      className={`relative ${base}`}
+    >
       <BellIcon className="h-5 w-5" />
       {count > 0 ? (
         <span className="absolute -right-0.5 -top-0.5 flex min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold leading-4 text-white">

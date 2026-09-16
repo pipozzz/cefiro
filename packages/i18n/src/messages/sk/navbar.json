@@ -31,7 +31,11 @@
   "nav": {
     "home": "Recepty",
     "calendar": "Kalendár",
-    "groceries": "Nákupy"
+    "groceries": "Nákupy",
+    "feed": "Feed",
+    "discover": "Objavuj",
+    "profile": "Profil",
+    "notifications": "Notifikácie"
   },
   "mobile": {
     "searchPlaceholder": "Hľadať recepty...",

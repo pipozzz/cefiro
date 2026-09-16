@@ -31,7 +31,11 @@
   "nav": {
     "home": "Recipes",
     "calendar": "Calendar",
-    "groceries": "Groceries"
+    "groceries": "Groceries",
+    "feed": "Feed",
+    "discover": "Discover",
+    "profile": "Profile",
+    "notifications": "Notifications"
   },
   "mobile": {
     "searchPlaceholder": "Search recipes...",

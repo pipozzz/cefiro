@@ -86,5 +86,50 @@
     "carbs": "Sacharidy",
     "fat": "Tuky",
     "source": "Zdroj:"
+  },
+  "feed": {
+    "title": "Tvoj feed",
+    "subtitle": "Najnovšie recepty od ľudí, ktorých sleduješ.",
+    "emptyTitle": "Tvoj feed je prázdny.",
+    "emptyBody": "Začni sledovať kuchárov a uvidíš tu ich najnovšie recepty.",
+    "discoverCta": "Objavuj recepty",
+    "loadMore": "Načítať ďalšie"
+  },
+  "notifications": {
+    "title": "Notifikácie",
+    "empty": "Zatiaľ žiadne notifikácie.",
+    "someone": "Niekto",
+    "now": "teraz",
+    "ago": "pred {value}{unit}",
+    "follow": "ťa začal(a) sledovať",
+    "likeNamed": "dal(a) like tvojmu receptu {name}",
+    "like": "dal(a) like tvojmu receptu",
+    "commentNamed": "komentoval(a) {name}",
+    "comment": "komentoval(a) tvoj recept"
+  },
+  "profileSettings": {
+    "title": "Verejný profil",
+    "subtitle": "Tvoj handle a profil poháňajú tvoje verejné recept stránky.",
+    "view": "Zobraziť",
+    "handle": "Handle",
+    "handlePlaceholder": "tvojemeno",
+    "handleRule": "3–30 znakov, začni písmenom, len malé písmená, číslice alebo podčiarkovník.",
+    "handleTaken": "Tento handle je obsadený.",
+    "handleAvailable": "Voľné",
+    "displayName": "Zobrazované meno",
+    "displayNamePlaceholder": "Tvoje meno",
+    "bio": "Bio",
+    "bioPlaceholder": "Napíš ľuďom, čo varíš…",
+    "location": "Lokalita",
+    "locationPlaceholder": "Mesto, Krajina",
+    "website": "Web",
+    "websitePlaceholder": "https://…",
+    "avatarUrl": "URL avatara",
+    "avatarUrlPlaceholder": "https://…/avatar.jpg",
+    "publicProfile": "Verejný profil",
+    "publicProfileHint": "Keď je vypnuté, tvoj profil a verejné recepty sú skryté pred ostatnými.",
+    "save": "Uložiť profil",
+    "saved": "Profil uložený",
+    "couldNotSave": "Nepodarilo sa uložiť profil"
   }
 }

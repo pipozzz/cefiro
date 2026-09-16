@@ -5,9 +5,11 @@ import { useTRPC } from "@/app/providers/trpc-provider";
 import { SocialRecipeGrid } from "@/components/social/social-recipe-card";
 import { Button, Spinner } from "@heroui/react";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 
 export default function FeedPage() {
   const trpc = useTRPC();
+  const t = useTranslations("social.feed");
 
   const query = useInfiniteQuery({
     ...trpc.social.feed.infiniteQueryOptions(
@@ -22,8 +24,8 @@ export default function FeedPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <header className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Your feed</h1>
-        <p className="text-sm text-default-500">Latest recipes from people you follow.</p>
+        <h1 className="text-2xl font-bold text-foreground">{t("title")}</h1>
+        <p className="text-sm text-default-500">{t("subtitle")}</p>
       </header>
 
       {query.isLoading ? (
@@ -32,12 +34,10 @@ export default function FeedPage() {
         </div>
       ) : recipes.length === 0 ? (
         <div className="rounded-2xl bg-content2 p-10 text-center">
-          <p className="text-default-600">Your feed is empty.</p>
-          <p className="mt-1 text-sm text-default-500">
-            Follow some cooks to see their latest recipes here.
-          </p>
+          <p className="text-default-600">{t("emptyTitle")}</p>
+          <p className="mt-1 text-sm text-default-500">{t("emptyBody")}</p>
           <Button as={Link} href="/discover" variant="primary" className="mt-4">
-            Discover recipes
+            {t("discoverCta")}
           </Button>
         </div>
       ) : (
@@ -51,7 +51,7 @@ export default function FeedPage() {
                 onPress={() => query.fetchNextPage()}
                 isPending={query.isFetchingNextPage}
               >
-                Load more
+                {t("loadMore")}
               </Button>
             </div>
           ) : null}

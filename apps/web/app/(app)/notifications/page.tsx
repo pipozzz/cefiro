@@ -5,8 +5,11 @@ import Link from "next/link";
 import { useTRPC } from "@/app/providers/trpc-provider";
 import { Spinner } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 
-function timeAgo(date: Date): string {
+type NotificationsTranslator = ReturnType<typeof useTranslations<"social.notifications">>;
+
+function timeAgo(date: Date, t: NotificationsTranslator): string {
   const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
   const steps: [number, string][] = [
     [60, "s"],
@@ -31,7 +34,7 @@ function timeAgo(date: Date): string {
     unit = label;
   }
 
-  return value <= 0 ? "now" : `${value}${unit} ago`;
+  return value <= 0 ? t("now") : t("ago", { value, unit });
 }
 
 type Notification = {
@@ -43,14 +46,14 @@ type Notification = {
   recipe: { slug: string; name: string | null } | null;
 };
 
-function actionText(n: Notification): string {
+function actionText(n: Notification, t: NotificationsTranslator): string {
   switch (n.type) {
     case "follow":
-      return "started following you";
+      return t("follow");
     case "like":
-      return `liked your recipe ${n.recipe?.name ?? ""}`.trim();
+      return n.recipe?.name ? t("likeNamed", { name: n.recipe.name }) : t("like");
     case "comment":
-      return `commented on ${n.recipe?.name ?? "your recipe"}`;
+      return n.recipe?.name ? t("commentNamed", { name: n.recipe.name }) : t("comment");
   }
 }
 
@@ -65,6 +68,7 @@ function href(n: Notification): string {
 export default function NotificationsPage() {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
+  const t = useTranslations("social.notifications");
   const markedRef = useRef(false);
 
   const query = useQuery({
@@ -94,20 +98,18 @@ export default function NotificationsPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
-      <h1 className="mb-6 text-2xl font-bold text-foreground">Notifications</h1>
+      <h1 className="mb-6 text-2xl font-bold text-foreground">{t("title")}</h1>
 
       {query.isLoading ? (
         <div className="flex min-h-[30vh] items-center justify-center">
           <Spinner />
         </div>
       ) : notifications.length === 0 ? (
-        <p className="rounded-2xl bg-content2 p-10 text-center text-default-500">
-          No notifications yet.
-        </p>
+        <p className="rounded-2xl bg-content2 p-10 text-center text-default-500">{t("empty")}</p>
       ) : (
         <ul className="divide-y divide-default-100 overflow-hidden rounded-2xl bg-content1 ring-1 ring-default-100">
           {notifications.map((n) => {
-            const name = n.actor?.displayName ?? (n.actor ? `@${n.actor.handle}` : "Someone");
+            const name = n.actor?.displayName ?? (n.actor ? `@${n.actor.handle}` : t("someone"));
 
             return (
               <li key={n.id} className={n.read ? "" : "bg-primary/5"}>
@@ -121,9 +123,9 @@ export default function NotificationsPage() {
                     </span>
                   )}
                   <span className="flex-1 text-sm text-default-700">
-                    <span className="font-medium text-foreground">{name}</span> {actionText(n)}
+                    <span className="font-medium text-foreground">{name}</span> {actionText(n, t)}
                   </span>
-                  <span className="shrink-0 text-xs text-default-400">{timeAgo(n.createdAt)}</span>
+                  <span className="shrink-0 text-xs text-default-400">{timeAgo(n.createdAt, t)}</span>
                   {!n.read ? <span className="h-2 w-2 shrink-0 rounded-full bg-primary" /> : null}
                 </Link>
               </li>
