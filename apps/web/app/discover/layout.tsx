@@ -8,21 +8,18 @@ import { auth } from "@norish/auth/auth";
 
 import { BaseProviders } from "../providers/base-providers";
 
-export const metadata: Metadata = {
-  title: "Discover recipes",
-  description: "Explore recipes shared by the Cefiro community.",
-  openGraph: {
-    type: "website",
-    title: "Discover recipes",
-    description: "Explore recipes shared by the Cefiro community.",
-    siteName: "Cefiro",
-  },
-  twitter: {
-    card: "summary",
-    title: "Discover recipes",
-    description: "Explore recipes shared by the Cefiro community.",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("social.discover");
+  const title = t("metaTitle");
+  const description = t("metaDescription");
+
+  return {
+    title,
+    description,
+    openGraph: { type: "website", title, description, siteName: "Cefiro" },
+    twitter: { card: "summary", title, description },
+  };
+}
 
 export default async function DiscoverLayout({ children }: { children: React.ReactNode }) {
   const session = await auth.api.getSession({ headers: await headers() });

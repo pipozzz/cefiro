@@ -65,6 +65,7 @@ function AuthorChip({
 export function PublicRecipeView({ slug }: { slug: string }) {
   const trpc = useTRPC();
   const t = useTranslations("social.recipe");
+  const tCat = useTranslations("social.categories");
   const { data, isLoading, isError } = useQuery({
     ...trpc.social.getPublicRecipe.queryOptions({ slug }),
     retry: false,
@@ -133,7 +134,7 @@ export function PublicRecipeView({ slug }: { slug: string }) {
               key={`cat-${cat}`}
               className="rounded-full bg-primary/15 px-3 py-1 text-xs font-medium text-primary"
             >
-              {cat}
+              {tCat(cat)}
             </span>
           ))}
           {recipe.tags.map((tag) => (

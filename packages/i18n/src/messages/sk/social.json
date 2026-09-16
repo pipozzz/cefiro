@@ -2,6 +2,8 @@
   "discover": {
     "title": "Objavuj",
     "subtitle": "Objavuj recepty a kuchárov zdieľané komunitou.",
+    "metaTitle": "Objavuj recepty",
+    "metaDescription": "Objavuj recepty zdieľané komunitou Cefiro.",
     "searchPlaceholder": "Hľadaj recepty a ľudí…",
     "searchAria": "Hľadať recepty a ľudí",
     "clearSearch": "Vymazať hľadanie",
