@@ -664,6 +664,19 @@ const reportCommentProc = authedProcedure
 
     await reportComment(input.commentId, ctx.user.id);
 
+    // Let the recipe owner know a comment on their recipe was flagged, so they
+    // can moderate it. The reporter is the actor but stays hidden in the UI.
+    const recipeRef = await getViewableRecipeRefById(ownership.recipeId);
+
+    if (recipeRef?.userId) {
+      await createNotification({
+        userId: recipeRef.userId,
+        actorId: ctx.user.id,
+        type: "report",
+        recipeId: ownership.recipeId,
+      });
+    }
+
     log.info({ userId: ctx.user.id, commentId: input.commentId }, "Reported comment");
 
     return { ok: true };
@@ -886,6 +899,16 @@ const saveRecipe = authedProcedure
 
     if (!created) {
       throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to save recipe" });
+    }
+
+    // Tell the original author their recipe was saved (no-op if it's your own).
+    if (ref.userId) {
+      await createNotification({
+        userId: ref.userId,
+        actorId: ctx.user.id,
+        type: "save",
+        recipeId: input.recipeId,
+      });
     }
 
     log.info(

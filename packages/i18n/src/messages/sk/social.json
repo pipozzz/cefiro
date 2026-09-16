@@ -142,7 +142,10 @@
     "likeNamed": "dal(a) like tvojmu receptu {name}",
     "like": "dal(a) like tvojmu receptu",
     "commentNamed": "komentoval(a) {name}",
-    "comment": "komentoval(a) tvoj recept"
+    "comment": "komentoval(a) tvoj recept",
+    "saveNamed": "uložil(a) si tvoj recept {name}",
+    "save": "uložil(a) si tvoj recept",
+    "report": "Komentár na tvojom recepte bol nahlásený."
   },
   "profileSettings": {
     "title": "Verejný profil",
