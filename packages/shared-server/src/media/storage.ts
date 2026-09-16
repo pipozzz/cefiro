@@ -236,12 +236,26 @@ async function convertToJpeg(
 }
 
 // --- Fetch with timeout ---
+// Undici's default `user-agent: node` is a well-known bot signature that
+// Cloudflare and similar CDNs routinely challenge — especially from datacentre
+// IPs — so image downloads from otherwise-public recipe sites silently 403.
+// Present as a normal browser so a recipe's photo actually downloads.
+const IMAGE_FETCH_HEADERS = {
+  "User-Agent":
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+  Accept: "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+} as const;
+
 async function fetchWithTimeout(url: string, timeoutMs: number = FETCH_TIMEOUT): Promise<Response> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const response = await fetch(url, { signal: controller.signal });
+    const response = await fetch(url, {
+      signal: controller.signal,
+      headers: IMAGE_FETCH_HEADERS,
+      redirect: "follow",
+    });
 
     clearTimeout(timeoutId);
 
@@ -522,8 +536,8 @@ export async function downloadBestImageFromJsonLd(
   for (const cand of ordered) {
     try {
       return await downloadImage(cand.url, recipeId);
-    } catch (_e) {
-      // Fail silently and try next
+    } catch (err) {
+      log.warn({ err, url: cand.url }, "Failed to download recipe image, trying next");
     }
   }
 
@@ -674,9 +688,10 @@ export async function downloadAllImagesFromJsonLd(
       const webUrl = await downloadImage(cand.url, recipeId);
 
       downloadedUrls.push(webUrl);
-    } catch (_e) {
-      // Fail silently and try next
-      log.debug({ url: cand.url }, "Failed to download image, trying next");
+    } catch (err) {
+      // Try the next candidate, but at warn level: a recipe imported without
+      // its photo is a visible gap, and this is the only trace of why.
+      log.warn({ err, url: cand.url }, "Failed to download recipe image, trying next");
     }
   }
 
