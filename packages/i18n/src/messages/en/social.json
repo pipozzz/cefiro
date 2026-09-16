@@ -58,8 +58,12 @@
     "empty": "No comments yet. Be the first!",
     "unknown": "Unknown",
     "deleteAria": "Delete comment",
+    "report": "Report comment",
+    "reportAria": "Report comment",
+    "reported": "Thanks — this comment has been reported.",
     "couldNotPost": "Could not post comment",
     "couldNotDelete": "Could not delete comment",
+    "couldNotReport": "Could not report comment",
     "now": "now",
     "ago": "{value}{unit} ago"
   },

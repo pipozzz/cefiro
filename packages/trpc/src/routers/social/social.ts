@@ -27,6 +27,7 @@ import {
   deleteComment,
   getCommentOwnership,
   listCommentsForRecipe,
+  reportComment,
 } from "@norish/db/repositories/recipe-comments";
 import { createRecipeWithRefs, getRecipeFull } from "@norish/db/repositories/recipes";
 import {
@@ -82,6 +83,7 @@ import {
   GetPublicCookbookBySlugInputSchema,
   ListPublicCookbooksByHandleInputSchema,
   RateRecipeInputSchema,
+  ReportCommentInputSchema,
   SaveRecipeInputSchema,
   SearchInputSchema,
   SuggestedCooksInputSchema,
@@ -640,6 +642,23 @@ const removeComment = authedProcedure
     return { id: input.commentId };
   });
 
+const reportCommentProc = authedProcedure
+  .use(rateLimit({ name: "social.reportComment", limit: 20, windowSec: 60 }))
+  .input(ReportCommentInputSchema)
+  .mutation(async ({ ctx, input }) => {
+    const ownership = await getCommentOwnership(input.commentId);
+
+    if (!ownership) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Comment not found" });
+    }
+
+    await reportComment(input.commentId, ctx.user.id);
+
+    log.info({ userId: ctx.user.id, commentId: input.commentId }, "Reported comment");
+
+    return { ok: true };
+  });
+
 // --- Notifications -------------------------------------------------------
 
 function toNotificationDto(row: {
@@ -893,6 +912,7 @@ export const socialProcedures = router({
   getComments,
   postComment,
   removeComment,
+  reportComment: reportCommentProc,
   getNotifications,
   getUnreadNotificationCount,
   markNotificationsRead,
