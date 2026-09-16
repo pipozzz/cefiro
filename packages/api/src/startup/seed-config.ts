@@ -661,9 +661,10 @@ async function syncLocales(): Promise<void> {
   for (const [locale, entry] of Object.entries(DEFAULT_LOCALE_CONFIG.locales)) {
     if (!existing.locales[locale]) {
       newLocales.push(locale);
-      // If ENABLED_LOCALES env is set, only enable if locale is in that list
-      // Otherwise default to false for newly added languages so the admin can review them
-      const enabled = hasEnvFilter ? envEnabledLocales.includes(locale) : false;
+      // If ENABLED_LOCALES env is set, only enable locales in that list.
+      // Otherwise a newly shipped translation is enabled by default, so it
+      // shows up in the language picker without an admin having to toggle it.
+      const enabled = hasEnvFilter ? envEnabledLocales.includes(locale) : true;
 
       existing.locales[locale] = { ...entry, enabled };
     }
