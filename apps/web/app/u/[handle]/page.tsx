@@ -27,7 +27,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const displayName = profile.displayName ?? `@${profile.handle}`;
   const title = `${displayName} (@${profile.handle})`;
   const description = profile.bio?.trim() || `Recipes by @${profile.handle} on Cefiro.`;
-  const image = profile.avatarUrl ?? undefined;
+  // A branded card instead of the (small, square) avatar, so a shared profile
+  // link gets a rich large preview like recipes and cookbooks do.
+  const image = origin ? `${origin}/u/${profile.handle}/og` : undefined;
 
   return {
     title,
@@ -42,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: image ? [{ url: image, alt: displayName }] : undefined,
     },
     twitter: {
-      card: image ? "summary" : "summary",
+      card: image ? "summary_large_image" : "summary",
       title,
       description,
       images: image ? [image] : undefined,
