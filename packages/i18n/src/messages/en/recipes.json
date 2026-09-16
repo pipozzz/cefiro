@@ -43,7 +43,9 @@
     "noResults": "No recipes found",
     "noResultsHint": "Try adjusting or clearing your filters.",
     "noCookbooks": "No cookbooks yet",
-    "noCookbooksHint": "A cookbook is a titled set of recipes. Make your first one to give your library some order."
+    "noCookbooksHint": "A cookbook is a titled set of recipes. Make your first one to give your library some order.",
+    "recipeSuggestions": "Recipe suggestions",
+    "ingredientSuggestions": "Ingredient suggestions"
   },
   "card": {
     "noImage": "No image available",
@@ -238,8 +240,10 @@
       "mute": "Mute",
       "unmute": "Unmute",
       "fullscreen": "Enter fullscreen",
-      "exitFullscreen": "Exit fullscreen"
-    }
+      "exitFullscreen": "Exit fullscreen",
+      "progressBar": "Video progress"
+    },
+    "imageAlt": "Recipe image"
   },
   "validation": {
     "nameRequired": "Recipe name is required",
@@ -403,5 +407,9 @@
     "noRecipesToAdd": "No recipes found.",
     "addCount": "{count, plural, one {Add # recipe} other {Add # recipes}}",
     "everythingAlreadyIn": "Every recipe is already in this cookbook."
+  },
+  "servingsControl": {
+    "decrease": "Decrease servings",
+    "increase": "Increase servings"
   }
 }

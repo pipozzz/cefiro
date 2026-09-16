@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { cache } from "react";
 import { headers } from "next/headers";
+import { getTranslations } from "next-intl/server";
 
 import { getPublicCookbookBySlug } from "@norish/db/repositories/public-cookbooks";
 
@@ -22,9 +23,10 @@ const loadCookbook = cache(async (slug: string) => getPublicCookbookBySlug(slug)
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const cookbook = await loadCookbook(slug);
+  const t = await getTranslations("social.cookbook");
 
   if (!cookbook) {
-    return { title: "Cookbook not found", robots: { index: false, follow: false } };
+    return { title: t("notFoundTitle"), robots: { index: false, follow: false } };
   }
 
   const origin = await siteOrigin();
@@ -32,8 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const image = origin ? `${origin}/c/${slug}/og` : undefined;
   const title = cookbook.title;
   const description =
-    cookbook.description?.trim() ||
-    `A cookbook of ${cookbook.recipes.length} recipes shared on Cefiro.`;
+    cookbook.description?.trim() || t("metaDescription", { count: cookbook.recipes.length });
 
   return {
     title,

@@ -43,7 +43,9 @@
     "noResults": "Ingen oppskrifter funnet",
     "noResultsHint": "Prøv å justere eller tømme filtrene.",
     "noCookbooks": "Ingen kokebøker ennå",
-    "noCookbooksHint": "En kokebok er et navngitt sett med oppskrifter. Lag din første for å få orden i biblioteket."
+    "noCookbooksHint": "En kokebok er et navngitt sett med oppskrifter. Lag din første for å få orden i biblioteket.",
+    "recipeSuggestions": "Recipe suggestions",
+    "ingredientSuggestions": "Ingredient suggestions"
   },
   "card": {
     "noImage": "Ingen bilde tilgjengelig",
@@ -238,8 +240,10 @@
       "mute": "Slå av lyd",
       "unmute": "Slå på lyd",
       "fullscreen": "Gå til fullskjerm",
-      "exitFullscreen": "Forlat fullskjerm"
-    }
+      "exitFullscreen": "Forlat fullskjerm",
+      "progressBar": "Video progress"
+    },
+    "imageAlt": "Recipe image"
   },
   "validation": {
     "nameRequired": "Oppskriftnavn er påkrevd",
@@ -403,5 +407,9 @@
     "noRecipesToAdd": "Ingen oppskrifter funnet.",
     "addCount": "{count, plural, one {Legg til # oppskrift} other {Legg til # oppskrifter}}",
     "everythingAlreadyIn": "Alle oppskrifter er allerede i denne kokeboken."
+  },
+  "servingsControl": {
+    "decrease": "Decrease servings",
+    "increase": "Increase servings"
   }
 }

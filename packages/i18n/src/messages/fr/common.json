@@ -30,7 +30,8 @@
     "test": "Test",
     "format": "Format",
     "restoreDefaults": "Recharger paramètres par défaut",
-    "saveChanges": "Sauvegarder changements"
+    "saveChanges": "Sauvegarder changements",
+    "closeImageViewer": "Close image viewer"
   },
   "secret": {
     "reveal": "Révéler le secret",
@@ -72,7 +73,8 @@
     },
     "sortByTitle": "Titre",
     "sortByDate": "Date",
-    "clearFilters": "Effacer les filtres"
+    "clearFilters": "Effacer les filtres",
+    "ariaLabel": "Filters"
   },
   "time": {
     "minutes": "min",

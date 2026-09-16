@@ -98,7 +98,7 @@ vi.mock("@heroui/react", async () => {
         aria-label={ariaLabel}
         type={type}
         onClick={() => {
-          if (ariaLabel === "Open user menu") {
+          if (ariaLabel === "openMenu") {
             dropdown.onOpenChange(!dropdown.isOpen);
           }
           onPress?.();
@@ -205,7 +205,7 @@ describe("NavbarUserMenu open state", () => {
       </QueryClientProvider>
     );
 
-    const triggers = screen.getAllByLabelText("Open user menu");
+    const triggers = screen.getAllByLabelText("openMenu");
 
     fireEvent.click(triggers[0]);
 

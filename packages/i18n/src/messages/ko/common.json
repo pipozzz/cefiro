@@ -30,7 +30,8 @@
     "test": "테스트",
     "format": "서식",
     "restoreDefaults": "기본값 복원",
-    "saveChanges": "변경사항 저장"
+    "saveChanges": "변경사항 저장",
+    "closeImageViewer": "Close image viewer"
   },
   "secret": {
     "reveal": "시크릿 표시",
@@ -72,7 +73,8 @@
     },
     "sortByTitle": "제목",
     "sortByDate": "날짜",
-    "clearFilters": "필터 지우기"
+    "clearFilters": "필터 지우기",
+    "ariaLabel": "Filters"
   },
   "time": {
     "minutes": "분",

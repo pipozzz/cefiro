@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { getTranslations } from "next-intl/server";
 
 import { getProfileByHandle } from "@norish/db/repositories/user-profiles";
 
@@ -31,6 +32,7 @@ type Props = { params: Promise<{ handle: string }> };
 export async function GET(_req: Request, { params }: Props) {
   const { handle } = await params;
   const profile = await getProfileByHandle(handle);
+  const t = await getTranslations("social.profile");
 
   if (!profile || !profile.isPublic) {
     return new ImageResponse(<BrandFallback />, {
@@ -113,7 +115,7 @@ export async function GET(_req: Request, { params }: Props) {
       </div>
 
       <div style={{ display: "flex", fontSize: 32, opacity: 0.9, lineHeight: 1.3 }}>
-        {profile.bio?.trim() ? clamp(profile.bio, 140) : "Recipes on Cefiro"}
+        {profile.bio?.trim() ? clamp(profile.bio, 140) : t("ogTagline")}
       </div>
     </div>,
     { width: WIDTH, height: HEIGHT, headers: CACHE_HEADERS }

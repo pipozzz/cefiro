@@ -19,7 +19,9 @@
     },
     "version": {
       "updateAvailable": "k dispozícii v{version}"
-    }
+    },
+    "openMenu": "Otvoriť menu používateľa",
+    "menu": "Menu používateľa"
   },
   "theme": {
     "title": "Motív",
@@ -35,7 +37,9 @@
     "feed": "Feed",
     "discover": "Objavuj",
     "profile": "Profil",
-    "notifications": "Notifikácie"
+    "notifications": "Notifikácie",
+    "mainNav": "Hlavná navigácia",
+    "goHome": "Prejsť na domov"
   },
   "mobile": {
     "searchPlaceholder": "Hľadať recepty...",

@@ -43,7 +43,9 @@
     "noResults": "Рецепты не найдены",
     "noResultsHint": "Попробуйте изменить или очистить фильтры.",
     "noCookbooks": "Кулинарных книг пока нет",
-    "noCookbooksHint": "Кулинарная книга — это набор рецептов с названием. Создайте первую, чтобы упорядочить библиотеку."
+    "noCookbooksHint": "Кулинарная книга — это набор рецептов с названием. Создайте первую, чтобы упорядочить библиотеку.",
+    "recipeSuggestions": "Recipe suggestions",
+    "ingredientSuggestions": "Ingredient suggestions"
   },
   "card": {
     "noImage": "Изображение недоступно",
@@ -238,8 +240,10 @@
       "mute": "Выключить звук",
       "unmute": "Включить звук",
       "fullscreen": "Во весь экран",
-      "exitFullscreen": "Выйти из полноэкранного режима"
-    }
+      "exitFullscreen": "Выйти из полноэкранного режима",
+      "progressBar": "Video progress"
+    },
+    "imageAlt": "Recipe image"
   },
   "validation": {
     "nameRequired": "Название рецепта обязательно",
@@ -403,5 +407,9 @@
     "noRecipesToAdd": "Рецепты не найдены.",
     "addCount": "{count, plural, one {Добавить # рецепт} few {Добавить # рецепта} many {Добавить # рецептов} other {Добавить # рецепта}}",
     "everythingAlreadyIn": "Все рецепты уже в этой книге."
+  },
+  "servingsControl": {
+    "decrease": "Decrease servings",
+    "increase": "Increase servings"
   }
 }

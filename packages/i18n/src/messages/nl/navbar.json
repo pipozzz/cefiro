@@ -19,7 +19,9 @@
     },
     "version": {
       "updateAvailable": "v{version} beschikbaar"
-    }
+    },
+    "openMenu": "Open user menu",
+    "menu": "User menu"
   },
   "theme": {
     "title": "Thema",
@@ -35,7 +37,9 @@
     "feed": "Feed",
     "discover": "Discover",
     "profile": "Profile",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "mainNav": "Main navigation",
+    "goHome": "Go to home"
   },
   "mobile": {
     "searchPlaceholder": "Zoek recepten...",

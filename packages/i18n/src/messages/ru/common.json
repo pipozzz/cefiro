@@ -30,7 +30,8 @@
     "test": "Тест",
     "format": "Форматировать",
     "restoreDefaults": "Восстановить по умолчанию",
-    "saveChanges": "Сохранить изменения"
+    "saveChanges": "Сохранить изменения",
+    "closeImageViewer": "Close image viewer"
   },
   "secret": {
     "reveal": "Показать секрет",
@@ -72,7 +73,8 @@
     },
     "sortByTitle": "Название",
     "sortByDate": "Дата",
-    "clearFilters": "Очистить фильтры"
+    "clearFilters": "Очистить фильтры",
+    "ariaLabel": "Filters"
   },
   "time": {
     "minutes": "мин",

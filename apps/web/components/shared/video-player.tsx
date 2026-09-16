@@ -380,7 +380,7 @@ export default function VideoPlayer({
 
               {/* ProgressBar Bar */}
               <div
-                aria-label="Video ProgressBar"
+                aria-label={t("progressBar")}
                 aria-valuemax={100}
                 aria-valuemin={0}
                 aria-valuenow={progress}

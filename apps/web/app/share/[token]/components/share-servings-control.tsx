@@ -2,6 +2,7 @@
 
 import { MinusIcon, PlusIcon } from "@heroicons/react/16/solid";
 import { Button } from "@heroui/react";
+import { useTranslations } from "next-intl";
 
 function formatServings(n: number): string {
   if (Number.isInteger(n)) return String(n);
@@ -16,6 +17,7 @@ export function ShareServingsControl({
   servings: number;
   onChange: (servings: number) => void;
 }) {
+  const t = useTranslations("recipes.servingsControl");
   const decrease = () => {
     if (servings <= 1) onChange(Math.max(0.125, servings / 2));
     else if (servings <= 2) onChange(1);
@@ -30,7 +32,7 @@ export function ShareServingsControl({
     <div className="inline-flex items-center gap-2">
       <Button
         isIconOnly
-        aria-label="Decrease servings"
+        aria-label={t("decrease")}
         className="bg-surface-secondary"
         size="sm"
         variant="tertiary"
@@ -41,7 +43,7 @@ export function ShareServingsControl({
       <span className="min-w-8 text-center text-sm">{formatServings(servings)}</span>
       <Button
         isIconOnly
-        aria-label="Increase servings"
+        aria-label={t("increase")}
         className="bg-surface-secondary"
         size="sm"
         variant="tertiary"

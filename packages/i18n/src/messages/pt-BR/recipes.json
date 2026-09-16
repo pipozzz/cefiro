@@ -43,7 +43,9 @@
     "noResults": "Nenhuma receita encontrada",
     "noResultsHint": "Tente ajustar ou limpar seus filtros.",
     "noCookbooks": "Nenhum livro de receitas ainda",
-    "noCookbooksHint": "Um livro de receitas é um conjunto de receitas com título. Crie o primeiro para organizar sua biblioteca."
+    "noCookbooksHint": "Um livro de receitas é um conjunto de receitas com título. Crie o primeiro para organizar sua biblioteca.",
+    "recipeSuggestions": "Recipe suggestions",
+    "ingredientSuggestions": "Ingredient suggestions"
   },
   "card": {
     "noImage": "Nenhuma imagem disponível",
@@ -238,8 +240,10 @@
       "mute": "Silenciar",
       "unmute": "Ativar som",
       "fullscreen": "Entrar em tela cheia",
-      "exitFullscreen": "Sair da tela cheia"
-    }
+      "exitFullscreen": "Sair da tela cheia",
+      "progressBar": "Video progress"
+    },
+    "imageAlt": "Recipe image"
   },
   "validation": {
     "nameRequired": "O nome da receita é obrigatório",
@@ -403,5 +407,9 @@
     "noRecipesToAdd": "Nenhuma receita encontrada.",
     "addCount": "{count, plural, one {Adicionar # receita} other {Adicionar # receitas}}",
     "everythingAlreadyIn": "Todas as receitas já estão neste livro."
+  },
+  "servingsControl": {
+    "decrease": "Decrease servings",
+    "increase": "Increase servings"
   }
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
+import { getTranslations } from "next-intl/server";
 
 import { getProfileByHandle } from "@norish/db/repositories/user-profiles";
 
@@ -18,16 +19,17 @@ async function siteOrigin(): Promise<string> {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { handle } = await params;
   const profile = await getProfileByHandle(handle);
+  const t = await getTranslations("social.profile");
 
   if (!profile || !profile.isPublic) {
-    return { title: "Profile not found", robots: { index: false, follow: false } };
+    return { title: t("notFoundTitle"), robots: { index: false, follow: false } };
   }
 
   const origin = await siteOrigin();
   const url = origin ? `${origin}/u/${profile.handle}` : undefined;
   const displayName = profile.displayName ?? `@${profile.handle}`;
   const title = `${displayName} (@${profile.handle})`;
-  const description = profile.bio?.trim() || `Recipes by @${profile.handle} on Cefiro.`;
+  const description = profile.bio?.trim() || t("metaDescription", { handle: profile.handle });
   // A branded card instead of the (small, square) avatar, so a shared profile
   // link gets a rich large preview like recipes and cookbooks do.
   const image = origin ? `${origin}/u/${profile.handle}/og` : undefined;

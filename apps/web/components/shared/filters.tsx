@@ -5,9 +5,11 @@ import { FiltersPanel } from "@/components/Panel/consumers";
 import { useRecipesFiltersContext } from "@/context/recipes-filters-context";
 import { FunnelIcon } from "@heroicons/react/16/solid";
 import { Button } from "@heroui/react";
+import { useTranslations } from "next-intl";
 
 export default function Filters() {
   const { filters } = useRecipesFiltersContext();
+  const t = useTranslations("common.filters");
   const [isOpen, setIsOpen] = useState(false);
   const hasActiveFilters = useMemo(() => {
     const hasSearch = filters.rawInput.trim().length > 0;
@@ -27,7 +29,7 @@ export default function Filters() {
     <>
       <Button
         isIconOnly
-        aria-label="Filters"
+        aria-label={t("ariaLabel")}
         className="shadow-field bg-field hover:bg-field-hover dark:bg-default dark:hover:bg-surface-tertiary relative h-12 w-12 border border-transparent"
         onPress={() => setIsOpen(true)}
         variant="tertiary"
