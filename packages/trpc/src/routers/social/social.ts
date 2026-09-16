@@ -78,6 +78,7 @@ import {
 } from "@norish/shared/contracts/zod";
 
 import { authedProcedure } from "../../middleware";
+import { rateLimit } from "../../rate-limit-middleware";
 import { publicProcedure, router } from "../../trpc";
 
 /**
@@ -232,6 +233,7 @@ const checkHandle = authedProcedure
   });
 
 const upsertMyProfile = authedProcedure
+  .use(rateLimit({ name: "social.upsertMyProfile", limit: 10, windowSec: 60 }))
   .input(UpsertProfileInputSchema)
   .mutation(async ({ ctx, input }) => {
     const available = await isHandleAvailable(input.handle, ctx.user.id);
@@ -310,6 +312,7 @@ async function resolveFolloweeId(handle: string): Promise<{ userId: string }> {
 }
 
 const follow = authedProcedure
+  .use(rateLimit({ name: "social.follow", limit: 30, windowSec: 60 }))
   .input(FollowByHandleInputSchema)
   .mutation(async ({ ctx, input }) => {
     const { userId } = await resolveFolloweeId(input.handle);
@@ -325,6 +328,7 @@ const follow = authedProcedure
   });
 
 const unfollow = authedProcedure
+  .use(rateLimit({ name: "social.unfollow", limit: 30, windowSec: 60 }))
   .input(FollowByHandleInputSchema)
   .mutation(async ({ ctx, input }) => {
     const { userId } = await resolveFolloweeId(input.handle);
@@ -394,6 +398,7 @@ const getLikeStatus = authedProcedure
   });
 
 const toggleLike = authedProcedure
+  .use(rateLimit({ name: "social.toggleLike", limit: 60, windowSec: 60 }))
   .input(ToggleLikeInputSchema)
   .mutation(async ({ ctx, input }) => {
     const ref = await getViewableRecipeRefById(input.recipeId);
@@ -457,7 +462,10 @@ const getComments = publicProcedure.input(ListCommentsInputSchema).query(async (
   return { comments: items.map(toCommentDto), nextCursor };
 });
 
-const postComment = authedProcedure.input(AddCommentInputSchema).mutation(async ({ ctx, input }) => {
+const postComment = authedProcedure
+  .use(rateLimit({ name: "social.postComment", limit: 8, windowSec: 60 }))
+  .input(AddCommentInputSchema)
+  .mutation(async ({ ctx, input }) => {
   const ref = await getViewableRecipeRefById(input.recipeId);
 
   if (!ref) {
@@ -491,6 +499,7 @@ const postComment = authedProcedure.input(AddCommentInputSchema).mutation(async 
 });
 
 const removeComment = authedProcedure
+  .use(rateLimit({ name: "social.removeComment", limit: 20, windowSec: 60 }))
   .input(DeleteCommentInputSchema)
   .mutation(async ({ ctx, input }) => {
     const ownership = await getCommentOwnership(input.commentId);
@@ -651,6 +660,7 @@ const getMyRecipeRating = authedProcedure
   });
 
 const setRecipeRating = authedProcedure
+  .use(rateLimit({ name: "social.setRecipeRating", limit: 30, windowSec: 60 }))
   .input(RateRecipeInputSchema)
   .mutation(async ({ ctx, input }) => {
     if (!(await getViewableRecipeRefById(input.recipeId))) {
@@ -667,6 +677,7 @@ const setRecipeRating = authedProcedure
 // --- Save / fork a public recipe into your own library ------------------
 
 const saveRecipe = authedProcedure
+  .use(rateLimit({ name: "social.saveRecipe", limit: 15, windowSec: 60 }))
   .input(SaveRecipeInputSchema)
   .mutation(async ({ ctx, input }) => {
     const ref = await getViewableRecipeRefById(input.recipeId);
