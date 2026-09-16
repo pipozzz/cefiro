@@ -32,6 +32,20 @@ client {
 }
 ```
 
+**Ownership matters.** The `web` container runs as a non-root user (**uid 1000**
+by default), and a mounted host volume keeps the host directory's ownership —
+shadowing the writable dir baked into the image. If `/opt/cefiro/uploads` is
+owned by root, recipe-photo imports and avatar uploads fail with
+`EACCES: permission denied, mkdir '/app/uploads/recipes'` (the server also warns
+about this at startup). Chown the host directory to the container user once:
+
+```bash
+sudo mkdir -p /opt/cefiro/uploads
+sudo chown -R 1000:1000 /opt/cefiro/uploads
+```
+
+(Use the image's `UID` build arg value if you overrode the default.)
+
 Using an **external Postgres/Redis** instead? Delete the `postgres` / `redis`
 tasks (and the `pgdata` volume), and set `DATABASE_URL` / `REDIS_URL` in the
 `web` task to point at them.
