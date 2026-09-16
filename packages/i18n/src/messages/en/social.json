@@ -133,6 +133,25 @@
     "heading": "Cooks to follow",
     "subtitle": "Follow a few cooks to fill your feed."
   },
+  "welcome": {
+    "title": "Welcome to Cefiro",
+    "subtitle": "Pick a handle so people can find you and you can share recipes.",
+    "handleLabel": "Handle",
+    "handlePlaceholder": "yourname",
+    "handleRule": "3–30 chars, start with a letter, only lowercase letters, digits or underscore.",
+    "handleTaken": "That handle is taken.",
+    "handleAvailable": "Available",
+    "displayNameLabel": "Display name (optional)",
+    "displayNamePlaceholder": "Your name",
+    "bioLabel": "Bio (optional)",
+    "bioPlaceholder": "Tell people what you cook…",
+    "continue": "Continue",
+    "followTitle": "Follow a few cooks",
+    "followSubtitle": "Their latest recipes will fill your feed.",
+    "done": "Done",
+    "skip": "Skip for now",
+    "couldNotSave": "Could not save your profile"
+  },
   "notifications": {
     "title": "Notifications",
     "empty": "No notifications yet.",
