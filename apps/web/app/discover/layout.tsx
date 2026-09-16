@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { BrandLogo } from "@/components/brand/brand-logo";
 
 import { auth } from "@norish/auth/auth";
@@ -26,6 +27,7 @@ export const metadata: Metadata = {
 export default async function DiscoverLayout({ children }: { children: React.ReactNode }) {
   const session = await auth.api.getSession({ headers: await headers() });
   const isAuthed = !!session?.user?.id;
+  const t = await getTranslations("social.discover");
 
   return (
     <BaseProviders>
@@ -36,14 +38,14 @@ export default async function DiscoverLayout({ children }: { children: React.Rea
           </Link>
           {isAuthed ? (
             <Link href="/" className="text-sm font-medium text-primary hover:underline">
-              Open app
+              {t("openApp")}
             </Link>
           ) : (
             <Link
               href="/login"
               className="rounded-full bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground transition hover:opacity-90"
             >
-              Sign in
+              {t("signIn")}
             </Link>
           )}
         </header>

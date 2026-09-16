@@ -1,0 +1,90 @@
+{
+  "discover": {
+    "title": "Discover",
+    "subtitle": "Explore recipes and cooks shared by the community.",
+    "searchPlaceholder": "Search recipes and people…",
+    "searchAria": "Search recipes and people",
+    "clearSearch": "Clear search",
+    "sortNewest": "Newest",
+    "sortTrending": "🔥 Trending",
+    "categoryAll": "All",
+    "sectionPeople": "People",
+    "sectionRecipes": "Recipes",
+    "noResults": "No results for “{term}”.",
+    "empty": "No public recipes here yet.",
+    "loadMore": "Load more",
+    "signIn": "Sign in",
+    "openApp": "Open app"
+  },
+  "categories": {
+    "Breakfast": "Breakfast",
+    "Lunch": "Lunch",
+    "Dinner": "Dinner",
+    "Snack": "Snack"
+  },
+  "profileCard": {
+    "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
+  },
+  "follow": {
+    "follow": "Follow",
+    "following": "Following",
+    "editProfile": "Edit profile",
+    "couldNotFollow": "Could not follow",
+    "couldNotUnfollow": "Could not unfollow"
+  },
+  "like": {
+    "couldNotUpdate": "Could not update like"
+  },
+  "save": {
+    "cta": "Save recipe",
+    "saved": "Saved to your recipes",
+    "couldNotSave": "Could not save recipe"
+  },
+  "rating": {
+    "noRating": "No ratings yet",
+    "countLabel": "{count, plural, one {# rating} other {# ratings}}",
+    "yourRating": "Your rating:",
+    "ratePrompt": "Rate this recipe:",
+    "starAria": "{n} of 5",
+    "couldNotSave": "Could not save your rating"
+  },
+  "comments": {
+    "heading": "Comments",
+    "signInToJoin": "<link>Sign in</link> to join the conversation.",
+    "createProfileToComment": "<link>Create a public profile</link> to comment.",
+    "placeholder": "Add a comment…",
+    "post": "Post comment",
+    "loading": "Loading comments…",
+    "empty": "No comments yet. Be the first!",
+    "unknown": "Unknown",
+    "deleteAria": "Delete comment",
+    "couldNotPost": "Could not post comment",
+    "couldNotDelete": "Could not delete comment",
+    "now": "now",
+    "ago": "{value}{unit} ago"
+  },
+  "profile": {
+    "notFoundTitle": "Profile not found",
+    "notFoundMessage": "This profile is private or does not exist.",
+    "followersLabel": "{count, plural, one {follower} other {followers}}",
+    "following": "following",
+    "recipes": "Recipes",
+    "noRecipes": "No public recipes yet."
+  },
+  "recipe": {
+    "notFoundTitle": "Recipe not found",
+    "notFoundMessage": "This recipe is private or does not exist.",
+    "prep": "Prep",
+    "cook": "Cook",
+    "total": "Total",
+    "servings": "Servings",
+    "calories": "Calories",
+    "ingredients": "Ingredients",
+    "steps": "Steps",
+    "notes": "Notes",
+    "protein": "Protein",
+    "carbs": "Carbs",
+    "fat": "Fat",
+    "source": "Source:"
+  }
+}

@@ -9,6 +9,7 @@ import { RecipeRating } from "@/components/social/recipe-rating";
 import { SaveRecipeButton } from "@/components/social/save-recipe-button";
 import RecipeSkeleton from "@/components/skeleton/recipe-skeleton";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 
 function formatAmount(amount: number | null | undefined): string {
   if (amount === null || amount === undefined) {
@@ -63,6 +64,7 @@ function AuthorChip({
 
 export function PublicRecipeView({ slug }: { slug: string }) {
   const trpc = useTRPC();
+  const t = useTranslations("social.recipe");
   const { data, isLoading, isError } = useQuery({
     ...trpc.social.getPublicRecipe.queryOptions({ slug }),
     retry: false,
@@ -73,19 +75,17 @@ export function PublicRecipeView({ slug }: { slug: string }) {
   }
 
   if (isError || !data) {
-    return (
-      <NotFoundView title="Recipe not found" message="This recipe is private or does not exist." />
-    );
+    return <NotFoundView title={t("notFoundTitle")} message={t("notFoundMessage")} />;
   }
 
   const { recipe, author, recipeId, favoriteCount, rating } = data;
 
   const timePills = [
-    recipe.prepMinutes ? { label: "Prep", value: `${recipe.prepMinutes} min` } : null,
-    recipe.cookMinutes ? { label: "Cook", value: `${recipe.cookMinutes} min` } : null,
-    recipe.totalMinutes ? { label: "Total", value: `${recipe.totalMinutes} min` } : null,
-    recipe.servings ? { label: "Servings", value: String(recipe.servings) } : null,
-    recipe.calories ? { label: "Calories", value: `${recipe.calories} kcal` } : null,
+    recipe.prepMinutes ? { label: t("prep"), value: `${recipe.prepMinutes} min` } : null,
+    recipe.cookMinutes ? { label: t("cook"), value: `${recipe.cookMinutes} min` } : null,
+    recipe.totalMinutes ? { label: t("total"), value: `${recipe.totalMinutes} min` } : null,
+    recipe.servings ? { label: t("servings"), value: String(recipe.servings) } : null,
+    recipe.calories ? { label: t("calories"), value: `${recipe.calories} kcal` } : null,
   ].filter((p): p is { label: string; value: string } => p !== null);
 
   return (
@@ -173,7 +173,7 @@ export function PublicRecipeView({ slug }: { slug: string }) {
       {/* Ingredients + steps */}
       <div className="mt-10 grid gap-10 md:grid-cols-[minmax(0,20rem)_1fr]">
         <aside className="md:sticky md:top-6 md:self-start">
-          <h2 className="mb-4 text-xl font-semibold text-foreground">Ingredients</h2>
+          <h2 className="mb-4 text-xl font-semibold text-foreground">{t("ingredients")}</h2>
           <ul className="space-y-2">
             {recipe.recipeIngredients.map((ing, i) => (
               <li
@@ -190,7 +190,7 @@ export function PublicRecipeView({ slug }: { slug: string }) {
         </aside>
 
         <section>
-          <h2 className="mb-4 text-xl font-semibold text-foreground">Steps</h2>
+          <h2 className="mb-4 text-xl font-semibold text-foreground">{t("steps")}</h2>
           <ol className="space-y-6">
             {recipe.steps.map((step, i) => (
               <li key={`step-${i}`} className="flex gap-4">
@@ -222,7 +222,7 @@ export function PublicRecipeView({ slug }: { slug: string }) {
           {recipe.notes ? (
             <div className="mt-8 rounded-2xl bg-content2 p-5">
               <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-default-500">
-                Notes
+                {t("notes")}
               </h3>
               <p className="whitespace-pre-line text-sm leading-relaxed text-default-700">
                 {recipe.notes}
@@ -235,16 +235,16 @@ export function PublicRecipeView({ slug }: { slug: string }) {
       {/* Nutrition */}
       {(recipe.calories || recipe.protein || recipe.carbs || recipe.fat) && (
         <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {recipe.calories ? <MetaPill label="Calories" value={`${recipe.calories}`} /> : null}
-          {recipe.protein ? <MetaPill label="Protein" value={`${recipe.protein} g`} /> : null}
-          {recipe.carbs ? <MetaPill label="Carbs" value={`${recipe.carbs} g`} /> : null}
-          {recipe.fat ? <MetaPill label="Fat" value={`${recipe.fat} g`} /> : null}
+          {recipe.calories ? <MetaPill label={t("calories")} value={`${recipe.calories}`} /> : null}
+          {recipe.protein ? <MetaPill label={t("protein")} value={`${recipe.protein} g`} /> : null}
+          {recipe.carbs ? <MetaPill label={t("carbs")} value={`${recipe.carbs} g`} /> : null}
+          {recipe.fat ? <MetaPill label={t("fat")} value={`${recipe.fat} g`} /> : null}
         </div>
       )}
 
       {recipe.url ? (
         <p className="mt-10 text-sm text-default-500">
-          Source:{" "}
+          {t("source")}{" "}
           <a
             href={recipe.url}
             target="_blank"

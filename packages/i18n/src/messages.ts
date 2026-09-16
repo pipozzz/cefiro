@@ -8,6 +8,7 @@ export const I18N_MESSAGE_SECTIONS = [
   "settings",
   "navbar",
   "auth",
+  "social",
 ] as const;
 
 type MessageSection = (typeof I18N_MESSAGE_SECTIONS)[number];
@@ -22,6 +23,7 @@ const MESSAGE_LOADERS: Record<LocaleCatalogCode, Partial<Record<MessageSection, 
     settings: () => import("./messages/en/settings.json"),
     navbar: () => import("./messages/en/navbar.json"),
     auth: () => import("./messages/en/auth.json"),
+    social: () => import("./messages/en/social.json"),
   },
   sk: {
     common: () => import("./messages/sk/common.json"),
@@ -31,6 +33,7 @@ const MESSAGE_LOADERS: Record<LocaleCatalogCode, Partial<Record<MessageSection, 
     settings: () => import("./messages/sk/settings.json"),
     navbar: () => import("./messages/sk/navbar.json"),
     auth: () => import("./messages/sk/auth.json"),
+    social: () => import("./messages/sk/social.json"),
   },
   fr: {
     common: () => import("./messages/fr/common.json"),

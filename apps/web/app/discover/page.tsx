@@ -8,6 +8,7 @@ import { SocialRecipeGrid } from "@/components/social/social-recipe-card";
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Button, Spinner } from "@heroui/react";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 
 type Sort = "newest" | "trending";
 type Category = "Breakfast" | "Lunch" | "Dinner" | "Snack";
@@ -18,6 +19,8 @@ export default function DiscoverPage() {
   const trpc = useTRPC();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const t = useTranslations("social.discover");
+  const tCat = useTranslations("social.categories");
 
   const [sort, setSort] = useState<Sort>("newest");
   const [category, setCategory] = useState<Category | null>(null);
@@ -70,8 +73,8 @@ export default function DiscoverPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 pb-24 md:px-6">
       <header className="mb-6">
-        <h1 className="text-3xl font-bold text-foreground">Discover</h1>
-        <p className="text-default-500">Explore recipes and cooks shared by the community.</p>
+        <h1 className="text-3xl font-bold text-foreground">{t("title")}</h1>
+        <p className="text-default-500">{t("subtitle")}</p>
       </header>
 
       {/* Search */}
@@ -81,15 +84,15 @@ export default function DiscoverPage() {
           type="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Search recipes and people…"
-          aria-label="Search recipes and people"
+          placeholder={t("searchPlaceholder")}
+          aria-label={t("searchAria")}
           className="w-full rounded-full bg-content2 py-3 pl-12 pr-11 text-foreground outline-none ring-1 ring-transparent transition placeholder:text-default-400 focus:bg-content1 focus:ring-primary"
         />
         {q ? (
           <button
             type="button"
             onClick={() => setQ("")}
-            aria-label="Clear search"
+            aria-label={t("clearSearch")}
             className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-default-400 hover:text-foreground"
           >
             <XMarkIcon className="h-5 w-5" />
@@ -104,14 +107,14 @@ export default function DiscoverPage() {
           {/* Sort */}
           <div className="mb-3 flex gap-2">
             <button type="button" className={pill(sort === "newest")} onClick={() => setSort("newest")}>
-              Newest
+              {t("sortNewest")}
             </button>
             <button
               type="button"
               className={pill(sort === "trending")}
               onClick={() => setSort("trending")}
             >
-              🔥 Trending
+              {t("sortTrending")}
             </button>
           </div>
 
@@ -122,7 +125,7 @@ export default function DiscoverPage() {
               className={pill(category === null)}
               onClick={() => setCategory(null)}
             >
-              All
+              {t("categoryAll")}
             </button>
             {CATEGORIES.map((cat) => (
               <button
@@ -131,7 +134,7 @@ export default function DiscoverPage() {
                 className={pill(category === cat)}
                 onClick={() => setCategory(cat)}
               >
-                {cat}
+                {tCat(cat)}
               </button>
             ))}
           </div>
@@ -142,7 +145,7 @@ export default function DiscoverPage() {
             </div>
           ) : recipes.length === 0 ? (
             <p className="rounded-2xl bg-content2 p-10 text-center text-default-500">
-              No public recipes here yet.
+              {t("empty")}
             </p>
           ) : (
             <>
@@ -155,7 +158,7 @@ export default function DiscoverPage() {
                     onPress={() => browse.fetchNextPage()}
                     isPending={browse.isFetchingNextPage}
                   >
-                    Load more
+                    {t("loadMore")}
                   </Button>
                 </div>
               ) : null}
@@ -179,6 +182,8 @@ function SearchResults({
   query: { data?: SearchData; isLoading: boolean };
   term: string;
 }) {
+  const t = useTranslations("social.discover");
+
   if (query.isLoading) {
     return (
       <div className="flex min-h-[30vh] items-center justify-center">
@@ -193,7 +198,7 @@ function SearchResults({
   if (profiles.length === 0 && recipes.length === 0) {
     return (
       <p className="rounded-2xl bg-content2 p-10 text-center text-default-500">
-        No results for “{term}”.
+        {t("noResults", { term })}
       </p>
     );
   }
@@ -202,14 +207,14 @@ function SearchResults({
     <div className="space-y-10">
       {profiles.length > 0 ? (
         <section>
-          <h2 className="mb-4 text-lg font-semibold text-foreground">People</h2>
+          <h2 className="mb-4 text-lg font-semibold text-foreground">{t("sectionPeople")}</h2>
           <SocialProfileGrid profiles={profiles} />
         </section>
       ) : null}
 
       {recipes.length > 0 ? (
         <section>
-          <h2 className="mb-4 text-lg font-semibold text-foreground">Recipes</h2>
+          <h2 className="mb-4 text-lg font-semibold text-foreground">{t("sectionRecipes")}</h2>
           <SocialRecipeGrid recipes={recipes} />
         </section>
       ) : null}

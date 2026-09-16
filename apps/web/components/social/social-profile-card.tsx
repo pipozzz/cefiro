@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export type SocialProfileCardData = {
   handle: string;
@@ -11,6 +12,7 @@ export type SocialProfileCardData = {
 };
 
 export function SocialProfileCard({ profile }: { profile: SocialProfileCardData }) {
+  const t = useTranslations("social.profileCard");
   const name = profile.displayName ?? `@${profile.handle}`;
 
   return (
@@ -41,7 +43,7 @@ export function SocialProfileCard({ profile }: { profile: SocialProfileCardData 
 
       {profile.recipeCount > 0 ? (
         <span className="flex-shrink-0 text-xs text-default-400">
-          {profile.recipeCount} {profile.recipeCount === 1 ? "recipe" : "recipes"}
+          {t("recipeCount", { count: profile.recipeCount })}
         </span>
       ) : null}
     </Link>

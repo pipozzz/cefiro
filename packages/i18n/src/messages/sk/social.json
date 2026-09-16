@@ -1,0 +1,90 @@
+{
+  "discover": {
+    "title": "Objavuj",
+    "subtitle": "Objavuj recepty a kuchárov zdieľané komunitou.",
+    "searchPlaceholder": "Hľadaj recepty a ľudí…",
+    "searchAria": "Hľadať recepty a ľudí",
+    "clearSearch": "Vymazať hľadanie",
+    "sortNewest": "Najnovšie",
+    "sortTrending": "🔥 Trendy",
+    "categoryAll": "Všetko",
+    "sectionPeople": "Ľudia",
+    "sectionRecipes": "Recepty",
+    "noResults": "Žiadne výsledky pre „{term}“.",
+    "empty": "Zatiaľ tu nie sú žiadne verejné recepty.",
+    "loadMore": "Načítať ďalšie",
+    "signIn": "Prihlásiť sa",
+    "openApp": "Otvoriť appku"
+  },
+  "categories": {
+    "Breakfast": "Raňajky",
+    "Lunch": "Obed",
+    "Dinner": "Večera",
+    "Snack": "Snack"
+  },
+  "profileCard": {
+    "recipeCount": "{count, plural, one {# recept} few {# recepty} other {# receptov}}"
+  },
+  "follow": {
+    "follow": "Sledovať",
+    "following": "Sledované",
+    "editProfile": "Upraviť profil",
+    "couldNotFollow": "Nepodarilo sa začať sledovať",
+    "couldNotUnfollow": "Nepodarilo sa prestať sledovať"
+  },
+  "like": {
+    "couldNotUpdate": "Nepodarilo sa upraviť páči sa mi"
+  },
+  "save": {
+    "cta": "Uložiť recept",
+    "saved": "Uložené do tvojich receptov",
+    "couldNotSave": "Nepodarilo sa uložiť recept"
+  },
+  "rating": {
+    "noRating": "Zatiaľ bez hodnotenia",
+    "countLabel": "{count, plural, one {# hodnotenie} few {# hodnotenia} other {# hodnotení}}",
+    "yourRating": "Tvoje hodnotenie:",
+    "ratePrompt": "Ohodnoť recept:",
+    "starAria": "{n} z 5",
+    "couldNotSave": "Nepodarilo sa uložiť hodnotenie"
+  },
+  "comments": {
+    "heading": "Komentáre",
+    "signInToJoin": "<link>Prihlás sa</link> a zapoj sa do konverzácie.",
+    "createProfileToComment": "<link>Vytvor si verejný profil</link> a komentuj.",
+    "placeholder": "Pridaj komentár…",
+    "post": "Pridať komentár",
+    "loading": "Načítavam komentáre…",
+    "empty": "Zatiaľ žiadne komentáre. Buď prvý!",
+    "unknown": "Neznámy",
+    "deleteAria": "Zmazať komentár",
+    "couldNotPost": "Nepodarilo sa pridať komentár",
+    "couldNotDelete": "Nepodarilo sa zmazať komentár",
+    "now": "teraz",
+    "ago": "pred {value}{unit}"
+  },
+  "profile": {
+    "notFoundTitle": "Profil sa nenašiel",
+    "notFoundMessage": "Tento profil je súkromný alebo neexistuje.",
+    "followersLabel": "{count, plural, one {sledovateľ} few {sledovatelia} other {sledovateľov}}",
+    "following": "sledovaných",
+    "recipes": "Recepty",
+    "noRecipes": "Zatiaľ žiadne verejné recepty."
+  },
+  "recipe": {
+    "notFoundTitle": "Recept sa nenašiel",
+    "notFoundMessage": "Tento recept je súkromný alebo neexistuje.",
+    "prep": "Príprava",
+    "cook": "Varenie",
+    "total": "Spolu",
+    "servings": "Porcie",
+    "calories": "Kalórie",
+    "ingredients": "Ingrediencie",
+    "steps": "Postup",
+    "notes": "Poznámky",
+    "protein": "Bielkoviny",
+    "carbs": "Sacharidy",
+    "fat": "Tuky",
+    "source": "Zdroj:"
+  }
+}

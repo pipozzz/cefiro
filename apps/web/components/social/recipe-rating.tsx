@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useTRPC } from "@/app/providers/trpc-provider";
 import { showSafeErrorToast } from "@/lib/ui/safe-error-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 
 import { StarsDisplay } from "./stars-display";
 
@@ -22,6 +23,7 @@ export function RecipeRating({
   const trpc = useTRPC();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const t = useTranslations("social.rating");
 
   const [average, setAverage] = useState(initialAverage);
   const [count, setCount] = useState(initialCount);
@@ -42,7 +44,7 @@ export function RecipeRating({
           rating: data.rating,
         }));
       },
-      onError: (error) => showSafeErrorToast(error, "Could not save your rating"),
+      onError: (error) => showSafeErrorToast(error, t("couldNotSave")),
     })
   );
 
@@ -70,19 +72,17 @@ export function RecipeRating({
           <>
             <StarsDisplay value={average} size={18} />
             <span className="text-sm font-medium text-foreground">{average.toFixed(1)}</span>
-            <span className="text-sm text-default-500">
-              ({count} {count === 1 ? "hodnotenie" : count >= 2 && count <= 4 ? "hodnotenia" : "hodnotení"})
-            </span>
+            <span className="text-sm text-default-500">({t("countLabel", { count })})</span>
           </>
         ) : (
-          <span className="text-sm text-default-500">Zatiaľ bez hodnotenia</span>
+          <span className="text-sm text-default-500">{t("noRating")}</span>
         )}
       </div>
 
       {/* Interactive: your rating */}
       <div className="flex items-center gap-2">
         <span className="text-xs text-default-500">
-          {myRating ? "Tvoje hodnotenie:" : "Ohodnoť recept:"}
+          {myRating ? t("yourRating") : t("ratePrompt")}
         </span>
         <span className="inline-flex" onMouseLeave={() => setHover(0)}>
           {[1, 2, 3, 4, 5].map((n) => (
@@ -90,7 +90,7 @@ export function RecipeRating({
               key={n}
               type="button"
               disabled={pending}
-              aria-label={`${n} z 5`}
+              aria-label={t("starAria", { n })}
               onMouseEnter={() => setHover(n)}
               onClick={() => onPick(n)}
               className={`px-0.5 text-lg leading-none transition ${

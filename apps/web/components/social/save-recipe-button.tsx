@@ -6,16 +6,18 @@ import { showSafeErrorToast } from "@/lib/ui/safe-error-toast";
 import { BookmarkIcon } from "@heroicons/react/24/outline";
 import { Button, toast } from "@heroui/react";
 import { useMutation } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 
 /** Fork a public recipe into the viewer's own library, then open it. */
 export function SaveRecipeButton({ recipeId, slug }: { recipeId: string; slug: string }) {
   const trpc = useTRPC();
   const router = useRouter();
+  const t = useTranslations("social.save");
 
   const save = useMutation(
     trpc.social.saveRecipe.mutationOptions({
       onSuccess: (data) => {
-        toast.success("Uložené do tvojich receptov");
+        toast.success(t("saved"));
         router.push(`/recipes/${data.recipeId}`);
       },
       onError: (error) => {
@@ -25,7 +27,7 @@ export function SaveRecipeButton({ recipeId, slug }: { recipeId: string; slug: s
           return;
         }
 
-        showSafeErrorToast(error, "Nepodarilo sa uložiť recept");
+        showSafeErrorToast(error, t("couldNotSave"));
       },
     })
   );
@@ -38,7 +40,7 @@ export function SaveRecipeButton({ recipeId, slug }: { recipeId: string; slug: s
       onPress={() => save.mutate({ recipeId })}
     >
       <BookmarkIcon className="h-4 w-4" />
-      Uložiť recept
+      {t("cta")}
     </Button>
   );
 }
