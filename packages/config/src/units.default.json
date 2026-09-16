@@ -52,6 +52,10 @@
       {
         "locale": "bg",
         "name": "сл"
+      },
+      {
+        "locale": "sk",
+        "name": "cl"
       }
     ],
     "plural": [
@@ -106,6 +110,10 @@
       {
         "locale": "bg",
         "name": "сантилитра"
+      },
+      {
+        "locale": "sk",
+        "name": "centilitre"
       }
     ],
     "alternates": [
@@ -182,6 +190,10 @@
       {
         "locale": "bg",
         "name": "дл"
+      },
+      {
+        "locale": "sk",
+        "name": "dl"
       }
     ],
     "plural": [
@@ -236,6 +248,10 @@
       {
         "locale": "bg",
         "name": "децилитра"
+      },
+      {
+        "locale": "sk",
+        "name": "decilitre"
       }
     ],
     "alternates": [
@@ -313,6 +329,10 @@
       {
         "locale": "bg",
         "name": "г"
+      },
+      {
+        "locale": "sk",
+        "name": "g"
       }
     ],
     "plural": [
@@ -367,6 +387,10 @@
       {
         "locale": "bg",
         "name": "грама"
+      },
+      {
+        "locale": "sk",
+        "name": "gramy"
       }
     ],
     "alternates": [
@@ -452,6 +476,10 @@
       {
         "locale": "bg",
         "name": "ч.л."
+      },
+      {
+        "locale": "sk",
+        "name": "lyžička"
       }
     ],
     "plural": [
@@ -506,6 +534,10 @@
       {
         "locale": "bg",
         "name": "чаени лъжици"
+      },
+      {
+        "locale": "sk",
+        "name": "lyžičky"
       }
     ],
     "alternates": [
@@ -610,6 +642,10 @@
       {
         "locale": "bg",
         "name": "с.л."
+      },
+      {
+        "locale": "sk",
+        "name": "lyžica"
       }
     ],
     "plural": [
@@ -664,6 +700,10 @@
       {
         "locale": "bg",
         "name": "супени лъжици"
+      },
+      {
+        "locale": "sk",
+        "name": "lyžice"
       }
     ],
     "alternates": [
@@ -768,6 +808,10 @@
       {
         "locale": "fr",
         "name": "pointe de couteau"
+      },
+      {
+        "locale": "sk",
+        "name": "špička noža"
       }
     ],
     "plural": [
@@ -822,6 +866,10 @@
       {
         "locale": "fr",
         "name": "pointes de couteau"
+      },
+      {
+        "locale": "sk",
+        "name": "špičky noža"
       }
     ],
     "alternates": [
@@ -906,6 +954,10 @@
       {
         "locale": "bg",
         "name": "щипка"
+      },
+      {
+        "locale": "sk",
+        "name": "štipka"
       }
     ],
     "plural": [
@@ -960,6 +1012,10 @@
       {
         "locale": "bg",
         "name": "щипки"
+      },
+      {
+        "locale": "sk",
+        "name": "štipky"
       }
     ],
     "alternates": [
@@ -1050,6 +1106,10 @@
       {
         "locale": "fr",
         "name": "pièce"
+      },
+      {
+        "locale": "sk",
+        "name": "ks"
       }
     ],
     "plural": [
@@ -1104,6 +1164,10 @@
       {
         "locale": "fr",
         "name": "pièces"
+      },
+      {
+        "locale": "sk",
+        "name": "kusy"
       }
     ],
     "alternates": [
@@ -1217,6 +1281,10 @@
       {
         "locale": "fr",
         "name": "gousse"
+      },
+      {
+        "locale": "sk",
+        "name": "strúčik"
       }
     ],
     "plural": [
@@ -1271,6 +1339,10 @@
       {
         "locale": "fr",
         "name": "gousses"
+      },
+      {
+        "locale": "sk",
+        "name": "strúčiky"
       }
     ],
     "alternates": [
@@ -1355,6 +1427,10 @@
       {
         "locale": "bg",
         "name": "лист"
+      },
+      {
+        "locale": "sk",
+        "name": "list"
       }
     ],
     "plural": [
@@ -1409,6 +1485,10 @@
       {
         "locale": "bg",
         "name": "листа"
+      },
+      {
+        "locale": "sk",
+        "name": "listy"
       }
     ],
     "alternates": [
@@ -1494,6 +1574,10 @@
       {
         "locale": "fr",
         "name": "brin"
+      },
+      {
+        "locale": "sk",
+        "name": "vetvička"
       }
     ],
     "plural": [
@@ -1548,6 +1632,10 @@
       {
         "locale": "fr",
         "name": "brins"
+      },
+      {
+        "locale": "sk",
+        "name": "vetvičky"
       }
     ],
     "alternates": [
@@ -1641,6 +1729,10 @@
       {
         "locale": "fr",
         "name": "bouquet"
+      },
+      {
+        "locale": "sk",
+        "name": "zväzok"
       }
     ],
     "plural": [
@@ -1695,6 +1787,10 @@
       {
         "locale": "fr",
         "name": "bouquets"
+      },
+      {
+        "locale": "sk",
+        "name": "zväzky"
       }
     ],
     "alternates": [
@@ -1787,6 +1883,10 @@
       {
         "locale": "fr",
         "name": "tige"
+      },
+      {
+        "locale": "sk",
+        "name": "stonka"
       }
     ],
     "plural": [
@@ -1841,6 +1941,10 @@
       {
         "locale": "fr",
         "name": "tiges"
+      },
+      {
+        "locale": "sk",
+        "name": "stonky"
       }
     ],
     "alternates": [
@@ -1921,6 +2025,10 @@
       {
         "locale": "bg",
         "name": "опаковка"
+      },
+      {
+        "locale": "sk",
+        "name": "balenie"
       }
     ],
     "plural": [
@@ -1975,6 +2083,10 @@
       {
         "locale": "bg",
         "name": "опаковки"
+      },
+      {
+        "locale": "sk",
+        "name": "balenia"
       }
     ],
     "alternates": [
@@ -2072,6 +2184,10 @@
       {
         "locale": "fr",
         "name": "conserve"
+      },
+      {
+        "locale": "sk",
+        "name": "plechovka"
       }
     ],
     "plural": [
@@ -2126,6 +2242,10 @@
       {
         "locale": "fr",
         "name": "conserves"
+      },
+      {
+        "locale": "sk",
+        "name": "plechovky"
       }
     ],
     "alternates": [
@@ -2220,6 +2340,10 @@
       {
         "locale": "fr",
         "name": "bocal"
+      },
+      {
+        "locale": "sk",
+        "name": "pohár"
       }
     ],
     "plural": [
@@ -2274,6 +2398,10 @@
       {
         "locale": "fr",
         "name": "bocaux"
+      },
+      {
+        "locale": "sk",
+        "name": "poháre"
       }
     ],
     "alternates": [
@@ -2366,6 +2494,10 @@
       {
         "locale": "bg",
         "name": "бутилка"
+      },
+      {
+        "locale": "sk",
+        "name": "fľaša"
       }
     ],
     "plural": [
@@ -2420,6 +2552,10 @@
       {
         "locale": "bg",
         "name": "бутилки"
+      },
+      {
+        "locale": "sk",
+        "name": "fľaše"
       }
     ],
     "alternates": [
@@ -2508,6 +2644,10 @@
       {
         "locale": "fr",
         "name": "sac"
+      },
+      {
+        "locale": "sk",
+        "name": "vrecko"
       }
     ],
     "plural": [
@@ -2562,6 +2702,10 @@
       {
         "locale": "fr",
         "name": "sacs"
+      },
+      {
+        "locale": "sk",
+        "name": "vrecká"
       }
     ],
     "alternates": [
@@ -2654,6 +2798,10 @@
       {
         "locale": "bg",
         "name": "кутия"
+      },
+      {
+        "locale": "sk",
+        "name": "krabica"
       }
     ],
     "plural": [
@@ -2708,6 +2856,10 @@
       {
         "locale": "bg",
         "name": "кутии"
+      },
+      {
+        "locale": "sk",
+        "name": "krabice"
       }
     ],
     "alternates": [
@@ -2791,6 +2943,10 @@
       {
         "locale": "fr",
         "name": "poignée"
+      },
+      {
+        "locale": "sk",
+        "name": "hrsť"
       }
     ],
     "plural": [
@@ -2845,6 +3001,10 @@
       {
         "locale": "fr",
         "name": "poignées"
+      },
+      {
+        "locale": "sk",
+        "name": "hrste"
       }
     ],
     "alternates": [
@@ -2933,6 +3093,10 @@
       {
         "locale": "fr",
         "name": "giclée"
+      },
+      {
+        "locale": "sk",
+        "name": "šplech"
       }
     ],
     "plural": [
@@ -2987,6 +3151,10 @@
       {
         "locale": "fr",
         "name": "giclées"
+      },
+      {
+        "locale": "sk",
+        "name": "šplechy"
       }
     ],
     "alternates": [
@@ -3075,6 +3243,10 @@
       {
         "locale": "bg",
         "name": "чаша"
+      },
+      {
+        "locale": "sk",
+        "name": "šálka"
       }
     ],
     "plural": [
@@ -3129,6 +3301,10 @@
       {
         "locale": "bg",
         "name": "чаши"
+      },
+      {
+        "locale": "sk",
+        "name": "šálky"
       }
     ],
     "alternates": [
@@ -3228,6 +3404,10 @@
       {
         "locale": "bg",
         "name": "чашка"
+      },
+      {
+        "locale": "sk",
+        "name": "pohárik"
       }
     ],
     "plural": [
@@ -3282,6 +3462,10 @@
       {
         "locale": "bg",
         "name": "чашки"
+      },
+      {
+        "locale": "sk",
+        "name": "poháriky"
       }
     ],
     "alternates": [
@@ -3366,6 +3550,10 @@
       {
         "locale": "bg",
         "name": "филия"
+      },
+      {
+        "locale": "sk",
+        "name": "plátok"
       }
     ],
     "plural": [
@@ -3420,6 +3608,10 @@
       {
         "locale": "bg",
         "name": "филии"
+      },
+      {
+        "locale": "sk",
+        "name": "plátky"
       }
     ],
     "alternates": [
@@ -3509,6 +3701,10 @@
       {
         "locale": "fr",
         "name": "lanière"
+      },
+      {
+        "locale": "sk",
+        "name": "pásik"
       }
     ],
     "plural": [
@@ -3563,6 +3759,10 @@
       {
         "locale": "fr",
         "name": "lanières"
+      },
+      {
+        "locale": "sk",
+        "name": "pásiky"
       }
     ],
     "alternates": [
@@ -3644,6 +3844,10 @@
       {
         "locale": "bg",
         "name": "кора"
+      },
+      {
+        "locale": "sk",
+        "name": "plát"
       }
     ],
     "plural": [
@@ -3698,6 +3902,10 @@
       {
         "locale": "bg",
         "name": "кори"
+      },
+      {
+        "locale": "sk",
+        "name": "pláty"
       }
     ],
     "alternates": [
@@ -3777,6 +3985,10 @@
       {
         "locale": "fr",
         "name": "portion"
+      },
+      {
+        "locale": "sk",
+        "name": "porcia"
       }
     ],
     "plural": [
@@ -3831,6 +4043,10 @@
       {
         "locale": "fr",
         "name": "portions"
+      },
+      {
+        "locale": "sk",
+        "name": "porcie"
       }
     ],
     "alternates": [
@@ -3912,6 +4128,10 @@
       {
         "locale": "fr",
         "name": "rondelle"
+      },
+      {
+        "locale": "sk",
+        "name": "koliesko"
       }
     ],
     "plural": [
@@ -3966,6 +4186,10 @@
       {
         "locale": "fr",
         "name": "rondelles"
+      },
+      {
+        "locale": "sk",
+        "name": "kolieska"
       }
     ],
     "alternates": [
@@ -4047,6 +4271,10 @@
       {
         "locale": "fr",
         "name": "anneau"
+      },
+      {
+        "locale": "sk",
+        "name": "krúžok"
       }
     ],
     "plural": [
@@ -4101,6 +4329,10 @@
       {
         "locale": "fr",
         "name": "anneaux"
+      },
+      {
+        "locale": "sk",
+        "name": "krúžky"
       }
     ],
     "alternates": [
@@ -4182,6 +4414,10 @@
       {
         "locale": "fr",
         "name": "boule"
+      },
+      {
+        "locale": "sk",
+        "name": "gulička"
       }
     ],
     "plural": [
@@ -4236,6 +4472,10 @@
       {
         "locale": "fr",
         "name": "boules"
+      },
+      {
+        "locale": "sk",
+        "name": "guličky"
       }
     ],
     "alternates": [
@@ -4317,6 +4557,10 @@
       {
         "locale": "fr",
         "name": "soupçon"
+      },
+      {
+        "locale": "sk",
+        "name": "štipec"
       }
     ],
     "plural": [
@@ -4371,6 +4615,10 @@
       {
         "locale": "fr",
         "name": "soupçons"
+      },
+      {
+        "locale": "sk",
+        "name": "štipce"
       }
     ],
     "alternates": [
@@ -4452,6 +4700,10 @@
       {
         "locale": "fr",
         "name": "trait"
+      },
+      {
+        "locale": "sk",
+        "name": "pramienok"
       }
     ],
     "plural": [
@@ -4506,6 +4758,10 @@
       {
         "locale": "fr",
         "name": "traits"
+      },
+      {
+        "locale": "sk",
+        "name": "pramienky"
       }
     ],
     "alternates": [
@@ -4585,6 +4841,10 @@
       {
         "locale": "fr",
         "name": "louche"
+      },
+      {
+        "locale": "sk",
+        "name": "kopček"
       }
     ],
     "plural": [
@@ -4639,6 +4899,10 @@
       {
         "locale": "fr",
         "name": "louches"
+      },
+      {
+        "locale": "sk",
+        "name": "kopčeky"
       }
     ],
     "alternates": [
@@ -4718,6 +4982,10 @@
       {
         "locale": "fr",
         "name": "bâton"
+      },
+      {
+        "locale": "sk",
+        "name": "tyčinka"
       }
     ],
     "plural": [
@@ -4772,6 +5040,10 @@
       {
         "locale": "fr",
         "name": "bâtons"
+      },
+      {
+        "locale": "sk",
+        "name": "tyčinky"
       }
     ],
     "alternates": [
@@ -4852,6 +5124,10 @@
       {
         "locale": "fr",
         "name": "barquette"
+      },
+      {
+        "locale": "sk",
+        "name": "téglik"
       }
     ],
     "plural": [
@@ -4906,6 +5182,10 @@
       {
         "locale": "fr",
         "name": "barquettes"
+      },
+      {
+        "locale": "sk",
+        "name": "tégliky"
       }
     ],
     "alternates": [
@@ -4987,6 +5267,10 @@
       {
         "locale": "fr",
         "name": "bouchon"
+      },
+      {
+        "locale": "sk",
+        "name": "uzáver"
       }
     ],
     "plural": [
@@ -5041,6 +5325,10 @@
       {
         "locale": "fr",
         "name": "bouchons"
+      },
+      {
+        "locale": "sk",
+        "name": "uzávery"
       }
     ],
     "alternates": [
@@ -5121,6 +5409,10 @@
       {
         "locale": "fr",
         "name": "sachet"
+      },
+      {
+        "locale": "sk",
+        "name": "vrecúško"
       }
     ],
     "plural": [
@@ -5175,6 +5467,10 @@
       {
         "locale": "fr",
         "name": "sachets"
+      },
+      {
+        "locale": "sk",
+        "name": "vrecúška"
       }
     ],
     "alternates": [
@@ -5255,6 +5551,10 @@
       {
         "locale": "fr",
         "name": "étui"
+      },
+      {
+        "locale": "sk",
+        "name": "tuba"
       }
     ],
     "plural": [
@@ -5309,6 +5609,10 @@
       {
         "locale": "fr",
         "name": "étuis"
+      },
+      {
+        "locale": "sk",
+        "name": "tuby"
       }
     ],
     "alternates": [
@@ -5386,6 +5690,10 @@
       {
         "locale": "fr",
         "name": "rouleau"
+      },
+      {
+        "locale": "sk",
+        "name": "rolka"
       }
     ],
     "plural": [
@@ -5440,6 +5748,10 @@
       {
         "locale": "fr",
         "name": "rouleaux"
+      },
+      {
+        "locale": "sk",
+        "name": "rolky"
       }
     ],
     "alternates": [
@@ -5522,6 +5834,10 @@
       {
         "locale": "fr",
         "name": "épi"
+      },
+      {
+        "locale": "sk",
+        "name": "klas"
       }
     ],
     "plural": [
@@ -5576,6 +5892,10 @@
       {
         "locale": "fr",
         "name": "épis"
+      },
+      {
+        "locale": "sk",
+        "name": "klasy"
       }
     ],
     "alternates": [
@@ -5657,6 +5977,10 @@
       {
         "locale": "fr",
         "name": "quartier"
+      },
+      {
+        "locale": "sk",
+        "name": "klin"
       }
     ],
     "plural": [
@@ -5711,6 +6035,10 @@
       {
         "locale": "fr",
         "name": "quartiers"
+      },
+      {
+        "locale": "sk",
+        "name": "kliny"
       }
     ],
     "alternates": [
@@ -5790,6 +6118,10 @@
       {
         "locale": "fr",
         "name": "morceau"
+      },
+      {
+        "locale": "sk",
+        "name": "kúsok"
       }
     ],
     "plural": [
@@ -5844,6 +6176,10 @@
       {
         "locale": "fr",
         "name": "morceaux"
+      },
+      {
+        "locale": "sk",
+        "name": "kúsky"
       }
     ],
     "alternates": [
@@ -5925,6 +6261,10 @@
       {
         "locale": "fr",
         "name": "cube"
+      },
+      {
+        "locale": "sk",
+        "name": "kocka"
       }
     ],
     "plural": [
@@ -5979,6 +6319,10 @@
       {
         "locale": "fr",
         "name": "cubes"
+      },
+      {
+        "locale": "sk",
+        "name": "kocky"
       }
     ],
     "alternates": [
@@ -6060,6 +6404,10 @@
       {
         "locale": "fr",
         "name": "filet"
+      },
+      {
+        "locale": "sk",
+        "name": "filé"
       }
     ],
     "plural": [
@@ -6114,6 +6462,10 @@
       {
         "locale": "fr",
         "name": "filets"
+      },
+      {
+        "locale": "sk",
+        "name": "filé"
       }
     ],
     "alternates": [
@@ -6189,6 +6541,10 @@
       {
         "locale": "fr",
         "name": "càs bombée"
+      },
+      {
+        "locale": "sk",
+        "name": "kopcovitá lyžica"
       }
     ],
     "plural": [
@@ -6243,6 +6599,10 @@
       {
         "locale": "fr",
         "name": "cuillères à soupe bombées"
+      },
+      {
+        "locale": "sk",
+        "name": "kopcovité lyžice"
       }
     ],
     "alternates": [
@@ -6346,6 +6706,10 @@
       {
         "locale": "fr",
         "name": "càs rase"
+      },
+      {
+        "locale": "sk",
+        "name": "zarovnaná lyžica"
       }
     ],
     "plural": [
@@ -6400,6 +6764,10 @@
       {
         "locale": "fr",
         "name": "cuillères à soupe rases"
+      },
+      {
+        "locale": "sk",
+        "name": "zarovnané lyžice"
       }
     ],
     "alternates": [
@@ -6498,6 +6866,10 @@
       {
         "locale": "fr",
         "name": "grosse pincée"
+      },
+      {
+        "locale": "sk",
+        "name": "veľká štipka"
       }
     ],
     "plural": [
@@ -6552,6 +6924,10 @@
       {
         "locale": "fr",
         "name": "grosses pincées"
+      },
+      {
+        "locale": "sk",
+        "name": "veľké štipky"
       }
     ],
     "alternates": [
@@ -6638,6 +7014,10 @@
       {
         "locale": "fr",
         "name": "grande giclée"
+      },
+      {
+        "locale": "sk",
+        "name": "veľký šplech"
       }
     ],
     "plural": [
@@ -6692,6 +7072,10 @@
       {
         "locale": "fr",
         "name": "grandes giclées"
+      },
+      {
+        "locale": "sk",
+        "name": "veľké šplechy"
       }
     ],
     "alternates": [
@@ -6773,6 +7157,10 @@
       {
         "locale": "fr",
         "name": "douzaine"
+      },
+      {
+        "locale": "sk",
+        "name": "tucet"
       }
     ],
     "plural": [
@@ -6827,6 +7215,10 @@
       {
         "locale": "fr",
         "name": "douzaines"
+      },
+      {
+        "locale": "sk",
+        "name": "tucty"
       }
     ],
     "alternates": [
@@ -6905,6 +7297,10 @@
       {
         "locale": "fr",
         "name": "petite giclée"
+      },
+      {
+        "locale": "sk",
+        "name": "malý šplech"
       }
     ],
     "plural": [
@@ -6959,6 +7355,10 @@
       {
         "locale": "fr",
         "name": "petites giclées"
+      },
+      {
+        "locale": "sk",
+        "name": "malé šplechy"
       }
     ],
     "alternates": [
@@ -7039,6 +7439,10 @@
       {
         "locale": "fr",
         "name": "bulbe"
+      },
+      {
+        "locale": "sk",
+        "name": "hlavička"
       }
     ],
     "plural": [
@@ -7093,6 +7497,10 @@
       {
         "locale": "fr",
         "name": "bulbes"
+      },
+      {
+        "locale": "sk",
+        "name": "hlavičky"
       }
     ],
     "alternates": [
@@ -7167,6 +7575,10 @@
       {
         "locale": "fr",
         "name": "tête"
+      },
+      {
+        "locale": "sk",
+        "name": "hlava"
       }
     ],
     "plural": [
@@ -7221,6 +7633,10 @@
       {
         "locale": "fr",
         "name": "têtes"
+      },
+      {
+        "locale": "sk",
+        "name": "hlavy"
       }
     ],
     "alternates": [
@@ -7300,6 +7716,10 @@
       {
         "locale": "fr",
         "name": "selon le goût"
+      },
+      {
+        "locale": "sk",
+        "name": "podľa chuti"
       }
     ],
     "plural": [
@@ -7354,6 +7774,10 @@
       {
         "locale": "fr",
         "name": "selon le goût"
+      },
+      {
+        "locale": "sk",
+        "name": "podľa chuti"
       }
     ],
     "alternates": [
@@ -7432,6 +7856,10 @@
       {
         "locale": "fr",
         "name": "lb"
+      },
+      {
+        "locale": "sk",
+        "name": "lb"
       }
     ],
     "plural": [
@@ -7486,6 +7914,10 @@
       {
         "locale": "fr",
         "name": "livres"
+      },
+      {
+        "locale": "sk",
+        "name": "libry"
       }
     ],
     "alternates": [
@@ -7560,6 +7992,10 @@
       {
         "locale": "fr",
         "name": "tablette"
+      },
+      {
+        "locale": "sk",
+        "name": "tabuľka"
       }
     ],
     "plural": [
@@ -7614,6 +8050,10 @@
       {
         "locale": "fr",
         "name": "tablettes"
+      },
+      {
+        "locale": "sk",
+        "name": "tabuľky"
       }
     ],
     "alternates": [
@@ -7694,6 +8134,10 @@
       {
         "locale": "fr",
         "name": "bol"
+      },
+      {
+        "locale": "sk",
+        "name": "miska"
       }
     ],
     "plural": [
@@ -7748,6 +8192,10 @@
       {
         "locale": "fr",
         "name": "bols"
+      },
+      {
+        "locale": "sk",
+        "name": "misky"
       }
     ],
     "alternates": [
@@ -7828,6 +8276,10 @@
       {
         "locale": "fr",
         "name": "càc bombée"
+      },
+      {
+        "locale": "sk",
+        "name": "kopcovitá lyžička"
       }
     ],
     "plural": [
@@ -7882,6 +8334,10 @@
       {
         "locale": "fr",
         "name": "cuillères à café bombées"
+      },
+      {
+        "locale": "sk",
+        "name": "kopcovité lyžičky"
       }
     ],
     "alternates": [
@@ -7982,6 +8438,10 @@
       {
         "locale": "fr",
         "name": "càc rase"
+      },
+      {
+        "locale": "sk",
+        "name": "zarovnaná lyžička"
       }
     ],
     "plural": [
@@ -8036,6 +8496,10 @@
       {
         "locale": "fr",
         "name": "cuillères à café rases"
+      },
+      {
+        "locale": "sk",
+        "name": "zarovnané lyžičky"
       }
     ],
     "alternates": [
@@ -8132,6 +8596,10 @@
       {
         "locale": "fr",
         "name": "casserole"
+      },
+      {
+        "locale": "sk",
+        "name": "hrniec"
       }
     ],
     "plural": [
@@ -8186,6 +8654,10 @@
       {
         "locale": "fr",
         "name": "casseroles"
+      },
+      {
+        "locale": "sk",
+        "name": "hrnce"
       }
     ],
     "alternates": [
@@ -8262,6 +8734,10 @@
       {
         "locale": "fr",
         "name": "goutte"
+      },
+      {
+        "locale": "sk",
+        "name": "kvapka"
       }
     ],
     "plural": [
@@ -8316,6 +8792,10 @@
       {
         "locale": "fr",
         "name": "gouttes"
+      },
+      {
+        "locale": "sk",
+        "name": "kvapky"
       }
     ],
     "alternates": [
@@ -8400,6 +8880,10 @@
       {
         "locale": "fr",
         "name": "oz"
+      },
+      {
+        "locale": "sk",
+        "name": "oz"
       }
     ],
     "plural": [
@@ -8454,6 +8938,10 @@
       {
         "locale": "fr",
         "name": "onces"
+      },
+      {
+        "locale": "sk",
+        "name": "unce"
       }
     ],
     "alternates": [
@@ -8528,6 +9016,10 @@
       {
         "locale": "bg",
         "name": "мл"
+      },
+      {
+        "locale": "sk",
+        "name": "ml"
       }
     ],
     "plural": [
@@ -8582,6 +9074,10 @@
       {
         "locale": "bg",
         "name": "милилитра"
+      },
+      {
+        "locale": "sk",
+        "name": "mililitre"
       }
     ],
     "alternates": [
@@ -8660,6 +9156,10 @@
       {
         "locale": "bg",
         "name": "л"
+      },
+      {
+        "locale": "sk",
+        "name": "l"
       }
     ],
     "plural": [
@@ -8714,6 +9214,10 @@
       {
         "locale": "bg",
         "name": "литра"
+      },
+      {
+        "locale": "sk",
+        "name": "litre"
       }
     ],
     "alternates": [
@@ -8790,6 +9294,10 @@
       {
         "locale": "bg",
         "name": "см"
+      },
+      {
+        "locale": "sk",
+        "name": "cm"
       }
     ],
     "plural": [
@@ -8844,6 +9352,10 @@
       {
         "locale": "bg",
         "name": "сантиметра"
+      },
+      {
+        "locale": "sk",
+        "name": "centimetre"
       }
     ],
     "alternates": [

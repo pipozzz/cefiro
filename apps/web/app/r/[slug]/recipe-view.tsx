@@ -47,7 +47,7 @@ function AuthorChip({
   return (
     <Link
       href={`/u/${author.handle}`}
-      className="bg-content2/80 hover:bg-content3 inline-flex items-center gap-2 rounded-full py-1 pr-3 pl-1 backdrop-blur transition"
+      className="bg-content2 hover:bg-content3 inline-flex items-center gap-2 rounded-full py-1 pr-3 pl-1 transition"
     >
       {author.avatarUrl ? (
         // eslint-disable-next-line @next/next/no-img-element

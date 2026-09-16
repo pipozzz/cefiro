@@ -46,12 +46,12 @@ export function SocialRecipeCard({ recipe }: { recipe: SocialRecipeCardData }) {
           <div className="h-full w-full" style={{ background: recipe.dishColor ?? undefined }} />
         )}
         {recipe.totalMinutes ? (
-          <span className="absolute top-2 right-2 rounded-full bg-black/60 px-2 py-0.5 text-xs font-medium text-white backdrop-blur">
+          <span className="absolute top-2 right-2 rounded-full bg-black/70 px-2 py-0.5 text-xs font-medium text-white">
             {recipe.totalMinutes} min
           </span>
         ) : null}
         {typeof recipe.favoriteCount === "number" && recipe.favoriteCount > 0 ? (
-          <span className="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full bg-black/60 px-2 py-0.5 text-xs font-medium text-white backdrop-blur">
+          <span className="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full bg-black/70 px-2 py-0.5 text-xs font-medium text-white">
             <HeartIcon className="h-3 w-3 text-red-400" />
             {recipe.favoriteCount}
           </span>
