@@ -458,6 +458,53 @@ export async function listSuggestedProfiles(
 }
 
 /**
+ * Public profiles for the "Cooks" tab on discovery: any public profile with at
+ * least one public recipe, ranked by public-recipe count then handle. Offset
+ * cursor (a stringified number), like discovery's trending sort.
+ */
+export async function listDiscoverProfiles(
+  limit: number,
+  cursor?: string
+): Promise<{ items: PublicProfileCard[]; nextCursor: string | null }> {
+  const offset = cursor ? Number.parseInt(cursor, 10) || 0 : 0;
+
+  const recipeCountSql = sql<number>`(
+    SELECT count(*)::int FROM ${recipes}
+    WHERE ${recipes.userId} = ${userProfiles.userId}
+    AND ${recipes.visibility} = 'public'
+  )`;
+
+  const rows = await db
+    .select({
+      handle: userProfiles.handle,
+      displayName: userProfiles.displayName,
+      bio: userProfiles.bio,
+      avatarUrl: userProfiles.avatarUrl,
+      recipeCount: recipeCountSql,
+    })
+    .from(userProfiles)
+    .where(
+      and(
+        eq(userProfiles.isPublic, true),
+        sql`EXISTS (
+          SELECT 1 FROM ${recipes}
+          WHERE ${recipes.userId} = ${userProfiles.userId}
+          AND ${recipes.visibility} = 'public'
+        )`
+      )
+    )
+    .orderBy(desc(recipeCountSql), userProfiles.handle)
+    .limit(limit + 1)
+    .offset(offset);
+
+  const hasMore = rows.length > limit;
+  const items = hasMore ? rows.slice(0, limit) : rows;
+  const nextCursor = hasMore ? String(offset + limit) : null;
+
+  return { items, nextCursor };
+}
+
+/**
  * List a user's PUBLIC recipes (excludes unlisted/private), newest first,
  * cursor-paginated by publishedAt. Cursor is an ISO timestamp.
  */
