@@ -72,8 +72,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const origin = await siteOrigin();
   const url = origin ? `${origin}/r/${slug}` : undefined;
   const imgPath = toSlugMediaPath(primaryRecipeImage(full), slug);
-  const image =
+  const photo =
     imgPath && origin ? (imgPath.startsWith("http") ? imgPath : `${origin}${imgPath}`) : undefined;
+  // Recipes with a photo share the photo itself; the rest fall back to a
+  // branded, generated share card so every recipe has a rich preview.
+  const image = photo ?? (origin ? `${origin}/r/${slug}/og` : undefined);
 
   const title = full.name;
   const description = full.description?.trim() || "A recipe shared on Cefiro.";
