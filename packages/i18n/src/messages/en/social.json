@@ -2,6 +2,8 @@
   "discover": {
     "title": "Discover",
     "subtitle": "Explore recipes and cooks shared by the community.",
+    "metaTitle": "Discover recipes",
+    "metaDescription": "Explore recipes shared by the Cefiro community.",
     "searchPlaceholder": "Search recipes and people…",
     "searchAria": "Search recipes and people",
     "clearSearch": "Clear search",
