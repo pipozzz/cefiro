@@ -131,7 +131,8 @@
   },
   "avatar": {
     "upload": "Upload photo",
-    "couldNotUpload": "Could not upload photo"
+    "couldNotUpload": "Could not upload photo",
+    "remove": "Remove"
   },
   "suggestions": {
     "heading": "Cooks to follow",
@@ -188,12 +189,11 @@
     "locationPlaceholder": "City, Country",
     "website": "Website",
     "websitePlaceholder": "https://…",
-    "avatarUrl": "Avatar URL",
-    "avatarUrlPlaceholder": "https://…/avatar.jpg",
     "publicProfile": "Public profile",
     "publicProfileHint": "When off, your profile and public recipes are hidden from others.",
     "save": "Save profile",
     "saved": "Profile saved",
-    "couldNotSave": "Could not save profile"
+    "couldNotSave": "Could not save profile",
+    "avatarLabel": "Profile photo"
   }
 }

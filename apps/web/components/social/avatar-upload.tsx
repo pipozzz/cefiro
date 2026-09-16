@@ -49,7 +49,7 @@ export function AvatarUpload({
         </span>
       )}
 
-      <div>
+      <div className="flex items-center gap-2">
         <input
           ref={inputRef}
           type="file"
@@ -77,6 +77,16 @@ export function AvatarUpload({
         >
           {t("upload")}
         </Button>
+        {value ? (
+          <Button
+            variant="tertiary"
+            size="sm"
+            isDisabled={upload.isPending}
+            onPress={() => onChange("")}
+          >
+            {t("remove")}
+          </Button>
+        ) : null}
       </div>
     </div>
   );

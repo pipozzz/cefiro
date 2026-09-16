@@ -200,17 +200,13 @@ export default function ProfileSettingsPage() {
         </div>
 
         <div>
-          <label className="text-foreground mb-2 block text-sm font-medium">{t("avatarUrl")}</label>
+          <label className="text-foreground mb-2 block text-sm font-medium">
+            {t("avatarLabel")}
+          </label>
           <AvatarUpload
             value={avatarUrl.trim() || null}
             onChange={setAvatarUrl}
             name={displayName || handle}
-          />
-          <Input
-            className="mt-3"
-            value={avatarUrl}
-            onChange={(e) => setAvatarUrl(e.target.value)}
-            placeholder={t("avatarUrlPlaceholder")}
           />
         </div>
 

@@ -131,7 +131,8 @@
   },
   "avatar": {
     "upload": "Nahrať fotku",
-    "couldNotUpload": "Nepodarilo sa nahrať fotku"
+    "couldNotUpload": "Nepodarilo sa nahrať fotku",
+    "remove": "Odstrániť"
   },
   "suggestions": {
     "heading": "Kuchári na sledovanie",
@@ -188,12 +189,11 @@
     "locationPlaceholder": "Mesto, Krajina",
     "website": "Web",
     "websitePlaceholder": "https://…",
-    "avatarUrl": "URL avatara",
-    "avatarUrlPlaceholder": "https://…/avatar.jpg",
     "publicProfile": "Verejný profil",
     "publicProfileHint": "Keď je vypnuté, tvoj profil a verejné recepty sú skryté pred ostatnými.",
     "save": "Uložiť profil",
     "saved": "Profil uložený",
-    "couldNotSave": "Nepodarilo sa uložiť profil"
+    "couldNotSave": "Nepodarilo sa uložiť profil",
+    "avatarLabel": "Profilová fotka"
   }
 }
