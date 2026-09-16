@@ -24,16 +24,22 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Invalid, expired, or orphaned session - redirect to login
-  // Use X-Forwarded headers when behind a reverse proxy
+  // Anonymous (invalid/expired/orphaned session). Pick the base origin —
+  // forwarded host when trusted (behind a reverse proxy), else AUTH_URL.
   const forwardedOrigin = getPublicOrigin(request);
-  let loginUrl: URL;
+  const base =
+    forwardedOrigin && SERVER_CONFIG.TRUSTED_ORIGINS.includes(forwardedOrigin)
+      ? forwardedOrigin
+      : SERVER_CONFIG.AUTH_URL;
 
-  if (forwardedOrigin && SERVER_CONFIG.TRUSTED_ORIGINS.includes(forwardedOrigin)) {
-    loginUrl = new URL("/login", forwardedOrigin);
-  } else {
-    loginUrl = new URL("/login", SERVER_CONFIG.AUTH_URL);
+  // New visitors landing on the root get the public discovery page instead of a
+  // forced sign-in. Deep links to authed pages still go to login with a
+  // callbackUrl so the user returns there after signing in.
+  if (request.nextUrl.pathname === "/") {
+    return NextResponse.redirect(new URL("/discover", base), 307);
   }
+
+  const loginUrl = new URL("/login", base);
 
   loginUrl.searchParams.set("callbackUrl", request.nextUrl.pathname + request.nextUrl.search);
 
