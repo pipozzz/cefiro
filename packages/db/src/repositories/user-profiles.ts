@@ -4,7 +4,7 @@ import type { RecipeVisibility } from "@norish/shared/contracts/zod/social";
 
 import { db } from "@norish/db/drizzle";
 
-import { recipes, userProfiles } from "../schema";
+import { follows, recipes, userProfiles } from "../schema";
 
 export interface PublicProfile {
   userId: string;
@@ -406,6 +406,51 @@ export async function searchPublicProfiles(
         sql`(${userProfiles.handle} ILIKE ${pattern}
           OR ${userProfiles.displayName} ILIKE ${pattern}
           OR ${userProfiles.bio} ILIKE ${pattern})`
+      )
+    )
+    .orderBy(desc(recipeCountSql), userProfiles.handle)
+    .limit(limit);
+}
+
+/**
+ * Public profiles to suggest that `userId` follow, for the empty-feed
+ * onboarding: not themselves, not already followed, and with at least one
+ * public recipe (so following them actually fills a feed). Ranked by
+ * public-recipe count, then handle.
+ */
+export async function listSuggestedProfiles(
+  userId: string,
+  limit: number
+): Promise<PublicProfileCard[]> {
+  const recipeCountSql = sql<number>`(
+    SELECT count(*)::int FROM ${recipes}
+    WHERE ${recipes.userId} = ${userProfiles.userId}
+    AND ${recipes.visibility} = 'public'
+  )`;
+
+  return db
+    .select({
+      handle: userProfiles.handle,
+      displayName: userProfiles.displayName,
+      bio: userProfiles.bio,
+      avatarUrl: userProfiles.avatarUrl,
+      recipeCount: recipeCountSql,
+    })
+    .from(userProfiles)
+    .where(
+      and(
+        eq(userProfiles.isPublic, true),
+        ne(userProfiles.userId, userId),
+        sql`EXISTS (
+          SELECT 1 FROM ${recipes}
+          WHERE ${recipes.userId} = ${userProfiles.userId}
+          AND ${recipes.visibility} = 'public'
+        )`,
+        sql`NOT EXISTS (
+          SELECT 1 FROM ${follows}
+          WHERE ${follows.followerId} = ${userId}
+          AND ${follows.followeeId} = ${userProfiles.userId}
+        )`
       )
     )
     .orderBy(desc(recipeCountSql), userProfiles.handle)

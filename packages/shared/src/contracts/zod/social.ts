@@ -155,6 +155,10 @@ export const SearchInputSchema = z.object({
   limit: z.number().int().min(1).max(50).default(20),
 });
 
+export const SuggestedCooksInputSchema = z.object({
+  limit: z.number().int().min(1).max(24).default(6),
+});
+
 // --- Likes & comments ---------------------------------------------------
 
 export const ToggleLikeInputSchema = z.object({
