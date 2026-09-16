@@ -1,9 +1,7 @@
-import { TRPCError } from "@trpc/server";
+import { experimental_standaloneMiddleware, TRPCError } from "@trpc/server";
 
 import { trpcLogger as log } from "@norish/shared-server/logger";
 import { getPublisherClient } from "@norish/shared-server/redis/client";
-
-import { middleware } from "./trpc";
 
 export interface RateLimitOptions {
   /** Stable name used in the Redis key and logs, e.g. "social.postComment". */
@@ -27,7 +25,11 @@ export interface RateLimitOptions {
  * single shared "anon" bucket.
  */
 export function rateLimit({ name, limit, windowSec }: RateLimitOptions) {
-  return middleware(async ({ ctx, next }) => {
+  // Standalone so it can attach to any procedure whose context carries a user,
+  // authed or not, without being pinned to one procedure's exact context type.
+  return experimental_standaloneMiddleware<{
+    ctx: { user: { id: string } | null };
+  }>().create(async ({ ctx, next }) => {
     const userId = ctx.user?.id ?? "anon";
     const bucket = Math.floor(Date.now() / (windowSec * 1000));
     const key = `rl:${name}:${userId}:${bucket}`;

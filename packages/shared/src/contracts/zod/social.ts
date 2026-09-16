@@ -96,6 +96,35 @@ export const ListPublicRecipesByHandleInputSchema = z.object({
   cursor: z.string().optional(),
 });
 
+// --- Public cookbooks ---------------------------------------------------
+
+export const GetPublicCookbookBySlugInputSchema = z.object({
+  slug: z
+    .string()
+    .trim()
+    .min(1)
+    .max(120)
+    .regex(/^[a-z0-9-]+$/, "Invalid slug"),
+});
+
+export const ListPublicCookbooksByHandleInputSchema = z.object({
+  handle: z.string().trim().toLowerCase().min(1).max(30),
+});
+
+export const CookbookPublishStateInputSchema = z.object({
+  cookbookId: z.uuid(),
+});
+
+export const SetCookbookVisibilityInputSchema = z.object({
+  cookbookId: z.uuid(),
+  visibility: RecipeVisibilitySchema,
+});
+
+export const SetCookbookDescriptionInputSchema = z.object({
+  cookbookId: z.uuid(),
+  description: z.string().trim().max(500).nullable(),
+});
+
 // --- Follow graph, feed & discovery -------------------------------------
 
 export const FollowByHandleInputSchema = z.object({

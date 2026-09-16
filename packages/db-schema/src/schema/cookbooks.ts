@@ -1,7 +1,7 @@
-import { index, pgTable, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
+import { index, pgTable, text, timestamp, unique, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 import { users } from "./auth";
-import { recipes } from "./recipes";
+import { recipes, recipeVisibilityEnum } from "./recipes";
 import { mutableRowColumns } from "./shared";
 
 /**
@@ -25,12 +25,22 @@ export const cookbooks = pgTable(
       onDelete: "set null",
     }),
     title: text("title").notNull(),
+    // Social layer (cefiro): an optional public description, the sharing
+    // visibility and a stable public URL slug for `/c/[slug]`. A public
+    // cookbook only ever exposes the PUBLIC recipes filed in it. `slug` is
+    // globally unique when set (Postgres allows many NULLs) and is assigned on
+    // the first publish, then kept so links stay stable.
+    description: text("description"),
+    visibility: recipeVisibilityEnum("visibility").notNull().default("private"),
+    slug: text("slug"),
     ...mutableRowColumns,
   },
   (t) => [
     index("idx_cookbooks_user_id").on(t.userId),
     index("idx_cookbooks_title").on(t.title),
     index("idx_cookbooks_created_at_desc").on(t.createdAt.desc()),
+    uniqueIndex("uq_cookbooks_slug").on(t.slug),
+    index("idx_cookbooks_visibility").on(t.visibility),
   ]
 );
 
