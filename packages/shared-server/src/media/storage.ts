@@ -28,6 +28,9 @@ export type ImageCandidate = {
 };
 
 const RECIPES_BASE_DIR = path.join(SERVER_CONFIG.UPLOADS_DIR, "recipes");
+// Public profile avatars (cefiro social) live in their own directory and are
+// served without auth, unlike the encrypted-user avatars under `/avatars`.
+const PUBLIC_AVATARS_DIR = path.join(SERVER_CONFIG.UPLOADS_DIR, "public-avatars");
 
 // Configuration constants
 const MAX_WIDTH = 1280;
@@ -554,6 +557,40 @@ export async function saveImageBytes(bytes: Buffer, recipeId: string): Promise<s
     directory: path.join(RECIPES_BASE_DIR, recipeId),
     webPrefix: `/recipes/${recipeId}`,
   });
+}
+
+/**
+ * Save a public profile avatar (cefiro social). Cover-cropped and content-
+ * hashed like recipe media; served publicly from `/public-avatars/{hash}.jpg`.
+ */
+export async function saveProfileAvatarBytes(bytes: Buffer): Promise<string> {
+  return saveImageBytesCore(bytes, {
+    directory: PUBLIC_AVATARS_DIR,
+    webPrefix: "/public-avatars",
+    fit: "cover",
+  });
+}
+
+/**
+ * Serve a public profile avatar by its filename. Returns null when the name is
+ * unsafe or the file is missing, so the caller can 404.
+ */
+export async function readPublicAvatar(
+  filename: string
+): Promise<{ bytes: Buffer; contentType: string } | null> {
+  // Saved files are content-hashed `<uuid>.jpg`; reject anything else so a
+  // crafted name can't traverse out of the directory.
+  if (!/^[a-f0-9-]{8,}\.jpg$/.test(filename)) {
+    return null;
+  }
+
+  const filePath = path.join(PUBLIC_AVATARS_DIR, filename);
+
+  if (!(await fileExists(filePath))) {
+    return null;
+  }
+
+  return { bytes: await fs.readFile(filePath), contentType: "image/jpeg" };
 }
 
 /**
