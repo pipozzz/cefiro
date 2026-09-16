@@ -53,6 +53,14 @@ import {
   unfollowUser,
   type FeedRecipeRow,
 } from "@norish/db/repositories/follows";
+import {
+  getCookbookPublishState,
+  getPublicCookbookBySlug,
+  listPublicCookbooksByUserId,
+  setCookbookDescription,
+  setCookbookVisibility,
+  type PublicCookbookCard,
+} from "@norish/db/repositories/public-cookbooks";
 import { trpcLogger as log } from "@norish/shared-server/logger";
 import { PublicRecipeViewSchema } from "@norish/shared/contracts/zod/recipe-shares";
 import {
@@ -69,9 +77,14 @@ import {
   ListNotificationsInputSchema,
   ListPublicRecipesByHandleInputSchema,
   MyRatingInputSchema,
+  CookbookPublishStateInputSchema,
+  GetPublicCookbookBySlugInputSchema,
+  ListPublicCookbooksByHandleInputSchema,
   RateRecipeInputSchema,
   SaveRecipeInputSchema,
   SearchInputSchema,
+  SetCookbookDescriptionInputSchema,
+  SetCookbookVisibilityInputSchema,
   SetRecipeVisibilityInputSchema,
   ToggleLikeInputSchema,
   UpsertProfileInputSchema,
@@ -202,6 +215,18 @@ function toProfileCard(row: PublicProfileCard) {
     bio: row.bio,
     avatarUrl: row.avatarUrl,
     recipeCount: row.recipeCount,
+  };
+}
+
+function toCookbookCard(row: PublicCookbookCard) {
+  return {
+    slug: row.slug,
+    title: row.title,
+    description: row.description,
+    recipeCount: row.recipeCount,
+    coverImages: row.coverImages
+      .map((c) => (c.recipeSlug ? toSlugMediaUrl(c.image, c.recipeSlug) : null))
+      .filter((u): u is string => !!u),
   };
 }
 
@@ -386,6 +411,89 @@ const search = publicProcedure.input(SearchInputSchema).query(async ({ input }) 
     profiles: profileRows.map(toProfileCard),
   };
 });
+
+// --- Public cookbooks ---------------------------------------------------
+
+const getPublicCookbook = publicProcedure
+  .input(GetPublicCookbookBySlugInputSchema)
+  .query(async ({ input }) => {
+    const cb = await getPublicCookbookBySlug(input.slug);
+
+    if (!cb) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Cookbook not found" });
+    }
+
+    return {
+      slug: cb.slug,
+      title: cb.title,
+      description: cb.description,
+      owner: cb.owner,
+      recipes: await toFeedCardsWithRatings(cb.recipes),
+    };
+  });
+
+const listPublicCookbooks = publicProcedure
+  .input(ListPublicCookbooksByHandleInputSchema)
+  .query(async ({ input }) => {
+    const profile = await getProfileByHandle(input.handle);
+
+    if (!profile || !profile.isPublic) {
+      return { cookbooks: [] };
+    }
+
+    const rows = await listPublicCookbooksByUserId(profile.userId);
+
+    return { cookbooks: rows.map(toCookbookCard) };
+  });
+
+const getCookbookPublishStateProc = authedProcedure
+  .input(CookbookPublishStateInputSchema)
+  .query(async ({ ctx, input }) => {
+    const state = await getCookbookPublishState(ctx.user.id, input.cookbookId);
+
+    if (!state) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Cookbook not found" });
+    }
+
+    return state;
+  });
+
+const setCookbookVisibilityProc = authedProcedure
+  .use(rateLimit({ name: "social.setCookbookVisibility", limit: 20, windowSec: 60 }))
+  .input(SetCookbookVisibilityInputSchema)
+  .mutation(async ({ ctx, input }) => {
+    const result = await setCookbookVisibility(ctx.user.id, input.cookbookId, input.visibility);
+
+    if (!result) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Cookbook not found or you do not own it",
+      });
+    }
+
+    log.info(
+      { userId: ctx.user.id, cookbookId: input.cookbookId, visibility: input.visibility },
+      "Set cookbook visibility"
+    );
+
+    return result;
+  });
+
+const setCookbookDescriptionProc = authedProcedure
+  .use(rateLimit({ name: "social.setCookbookDescription", limit: 20, windowSec: 60 }))
+  .input(SetCookbookDescriptionInputSchema)
+  .mutation(async ({ ctx, input }) => {
+    const ok = await setCookbookDescription(ctx.user.id, input.cookbookId, input.description);
+
+    if (!ok) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Cookbook not found or you do not own it",
+      });
+    }
+
+    return { ok: true };
+  });
 
 // --- Likes (favourites double as public likes) --------------------------
 
@@ -764,6 +872,11 @@ export const socialProcedures = router({
   feed,
   discover,
   search,
+  getPublicCookbook,
+  listPublicCookbooks,
+  getCookbookPublishState: getCookbookPublishStateProc,
+  setCookbookVisibility: setCookbookVisibilityProc,
+  setCookbookDescription: setCookbookDescriptionProc,
   getLikeStatus,
   toggleLike,
   getComments,

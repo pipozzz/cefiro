@@ -69,7 +69,31 @@
     "followersLabel": "{count, plural, one {follower} other {followers}}",
     "following": "following",
     "recipes": "Recipes",
-    "noRecipes": "No public recipes yet."
+    "noRecipes": "No public recipes yet.",
+    "cookbooksHeading": "Cookbooks"
+  },
+  "cookbook": {
+    "notFoundTitle": "Cookbook not found",
+    "notFoundMessage": "This cookbook is private or does not exist.",
+    "recipesCount": "{count, plural, one {# recipe} other {# recipes}}",
+    "empty": "No public recipes in this cookbook yet."
+  },
+  "cookbookShare": {
+    "heading": "Sharing",
+    "visibilityLabel": "Who can see this cookbook",
+    "private": "Private",
+    "unlisted": "Unlisted",
+    "public": "Public",
+    "privateHint": "Only you and your household can see it.",
+    "unlistedHint": "Anyone with the link can view it. Not shown on your profile.",
+    "publicHint": "Anyone can find and view it. Only its public recipes are shown.",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "What's this cookbook about?",
+    "viewPublic": "View public page",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied",
+    "saved": "Sharing updated",
+    "couldNotSave": "Could not update sharing"
   },
   "recipe": {
     "notFoundTitle": "Recipe not found",

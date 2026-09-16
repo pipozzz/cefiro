@@ -14,6 +14,7 @@ export function isRecipeSharePagePath(pathname: string): boolean {
 export function isPublicSocialPath(pathname: string): boolean {
   return (
     pathname.startsWith("/r/") ||
+    pathname.startsWith("/c/") ||
     pathname.startsWith("/u/") ||
     pathname.startsWith("/@") ||
     pathname === "/discover" ||

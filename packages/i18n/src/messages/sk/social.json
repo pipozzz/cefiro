@@ -69,7 +69,31 @@
     "followersLabel": "{count, plural, one {sledovateľ} few {sledovatelia} other {sledovateľov}}",
     "following": "sledovaných",
     "recipes": "Recepty",
-    "noRecipes": "Zatiaľ žiadne verejné recepty."
+    "noRecipes": "Zatiaľ žiadne verejné recepty.",
+    "cookbooksHeading": "Kuchárky"
+  },
+  "cookbook": {
+    "notFoundTitle": "Kuchárka sa nenašla",
+    "notFoundMessage": "Táto kuchárka je súkromná alebo neexistuje.",
+    "recipesCount": "{count, plural, one {# recept} few {# recepty} other {# receptov}}",
+    "empty": "V tejto kuchárke zatiaľ nie sú žiadne verejné recepty."
+  },
+  "cookbookShare": {
+    "heading": "Zdieľanie",
+    "visibilityLabel": "Kto vidí túto kuchárku",
+    "private": "Súkromná",
+    "unlisted": "Cez odkaz",
+    "public": "Verejná",
+    "privateHint": "Vidíš ju len ty a tvoja domácnosť.",
+    "unlistedHint": "Ktokoľvek s odkazom ju vidí. Nezobrazuje sa na profile.",
+    "publicHint": "Ktokoľvek ju nájde a zobrazí. Zobrazujú sa len jej verejné recepty.",
+    "descriptionLabel": "Popis",
+    "descriptionPlaceholder": "O čom je táto kuchárka?",
+    "viewPublic": "Zobraziť verejnú stránku",
+    "copyLink": "Kopírovať odkaz",
+    "linkCopied": "Odkaz skopírovaný",
+    "saved": "Zdieľanie upravené",
+    "couldNotSave": "Nepodarilo sa upraviť zdieľanie"
   },
   "recipe": {
     "notFoundTitle": "Recept sa nenašiel",

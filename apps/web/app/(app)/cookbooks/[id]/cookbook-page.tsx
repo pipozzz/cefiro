@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CookbookAddRecipesPanel } from "@/components/cookbooks/cookbook-add-recipes-panel";
 import { CookbookEditPanel, DeleteCookbookModal } from "@/components/cookbooks/cookbook-panels";
+import { CookbookShareCard } from "@/components/cookbooks/cookbook-share-card";
 import RecipeViewModeToggle from "@/components/dashboard/recipe-view-mode-toggle";
 import SearchInput from "@/components/dashboard/search-input";
 import { NotFoundView } from "@/components/shared/not-found-view";
@@ -209,6 +210,8 @@ function CookbookPageContent({ cookbookId }: { cookbookId: string }) {
               )}
             </div>
           </div>
+
+          {canEdit ? <CookbookShareCard cookbookId={cookbookId} /> : null}
 
           <div className="min-w-0">
             <SearchInput />

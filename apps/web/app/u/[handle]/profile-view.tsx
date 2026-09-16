@@ -64,9 +64,57 @@ function RecipeCardTile({ recipe }: { recipe: RecipeCard }) {
   );
 }
 
+type CookbookCard = {
+  slug: string;
+  title: string;
+  description: string | null;
+  recipeCount: number;
+  coverImages: string[];
+};
+
+function CookbookTile({
+  cookbook,
+  countLabel,
+}: {
+  cookbook: CookbookCard;
+  countLabel: string;
+}) {
+  const covers = cookbook.coverImages.slice(0, 4);
+
+  return (
+    <Link
+      href={`/c/${cookbook.slug}`}
+      className="group flex flex-col overflow-hidden rounded-2xl bg-content1 shadow-sm ring-1 ring-default-100 transition hover:-translate-y-0.5 hover:shadow-md"
+    >
+      <div className="grid aspect-[3/2] w-full grid-cols-2 grid-rows-2 gap-0.5 bg-content2">
+        {covers.length > 0
+          ? Array.from({ length: 4 }).map((_, i) =>
+              covers[i] ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img key={i} src={covers[i]} alt="" className="h-full w-full object-cover" />
+              ) : (
+                <div key={i} className="h-full w-full bg-content3" />
+              )
+            )
+          : null}
+      </div>
+      <div className="flex flex-1 flex-col p-4">
+        <h3 className="line-clamp-1 font-semibold text-foreground group-hover:text-primary">
+          {cookbook.title}
+        </h3>
+        <p className="mt-0.5 text-xs text-default-500">{countLabel}</p>
+        {cookbook.description ? (
+          <p className="mt-1 line-clamp-2 text-sm text-default-500">{cookbook.description}</p>
+        ) : null}
+      </div>
+    </Link>
+  );
+}
+
 export function PublicProfileView({ handle }: { handle: string }) {
   const trpc = useTRPC();
   const t = useTranslations("social.profile");
+  const tCookbook = useTranslations("social.cookbook");
 
   const profileQuery = useQuery({
     ...trpc.social.getProfile.queryOptions({ handle }),
@@ -75,6 +123,12 @@ export function PublicProfileView({ handle }: { handle: string }) {
 
   const recipesQuery = useQuery({
     ...trpc.social.listProfileRecipes.queryOptions({ handle, limit: 24 }),
+    retry: false,
+    enabled: profileQuery.isSuccess,
+  });
+
+  const cookbooksQuery = useQuery({
+    ...trpc.social.listPublicCookbooks.queryOptions({ handle }),
     retry: false,
     enabled: profileQuery.isSuccess,
   });
@@ -97,6 +151,7 @@ export function PublicProfileView({ handle }: { handle: string }) {
   const { profile, counts } = profileQuery.data;
   const displayName = profile.displayName ?? `@${profile.handle}`;
   const recipes = recipesQuery.data?.recipes ?? [];
+  const cookbooks = cookbooksQuery.data?.cookbooks ?? [];
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-24 md:px-6">
@@ -153,6 +208,22 @@ export function PublicProfileView({ handle }: { handle: string }) {
           </div>
         </div>
       </header>
+
+      {/* Cookbooks */}
+      {cookbooks.length > 0 ? (
+        <section className="mt-10">
+          <h2 className="mb-4 text-lg font-semibold text-foreground">{t("cookbooksHeading")}</h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {cookbooks.map((cookbook) => (
+              <CookbookTile
+                key={cookbook.slug}
+                cookbook={cookbook}
+                countLabel={tCookbook("recipesCount", { count: cookbook.recipeCount })}
+              />
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       {/* Recipes grid */}
       <section className="mt-10">
