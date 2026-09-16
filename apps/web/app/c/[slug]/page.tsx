@@ -28,6 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const origin = await siteOrigin();
   const url = origin ? `${origin}/c/${slug}` : undefined;
+  const image = origin ? `${origin}/c/${slug}/og` : undefined;
   const title = cookbook.title;
   const description =
     cookbook.description?.trim() ||
@@ -43,8 +44,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
       siteName: "Cefiro",
       url,
+      images: image ? [{ url: image, alt: title }] : undefined,
     },
-    twitter: { card: "summary", title, description },
+    twitter: {
+      card: image ? "summary_large_image" : "summary",
+      title,
+      description,
+      images: image ? [image] : undefined,
+    },
   };
 }
 
