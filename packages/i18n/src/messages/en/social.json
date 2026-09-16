@@ -86,5 +86,50 @@
     "carbs": "Carbs",
     "fat": "Fat",
     "source": "Source:"
+  },
+  "feed": {
+    "title": "Your feed",
+    "subtitle": "Latest recipes from people you follow.",
+    "emptyTitle": "Your feed is empty.",
+    "emptyBody": "Follow some cooks to see their latest recipes here.",
+    "discoverCta": "Discover recipes",
+    "loadMore": "Load more"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications yet.",
+    "someone": "Someone",
+    "now": "now",
+    "ago": "{value}{unit} ago",
+    "follow": "started following you",
+    "likeNamed": "liked your recipe {name}",
+    "like": "liked your recipe",
+    "commentNamed": "commented on {name}",
+    "comment": "commented on your recipe"
+  },
+  "profileSettings": {
+    "title": "Public profile",
+    "subtitle": "Your handle and profile power your public recipe pages.",
+    "view": "View",
+    "handle": "Handle",
+    "handlePlaceholder": "yourname",
+    "handleRule": "3–30 chars, start with a letter, only lowercase letters, digits or underscore.",
+    "handleTaken": "That handle is taken.",
+    "handleAvailable": "Available",
+    "displayName": "Display name",
+    "displayNamePlaceholder": "Your name",
+    "bio": "Bio",
+    "bioPlaceholder": "Tell people what you cook…",
+    "location": "Location",
+    "locationPlaceholder": "City, Country",
+    "website": "Website",
+    "websitePlaceholder": "https://…",
+    "avatarUrl": "Avatar URL",
+    "avatarUrlPlaceholder": "https://…/avatar.jpg",
+    "publicProfile": "Public profile",
+    "publicProfileHint": "When off, your profile and public recipes are hidden from others.",
+    "save": "Save profile",
+    "saved": "Profile saved",
+    "couldNotSave": "Could not save profile"
   }
 }

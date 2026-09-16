@@ -6,12 +6,14 @@ import { showSafeErrorToast } from "@/lib/ui/safe-error-toast";
 import { ArrowTopRightOnSquareIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
 import { Button, Input, Spinner, toast } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 
 const HANDLE_RE = /^[a-z][a-z0-9_]*[a-z0-9]$/;
 
 export default function ProfileSettingsPage() {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
+  const t = useTranslations("social.profileSettings");
 
   const profileQuery = useQuery({
     ...trpc.social.getMyProfile.queryOptions(),
@@ -71,10 +73,10 @@ export default function ProfileSettingsPage() {
             version: data.profile.version,
           },
         }));
-        toast.success("Profile saved");
+        toast.success(t("saved"));
       },
       onError: (error) => {
-        showSafeErrorToast(error, "Could not save profile");
+        showSafeErrorToast(error, t("couldNotSave"));
       },
     })
   );
@@ -108,10 +110,8 @@ export default function ProfileSettingsPage() {
     <div className="mx-auto max-w-2xl px-4 py-8">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Public profile</h1>
-          <p className="text-sm text-default-500">
-            Your handle and profile power your public recipe pages.
-          </p>
+          <h1 className="text-2xl font-bold text-foreground">{t("title")}</h1>
+          <p className="text-sm text-default-500">{t("subtitle")}</p>
         </div>
         {existing?.handle && existing.isPublic ? (
           <Button
@@ -123,85 +123,83 @@ export default function ProfileSettingsPage() {
             size="sm"
           >
             <ArrowTopRightOnSquareIcon className="h-4 w-4" />
-            View
+            {t("view")}
           </Button>
         ) : null}
       </div>
 
       <div className="flex flex-col gap-5">
         <div>
-          <label className="mb-1 block text-sm font-medium text-foreground">Handle</label>
+          <label className="mb-1 block text-sm font-medium text-foreground">{t("handle")}</label>
           <div className="flex items-center gap-2">
             <span className="text-default-500">@</span>
             <Input
               value={handle}
               onChange={(e) => setHandle(e.target.value)}
-              placeholder="yourname"
+              placeholder={t("handlePlaceholder")}
               autoCapitalize="none"
               autoCorrect="off"
             />
           </div>
           <div className="mt-1 min-h-5 text-xs">
             {handle.length > 0 && !handleValid ? (
-              <span className="text-danger">
-                3–30 chars, start with a letter, only lowercase letters, digits or underscore.
-              </span>
+              <span className="text-danger">{t("handleRule")}</span>
             ) : handleTaken ? (
-              <span className="text-danger">That handle is taken.</span>
+              <span className="text-danger">{t("handleTaken")}</span>
             ) : handleValid && handleCheck.data?.available ? (
               <span className="inline-flex items-center gap-1 text-success">
-                <CheckCircleIcon className="h-4 w-4" /> Available
+                <CheckCircleIcon className="h-4 w-4" /> {t("handleAvailable")}
               </span>
             ) : null}
           </div>
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-foreground">Display name</label>
+          <label className="mb-1 block text-sm font-medium text-foreground">{t("displayName")}</label>
           <Input
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
-            placeholder="Your name"
+            placeholder={t("displayNamePlaceholder")}
           />
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-foreground">Bio</label>
+          <label className="mb-1 block text-sm font-medium text-foreground">{t("bio")}</label>
           <textarea
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             rows={3}
             maxLength={500}
-            placeholder="Tell people what you cook…"
+            placeholder={t("bioPlaceholder")}
             className="w-full rounded-xl border border-default-200 bg-content1 px-3 py-2 text-sm text-foreground outline-none focus:border-primary"
           />
         </div>
 
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm font-medium text-foreground">Location</label>
+            <label className="mb-1 block text-sm font-medium text-foreground">{t("location")}</label>
             <Input
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              placeholder="City, Country"
+              placeholder={t("locationPlaceholder")}
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-foreground">Website</label>
+            <label className="mb-1 block text-sm font-medium text-foreground">{t("website")}</label>
             <Input
               value={websiteUrl}
               onChange={(e) => setWebsiteUrl(e.target.value)}
-              placeholder="https://…"
+              placeholder={t("websitePlaceholder")}
             />
           </div>
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-foreground">Avatar URL</label>
+          <label className="mb-1 block text-sm font-medium text-foreground">{t("avatarUrl")}</label>
           <Input
             value={avatarUrl}
             onChange={(e) => setAvatarUrl(e.target.value)}
-            placeholder="https://…/avatar.jpg"
+            placeholder={t("avatarUrlPlaceholder")}
           />
         </div>
 
@@ -213,16 +211,14 @@ export default function ProfileSettingsPage() {
             className="h-4 w-4 accent-[var(--heroui-primary,#3f6212)]"
           />
           <span>
-            <span className="block text-sm font-medium text-foreground">Public profile</span>
-            <span className="block text-xs text-default-500">
-              When off, your profile and public recipes are hidden from others.
-            </span>
+            <span className="block text-sm font-medium text-foreground">{t("publicProfile")}</span>
+            <span className="block text-xs text-default-500">{t("publicProfileHint")}</span>
           </span>
         </label>
 
         <div className="flex justify-end">
           <Button variant="primary" onPress={onSave} isDisabled={!canSave} isPending={upsertMutation.isPending}>
-            Save profile
+            {t("save")}
           </Button>
         </div>
       </div>
