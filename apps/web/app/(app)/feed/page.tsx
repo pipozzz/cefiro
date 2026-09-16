@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useTRPC } from "@/app/providers/trpc-provider";
 import { SocialRecipeGrid } from "@/components/social/social-recipe-card";
+import { SuggestedCooks } from "@/components/social/suggested-cooks";
 import { Button, Spinner } from "@heroui/react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -33,12 +34,16 @@ export default function FeedPage() {
           <Spinner />
         </div>
       ) : recipes.length === 0 ? (
-        <div className="rounded-2xl bg-content2 p-10 text-center">
-          <p className="text-default-600">{t("emptyTitle")}</p>
-          <p className="mt-1 text-sm text-default-500">{t("emptyBody")}</p>
-          <Button as={Link} href="/discover" variant="primary" className="mt-4">
-            {t("discoverCta")}
-          </Button>
+        <div className="space-y-8">
+          <div className="rounded-2xl bg-content2 p-10 text-center">
+            <p className="text-default-600">{t("emptyTitle")}</p>
+            <p className="mt-1 text-sm text-default-500">{t("emptyBody")}</p>
+            <Button as={Link} href="/discover" variant="primary" className="mt-4">
+              {t("discoverCta")}
+            </Button>
+          </div>
+
+          <SuggestedCooks />
         </div>
       ) : (
         <>

@@ -37,6 +37,7 @@ import {
   getViewableRecipeRefBySlug,
   isHandleAvailable,
   listPublicRecipesByUserId,
+  listSuggestedProfiles,
   searchPublicProfiles,
   setRecipeVisibility,
   upsertProfile,
@@ -83,6 +84,7 @@ import {
   RateRecipeInputSchema,
   SaveRecipeInputSchema,
   SearchInputSchema,
+  SuggestedCooksInputSchema,
   SetCookbookDescriptionInputSchema,
   SetCookbookVisibilityInputSchema,
   SetRecipeVisibilityInputSchema,
@@ -411,6 +413,14 @@ const search = publicProcedure.input(SearchInputSchema).query(async ({ input }) 
     profiles: profileRows.map(toProfileCard),
   };
 });
+
+const suggestedCooks = authedProcedure
+  .input(SuggestedCooksInputSchema)
+  .query(async ({ ctx, input }) => {
+    const rows = await listSuggestedProfiles(ctx.user.id, input.limit);
+
+    return { cooks: rows.map(toProfileCard) };
+  });
 
 // --- Public cookbooks ---------------------------------------------------
 
@@ -872,6 +882,7 @@ export const socialProcedures = router({
   feed,
   discover,
   search,
+  suggestedCooks,
   getPublicCookbook,
   listPublicCookbooks,
   getCookbookPublishState: getCookbookPublishStateProc,

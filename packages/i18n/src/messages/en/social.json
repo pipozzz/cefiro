@@ -119,6 +119,10 @@
     "discoverCta": "Discover recipes",
     "loadMore": "Load more"
   },
+  "suggestions": {
+    "heading": "Cooks to follow",
+    "subtitle": "Follow a few cooks to fill your feed."
+  },
   "notifications": {
     "title": "Notifications",
     "empty": "No notifications yet.",
