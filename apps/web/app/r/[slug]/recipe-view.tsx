@@ -256,7 +256,7 @@ export function PublicRecipeView({ slug }: { slug: string }) {
         </p>
       ) : null}
 
-      <CommentsSection recipeId={recipeId} slug={slug} />
+      <CommentsSection recipeId={recipeId} slug={slug} recipeAuthorHandle={author?.handle ?? null} />
     </article>
   );
 }

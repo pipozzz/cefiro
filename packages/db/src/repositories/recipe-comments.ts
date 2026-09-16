@@ -2,7 +2,7 @@ import { and, desc, eq, lt, sql } from "drizzle-orm";
 
 import { db } from "@norish/db/drizzle";
 
-import { recipeComments, userProfiles } from "../schema";
+import { commentReports, recipeComments, userProfiles } from "../schema";
 
 export interface RecipeCommentRow {
   id: string;
@@ -97,4 +97,15 @@ export async function getCommentOwnership(
 
 export async function deleteComment(commentId: string): Promise<void> {
   await db.delete(recipeComments).where(eq(recipeComments.id, commentId));
+}
+
+/**
+ * Record a report of a comment. Idempotent per (comment, reporter): reporting
+ * again is a no-op. Assumes the comment exists (caller checks ownership first).
+ */
+export async function reportComment(commentId: string, reporterId: string): Promise<void> {
+  await db
+    .insert(commentReports)
+    .values({ commentId, reporterId })
+    .onConflictDoNothing({ target: [commentReports.commentId, commentReports.reporterId] });
 }

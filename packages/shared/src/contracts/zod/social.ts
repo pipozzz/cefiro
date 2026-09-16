@@ -185,6 +185,10 @@ export const DeleteCommentInputSchema = z.object({
   commentId: z.uuid(),
 });
 
+export const ReportCommentInputSchema = z.object({
+  commentId: z.uuid(),
+});
+
 // --- Save / fork ---------------------------------------------------------
 
 export const SaveRecipeInputSchema = z.object({

@@ -58,8 +58,12 @@
     "empty": "Zatiaľ žiadne komentáre. Buď prvý!",
     "unknown": "Neznámy",
     "deleteAria": "Zmazať komentár",
+    "report": "Nahlásiť komentár",
+    "reportAria": "Nahlásiť komentár",
+    "reported": "Ďakujeme — komentár bol nahlásený.",
     "couldNotPost": "Nepodarilo sa pridať komentár",
     "couldNotDelete": "Nepodarilo sa zmazať komentár",
+    "couldNotReport": "Nepodarilo sa nahlásiť komentár",
     "now": "teraz",
     "ago": "pred {value}{unit}"
   },

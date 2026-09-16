@@ -4,8 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useTRPC } from "@/app/providers/trpc-provider";
 import { showSafeErrorToast } from "@/lib/ui/safe-error-toast";
-import { TrashIcon } from "@heroicons/react/24/outline";
-import { Button } from "@heroui/react";
+import { FlagIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { Button, toast } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
@@ -39,7 +39,15 @@ function timeAgo(date: Date, t: CommentsTranslator): string {
   return value <= 0 ? t("now") : t("ago", { value, unit });
 }
 
-export function CommentsSection({ recipeId, slug }: { recipeId: string; slug: string }) {
+export function CommentsSection({
+  recipeId,
+  slug,
+  recipeAuthorHandle,
+}: {
+  recipeId: string;
+  slug: string;
+  recipeAuthorHandle?: string | null;
+}) {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const t = useTranslations("social.comments");
@@ -75,9 +83,18 @@ export function CommentsSection({ recipeId, slug }: { recipeId: string; slug: st
     })
   );
 
+  const reportMutation = useMutation(
+    trpc.social.reportComment.mutationOptions({
+      onSuccess: () => toast.success(t("reported")),
+      onError: (error) => showSafeErrorToast(error, t("couldNotReport")),
+    })
+  );
+
   const isAnonymous = profileQuery.isError;
   const myProfile = profileQuery.data?.profile ?? null;
   const myHandle = myProfile?.handle ?? null;
+  // The recipe owner can moderate (delete) any comment on their recipe.
+  const isRecipeOwner = !!myHandle && !!recipeAuthorHandle && myHandle === recipeAuthorHandle;
   const comments = commentsQuery.data?.comments ?? [];
 
   return (
@@ -143,7 +160,10 @@ export function CommentsSection({ recipeId, slug }: { recipeId: string; slug: st
         <ul className="space-y-5">
           {comments.map((comment) => {
             const name = comment.author?.displayName ?? (comment.author ? `@${comment.author.handle}` : t("unknown"));
-            const canDelete = myHandle && comment.author?.handle === myHandle;
+            const isOwnComment = !!myHandle && comment.author?.handle === myHandle;
+            const canDelete = isOwnComment || isRecipeOwner;
+            // Logged-in viewers can flag someone else's comment for review.
+            const canReport = !!myProfile && !isOwnComment;
 
             return (
               <li key={comment.id} className="flex gap-3">
@@ -165,16 +185,30 @@ export function CommentsSection({ recipeId, slug }: { recipeId: string; slug: st
                       <span className="text-sm font-medium text-foreground">{name}</span>
                     )}
                     <span className="text-xs text-default-400">{timeAgo(comment.createdAt, t)}</span>
-                    {canDelete ? (
-                      <button
-                        type="button"
-                        aria-label={t("deleteAria")}
-                        className="ml-auto text-default-400 hover:text-danger"
-                        onClick={() => deleteMutation.mutate({ commentId: comment.id })}
-                      >
-                        <TrashIcon className="h-4 w-4" />
-                      </button>
-                    ) : null}
+                    <span className="ml-auto flex items-center gap-2">
+                      {canReport ? (
+                        <button
+                          type="button"
+                          aria-label={t("reportAria")}
+                          title={t("report")}
+                          className="text-default-400 hover:text-danger"
+                          disabled={reportMutation.isPending}
+                          onClick={() => reportMutation.mutate({ commentId: comment.id })}
+                        >
+                          <FlagIcon className="h-4 w-4" />
+                        </button>
+                      ) : null}
+                      {canDelete ? (
+                        <button
+                          type="button"
+                          aria-label={t("deleteAria")}
+                          className="text-default-400 hover:text-danger"
+                          onClick={() => deleteMutation.mutate({ commentId: comment.id })}
+                        >
+                          <TrashIcon className="h-4 w-4" />
+                        </button>
+                      ) : null}
+                    </span>
                   </div>
                   <p className="mt-0.5 whitespace-pre-line text-sm text-default-700">{comment.body}</p>
                 </div>

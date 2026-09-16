@@ -407,6 +407,13 @@
       "when": 1789550825872,
       "tag": "0057_bent_scarecrow",
       "breakpoints": true
+    },
+    {
+      "idx": 58,
+      "version": "7",
+      "when": 1789557852373,
+      "tag": "0058_minor_leader",
+      "breakpoints": true
     }
   ]
 }
