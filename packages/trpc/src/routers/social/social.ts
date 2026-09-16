@@ -6,6 +6,7 @@ import type { RatingStats } from "@norish/db/repositories/ratings";
 import type { PublicProfile, PublicProfileCard } from "@norish/db/repositories/user-profiles";
 import type { FullRecipeDTO } from "@norish/shared/contracts";
 import type { PublicRecipeViewDTO } from "@norish/shared/contracts/dto/recipe-shares";
+import { SERVER_CONFIG } from "@norish/config/env-config-server";
 import {
   addFavorite,
   countRecipeFavorites,
@@ -64,6 +65,8 @@ import {
   upsertProfile,
 } from "@norish/db/repositories/user-profiles";
 import { trpcLogger as log } from "@norish/shared-server/logger";
+import { saveProfileAvatarBytes } from "@norish/shared-server/media/storage";
+import { ALLOWED_IMAGE_MIME_SET } from "@norish/shared/contracts";
 import {
   AddCommentInputSchema,
   CheckHandleInputSchema,
@@ -95,6 +98,7 @@ import {
 } from "@norish/shared/contracts/zod";
 import { PublicRecipeViewSchema } from "@norish/shared/contracts/zod/recipe-shares";
 
+import { formDataInputSchema, getUploadedFile } from "../../form-data";
 import { authedProcedure } from "../../middleware";
 import { rateLimit } from "../../rate-limit-middleware";
 import { publicProcedure, router } from "../../trpc";
@@ -911,10 +915,45 @@ const saveRecipe = authedProcedure
     return { recipeId: created.recipeId };
   });
 
+const uploadProfileAvatar = authedProcedure
+  .use(rateLimit({ name: "social.uploadProfileAvatar", limit: 10, windowSec: 60 }))
+  .input(formDataInputSchema)
+  .mutation(async ({ ctx, input }) => {
+    const file = getUploadedFile(input, "avatar");
+
+    if (!file) {
+      throw new TRPCError({ code: "BAD_REQUEST", message: "No avatar file provided" });
+    }
+
+    if (!ALLOWED_IMAGE_MIME_SET.has(file.type)) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Only JPEG, PNG, WebP or AVIF images are allowed.",
+      });
+    }
+
+    if (file.size > SERVER_CONFIG.MAX_IMAGE_FILE_SIZE) {
+      const maxMB = Math.round(SERVER_CONFIG.MAX_IMAGE_FILE_SIZE / 1024 / 1024);
+
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: `File too large. Maximum size is ${maxMB}MB.`,
+      });
+    }
+
+    const bytes = Buffer.from(await file.arrayBuffer());
+    const url = await saveProfileAvatarBytes(bytes);
+
+    log.info({ userId: ctx.user.id }, "Uploaded profile avatar");
+
+    return { url };
+  });
+
 export const socialProcedures = router({
   getMyProfile,
   checkHandle,
   upsertMyProfile,
+  uploadProfileAvatar,
   getPublishState,
   setVisibility,
   getProfile,

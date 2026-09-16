@@ -129,6 +129,10 @@
     "discoverCta": "Objavuj recepty",
     "loadMore": "Načítať ďalšie"
   },
+  "avatar": {
+    "upload": "Nahrať fotku",
+    "couldNotUpload": "Nepodarilo sa nahrať fotku"
+  },
   "suggestions": {
     "heading": "Kuchári na sledovanie",
     "subtitle": "Začni sledovať pár kuchárov a naplň si feed."

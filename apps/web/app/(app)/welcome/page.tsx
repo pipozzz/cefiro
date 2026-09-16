@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTRPC } from "@/app/providers/trpc-provider";
+import { AvatarUpload } from "@/components/social/avatar-upload";
 import { SuggestedCooks } from "@/components/social/suggested-cooks";
 import { showSafeErrorToast } from "@/lib/ui/safe-error-toast";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
@@ -26,6 +27,7 @@ export default function WelcomePage() {
   const [handle, setHandle] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState("");
 
   // Decide once, from the profile as it was when they arrived: someone who
   // already has a public profile skips onboarding. Deciding only once matters —
@@ -87,6 +89,12 @@ export default function WelcomePage() {
           <p className="text-default-500 mt-2">{t("subtitle")}</p>
 
           <div className="mt-8 flex flex-col gap-5">
+            <AvatarUpload
+              value={avatarUrl.trim() || null}
+              onChange={setAvatarUrl}
+              name={displayName || handle}
+            />
+
             <div>
               <label className="text-foreground mb-1 block text-sm font-medium">
                 {t("handleLabel")}
@@ -152,6 +160,7 @@ export default function WelcomePage() {
                     handle: normalizedHandle,
                     displayName: displayName.trim() || null,
                     bio: bio.trim() || null,
+                    avatarUrl: avatarUrl.trim() || null,
                     isPublic: true,
                   })
                 }

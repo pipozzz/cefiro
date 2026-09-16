@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTRPC } from "@/app/providers/trpc-provider";
+import { AvatarUpload } from "@/components/social/avatar-upload";
 import { showSafeErrorToast } from "@/lib/ui/safe-error-toast";
 import { ArrowTopRightOnSquareIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
 import { Button, Input, Spinner, toast } from "@heroui/react";
@@ -199,8 +200,14 @@ export default function ProfileSettingsPage() {
         </div>
 
         <div>
-          <label className="text-foreground mb-1 block text-sm font-medium">{t("avatarUrl")}</label>
+          <label className="text-foreground mb-2 block text-sm font-medium">{t("avatarUrl")}</label>
+          <AvatarUpload
+            value={avatarUrl.trim() || null}
+            onChange={setAvatarUrl}
+            name={displayName || handle}
+          />
           <Input
+            className="mt-3"
             value={avatarUrl}
             onChange={(e) => setAvatarUrl(e.target.value)}
             placeholder={t("avatarUrlPlaceholder")}

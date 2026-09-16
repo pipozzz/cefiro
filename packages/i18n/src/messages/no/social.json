@@ -129,6 +129,10 @@
     "discoverCta": "Discover recipes",
     "loadMore": "Load more"
   },
+  "avatar": {
+    "upload": "Upload photo",
+    "couldNotUpload": "Could not upload photo"
+  },
   "suggestions": {
     "heading": "Cooks to follow",
     "subtitle": "Follow a few cooks to fill your feed."
