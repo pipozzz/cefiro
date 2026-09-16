@@ -138,12 +138,13 @@ export function PublicRecipeView({ slug }: { slug: string }) {
             </span>
           ))}
           {recipe.tags.map((tag) => (
-            <span
+            <Link
               key={`tag-${tag.name}`}
-              className="rounded-full bg-content2 px-3 py-1 text-xs font-medium text-default-600"
+              href={`/discover?tag=${encodeURIComponent(tag.name)}`}
+              className="rounded-full bg-content2 px-3 py-1 text-xs font-medium text-default-600 transition hover:bg-content3 hover:text-foreground"
             >
               #{tag.name}
-            </span>
+            </Link>
           ))}
         </div>
       )}

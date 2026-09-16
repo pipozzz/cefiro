@@ -397,6 +397,7 @@ const discover = publicProcedure.input(DiscoverInputSchema).query(async ({ input
   const { items, nextCursor } = await listDiscoverRecipes({
     sort: input.sort,
     category: input.category,
+    tag: input.tag,
     limit: input.limit,
     cursor: input.cursor,
   });
