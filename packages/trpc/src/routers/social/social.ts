@@ -134,14 +134,21 @@ function toSlugMediaUrl(url: string | null | undefined, slug: string): string | 
 }
 
 function mapRecipeToPublicSlugView(recipe: FullRecipeDTO, slug: string): PublicRecipeViewDTO {
+  // The hero mirrors the "primary image" rule the rest of the app uses: the
+  // first gallery image, with the legacy scalar only as a fallback. An imported
+  // recipe whose photo landed only in the gallery still gets a hero.
+  const heroImage = recipe.image ?? recipe.images?.[0]?.image ?? null;
+
   return PublicRecipeViewSchema.parse({
     name: recipe.name,
     description: recipe.description ?? null,
     notes: recipe.notes ?? null,
     url: recipe.url ?? null,
-    image: toSlugMediaUrl(recipe.image, slug),
+    image: toSlugMediaUrl(heroImage, slug),
     dishColor: recipe.dishColor ?? null,
-    servings: recipe.servings,
+    // An imported recipe can have no stated yield (0 or null); treat that as
+    // "unknown" so it hides the servings pill instead of failing validation.
+    servings: recipe.servings && recipe.servings > 0 ? recipe.servings : null,
     prepMinutes: recipe.prepMinutes ?? null,
     cookMinutes: recipe.cookMinutes ?? null,
     totalMinutes: recipe.totalMinutes ?? null,

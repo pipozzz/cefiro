@@ -55,6 +55,7 @@ import {
   getUnitsForNormalization,
 } from "./ingredients";
 import { appliedOutcome, staleOutcome } from "./mutation-outcomes";
+import { PRIMARY_IMAGE_SQL } from "./recipe-image-sql";
 import { getConfig } from "./server-config";
 import {
   createManyRecipeStepsTx,
@@ -324,25 +325,10 @@ export async function listVisibleRecipeIds(ctx: RecipeListContext): Promise<stri
   return rows.map((row) => row.id);
 }
 
-/**
- * SQL twin of `primaryRecipeImage` (@norish/shared/lib/recipe-media): the
- * first gallery image by order, falling back to the legacy `recipes.image`
- * scalar. Every list-shaped projection serves its `image` through this, so
- * nothing reads the deprecated scalar directly; a change here must move
- * with the shared helper.
- *
- * The outer references are spelled `"recipes"."id"`/`"recipes"."image"` by
- * hand: interpolating the drizzle columns renders them unqualified in plain
- * selects, and inside the subquery an unqualified `"id"` resolves to the
- * gallery's own column — silently matching nothing.
- */
-export const PRIMARY_IMAGE_SQL = sql<string | null>`COALESCE(
-  (SELECT gallery.image FROM ${recipeImages} AS gallery
-    WHERE gallery.recipe_id = "recipes"."id"
-    ORDER BY COALESCE(gallery."order", 0) ASC, gallery.created_at ASC
-    LIMIT 1),
-  "recipes"."image"
-)`;
+// Defined in its own module so the public listing repositories can share it
+// without importing this heavily mocked repo; re-exported here for callers that
+// still reach for it via `repositories/recipes`.
+export { PRIMARY_IMAGE_SQL };
 
 /**
  * The weighted search document and its rank, for whichever fields the reader
