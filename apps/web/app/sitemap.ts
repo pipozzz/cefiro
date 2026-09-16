@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { headers } from "next/headers";
+import { listPublicCookbookSlugs } from "@norish/db/repositories/public-cookbooks";
 import {
   listPublicProfileHandles,
   listPublicRecipeSlugs,
@@ -23,9 +24,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return [];
   }
 
-  const [recipes, profiles] = await Promise.all([
+  const [recipes, profiles, cookbooks] = await Promise.all([
     listPublicRecipeSlugs(),
     listPublicProfileHandles(),
+    listPublicCookbookSlugs(),
   ]);
 
   return [
@@ -39,6 +41,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...profiles.map((p) => ({
       url: `${base}/u/${p.handle}`,
       lastModified: p.updatedAt,
+      changeFrequency: "weekly" as const,
+      priority: 0.5,
+    })),
+    ...cookbooks.map((c) => ({
+      url: `${base}/c/${c.slug}`,
+      lastModified: c.updatedAt,
       changeFrequency: "weekly" as const,
       priority: 0.5,
     })),
