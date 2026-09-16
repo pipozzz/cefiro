@@ -2,7 +2,7 @@ import { and, desc, eq, lt, sql } from "drizzle-orm";
 
 import { db } from "@norish/db/drizzle";
 
-import { follows, recipeFavorites, recipes, userProfiles } from "../schema";
+import { follows, recipeFavorites, recipes, recipeTags, tags, userProfiles } from "../schema";
 
 export async function followUser(followerId: string, followeeId: string): Promise<void> {
   if (followerId === followeeId) {
@@ -133,15 +133,24 @@ type DiscoverSort = "newest" | "trending";
 export async function listDiscoverRecipes(params: {
   sort: DiscoverSort;
   category?: string;
+  tag?: string;
   limit: number;
   cursor?: string;
 }): Promise<{ items: FeedRecipeRow[]; nextCursor: string | null }> {
-  const { sort, category, limit } = params;
+  const { sort, category, tag, limit } = params;
 
   const conditions = [eq(recipes.visibility, "public")];
 
   if (category) {
     conditions.push(sql`${category} = ANY(${recipes.categories})`);
+  }
+
+  if (tag) {
+    conditions.push(sql`EXISTS (
+      SELECT 1 FROM ${recipeTags} rt
+      JOIN ${tags} tg ON tg.id = rt.tag_id
+      WHERE rt.recipe_id = ${recipes.id} AND lower(tg.name) = ${tag.trim().toLowerCase()}
+    )`);
   }
 
   if (sort === "trending") {

@@ -144,6 +144,7 @@ export const recipeCategoryValues = ["Breakfast", "Lunch", "Dinner", "Snack"] as
 export const DiscoverInputSchema = z.object({
   sort: DiscoverSortSchema.default("newest"),
   category: z.enum(recipeCategoryValues).optional(),
+  tag: z.string().trim().min(1).max(50).optional(),
   limit: z.number().int().min(1).max(50).default(24),
   cursor: z.string().optional(),
 });

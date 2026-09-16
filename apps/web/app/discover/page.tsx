@@ -27,6 +27,7 @@ export default function DiscoverPage() {
   const [mode, setMode] = useState<Mode>("recipes");
   const [sort, setSort] = useState<Sort>("newest");
   const [category, setCategory] = useState<Category | null>(null);
+  const [tag, setTag] = useState<string | null>(() => searchParams.get("tag"));
 
   const [q, setQ] = useState(() => searchParams.get("q") ?? "");
   const [debouncedQ, setDebouncedQ] = useState(q);
@@ -38,22 +39,29 @@ export default function DiscoverPage() {
     return () => clearTimeout(id);
   }, [q]);
 
-  // Keep the URL in sync so a search is shareable and survives reload.
+  // Keep the URL in sync so a search / tag filter is shareable and survives
+  // reload.
   useEffect(() => {
+    const params = new URLSearchParams();
     const trimmed = debouncedQ.trim();
-    const next = trimmed ? `/discover?q=${encodeURIComponent(trimmed)}` : "/discover";
+
+    if (trimmed) params.set("q", trimmed);
+    if (tag) params.set("tag", tag);
+
+    const query = params.toString();
+    const next = query ? `/discover?${query}` : "/discover";
 
     if (`${window.location.pathname}${window.location.search}` !== next) {
       router.replace(next, { scroll: false });
     }
-  }, [debouncedQ, router]);
+  }, [debouncedQ, tag, router]);
 
   const searchTerm = debouncedQ.trim();
   const isSearching = searchTerm.length >= 2;
 
   const browse = useInfiniteQuery({
     ...trpc.social.discover.infiniteQueryOptions(
-      { sort, category: category ?? undefined, limit: 24 },
+      { sort, category: category ?? undefined, tag: tag ?? undefined, limit: 24 },
       { getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined }
     ),
     enabled: !isSearching && mode === "recipes",
@@ -197,6 +205,22 @@ export default function DiscoverPage() {
               </button>
             ))}
           </div>
+
+          {tag ? (
+            <div className="mb-6 flex items-center gap-2">
+              <span className="inline-flex items-center gap-1 rounded-full bg-primary/15 px-3 py-1.5 text-sm font-medium text-primary">
+                #{tag}
+                <button
+                  type="button"
+                  onClick={() => setTag(null)}
+                  aria-label={t("clearTag")}
+                  className="ml-0.5 rounded-full hover:text-danger"
+                >
+                  <XMarkIcon className="h-4 w-4" />
+                </button>
+              </span>
+            </div>
+          ) : null}
 
           {browse.isLoading ? (
             <div className="flex min-h-[30vh] items-center justify-center">
