@@ -37,6 +37,7 @@ import {
   getViewableRecipeRefById,
   getViewableRecipeRefBySlug,
   isHandleAvailable,
+  listDiscoverProfiles,
   listPublicRecipesByUserId,
   listSuggestedProfiles,
   searchPublicProfiles,
@@ -80,6 +81,7 @@ import {
   ListPublicRecipesByHandleInputSchema,
   MyRatingInputSchema,
   CookbookPublishStateInputSchema,
+  DiscoverCooksInputSchema,
   GetPublicCookbookBySlugInputSchema,
   ListPublicCookbooksByHandleInputSchema,
   RateRecipeInputSchema,
@@ -422,6 +424,14 @@ const suggestedCooks = authedProcedure
     const rows = await listSuggestedProfiles(ctx.user.id, input.limit);
 
     return { cooks: rows.map(toProfileCard) };
+  });
+
+const discoverCooks = publicProcedure
+  .input(DiscoverCooksInputSchema)
+  .query(async ({ input }) => {
+    const { items, nextCursor } = await listDiscoverProfiles(input.limit, input.cursor);
+
+    return { cooks: items.map(toProfileCard), nextCursor };
   });
 
 // --- Public cookbooks ---------------------------------------------------
@@ -902,6 +912,7 @@ export const socialProcedures = router({
   discover,
   search,
   suggestedCooks,
+  discoverCooks,
   getPublicCookbook,
   listPublicCookbooks,
   getCookbookPublishState: getCookbookPublishStateProc,

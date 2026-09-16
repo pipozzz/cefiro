@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTRPC } from "@/app/providers/trpc-provider";
+import { CookGrid } from "@/components/social/cook-card";
 import { SocialProfileGrid } from "@/components/social/social-profile-card";
 import { SocialRecipeGrid } from "@/components/social/social-recipe-card";
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -12,6 +13,7 @@ import { useTranslations } from "next-intl";
 
 type Sort = "newest" | "trending";
 type Category = "Breakfast" | "Lunch" | "Dinner" | "Snack";
+type Mode = "recipes" | "cooks";
 
 const CATEGORIES: Category[] = ["Breakfast", "Lunch", "Dinner", "Snack"];
 
@@ -22,6 +24,7 @@ export default function DiscoverPage() {
   const t = useTranslations("social.discover");
   const tCat = useTranslations("social.categories");
 
+  const [mode, setMode] = useState<Mode>("recipes");
   const [sort, setSort] = useState<Sort>("newest");
   const [category, setCategory] = useState<Category | null>(null);
 
@@ -53,9 +56,20 @@ export default function DiscoverPage() {
       { sort, category: category ?? undefined, limit: 24 },
       { getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined }
     ),
-    enabled: !isSearching,
+    enabled: !isSearching && mode === "recipes",
     retry: false,
   });
+
+  const cooks = useInfiniteQuery({
+    ...trpc.social.discoverCooks.infiniteQueryOptions(
+      { limit: 24 },
+      { getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined }
+    ),
+    enabled: !isSearching && mode === "cooks",
+    retry: false,
+  });
+
+  const cookList = cooks.data?.pages.flatMap((page) => page.cooks) ?? [];
 
   const searchQuery = useQuery({
     ...trpc.social.search.queryOptions({ q: searchTerm, limit: 24 }),
@@ -104,6 +118,51 @@ export default function DiscoverPage() {
         <SearchResults query={searchQuery} term={searchTerm} />
       ) : (
         <>
+          {/* Recipes / Cooks toggle */}
+          <div className="mb-6 flex gap-2">
+            <button
+              type="button"
+              className={pill(mode === "recipes")}
+              onClick={() => setMode("recipes")}
+            >
+              {t("modeRecipes")}
+            </button>
+            <button
+              type="button"
+              className={pill(mode === "cooks")}
+              onClick={() => setMode("cooks")}
+            >
+              {t("modeCooks")}
+            </button>
+          </div>
+
+          {mode === "cooks" ? (
+            cooks.isLoading ? (
+              <div className="flex min-h-[30vh] items-center justify-center">
+                <Spinner />
+              </div>
+            ) : cookList.length === 0 ? (
+              <p className="rounded-2xl bg-content2 p-10 text-center text-default-500">
+                {t("noCooks")}
+              </p>
+            ) : (
+              <>
+                <CookGrid cooks={cookList} />
+                {cooks.hasNextPage ? (
+                  <div className="mt-8 flex justify-center">
+                    <Button
+                      variant="tertiary"
+                      onPress={() => cooks.fetchNextPage()}
+                      isPending={cooks.isFetchingNextPage}
+                    >
+                      {t("loadMore")}
+                    </Button>
+                  </div>
+                ) : null}
+              </>
+            )
+          ) : (
+            <>
           {/* Sort */}
           <div className="mb-3 flex gap-2">
             <button type="button" className={pill(sort === "newest")} onClick={() => setSort("newest")}>
@@ -162,6 +221,8 @@ export default function DiscoverPage() {
                   </Button>
                 </div>
               ) : null}
+            </>
+          )}
             </>
           )}
         </>
