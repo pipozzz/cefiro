@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { useTRPC } from "@/app/providers/trpc-provider";
+import { FlagIcon } from "@heroicons/react/24/outline";
 import { Spinner } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -39,7 +40,7 @@ function timeAgo(date: Date, t: NotificationsTranslator): string {
 
 type Notification = {
   id: string;
-  type: "follow" | "like" | "comment";
+  type: "follow" | "like" | "comment" | "save" | "report";
   createdAt: Date;
   read: boolean;
   actor: { handle: string; displayName: string | null; avatarUrl: string | null } | null;
@@ -54,6 +55,11 @@ function actionText(n: Notification, t: NotificationsTranslator): string {
       return n.recipe?.name ? t("likeNamed", { name: n.recipe.name }) : t("like");
     case "comment":
       return n.recipe?.name ? t("commentNamed", { name: n.recipe.name }) : t("comment");
+    case "save":
+      return n.recipe?.name ? t("saveNamed", { name: n.recipe.name }) : t("save");
+    // The reporter stays anonymous; the message stands on its own (see render).
+    case "report":
+      return t("report");
   }
 }
 
@@ -110,11 +116,17 @@ export default function NotificationsPage() {
         <ul className="divide-y divide-default-100 overflow-hidden rounded-2xl bg-content1 ring-1 ring-default-100">
           {notifications.map((n) => {
             const name = n.actor?.displayName ?? (n.actor ? `@${n.actor.handle}` : t("someone"));
+            // A report keeps its reporter anonymous: a neutral flag, no name.
+            const anonymous = n.type === "report";
 
             return (
               <li key={n.id} className={n.read ? "" : "bg-primary/5"}>
                 <Link href={href(n)} className="flex items-center gap-3 p-4 hover:bg-content2">
-                  {n.actor?.avatarUrl ? (
+                  {anonymous ? (
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-danger/15 text-danger">
+                      <FlagIcon className="h-4 w-4" />
+                    </span>
+                  ) : n.actor?.avatarUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={n.actor.avatarUrl} alt="" className="h-9 w-9 rounded-full object-cover" />
                   ) : (
@@ -123,7 +135,14 @@ export default function NotificationsPage() {
                     </span>
                   )}
                   <span className="flex-1 text-sm text-default-700">
-                    <span className="font-medium text-foreground">{name}</span> {actionText(n, t)}
+                    {anonymous ? (
+                      actionText(n, t)
+                    ) : (
+                      <>
+                        <span className="font-medium text-foreground">{name}</span>{" "}
+                        {actionText(n, t)}
+                      </>
+                    )}
                   </span>
                   <span className="shrink-0 text-xs text-default-400">{timeAgo(n.createdAt, t)}</span>
                   {!n.read ? <span className="h-2 w-2 shrink-0 rounded-full bg-primary" /> : null}

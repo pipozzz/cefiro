@@ -142,7 +142,10 @@
     "likeNamed": "liked your recipe {name}",
     "like": "liked your recipe",
     "commentNamed": "commented on {name}",
-    "comment": "commented on your recipe"
+    "comment": "commented on your recipe",
+    "saveNamed": "saved your recipe {name}",
+    "save": "saved your recipe",
+    "report": "A comment on your recipe was reported."
   },
   "profileSettings": {
     "title": "Public profile",

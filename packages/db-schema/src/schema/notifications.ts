@@ -4,7 +4,13 @@ import { index, pgEnum, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-co
 import { users } from "./auth";
 import { recipes } from "./recipes";
 
-export const notificationTypeEnum = pgEnum("notification_type", ["follow", "like", "comment"]);
+export const notificationTypeEnum = pgEnum("notification_type", [
+  "follow",
+  "like",
+  "comment",
+  "save",
+  "report",
+]);
 
 /**
  * In-app notifications (cefiro social layer). `userId` is the recipient,
