@@ -5,10 +5,12 @@ import { useTRPC } from "@/app/providers/trpc-provider";
 import { showSafeErrorToast } from "@/lib/ui/safe-error-toast";
 import { Button } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 
 export function FollowButton({ handle }: { handle: string }) {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
+  const t = useTranslations("social.follow");
 
   const statusQuery = useQuery({
     ...trpc.social.getFollowStatus.queryOptions({ handle }),
@@ -23,14 +25,14 @@ export function FollowButton({ handle }: { handle: string }) {
   const followMutation = useMutation(
     trpc.social.follow.mutationOptions({
       onSuccess: invalidate,
-      onError: (error) => showSafeErrorToast(error, "Could not follow"),
+      onError: (error) => showSafeErrorToast(error, t("couldNotFollow")),
     })
   );
 
   const unfollowMutation = useMutation(
     trpc.social.unfollow.mutationOptions({
       onSuccess: invalidate,
-      onError: (error) => showSafeErrorToast(error, "Could not unfollow"),
+      onError: (error) => showSafeErrorToast(error, t("couldNotUnfollow")),
     })
   );
 
@@ -39,7 +41,7 @@ export function FollowButton({ handle }: { handle: string }) {
   if (statusQuery.isError) {
     return (
       <Button as={Link} href={`/login?callbackUrl=/u/${handle}`} variant="primary" size="sm">
-        Follow
+        {t("follow")}
       </Button>
     );
   }
@@ -55,7 +57,7 @@ export function FollowButton({ handle }: { handle: string }) {
   if (statusQuery.data.isSelf) {
     return (
       <Button as={Link} href="/profile" variant="tertiary" size="sm">
-        Edit profile
+        {t("editProfile")}
       </Button>
     );
   }
@@ -72,7 +74,7 @@ export function FollowButton({ handle }: { handle: string }) {
         following ? unfollowMutation.mutate({ handle }) : followMutation.mutate({ handle })
       }
     >
-      {following ? "Following" : "Follow"}
+      {following ? t("following") : t("follow")}
     </Button>
   );
 }

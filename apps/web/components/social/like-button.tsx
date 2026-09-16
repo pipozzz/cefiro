@@ -7,6 +7,7 @@ import { showSafeErrorToast } from "@/lib/ui/safe-error-toast";
 import { HeartIcon as HeartOutline } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartSolid } from "@heroicons/react/24/solid";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 
 export function LikeButton({
   recipeId,
@@ -20,6 +21,7 @@ export function LikeButton({
   const trpc = useTRPC();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const t = useTranslations("social.like");
   const [count, setCount] = useState(initialCount);
 
   const statusQuery = useQuery({
@@ -36,7 +38,7 @@ export function LikeButton({
           liked: data.liked,
         }));
       },
-      onError: (error) => showSafeErrorToast(error, "Could not update like"),
+      onError: (error) => showSafeErrorToast(error, t("couldNotUpdate")),
     })
   );
 

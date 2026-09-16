@@ -6,6 +6,7 @@ import { NotFoundView } from "@/components/shared/not-found-view";
 import { FollowButton } from "@/components/social/follow-button";
 import { StarsDisplay } from "@/components/social/stars-display";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 
 type RecipeCard = {
   slug: string | null;
@@ -65,6 +66,7 @@ function RecipeCardTile({ recipe }: { recipe: RecipeCard }) {
 
 export function PublicProfileView({ handle }: { handle: string }) {
   const trpc = useTRPC();
+  const t = useTranslations("social.profile");
 
   const profileQuery = useQuery({
     ...trpc.social.getProfile.queryOptions({ handle }),
@@ -88,7 +90,7 @@ export function PublicProfileView({ handle }: { handle: string }) {
 
   if (profileQuery.isError || !profileQuery.data) {
     return (
-      <NotFoundView title="Profile not found" message="This profile is private or does not exist." />
+      <NotFoundView title={t("notFoundTitle")} message={t("notFoundMessage")} />
     );
   }
 
@@ -126,12 +128,12 @@ export function PublicProfileView({ handle }: { handle: string }) {
             <span>
               <span className="font-semibold text-foreground">{counts.followers}</span>{" "}
               <span className="text-default-500">
-                {counts.followers === 1 ? "follower" : "followers"}
+                {t("followersLabel", { count: counts.followers })}
               </span>
             </span>
             <span>
               <span className="font-semibold text-foreground">{counts.following}</span>{" "}
-              <span className="text-default-500">following</span>
+              <span className="text-default-500">{t("following")}</span>
             </span>
           </div>
 
@@ -155,7 +157,7 @@ export function PublicProfileView({ handle }: { handle: string }) {
       {/* Recipes grid */}
       <section className="mt-10">
         <h2 className="mb-4 text-lg font-semibold text-foreground">
-          Recipes {recipes.length > 0 ? `(${recipes.length})` : ""}
+          {t("recipes")} {recipes.length > 0 ? `(${recipes.length})` : ""}
         </h2>
 
         {recipesQuery.isLoading ? (
@@ -166,7 +168,7 @@ export function PublicProfileView({ handle }: { handle: string }) {
           </div>
         ) : recipes.length === 0 ? (
           <p className="rounded-2xl bg-content2 p-8 text-center text-default-500">
-            No public recipes yet.
+            {t("noRecipes")}
           </p>
         ) : (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
