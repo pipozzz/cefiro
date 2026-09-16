@@ -1,13 +1,14 @@
-import { cache } from "react";
 import type { Metadata } from "next";
+import { cache } from "react";
 import { headers } from "next/headers";
+
+import type { FullRecipeDTO } from "@norish/shared/contracts";
 import { getAverageRating } from "@norish/db/repositories/ratings";
 import { getRecipeFull } from "@norish/db/repositories/recipes";
 import {
   getProfileByUserId,
   getViewableRecipeRefBySlug,
 } from "@norish/db/repositories/user-profiles";
-import type { FullRecipeDTO } from "@norish/shared/contracts";
 import { primaryRecipeImage } from "@norish/shared/lib/recipe-media";
 
 import { PublicRecipeView } from "./recipe-view";
@@ -131,9 +132,7 @@ function buildRecipeJsonLd(
     toSlugMediaPath(primaryRecipeImage(full), slug),
     ...(full.images ?? []).map((img) => toSlugMediaPath(img.image, slug)),
   ];
-  const images = Array.from(
-    new Set(imagePaths.map((p) => abs(p)).filter((u): u is string => !!u))
-  );
+  const images = Array.from(new Set(imagePaths.map((p) => abs(p)).filter((u): u is string => !!u)));
 
   const ingredients = (full.recipeIngredients ?? [])
     .map((i) => `${formatAmount(i.amount)} ${i.unit ?? ""} ${i.ingredientName}`.trim())

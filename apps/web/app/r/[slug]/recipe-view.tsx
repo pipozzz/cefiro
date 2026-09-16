@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useTRPC } from "@/app/providers/trpc-provider";
 import { NotFoundView } from "@/components/shared/not-found-view";
+import RecipeSkeleton from "@/components/skeleton/recipe-skeleton";
 import { CommentsSection } from "@/components/social/comments-section";
 import { LikeButton } from "@/components/social/like-button";
 import { RecipeRating } from "@/components/social/recipe-rating";
 import { SaveRecipeButton } from "@/components/social/save-recipe-button";
-import RecipeSkeleton from "@/components/skeleton/recipe-skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
@@ -22,9 +22,9 @@ function formatAmount(amount: number | null | undefined): string {
 
 function MetaPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex flex-col items-center rounded-2xl bg-content2 px-5 py-3 text-center">
-      <span className="text-lg font-semibold text-foreground">{value}</span>
-      <span className="text-xs uppercase tracking-wide text-default-500">{label}</span>
+    <div className="bg-content2 flex flex-col items-center rounded-2xl px-5 py-3 text-center">
+      <span className="text-foreground text-lg font-semibold">{value}</span>
+      <span className="text-default-500 text-xs tracking-wide uppercase">{label}</span>
     </div>
   );
 }
@@ -47,17 +47,17 @@ function AuthorChip({
   return (
     <Link
       href={`/u/${author.handle}`}
-      className="inline-flex items-center gap-2 rounded-full bg-content2/80 py-1 pl-1 pr-3 backdrop-blur transition hover:bg-content3"
+      className="bg-content2 hover:bg-content3 inline-flex items-center gap-2 rounded-full py-1 pr-3 pl-1 transition"
     >
       {author.avatarUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={author.avatarUrl} alt="" className="h-7 w-7 rounded-full object-cover" />
       ) : (
-        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
+        <span className="bg-primary text-primary-foreground flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold">
           {name.charAt(0).toUpperCase()}
         </span>
       )}
-      <span className="text-sm font-medium text-foreground">{name}</span>
+      <span className="text-foreground text-sm font-medium">{name}</span>
     </Link>
   );
 }
@@ -115,13 +115,13 @@ export function PublicRecipeView({ slug }: { slug: string }) {
             <div className="mb-3">
               <AuthorChip author={author} />
             </div>
-            <h1 className="text-3xl font-bold text-foreground md:text-5xl">{recipe.name}</h1>
+            <h1 className="text-foreground text-3xl font-bold md:text-5xl">{recipe.name}</h1>
           </div>
         )}
       </header>
 
       {recipe.description ? (
-        <p className="mt-6 max-w-3xl text-lg leading-relaxed text-default-600">
+        <p className="text-default-600 mt-6 max-w-3xl text-lg leading-relaxed">
           {recipe.description}
         </p>
       ) : null}
@@ -132,7 +132,7 @@ export function PublicRecipeView({ slug }: { slug: string }) {
           {recipe.categories.map((cat) => (
             <span
               key={`cat-${cat}`}
-              className="rounded-full bg-primary/15 px-3 py-1 text-xs font-medium text-primary"
+              className="bg-primary/15 text-primary rounded-full px-3 py-1 text-xs font-medium"
             >
               {tCat(cat)}
             </span>
@@ -141,7 +141,7 @@ export function PublicRecipeView({ slug }: { slug: string }) {
             <Link
               key={`tag-${tag.name}`}
               href={`/discover?tag=${encodeURIComponent(tag.name)}`}
-              className="rounded-full bg-content2 px-3 py-1 text-xs font-medium text-default-600 transition hover:bg-content3 hover:text-foreground"
+              className="bg-content2 text-default-600 hover:bg-content3 hover:text-foreground rounded-full px-3 py-1 text-xs font-medium transition"
             >
               #{tag.name}
             </Link>
@@ -175,14 +175,14 @@ export function PublicRecipeView({ slug }: { slug: string }) {
       {/* Ingredients + steps */}
       <div className="mt-10 grid gap-10 md:grid-cols-[minmax(0,20rem)_1fr]">
         <aside className="md:sticky md:top-6 md:self-start">
-          <h2 className="mb-4 text-xl font-semibold text-foreground">{t("ingredients")}</h2>
+          <h2 className="text-foreground mb-4 text-xl font-semibold">{t("ingredients")}</h2>
           <ul className="space-y-2">
             {recipe.recipeIngredients.map((ing, i) => (
               <li
                 key={`${ing.ingredientName}-${i}`}
-                className="flex items-baseline gap-2 border-b border-default-100 pb-2 text-sm"
+                className="border-default-100 flex items-baseline gap-2 border-b pb-2 text-sm"
               >
-                <span className="font-medium text-foreground">
+                <span className="text-foreground font-medium">
                   {formatAmount(ing.amount)} {ing.unit ?? ""}
                 </span>
                 <span className="text-default-600">{ing.ingredientName}</span>
@@ -192,15 +192,15 @@ export function PublicRecipeView({ slug }: { slug: string }) {
         </aside>
 
         <section>
-          <h2 className="mb-4 text-xl font-semibold text-foreground">{t("steps")}</h2>
+          <h2 className="text-foreground mb-4 text-xl font-semibold">{t("steps")}</h2>
           <ol className="space-y-6">
             {recipe.steps.map((step, i) => (
               <li key={`step-${i}`} className="flex gap-4">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
+                <span className="bg-primary text-primary-foreground flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold">
                   {i + 1}
                 </span>
                 <div className="flex-1">
-                  <p className="leading-relaxed text-default-700">{step.step}</p>
+                  <p className="text-default-700 leading-relaxed">{step.step}</p>
                   {step.images && step.images.length > 0 && (
                     <div className="mt-3 flex flex-wrap gap-3">
                       {step.images.map((img, j) =>
@@ -222,11 +222,11 @@ export function PublicRecipeView({ slug }: { slug: string }) {
           </ol>
 
           {recipe.notes ? (
-            <div className="mt-8 rounded-2xl bg-content2 p-5">
-              <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-default-500">
+            <div className="bg-content2 mt-8 rounded-2xl p-5">
+              <h3 className="text-default-500 mb-2 text-sm font-semibold tracking-wide uppercase">
                 {t("notes")}
               </h3>
-              <p className="whitespace-pre-line text-sm leading-relaxed text-default-700">
+              <p className="text-default-700 text-sm leading-relaxed whitespace-pre-line">
                 {recipe.notes}
               </p>
             </div>
@@ -245,7 +245,7 @@ export function PublicRecipeView({ slug }: { slug: string }) {
       )}
 
       {recipe.url ? (
-        <p className="mt-10 text-sm text-default-500">
+        <p className="text-default-500 mt-10 text-sm">
           {t("source")}{" "}
           <a
             href={recipe.url}
@@ -258,7 +258,11 @@ export function PublicRecipeView({ slug }: { slug: string }) {
         </p>
       ) : null}
 
-      <CommentsSection recipeId={recipeId} slug={slug} recipeAuthorHandle={author?.handle ?? null} />
+      <CommentsSection
+        recipeId={recipeId}
+        slug={slug}
+        recipeAuthorHandle={author?.handle ?? null}
+      />
     </article>
   );
 }

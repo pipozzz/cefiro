@@ -83,12 +83,12 @@ export default function WelcomePage() {
     <div className="mx-auto max-w-lg px-4 py-10 md:py-16">
       {step === "profile" ? (
         <>
-          <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
-          <p className="mt-2 text-default-500">{t("subtitle")}</p>
+          <h1 className="text-foreground text-2xl font-bold md:text-3xl">{t("title")}</h1>
+          <p className="text-default-500 mt-2">{t("subtitle")}</p>
 
           <div className="mt-8 flex flex-col gap-5">
             <div>
-              <label className="mb-1 block text-sm font-medium text-foreground">
+              <label className="text-foreground mb-1 block text-sm font-medium">
                 {t("handleLabel")}
               </label>
               <div className="flex items-center gap-2">
@@ -99,7 +99,6 @@ export default function WelcomePage() {
                   placeholder={t("handlePlaceholder")}
                   autoCapitalize="none"
                   autoCorrect="off"
-                  autoFocus
                 />
               </div>
               <div className="mt-1 min-h-5 text-xs">
@@ -108,7 +107,7 @@ export default function WelcomePage() {
                 ) : handleTaken ? (
                   <span className="text-danger">{t("handleTaken")}</span>
                 ) : handleValid && handleCheck.data?.available ? (
-                  <span className="inline-flex items-center gap-1 text-success">
+                  <span className="text-success inline-flex items-center gap-1">
                     <CheckCircleIcon className="h-4 w-4" /> {t("handleAvailable")}
                   </span>
                 ) : null}
@@ -116,7 +115,7 @@ export default function WelcomePage() {
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-foreground">
+              <label className="text-foreground mb-1 block text-sm font-medium">
                 {t("displayNameLabel")}
               </label>
               <Input
@@ -127,7 +126,7 @@ export default function WelcomePage() {
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-foreground">
+              <label className="text-foreground mb-1 block text-sm font-medium">
                 {t("bioLabel")}
               </label>
               <textarea
@@ -136,7 +135,7 @@ export default function WelcomePage() {
                 rows={3}
                 maxLength={500}
                 placeholder={t("bioPlaceholder")}
-                className="w-full rounded-xl border border-default-200 bg-content1 px-3 py-2 text-sm text-foreground outline-none focus:border-primary"
+                className="border-default-200 bg-content1 text-foreground focus:border-primary w-full rounded-xl border px-3 py-2 text-sm outline-none"
               />
             </div>
 
@@ -164,8 +163,8 @@ export default function WelcomePage() {
         </>
       ) : (
         <>
-          <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("followTitle")}</h1>
-          <p className="mt-2 text-default-500">{t("followSubtitle")}</p>
+          <h1 className="text-foreground text-2xl font-bold md:text-3xl">{t("followTitle")}</h1>
+          <p className="text-default-500 mt-2">{t("followSubtitle")}</p>
 
           <div className="mt-8">
             <SuggestedCooks limit={9} />

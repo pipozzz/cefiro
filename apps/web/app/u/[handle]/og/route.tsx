@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+
 import { getProfileByHandle } from "@norish/db/repositories/user-profiles";
 
 // Needs the database, so it must run on Node (not edge).

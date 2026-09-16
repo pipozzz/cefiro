@@ -34,6 +34,8 @@ export const notifications = pgTable(
   (t) => [
     index("idx_notifications_user_created").on(t.userId, t.createdAt.desc()),
     // Partial index for cheap unread counts.
-    index("idx_notifications_user_unread").on(t.userId).where(sql`read_at IS NULL`),
+    index("idx_notifications_user_unread")
+      .on(t.userId)
+      .where(sql`read_at IS NULL`),
   ]
 );

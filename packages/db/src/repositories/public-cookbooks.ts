@@ -3,8 +3,8 @@ import { and, desc, eq, inArray, isNotNull, ne, sql } from "drizzle-orm";
 import type { RecipeVisibility } from "@norish/shared/contracts/zod/social";
 import { db } from "@norish/db/drizzle";
 
-import { cookbookRecipes, cookbooks, recipeFavorites, recipes, userProfiles } from "../schema";
 import type { FeedRecipeRow } from "./follows";
+import { cookbookRecipes, cookbooks, recipeFavorites, recipes, userProfiles } from "../schema";
 
 // --- Slug ----------------------------------------------------------------
 
@@ -90,7 +90,12 @@ export async function setCookbookVisibility(
   visibility: RecipeVisibility
 ): Promise<CookbookPublishState | null> {
   const [current] = await db
-    .select({ id: cookbooks.id, title: cookbooks.title, slug: cookbooks.slug, userId: cookbooks.userId })
+    .select({
+      id: cookbooks.id,
+      title: cookbooks.title,
+      slug: cookbooks.slug,
+      userId: cookbooks.userId,
+    })
     .from(cookbooks)
     .where(eq(cookbooks.id, cookbookId))
     .limit(1);

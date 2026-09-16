@@ -112,9 +112,7 @@ export const MobileNav = () => {
                         : item.href.startsWith("/calendar")
                           ? CalendarDaysIcon
                           : ClipboardDocumentListIcon;
-                const label = navLabelKeys[item.href]
-                  ? tNav(navLabelKeys[item.href])
-                  : item.label;
+                const label = navLabelKeys[item.href] ? tNav(navLabelKeys[item.href]) : item.label;
 
                 return (
                   <li key={item.href}>

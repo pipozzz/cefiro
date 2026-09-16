@@ -110,8 +110,8 @@ export default function ProfileSettingsPage() {
     <div className="mx-auto max-w-2xl px-4 py-8">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">{t("title")}</h1>
-          <p className="text-sm text-default-500">{t("subtitle")}</p>
+          <h1 className="text-foreground text-2xl font-bold">{t("title")}</h1>
+          <p className="text-default-500 text-sm">{t("subtitle")}</p>
         </div>
         {existing?.handle && existing.isPublic ? (
           <Button
@@ -130,7 +130,7 @@ export default function ProfileSettingsPage() {
 
       <div className="flex flex-col gap-5">
         <div>
-          <label className="mb-1 block text-sm font-medium text-foreground">{t("handle")}</label>
+          <label className="text-foreground mb-1 block text-sm font-medium">{t("handle")}</label>
           <div className="flex items-center gap-2">
             <span className="text-default-500">@</span>
             <Input
@@ -147,7 +147,7 @@ export default function ProfileSettingsPage() {
             ) : handleTaken ? (
               <span className="text-danger">{t("handleTaken")}</span>
             ) : handleValid && handleCheck.data?.available ? (
-              <span className="inline-flex items-center gap-1 text-success">
+              <span className="text-success inline-flex items-center gap-1">
                 <CheckCircleIcon className="h-4 w-4" /> {t("handleAvailable")}
               </span>
             ) : null}
@@ -155,7 +155,9 @@ export default function ProfileSettingsPage() {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-foreground">{t("displayName")}</label>
+          <label className="text-foreground mb-1 block text-sm font-medium">
+            {t("displayName")}
+          </label>
           <Input
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
@@ -164,20 +166,22 @@ export default function ProfileSettingsPage() {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-foreground">{t("bio")}</label>
+          <label className="text-foreground mb-1 block text-sm font-medium">{t("bio")}</label>
           <textarea
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             rows={3}
             maxLength={500}
             placeholder={t("bioPlaceholder")}
-            className="w-full rounded-xl border border-default-200 bg-content1 px-3 py-2 text-sm text-foreground outline-none focus:border-primary"
+            className="border-default-200 bg-content1 text-foreground focus:border-primary w-full rounded-xl border px-3 py-2 text-sm outline-none"
           />
         </div>
 
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm font-medium text-foreground">{t("location")}</label>
+            <label className="text-foreground mb-1 block text-sm font-medium">
+              {t("location")}
+            </label>
             <Input
               value={location}
               onChange={(e) => setLocation(e.target.value)}
@@ -185,7 +189,7 @@ export default function ProfileSettingsPage() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-foreground">{t("website")}</label>
+            <label className="text-foreground mb-1 block text-sm font-medium">{t("website")}</label>
             <Input
               value={websiteUrl}
               onChange={(e) => setWebsiteUrl(e.target.value)}
@@ -195,7 +199,7 @@ export default function ProfileSettingsPage() {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-foreground">{t("avatarUrl")}</label>
+          <label className="text-foreground mb-1 block text-sm font-medium">{t("avatarUrl")}</label>
           <Input
             value={avatarUrl}
             onChange={(e) => setAvatarUrl(e.target.value)}
@@ -203,21 +207,33 @@ export default function ProfileSettingsPage() {
           />
         </div>
 
-        <label className="flex items-center gap-3 rounded-xl border border-default-200 bg-content1 p-3">
+        {/* Associated via htmlFor + nested control, with visible text below;
+            the rule miscounts the nested-span depth. */}
+        {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+        <label
+          htmlFor="profile-is-public"
+          className="border-default-200 bg-content1 flex items-center gap-3 rounded-xl border p-3"
+        >
           <input
+            id="profile-is-public"
             type="checkbox"
             checked={isPublic}
             onChange={(e) => setIsPublic(e.target.checked)}
             className="h-4 w-4 accent-[var(--heroui-primary,#3f6212)]"
           />
           <span>
-            <span className="block text-sm font-medium text-foreground">{t("publicProfile")}</span>
-            <span className="block text-xs text-default-500">{t("publicProfileHint")}</span>
+            <span className="text-foreground block text-sm font-medium">{t("publicProfile")}</span>
+            <span className="text-default-500 block text-xs">{t("publicProfileHint")}</span>
           </span>
         </label>
 
         <div className="flex justify-end">
-          <Button variant="primary" onPress={onSave} isDisabled={!canSave} isPending={upsertMutation.isPending}>
+          <Button
+            variant="primary"
+            onPress={onSave}
+            isDisabled={!canSave}
+            isPending={upsertMutation.isPending}
+          >
             {t("save")}
           </Button>
         </div>

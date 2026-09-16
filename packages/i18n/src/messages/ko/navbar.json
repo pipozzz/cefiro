@@ -31,7 +31,11 @@
   "nav": {
     "home": "레시피",
     "calendar": "달력",
-    "groceries": "장보기"
+    "groceries": "장보기",
+    "feed": "Feed",
+    "discover": "Discover",
+    "profile": "Profile",
+    "notifications": "Notifications"
   },
   "mobile": {
     "searchPlaceholder": "레시피 검색...",

@@ -18,7 +18,7 @@ export function CookCard({ cook }: { cook: CookCardData }) {
   const name = cook.displayName ?? `@${cook.handle}`;
 
   return (
-    <li className="flex items-center gap-3 rounded-2xl bg-content1 p-4 shadow-sm ring-1 ring-default-100">
+    <li className="bg-content1 ring-default-100 flex items-center gap-3 rounded-2xl p-4 shadow-sm ring-1">
       <Link href={`/u/${cook.handle}`} className="flex min-w-0 flex-1 items-center gap-3">
         {cook.avatarUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -28,13 +28,13 @@ export function CookCard({ cook }: { cook: CookCardData }) {
             className="h-11 w-11 flex-shrink-0 rounded-full object-cover"
           />
         ) : (
-          <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-primary text-base font-semibold text-primary-foreground">
+          <span className="bg-primary text-primary-foreground flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full text-base font-semibold">
             {name.charAt(0).toUpperCase()}
           </span>
         )}
         <span className="min-w-0">
-          <span className="block truncate font-semibold text-foreground">{name}</span>
-          <span className="block truncate text-xs text-default-500">
+          <span className="text-foreground block truncate font-semibold">{name}</span>
+          <span className="text-default-500 block truncate text-xs">
             {cook.recipeCount > 0
               ? tCard("recipeCount", { count: cook.recipeCount })
               : `@${cook.handle}`}

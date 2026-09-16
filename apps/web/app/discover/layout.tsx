@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
 import { BrandLogo } from "@/components/brand/brand-logo";
+import { getTranslations } from "next-intl/server";
 
 import { auth } from "@norish/auth/auth";
 
@@ -30,17 +30,21 @@ export default async function DiscoverLayout({ children }: { children: React.Rea
     <BaseProviders>
       <div className="min-h-dvh">
         <header className="flex items-center justify-between px-4 py-4 md:px-6">
-          <Link href={isAuthed ? "/" : "/discover"} aria-label="Cefiro" className="flex items-center">
+          <Link
+            href={isAuthed ? "/" : "/discover"}
+            aria-label="Cefiro"
+            className="flex items-center"
+          >
             <BrandLogo priority height={28} width={112} />
           </Link>
           {isAuthed ? (
-            <Link href="/" className="text-sm font-medium text-primary hover:underline">
+            <Link href="/" className="text-primary text-sm font-medium hover:underline">
               {t("openApp")}
             </Link>
           ) : (
             <Link
               href="/login"
-              className="rounded-full bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+              className="bg-primary text-primary-foreground rounded-full px-4 py-1.5 text-sm font-medium transition hover:opacity-90"
             >
               {t("signIn")}
             </Link>

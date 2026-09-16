@@ -7,8 +7,8 @@ import {
   ArrowTopRightOnSquareIcon,
   ClipboardDocumentIcon,
   GlobeAltIcon,
-  LockClosedIcon,
   LinkIcon,
+  LockClosedIcon,
 } from "@heroicons/react/24/outline";
 import { Button, Card, Spinner, toast } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -58,10 +58,11 @@ export default function RecipePublishControl({ recipeId }: Props) {
   const setVisibilityMutation = useMutation(
     trpc.social.setVisibility.mutationOptions({
       onSuccess: (data) => {
-        queryClient.setQueryData(
-          trpc.social.getPublishState.queryKey({ recipeId }),
-          () => ({ visibility: data.visibility, slug: data.slug, publishedAt: data.publishedAt })
-        );
+        queryClient.setQueryData(trpc.social.getPublishState.queryKey({ recipeId }), () => ({
+          visibility: data.visibility,
+          slug: data.slug,
+          publishedAt: data.publishedAt,
+        }));
       },
       onError: (error) => {
         showSafeErrorToast(error, "Could not update sharing");
@@ -93,7 +94,7 @@ export default function RecipePublishControl({ recipeId }: Props) {
     <Card className="bg-surface-secondary/40 border-border border">
       <Card.Content className="gap-3">
         <div className="flex items-center gap-2">
-          <GlobeAltIcon className="h-5 w-5 text-primary" />
+          <GlobeAltIcon className="text-primary h-5 w-5" />
           <h3 className="text-sm font-semibold">Publish to community</h3>
           {stateQuery.isLoading ? <Spinner size="sm" /> : null}
         </div>
@@ -108,13 +109,11 @@ export default function RecipePublishControl({ recipeId }: Props) {
                 key={option.value}
                 type="button"
                 disabled={setVisibilityMutation.isPending || stateQuery.isLoading}
-                onClick={() =>
-                  setVisibilityMutation.mutate({ recipeId, visibility: option.value })
-                }
+                onClick={() => setVisibilityMutation.mutate({ recipeId, visibility: option.value })}
                 className={[
                   "flex flex-col items-start gap-1 rounded-2xl border p-3 text-left transition",
                   active
-                    ? "border-primary bg-primary/10 ring-1 ring-primary"
+                    ? "border-primary bg-primary/10 ring-primary ring-1"
                     : "border-border bg-content1 hover:bg-content2",
                   setVisibilityMutation.isPending ? "opacity-60" : "",
                 ].join(" ")}
@@ -123,7 +122,7 @@ export default function RecipePublishControl({ recipeId }: Props) {
                   <Icon className="h-4 w-4" />
                   {option.label}
                 </span>
-                <span className="text-xs text-default-500">{option.description}</span>
+                <span className="text-default-500 text-xs">{option.description}</span>
               </button>
             );
           })}
@@ -133,7 +132,7 @@ export default function RecipePublishControl({ recipeId }: Props) {
           <div className="border-success/30 bg-success/10 rounded-2xl border p-3">
             <p className="mb-2 text-sm font-medium">Public link</p>
             <div className="flex items-center gap-2">
-              <code className="flex-1 truncate rounded-lg bg-content2 px-2 py-1.5 text-xs">
+              <code className="bg-content2 flex-1 truncate rounded-lg px-2 py-1.5 text-xs">
                 {publicUrl}
               </code>
               <Button size="sm" variant="tertiary" onPress={handleCopy} className="min-w-16">

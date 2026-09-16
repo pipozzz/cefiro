@@ -1,7 +1,6 @@
 import { and, desc, eq, isNotNull, lt, ne, sql } from "drizzle-orm";
 
 import type { RecipeVisibility } from "@norish/shared/contracts/zod/social";
-
 import { db } from "@norish/db/drizzle";
 
 import { follows, recipes, userProfiles } from "../schema";
@@ -379,10 +378,7 @@ function escapeLike(value: string): string {
  * Search PUBLIC profiles by handle, display name or bio. Case-insensitive
  * substring match, ranked by public-recipe count then handle; top-N results.
  */
-export async function searchPublicProfiles(
-  q: string,
-  limit: number
-): Promise<PublicProfileCard[]> {
+export async function searchPublicProfiles(q: string, limit: number): Promise<PublicProfileCard[]> {
   const pattern = `%${escapeLike(q.trim())}%`;
 
   const recipeCountSql = sql<number>`(

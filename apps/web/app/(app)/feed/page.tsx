@@ -25,8 +25,8 @@ export default function FeedPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <header className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">{t("title")}</h1>
-        <p className="text-sm text-default-500">{t("subtitle")}</p>
+        <h1 className="text-foreground text-2xl font-bold">{t("title")}</h1>
+        <p className="text-default-500 text-sm">{t("subtitle")}</p>
       </header>
 
       {query.isLoading ? (
@@ -35,9 +35,9 @@ export default function FeedPage() {
         </div>
       ) : recipes.length === 0 ? (
         <div className="space-y-8">
-          <div className="rounded-2xl bg-content2 p-10 text-center">
+          <div className="bg-content2 rounded-2xl p-10 text-center">
             <p className="text-default-600">{t("emptyTitle")}</p>
-            <p className="mt-1 text-sm text-default-500">{t("emptyBody")}</p>
+            <p className="text-default-500 mt-1 text-sm">{t("emptyBody")}</p>
             <Button as={Link} href="/discover" variant="primary" className="mt-4">
               {t("discoverCta")}
             </Button>

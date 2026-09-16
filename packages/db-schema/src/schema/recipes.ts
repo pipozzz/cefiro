@@ -23,11 +23,7 @@ export const measurementSystemEnum = pgEnum("measurement_system", ["metric", "us
  * - `unlisted` — anyone with the `slug` link can view; not listed in discovery.
  * - `public`   — listed in profiles, feeds and discovery.
  */
-export const recipeVisibilityEnum = pgEnum("recipe_visibility", [
-  "private",
-  "unlisted",
-  "public",
-]);
+export const recipeVisibilityEnum = pgEnum("recipe_visibility", ["private", "unlisted", "public"]);
 
 export const recipes = pgTable(
   "recipes",

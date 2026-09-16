@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+
 import { getPublicCookbookBySlug } from "@norish/db/repositories/public-cookbooks";
 
 // Needs the database, so it must run on Node (not edge).
@@ -93,12 +94,22 @@ export async function GET(_req: Request, { params }: Props) {
         </div>
 
         {cookbook.description ? (
-          <div style={{ display: "flex", marginTop: 20, fontSize: 32, opacity: 0.9, lineHeight: 1.3 }}>
+          <div
+            style={{ display: "flex", marginTop: 20, fontSize: 32, opacity: 0.9, lineHeight: 1.3 }}
+          >
             {clamp(cookbook.description, 120)}
           </div>
         ) : null}
 
-        <div style={{ display: "flex", alignItems: "center", marginTop: 28, fontSize: 32, opacity: 0.95 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginTop: 28,
+            fontSize: 32,
+            opacity: 0.95,
+          }}
+        >
           <span style={{ display: "flex" }}>{recipesLabel}</span>
           {ownerName ? (
             <>

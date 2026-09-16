@@ -35,28 +35,22 @@ export function PublicCookbookView({ slug }: { slug: string }) {
   return (
     <div className="mx-auto max-w-6xl px-4 pb-24 md:px-6">
       <header className="pt-10">
-        <p className="text-sm font-medium uppercase tracking-wide text-primary">📚</p>
-        <h1 className="mt-1 text-3xl font-bold text-foreground md:text-4xl">{title}</h1>
-        {description ? (
-          <p className="mt-3 max-w-2xl text-default-600">{description}</p>
-        ) : null}
+        <p className="text-primary text-sm font-medium tracking-wide uppercase">📚</p>
+        <h1 className="text-foreground mt-1 text-3xl font-bold md:text-4xl">{title}</h1>
+        {description ? <p className="text-default-600 mt-3 max-w-2xl">{description}</p> : null}
 
-        <div className="mt-4 flex items-center gap-4 text-sm text-default-500">
+        <div className="text-default-500 mt-4 flex items-center gap-4 text-sm">
           <span>{t("recipesCount", { count: recipes.length })}</span>
           {owner && authorName ? (
             <Link
               href={`/u/${owner.handle}`}
-              className="inline-flex items-center gap-2 hover:text-foreground"
+              className="hover:text-foreground inline-flex items-center gap-2"
             >
               {owner.avatarUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={owner.avatarUrl}
-                  alt=""
-                  className="h-6 w-6 rounded-full object-cover"
-                />
+                <img src={owner.avatarUrl} alt="" className="h-6 w-6 rounded-full object-cover" />
               ) : (
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-[11px] font-semibold text-primary-foreground">
+                <span className="bg-primary text-primary-foreground flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-semibold">
                   {authorName.charAt(0).toUpperCase()}
                 </span>
               )}
@@ -68,7 +62,7 @@ export function PublicCookbookView({ slug }: { slug: string }) {
 
       <section className="mt-8">
         {recipes.length === 0 ? (
-          <p className="rounded-2xl bg-content2 p-10 text-center text-default-500">{t("empty")}</p>
+          <p className="bg-content2 text-default-500 rounded-2xl p-10 text-center">{t("empty")}</p>
         ) : (
           <SocialRecipeGrid recipes={recipes} />
         )}

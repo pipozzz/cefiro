@@ -64,7 +64,9 @@ export function CookbookShareCard({ cookbookId }: { cookbookId: string }) {
 
   const pill = (active: boolean) =>
     `rounded-full px-4 py-1.5 text-sm font-medium transition ${
-      active ? "bg-primary text-primary-foreground" : "bg-content2 text-default-600 hover:bg-content3"
+      active
+        ? "bg-primary text-primary-foreground"
+        : "bg-content2 text-default-600 hover:bg-content3"
     }`;
 
   const onCopy = async () => {
@@ -79,10 +81,10 @@ export function CookbookShareCard({ cookbookId }: { cookbookId: string }) {
   };
 
   return (
-    <div className="rounded-2xl bg-content1 p-4 ring-1 ring-default-100">
-      <h2 className="mb-3 text-sm font-semibold text-foreground">{t("heading")}</h2>
+    <div className="bg-content1 ring-default-100 rounded-2xl p-4 ring-1">
+      <h2 className="text-foreground mb-3 text-sm font-semibold">{t("heading")}</h2>
 
-      <p className="mb-2 text-xs text-default-500">{t("visibilityLabel")}</p>
+      <p className="text-default-500 mb-2 text-xs">{t("visibilityLabel")}</p>
       <div className="flex flex-wrap gap-2">
         {VISIBILITIES.map((v) => (
           <button
@@ -96,12 +98,12 @@ export function CookbookShareCard({ cookbookId }: { cookbookId: string }) {
           </button>
         ))}
       </div>
-      <p className="mt-2 text-xs text-default-500">{t(`${visibility}Hint`)}</p>
+      <p className="text-default-500 mt-2 text-xs">{t(`${visibility}Hint`)}</p>
 
       {isShared ? (
         <>
           <div className="mt-4">
-            <label className="mb-1 block text-xs font-medium text-default-600">
+            <label className="text-default-600 mb-1 block text-xs font-medium">
               {t("descriptionLabel")}
             </label>
             <textarea
@@ -117,13 +119,20 @@ export function CookbookShareCard({ cookbookId }: { cookbookId: string }) {
               rows={2}
               maxLength={500}
               placeholder={t("descriptionPlaceholder")}
-              className="w-full rounded-xl border border-default-200 bg-content1 px-3 py-2 text-sm text-foreground outline-none focus:border-primary"
+              className="border-default-200 bg-content1 text-foreground focus:border-primary w-full rounded-xl border px-3 py-2 text-sm outline-none"
             />
           </div>
 
           {publicUrl ? (
             <div className="mt-3 flex flex-wrap items-center gap-2">
-              <Button as="a" href={`/c/${slug}`} target="_blank" rel="noopener noreferrer" variant="tertiary" size="sm">
+              <Button
+                as="a"
+                href={`/c/${slug}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="tertiary"
+                size="sm"
+              >
                 <ArrowTopRightOnSquareIcon className="h-4 w-4" />
                 {t("viewPublic")}
               </Button>

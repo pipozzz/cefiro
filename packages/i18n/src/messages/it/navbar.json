@@ -31,7 +31,11 @@
   "nav": {
     "home": "Ricette",
     "calendar": "Calendario",
-    "groceries": "Spesa"
+    "groceries": "Spesa",
+    "feed": "Feed",
+    "discover": "Discover",
+    "profile": "Profile",
+    "notifications": "Notifications"
   },
   "mobile": {
     "searchPlaceholder": "Cerca ricette...",
