@@ -46,7 +46,10 @@
   "save": {
     "cta": "Uložiť recept",
     "saved": "Uložené do tvojich receptov",
-    "couldNotSave": "Nepodarilo sa uložiť recept"
+    "couldNotSave": "Nepodarilo sa uložiť recept",
+    "alreadySaved": "Už máte vo svojich receptoch",
+    "openCopy": "Otvoriť moju kópiu",
+    "errorTitle": "Uloženie zlyhalo"
   },
   "rating": {
     "noRating": "Zatiaľ bez hodnotenia",

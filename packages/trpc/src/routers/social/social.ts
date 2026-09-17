@@ -53,7 +53,12 @@ import {
   listCommentsForRecipe,
   reportComment,
 } from "@norish/db/repositories/recipe-comments";
-import { createRecipeWithRefs, getRecipeFull } from "@norish/db/repositories/recipes";
+import {
+  createRecipeWithRefs,
+  getRecipeFull,
+  getSavedForkForUser,
+  setRecipeSavedFrom,
+} from "@norish/db/repositories/recipes";
 import {
   getProfileByHandle,
   getProfileByUserId,
@@ -69,7 +74,7 @@ import {
   upsertProfile,
 } from "@norish/db/repositories/user-profiles";
 import { trpcLogger as log } from "@norish/shared-server/logger";
-import { saveProfileAvatarBytes } from "@norish/shared-server/media/storage";
+import { copyRecipeImageByUrl, saveProfileAvatarBytes } from "@norish/shared-server/media/storage";
 import { ALLOWED_IMAGE_MIME_SET } from "@norish/shared/contracts";
 import {
   AddCommentInputSchema,
@@ -856,14 +861,31 @@ const setRecipeRating = authedProcedure
 
 // --- Save / fork a public recipe into your own library ------------------
 
+/** The outcome of a save: a fresh fork, the existing one, or your own recipe. */
+type SaveStatus = "created" | "existing" | "own";
+
 const saveRecipe = authedProcedure
   .use(rateLimit({ name: "social.saveRecipe", limit: 15, windowSec: 60 }))
   .input(SaveRecipeInputSchema)
-  .mutation(async ({ ctx, input }) => {
+  .mutation(async ({ ctx, input }): Promise<{ recipeId: string; status: SaveStatus }> => {
     const ref = await getViewableRecipeRefById(input.recipeId);
 
     if (!ref) {
       throw new TRPCError({ code: "NOT_FOUND", message: "Recipe not found" });
+    }
+
+    // Saving your own recipe is a no-op: it is already in your library, so just
+    // point the caller back at it rather than cloning it onto itself.
+    if (ref.userId === ctx.user.id) {
+      return { recipeId: input.recipeId, status: "own" };
+    }
+
+    // Idempotent by source: if you have already saved this recipe, reopen that
+    // copy instead of piling up duplicates every time the button is pressed.
+    const existingFork = await getSavedForkForUser(ctx.user.id, input.recipeId);
+
+    if (existingFork) {
+      return { recipeId: existingFork.recipeId, status: "existing" };
     }
 
     const full = await getRecipeFull(input.recipeId);
@@ -872,9 +894,34 @@ const saveRecipe = authedProcedure
       throw new TRPCError({ code: "NOT_FOUND", message: "Recipe not found" });
     }
 
-    // Deep-copy the content into a new private recipe the caller owns. Media
-    // (images/videos) and step-ingredient links are not copied — they belong
-    // to the source recipe's storage.
+    const newId = crypto.randomUUID();
+
+    // Copy the gallery pictures into the new recipe's own storage so the fork
+    // keeps its image even if the original is later deleted or unpublished.
+    // Step images and videos are not copied (a deliberate, lighter fork). A
+    // copy that fails is skipped, never fatal — a recipe without its photo is
+    // far better than a save that errors out.
+    const sourceImages = full.images?.length
+      ? full.images
+      : full.image
+        ? [{ image: full.image, order: 0 }]
+        : [];
+    const copiedImages: { image: string; order: number }[] = [];
+
+    for (const [idx, img] of sourceImages.entries()) {
+      if (!img.image) {
+        continue;
+      }
+
+      const copiedUrl = await copyRecipeImageByUrl(img.image, newId);
+
+      if (copiedUrl) {
+        copiedImages.push({ image: copiedUrl, order: Number(img.order ?? idx) });
+      }
+    }
+
+    // Deep-copy the content into a new private recipe the caller owns. Step
+    // images and step-ingredient links are not copied.
     const dto = {
       name: full.name,
       description: full.description ?? null,
@@ -910,18 +957,21 @@ const saveRecipe = authedProcedure
         images: [],
         stepIngredients: [],
       })),
-      images: [],
+      images: copiedImages,
       videos: [],
     };
 
-    const newId = crypto.randomUUID();
     const created = await createRecipeWithRefs(newId, ctx.user.id, dto);
 
     if (!created) {
       throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to save recipe" });
     }
 
-    // Tell the original author their recipe was saved (no-op if it's your own).
+    // Record provenance so a later save reopens this copy (dedupe above) and the
+    // fork can be attributed to the original.
+    await setRecipeSavedFrom(created.recipeId, input.recipeId);
+
+    // Tell the original author their recipe was saved.
     if (ref.userId) {
       await createNotification({
         userId: ref.userId,
@@ -936,7 +986,30 @@ const saveRecipe = authedProcedure
       "Saved (forked) recipe"
     );
 
-    return { recipeId: created.recipeId };
+    return { recipeId: created.recipeId, status: "created" };
+  });
+
+/**
+ * Whether the caller can/has saved a given public recipe — drives the Save
+ * button's three states without the client guessing: their own recipe (no save
+ * offered), a recipe they have already saved (reopen the copy), or a fresh one.
+ */
+const getSaveState = authedProcedure
+  .input(SaveRecipeInputSchema)
+  .query(async ({ ctx, input }): Promise<{ isOwn: boolean; savedRecipeId: string | null }> => {
+    const ref = await getViewableRecipeRefById(input.recipeId);
+
+    if (!ref) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Recipe not found" });
+    }
+
+    if (ref.userId === ctx.user.id) {
+      return { isOwn: true, savedRecipeId: null };
+    }
+
+    const existingFork = await getSavedForkForUser(ctx.user.id, input.recipeId);
+
+    return { isOwn: false, savedRecipeId: existingFork?.recipeId ?? null };
   });
 
 const uploadProfileAvatar = authedProcedure
@@ -1009,4 +1082,5 @@ export const socialProcedures = router({
   getMyRecipeRating,
   setRecipeRating,
   saveRecipe,
+  getSaveState,
 });

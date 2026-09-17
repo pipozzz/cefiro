@@ -65,6 +65,14 @@ export const recipes = pgTable(
     originCountryName: text("origin_country_name"),
     originRegion: text("origin_region"),
     provenanceNote: text("provenance_note"),
+    // Set when this recipe was created by "saving" (forking) a public recipe
+    // from the social layer: it points at the source recipe's id. A loose
+    // pointer, not a DB foreign key — the source may later be deleted or made
+    // private, and the fork must survive that untouched. Used to attribute the
+    // copy to the original and to dedupe repeat saves (see the composite index
+    // below), so a member who saves the same recipe twice reopens their copy
+    // instead of piling up duplicates.
+    savedFromRecipeId: uuid("saved_from_recipe_id"),
     // The Dish Colour (ADR-0023): one colour extracted from the recipe's
     // primary image when that image is stored, as a `#rrggbb` hex string.
     // Derived, never supplied — it does not travel in a Recipe Archive, and
@@ -92,5 +100,7 @@ export const recipes = pgTable(
     uniqueIndex("uq_recipes_slug").on(t.slug),
     // Discovery: list public recipes newest-first.
     index("idx_recipes_visibility_published_at").on(t.visibility, t.publishedAt.desc()),
+    // Dedupe "save" (fork): find the copy a user already made of a source.
+    index("idx_recipes_user_saved_from").on(t.userId, t.savedFromRecipeId),
   ]
 );
