@@ -7,7 +7,8 @@
     "user": "Používateľ",
     "household": "Domácnosť",
     "caldav": "CalDAV",
-    "admin": "Správca"
+    "admin": "Správca",
+    "billing": "Plán"
   },
   "user": {
     "profile": {
@@ -941,6 +942,55 @@
       "failedDescription": "Archív receptov sa nepodarilo stiahnuť. Skúste to znova.",
       "signedOut": "Vaša relácia vypršala. Prihláste sa znova a exportujte.",
       "notAllowed": "Nemáte oprávnenie exportovať toto."
+    }
+  },
+  "billing": {
+    "title": "Tvoj plán",
+    "currentPlan": "Aktuálny plán: {plan}",
+    "currentBadge": "Aktuálny",
+    "taxNote": "Ceny sú bez prípadných daní. Spravovať alebo zrušiť môžeš kedykoľvek.",
+    "planName": {
+      "free": "Zadarmo",
+      "plus": "Plus",
+      "family": "Rodina"
+    },
+    "price": {
+      "free": "0 €",
+      "plus": "4 €",
+      "family": "8 €",
+      "perMonth": "/mes"
+    },
+    "tagline": {
+      "free": "Základ, zadarmo navždy.",
+      "plus": "AI a kalendár pre nadšených kuchárov.",
+      "family": "Všetko, zdieľané s celou domácnosťou."
+    },
+    "features": {
+      "householdMembers": "{count} členov domácnosti",
+      "householdMembersUnlimited": "Neobmedzený počet členov",
+      "aiCredits": "{count} AI akcií mesačne",
+      "aiCreditsUnlimited": "Neobmedzené AI akcie",
+      "aiImageGeneration": "AI obrázky receptov",
+      "caldavSync": "Synchronizácia kalendára (CalDAV)"
+    },
+    "cta": {
+      "current": "Aktuálny plán",
+      "upgrade": "Prejsť vyššie",
+      "manage": "Spravovať platby"
+    },
+    "selfHosted": {
+      "title": "Všetko je odomknuté",
+      "body": "Táto inštancia beží bez platieb, takže všetky funkcie sú dostupné pre všetkých členov."
+    },
+    "status": {
+      "successTitle": "Máš vyšší plán",
+      "success": "Vitaj v novom pláne — uži si ho!",
+      "cancelTitle": "Platba zrušená",
+      "cancel": "Nič sa nezmenilo."
+    },
+    "errors": {
+      "title": "Niečo sa pokazilo",
+      "generic": "Skús to prosím o chvíľu znova."
     }
   }
 }
