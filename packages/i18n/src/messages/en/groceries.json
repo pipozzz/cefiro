@@ -121,7 +121,9 @@
     "ingredientsFailed": "Failed to add ingredients to grocery list.",
     "addToGroceries": "Add to Groceries",
     "aisle": "Aisle",
-    "noAisle": "No aisle"
+    "noAisle": "No aisle",
+    "decreaseServings": "Decrease servings",
+    "increaseServings": "Increase servings"
   },
   "picker": {
     "unlink": "Unlink product",

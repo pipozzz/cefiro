@@ -479,7 +479,7 @@ export default function AIConfigForm({ onDirtyChange }: AIConfigFormProps) {
           })}
         </label>
         <Slider
-          aria-label="Temperature"
+          aria-label={t("temperatureAria")}
           className="max-w-md"
           isDisabled={!enabled}
           maxValue={2}

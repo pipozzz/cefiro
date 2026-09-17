@@ -75,7 +75,8 @@
     "sortByTitle": "Titre",
     "sortByDate": "Date",
     "clearFilters": "Effacer les filtres",
-    "ariaLabel": "Filters"
+    "ariaLabel": "Filters",
+    "clear": "Clear"
   },
   "time": {
     "minutes": "min",
@@ -207,7 +208,10 @@
       "4": "Jeudi",
       "5": "Vendredi",
       "6": "Samedi"
-    }
+    },
+    "decreaseInterval": "Decrease interval",
+    "increaseInterval": "Increase interval",
+    "remove": "Remove recurrence"
   },
   "badges": {
     "new": "Nouveau"
@@ -222,7 +226,12 @@
     "notification_title": "Minuteur terminé",
     "notification_body": "{label} est prêt !",
     "notifications_disabled": "Les notifications sont désactivées",
-    "notifications_disabled_hint": "Activez les notifications dans les paramètres de votre navigateur pour recevoir des alertes lorsque les minuteurs se terminent en arrière-plan."
+    "notifications_disabled_hint": "Activez les notifications dans les paramètres de votre navigateur pour recevoir des alertes lorsque les minuteurs se terminent en arrière-plan.",
+    "closeSummary": "Close timer summary",
+    "dismissCompleted": "Dismiss completed timer",
+    "pause": "Pause timer",
+    "start": "Start timer",
+    "dismiss": "Dismiss timer"
   },
   "offlineStatus": {
     "title": "Connection & offline",
@@ -292,5 +301,10 @@
     "title": "Démarrage impossible",
     "description": "Cefiro n'a pas pu lire son stockage sécurisé et ne sait donc pas à quel serveur cette application est rattachée. Rien n'a été modifié. Réessayez ou redémarrez l'application.",
     "detailsLabel": "Détails techniques"
+  },
+  "a11y": {
+    "closePanel": "Close panel",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide"
   }
 }

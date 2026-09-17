@@ -4,6 +4,7 @@ import type { MouseEvent } from "react";
 import { useCallback } from "react";
 import { HeartIcon } from "@heroicons/react/16/solid";
 import { Button } from "@heroui/react";
+import { useTranslations } from "next-intl";
 
 type HeartButtonProps = {
   isFavorite: boolean;
@@ -28,6 +29,7 @@ export default function HeartButton({
   showBackground = false,
   hideWhenNotFavorite = false,
 }: HeartButtonProps) {
+  const t = useTranslations("recipes.favorite");
   const stopParentActivation = useCallback((event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
@@ -43,7 +45,7 @@ export default function HeartButton({
   return (
     <Button
       isIconOnly
-      aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+      aria-label={isFavorite ? t("remove") : t("add")}
       aria-pressed={isFavorite}
       // A heart carrying its own surface is a real object on the media, so the
       // unfavourited state is drawn by the icon's colour alone rather than by

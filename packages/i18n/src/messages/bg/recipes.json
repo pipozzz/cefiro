@@ -27,7 +27,8 @@
       "all": "Всичко",
       "recipes": "Рецепти",
       "cookbooks": "Готварски книги"
-    }
+    },
+    "clearSearch": "Clear search"
   },
   "back": {
     "all": "Обратно към библиотеката",
@@ -259,7 +260,9 @@
     "protein": "Протеини",
     "showingPortions": "Показани стойности за {count} {count, plural, one {порция} other {порции}}",
     "noInfo": "Няма налична информация за хранителните стойности",
-    "estimateWithAI": "Изчисли с AI"
+    "estimateWithAI": "Изчисли с AI",
+    "decreasePortions": "Decrease portions",
+    "increasePortions": "Increase portions"
   },
   "measurementSystem": {
     "label": "Мерна система",
@@ -412,5 +415,10 @@
     "decrease": "Decrease servings",
     "increase": "Increase servings"
   },
-  "stepImageOpen": "Open step {step} image"
+  "stepImageOpen": "Open step {step} image",
+  "favorite": {
+    "add": "Add to favorites",
+    "remove": "Remove from favorites"
+  },
+  "stepImageAlt": "Step {step}, image {index}"
 }

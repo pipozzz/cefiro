@@ -121,7 +121,9 @@
     "ingredientsFailed": "Kunne ikke legge til ingredienser i handlelisten.",
     "addToGroceries": "Legg til i handleliste",
     "aisle": "Gang",
-    "noAisle": "Ingen gang"
+    "noAisle": "Ingen gang",
+    "decreaseServings": "Decrease servings",
+    "increaseServings": "Increase servings"
   },
   "picker": {
     "unlink": "Fjern kobling til produkt",

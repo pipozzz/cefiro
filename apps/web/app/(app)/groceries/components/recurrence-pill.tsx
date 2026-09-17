@@ -101,7 +101,7 @@ export function RecurrencePill({
       )}
       {showRemove && onRemove && (
         <span
-          aria-label="Remove recurrence"
+          aria-label={t("remove")}
           className="hover:bg-surface-tertiary/50 ml-0.5 cursor-pointer rounded-full p-0.5 transition-colors"
           role="button"
           tabIndex={0}

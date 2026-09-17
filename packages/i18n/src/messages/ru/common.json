@@ -75,7 +75,8 @@
     "sortByTitle": "Название",
     "sortByDate": "Дата",
     "clearFilters": "Очистить фильтры",
-    "ariaLabel": "Filters"
+    "ariaLabel": "Filters",
+    "clear": "Clear"
   },
   "time": {
     "minutes": "мин",
@@ -202,7 +203,10 @@
       "4": "Четверг",
       "5": "Пятница",
       "6": "Суббота"
-    }
+    },
+    "decreaseInterval": "Decrease interval",
+    "increaseInterval": "Increase interval",
+    "remove": "Remove recurrence"
   },
   "badges": {
     "new": "Новое"
@@ -222,7 +226,12 @@
     "notification_title": "Таймер завершён",
     "notification_body": "{label} завершён!",
     "notifications_disabled": "Уведомления отключены",
-    "notifications_disabled_hint": "Включите уведомления в настройках браузера, чтобы получать оповещения при завершении таймеров в фоновом режиме."
+    "notifications_disabled_hint": "Включите уведомления в настройках браузера, чтобы получать оповещения при завершении таймеров в фоновом режиме.",
+    "closeSummary": "Close timer summary",
+    "dismissCompleted": "Dismiss completed timer",
+    "pause": "Pause timer",
+    "start": "Start timer",
+    "dismiss": "Dismiss timer"
   },
   "offlineStatus": {
     "title": "Connection & offline",
@@ -292,5 +301,10 @@
     "title": "Не удалось запустить",
     "description": "Cefiro не смог прочитать защищённое хранилище и не знает, к какому серверу относится это приложение. Ничего не изменено. Повторите попытку или перезапустите приложение.",
     "detailsLabel": "Технические подробности"
+  },
+  "a11y": {
+    "closePanel": "Close panel",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide"
   }
 }

@@ -73,7 +73,7 @@ const MiniRecipeItem = memo(function MiniRecipeItem({
     );
   }
   return (
-    <SlotDropdown ariaLabel="Choose slot" onSelectSlot={(slot) => onPlan(recipe, slot)}>
+    <SlotDropdown ariaLabel={t("chooseSlot")} onSelectSlot={(slot) => onPlan(recipe, slot)}>
       {content}
     </SlotDropdown>
   );
@@ -306,7 +306,7 @@ function MiniRecipesContent({
                 </span>
               </ActionButton>
             ) : (
-              <SlotDropdown ariaLabel="Choose slot for note" onSelectSlot={handlePlanNote}>
+              <SlotDropdown ariaLabel={t("chooseSlotForNote")} onSelectSlot={handlePlanNote}>
                 <ActionButton action="add" className="max-w-full min-w-16 justify-center" size="sm">
                   <span className="min-w-0 truncate">
                     {t("addNote", {

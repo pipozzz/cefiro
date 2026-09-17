@@ -6,6 +6,8 @@ import "@testing-library/jest-dom";
 
 import Panel from "@/components/Panel/Panel";
 
+vi.mock("next-intl", () => ({ useTranslations: () => (key: string) => key }));
+
 type MockDrawerProps = {
   "aria-label"?: string;
   children?: ReactNode;

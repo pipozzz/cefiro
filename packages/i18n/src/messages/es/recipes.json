@@ -27,7 +27,8 @@
       "all": "Todo",
       "recipes": "Recetas",
       "cookbooks": "Libros de cocina"
-    }
+    },
+    "clearSearch": "Clear search"
   },
   "back": {
     "all": "Volver a la biblioteca",
@@ -259,7 +260,9 @@
     "protein": "Proteínas",
     "showingPortions": "Mostrando valores para {count} {count, plural, one {porción} other {porciones}}",
     "noInfo": "No hay información nutricional disponible",
-    "estimateWithAI": "Estimar con IA"
+    "estimateWithAI": "Estimar con IA",
+    "decreasePortions": "Decrease portions",
+    "increasePortions": "Increase portions"
   },
   "measurementSystem": {
     "label": "Sistema de medidas",
@@ -412,5 +415,10 @@
     "decrease": "Decrease servings",
     "increase": "Increase servings"
   },
-  "stepImageOpen": "Open step {step} image"
+  "stepImageOpen": "Open step {step} image",
+  "favorite": {
+    "add": "Add to favorites",
+    "remove": "Remove from favorites"
+  },
+  "stepImageAlt": "Step {step}, image {index}"
 }

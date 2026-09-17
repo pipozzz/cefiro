@@ -75,7 +75,8 @@
     "sortByTitle": "Tytuł",
     "sortByDate": "Data",
     "clearFilters": "Wyczyść filtry",
-    "ariaLabel": "Filters"
+    "ariaLabel": "Filters",
+    "clear": "Clear"
   },
   "time": {
     "minutes": "min",
@@ -207,7 +208,10 @@
       "4": "Czwartek",
       "5": "Piątek",
       "6": "Sobota"
-    }
+    },
+    "decreaseInterval": "Decrease interval",
+    "increaseInterval": "Increase interval",
+    "remove": "Remove recurrence"
   },
   "badges": {
     "new": "Nowe"
@@ -222,7 +226,12 @@
     "notification_title": "Timer zakończony",
     "notification_body": "{label} gotowe!",
     "notifications_disabled": "Powiadomienia są wyłączone",
-    "notifications_disabled_hint": "Włącz powiadomienia w przeglądarce, aby otrzymywać alerty gdy timer skończy działać w tle."
+    "notifications_disabled_hint": "Włącz powiadomienia w przeglądarce, aby otrzymywać alerty gdy timer skończy działać w tle.",
+    "closeSummary": "Close timer summary",
+    "dismissCompleted": "Dismiss completed timer",
+    "pause": "Pause timer",
+    "start": "Start timer",
+    "dismiss": "Dismiss timer"
   },
   "offlineStatus": {
     "title": "Connection & offline",
@@ -292,5 +301,10 @@
     "title": "Nie można uruchomić",
     "description": "Cefiro nie mógł odczytać bezpiecznego magazynu, więc nie wie, do którego serwera należy ta aplikacja. Nic nie zostało zmienione. Spróbuj ponownie lub uruchom aplikację jeszcze raz.",
     "detailsLabel": "Szczegóły techniczne"
+  },
+  "a11y": {
+    "closePanel": "Close panel",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide"
   }
 }

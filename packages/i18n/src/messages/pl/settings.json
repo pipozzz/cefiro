@@ -352,7 +352,8 @@
       "emptyFiltered": "Brak elementów o statusie: {status}",
       "emptyDefault": "Brak rekordów synchronizacji",
       "errorDetails": "Szczegóły błędu",
-      "pagination": "Page {current} of {total}"
+      "pagination": "Page {current} of {total}",
+      "ariaLabel": "CalDAV sync status"
     },
     "toasts": {
       "savedTitle": "Configuration saved",
@@ -701,7 +702,8 @@
       "cuisineStrategies": {
         "existing": "Tylko istniejące kuchnie",
         "extend": "AI może dodawać nowe kuchnie"
-      }
+      },
+      "temperatureAria": "Temperature"
     },
     "modelListing": {
       "empty": "Nie zwrócono żadnych modeli. Sprawdź klucz API lub punkt końcowy albo wpisz nazwę modelu.",

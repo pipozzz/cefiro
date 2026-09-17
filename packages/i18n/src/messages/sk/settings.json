@@ -352,7 +352,8 @@
       "emptyFiltered": "Nenašli sa žiadne položky so stavom {status}",
       "emptyDefault": "Nenašli sa žiadne záznamy synchronizácie",
       "errorDetails": "Podrobnosti chyby",
-      "pagination": "Strana {current} z {total}"
+      "pagination": "Strana {current} z {total}",
+      "ariaLabel": "Stav synchronizácie CalDAV"
     },
     "toasts": {
       "savedTitle": "Konfigurácia uložená",
@@ -701,7 +702,8 @@
       "cuisineStrategies": {
         "existing": "Len existujúce kuchyne",
         "extend": "AI môže pridávať nové kuchyne"
-      }
+      },
+      "temperatureAria": "Teplota"
     },
     "modelListing": {
       "empty": "Nevrátili sa žiadne modely. Skontrolujte API kľúč alebo koncový bod, alebo zadajte názov modelu.",

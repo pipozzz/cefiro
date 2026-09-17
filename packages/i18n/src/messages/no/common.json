@@ -75,7 +75,8 @@
     "sortByTitle": "Tittel",
     "sortByDate": "Dato",
     "clearFilters": "Tøm filtre",
-    "ariaLabel": "Filters"
+    "ariaLabel": "Filters",
+    "clear": "Clear"
   },
   "time": {
     "minutes": "min",
@@ -207,7 +208,10 @@
       "4": "Fredag",
       "5": "Lørdag",
       "6": "Søndag"
-    }
+    },
+    "decreaseInterval": "Decrease interval",
+    "increaseInterval": "Increase interval",
+    "remove": "Remove recurrence"
   },
   "badges": {
     "new": "Ny"
@@ -222,7 +226,12 @@
     "notification_title": "Timer ferdig",
     "notification_body": "{label} er ferdig!",
     "notifications_disabled": "Varsler er deaktivert",
-    "notifications_disabled_hint": "Aktiver varsler i nettleserinnstillingene for å motta alarmer når timere avsluttes i bakgrunnen."
+    "notifications_disabled_hint": "Aktiver varsler i nettleserinnstillingene for å motta alarmer når timere avsluttes i bakgrunnen.",
+    "closeSummary": "Close timer summary",
+    "dismissCompleted": "Dismiss completed timer",
+    "pause": "Pause timer",
+    "start": "Start timer",
+    "dismiss": "Dismiss timer"
   },
   "offlineStatus": {
     "title": "Connection & offline",
@@ -292,5 +301,10 @@
     "title": "Kunne ikke starte",
     "description": "Cefiro klarte ikke å lese det sikre lageret og vet derfor ikke hvilken server appen hører til. Ingenting er endret. Prøv igjen, eller start appen på nytt.",
     "detailsLabel": "Tekniske detaljer"
+  },
+  "a11y": {
+    "closePanel": "Close panel",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide"
   }
 }

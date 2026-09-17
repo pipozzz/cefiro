@@ -6,6 +6,7 @@ import { FallbackPlaceholder, useImageErrors } from "@/components/shared/fallbac
 import ImageLightbox from "@/components/shared/image-lightbox";
 import { Carousel } from "@/components/ui/carousel";
 import { Button } from "@heroui/react";
+import { useTranslations } from "next-intl";
 
 import { cssMediaControl } from "@norish/web/config/css-tokens";
 
@@ -17,6 +18,7 @@ type StepImagesProps = {
 };
 
 export function StepImages({ className = "", step }: StepImagesProps) {
+  const t = useTranslations("recipes");
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxInitialIndex, setLightboxInitialIndex] = useState(0);
   const { handleImageError, hasError } = useImageErrors();
@@ -24,7 +26,7 @@ export function StepImages({ className = "", step }: StepImagesProps) {
     () =>
       step.images.map((image, index) => ({
         src: image.image,
-        alt: `Step ${step.stepNumber} image ${index + 1}`,
+        alt: t("stepImageAlt", { step: step.stepNumber, index: index + 1 }),
       })),
     [step.images, step.stepNumber]
   );
@@ -46,7 +48,7 @@ export function StepImages({ className = "", step }: StepImagesProps) {
               fill
               priority
               unoptimized
-              alt={`Step ${step.stepNumber} image 1`}
+              alt={t("stepImageAlt", { step: step.stepNumber, index: 1 })}
               className="object-cover"
               sizes="(min-width: 768px) 520px, 92vw"
               src={primaryImage.image}
@@ -55,7 +57,7 @@ export function StepImages({ className = "", step }: StepImagesProps) {
           )}
           <Button
             fullWidth
-            aria-label={`Open step ${step.stepNumber} image 1`}
+            aria-label={t("stepImageOpen", { step: step.stepNumber })}
             className="absolute inset-0 h-full min-h-0 rounded-xl bg-transparent p-0 hover:bg-black/10"
             variant="tertiary"
             onPress={() => {
@@ -77,7 +79,7 @@ export function StepImages({ className = "", step }: StepImagesProps) {
                       <Image
                         fill
                         unoptimized
-                        alt={`Step ${step.stepNumber} image ${index + 1}`}
+                        alt={t("stepImageAlt", { step: step.stepNumber, index: index + 1 })}
                         className="object-cover"
                         sizes="(min-width: 768px) 384px, 92vw"
                         src={image.image}
@@ -86,7 +88,7 @@ export function StepImages({ className = "", step }: StepImagesProps) {
                     )}
                     <Button
                       fullWidth
-                      aria-label={`Open step ${step.stepNumber} image ${index + 1}`}
+                      aria-label={t("stepImageOpen", { step: step.stepNumber })}
                       className="absolute inset-0 h-full min-h-0 rounded-xl bg-transparent p-0 hover:bg-black/10"
                       variant="tertiary"
                       onPress={() => {

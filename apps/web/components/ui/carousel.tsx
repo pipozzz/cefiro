@@ -6,6 +6,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from "rea
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
 import { Button, ScrollShadow } from "@heroui/react";
 import useEmblaCarousel from "embla-carousel-react";
+import { useTranslations } from "next-intl";
 import { createPortal } from "react-dom";
 import { twMerge } from "tailwind-merge";
 
@@ -161,6 +162,7 @@ interface CarouselNavProps extends Omit<ComponentPropsWithoutRef<typeof Button>,
 }
 
 function CarouselPrevious({ children, className, icon, ...props }: CarouselNavProps) {
+  const t = useTranslations("common.a11y");
   const { canScrollPrev, scrollPrev, viewportWrapper } = useCarousel();
 
   if (!viewportWrapper) return null;
@@ -168,7 +170,7 @@ function CarouselPrevious({ children, className, icon, ...props }: CarouselNavPr
   return createPortal(
     <Button
       isIconOnly
-      aria-label="Previous slide"
+      aria-label={t("previousSlide")}
       className={twMerge("absolute top-1/2 left-5 z-10 -translate-y-1/2", className)}
       data-slot="carousel-previous"
       isDisabled={!canScrollPrev}
@@ -184,6 +186,7 @@ function CarouselPrevious({ children, className, icon, ...props }: CarouselNavPr
 }
 
 function CarouselNext({ children, className, icon, ...props }: CarouselNavProps) {
+  const t = useTranslations("common.a11y");
   const { canScrollNext, scrollNext, viewportWrapper } = useCarousel();
 
   if (!viewportWrapper) return null;
@@ -191,7 +194,7 @@ function CarouselNext({ children, className, icon, ...props }: CarouselNavProps)
   return createPortal(
     <Button
       isIconOnly
-      aria-label="Next slide"
+      aria-label={t("nextSlide")}
       className={twMerge("absolute top-1/2 right-5 z-10 -translate-y-1/2", className)}
       data-slot="carousel-next"
       isDisabled={!canScrollNext}

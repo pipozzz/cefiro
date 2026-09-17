@@ -27,7 +27,8 @@
       "all": "Все",
       "recipes": "Рецепты",
       "cookbooks": "Кулинарные книги"
-    }
+    },
+    "clearSearch": "Clear search"
   },
   "back": {
     "all": "Назад к библиотеке",
@@ -259,7 +260,9 @@
     "protein": "Белки",
     "showingPortions": "Показаны значения для {count} {count, plural, one {порции} few {порций} many {порций} other {порции}}",
     "noInfo": "Нет данных о пищевой ценности",
-    "estimateWithAI": "Оценить с помощью ИИ"
+    "estimateWithAI": "Оценить с помощью ИИ",
+    "decreasePortions": "Decrease portions",
+    "increasePortions": "Increase portions"
   },
   "measurementSystem": {
     "label": "Система мер",
@@ -412,5 +415,10 @@
     "decrease": "Decrease servings",
     "increase": "Increase servings"
   },
-  "stepImageOpen": "Open step {step} image"
+  "stepImageOpen": "Open step {step} image",
+  "favorite": {
+    "add": "Add to favorites",
+    "remove": "Remove from favorites"
+  },
+  "stepImageAlt": "Step {step}, image {index}"
 }

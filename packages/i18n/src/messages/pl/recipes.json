@@ -27,7 +27,8 @@
       "all": "Wszystko",
       "recipes": "Przepisy",
       "cookbooks": "Książki kucharskie"
-    }
+    },
+    "clearSearch": "Clear search"
   },
   "back": {
     "all": "Wróć do biblioteki",
@@ -259,7 +260,9 @@
     "protein": "Białko",
     "showingPortions": "Wartości dla {count} {count, plural, one {porcji} other {porcji}}",
     "noInfo": "Brak informacji o wartościach odżywczych",
-    "estimateWithAI": "Oszacuj z AI"
+    "estimateWithAI": "Oszacuj z AI",
+    "decreasePortions": "Decrease portions",
+    "increasePortions": "Increase portions"
   },
   "measurementSystem": {
     "label": "System miar",
@@ -412,5 +415,10 @@
     "decrease": "Decrease servings",
     "increase": "Increase servings"
   },
-  "stepImageOpen": "Open step {step} image"
+  "stepImageOpen": "Open step {step} image",
+  "favorite": {
+    "add": "Add to favorites",
+    "remove": "Remove from favorites"
+  },
+  "stepImageAlt": "Step {step}, image {index}"
 }

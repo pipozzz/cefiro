@@ -188,7 +188,7 @@ export function RecurrencePanel({
                 action="decrease"
                 className="h-8 min-w-8 shrink-0"
                 isDisabled={pattern.interval <= 1}
-                label="Decrease interval"
+                label={t("decreaseInterval")}
                 size="sm"
                 onPress={() => handleIntervalChange(-1)}
                 tooltipPlacement="bottom"
@@ -212,7 +212,7 @@ export function RecurrencePanel({
               <IconActionButton
                 action="increase"
                 className="h-8 min-w-8 shrink-0"
-                label="Increase interval"
+                label={t("increaseInterval")}
                 size="sm"
                 onPress={() => handleIntervalChange(1)}
                 tooltipPlacement="bottom"

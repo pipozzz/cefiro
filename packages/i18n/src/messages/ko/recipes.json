@@ -27,7 +27,8 @@
       "all": "전체",
       "recipes": "레시피",
       "cookbooks": "요리책"
-    }
+    },
+    "clearSearch": "Clear search"
   },
   "back": {
     "all": "라이브러리로 돌아가기",
@@ -259,7 +260,9 @@
     "protein": "단백질",
     "showingPortions": "{count, plural, one {#인분} other {#인분}} 기준 영양 정보",
     "noInfo": "영양정보가 없습니다.",
-    "estimateWithAI": "AI로 추정"
+    "estimateWithAI": "AI로 추정",
+    "decreasePortions": "Decrease portions",
+    "increasePortions": "Increase portions"
   },
   "measurementSystem": {
     "label": "측정 시스템",
@@ -412,5 +415,10 @@
     "decrease": "Decrease servings",
     "increase": "Increase servings"
   },
-  "stepImageOpen": "Open step {step} image"
+  "stepImageOpen": "Open step {step} image",
+  "favorite": {
+    "add": "Add to favorites",
+    "remove": "Remove from favorites"
+  },
+  "stepImageAlt": "Step {step}, image {index}"
 }

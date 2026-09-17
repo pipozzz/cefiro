@@ -121,7 +121,9 @@
     "ingredientsFailed": "Nie udało się dodać składników do listy zakupów.",
     "addToGroceries": "Dodaj do zakupów",
     "aisle": "Alejka",
-    "noAisle": "Bez alejki"
+    "noAisle": "Bez alejki",
+    "decreaseServings": "Decrease servings",
+    "increaseServings": "Increase servings"
   },
   "picker": {
     "unlink": "Odłącz produkt",

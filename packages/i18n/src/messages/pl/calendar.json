@@ -1,6 +1,11 @@
 {
-  "page": { "title": "Kalendarz" },
-  "mobile": { "today": "Dziś", "scrollToToday": "Przejdź do dziś" },
+  "page": {
+    "title": "Kalendarz"
+  },
+  "mobile": {
+    "today": "Dziś",
+    "scrollToToday": "Przejdź do dziś"
+  },
   "editNote": {
     "title": "Edytuj notatkę",
     "noteLabel": "Notatka",
@@ -34,7 +39,11 @@
     "recipe": "Przepis",
     "note": "Notatka"
   },
-  "editPlannedRecipe": { "title": "Edytuj zaplanowany przepis", "date": "Data", "slot": "Posiłek" },
+  "editPlannedRecipe": {
+    "title": "Edytuj zaplanowany przepis",
+    "date": "Data",
+    "slot": "Posiłek"
+  },
   "panel": {
     "addToCalendar": "Dodaj do kalendarza",
     "addRecipe": "Dodaj przepis",
@@ -43,6 +52,8 @@
     "addNote": "Dodaj notatkę: {input}",
     "randomRecipe": "Losowy przepis",
     "noRecipesFound": "Nie znaleziono przepisów.",
-    "failedToLoadRecipes": "Nie udało się załadować przepisów."
+    "failedToLoadRecipes": "Nie udało się załadować przepisów.",
+    "chooseSlot": "Choose slot",
+    "chooseSlotForNote": "Choose slot for note"
   }
 }

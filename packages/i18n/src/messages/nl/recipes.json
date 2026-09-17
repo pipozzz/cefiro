@@ -27,7 +27,8 @@
       "all": "Alles",
       "recipes": "Recepten",
       "cookbooks": "Kookboeken"
-    }
+    },
+    "clearSearch": "Clear search"
   },
   "back": {
     "all": "Terug naar bibliotheek",
@@ -259,7 +260,9 @@
     "protein": "Eiwitten",
     "showingPortions": "Waardes voor {count} {count, plural, one {portie} other {porties}}",
     "noInfo": "Geen voedingsinformatie beschikbaar",
-    "estimateWithAI": "Schatten met AI"
+    "estimateWithAI": "Schatten met AI",
+    "decreasePortions": "Decrease portions",
+    "increasePortions": "Increase portions"
   },
   "measurementSystem": {
     "label": "Meetsysteem",
@@ -412,5 +415,10 @@
     "decrease": "Decrease servings",
     "increase": "Increase servings"
   },
-  "stepImageOpen": "Open step {step} image"
+  "stepImageOpen": "Open step {step} image",
+  "favorite": {
+    "add": "Add to favorites",
+    "remove": "Remove from favorites"
+  },
+  "stepImageAlt": "Step {step}, image {index}"
 }

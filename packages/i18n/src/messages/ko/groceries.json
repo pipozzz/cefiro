@@ -121,7 +121,9 @@
     "ingredientsFailed": "장보기 목록에 재료를 추가하지 못했습니다.",
     "addToGroceries": "장보기에 추가",
     "aisle": "통로",
-    "noAisle": "통로 없음"
+    "noAisle": "통로 없음",
+    "decreaseServings": "Decrease servings",
+    "increaseServings": "Increase servings"
   },
   "picker": {
     "unlink": "상품 연결 해제",

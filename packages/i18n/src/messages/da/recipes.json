@@ -27,7 +27,8 @@
       "all": "Alt",
       "recipes": "Opskrifter",
       "cookbooks": "Kogebøger"
-    }
+    },
+    "clearSearch": "Clear search"
   },
   "back": {
     "all": "Tilbage til biblioteket",
@@ -259,7 +260,9 @@
     "protein": "Protein",
     "showingPortions": "Viser værdier for {count} {count, plural, one {portion} other {portioner}}",
     "noInfo": "Ingen næringsoplysninger tilgængelige",
-    "estimateWithAI": "Estimér med AI"
+    "estimateWithAI": "Estimér med AI",
+    "decreasePortions": "Decrease portions",
+    "increasePortions": "Increase portions"
   },
   "measurementSystem": {
     "label": "Målesystem",
@@ -412,5 +415,10 @@
     "decrease": "Decrease servings",
     "increase": "Increase servings"
   },
-  "stepImageOpen": "Open step {step} image"
+  "stepImageOpen": "Open step {step} image",
+  "favorite": {
+    "add": "Add to favorites",
+    "remove": "Remove from favorites"
+  },
+  "stepImageAlt": "Step {step}, image {index}"
 }

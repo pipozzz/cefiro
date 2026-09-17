@@ -10,6 +10,7 @@ import React, {
   useState,
 } from "react";
 import { CloseButton } from "@heroui/react";
+import { useTranslations } from "next-intl";
 import { twMerge } from "tailwind-merge";
 import { Drawer } from "vaul";
 
@@ -111,6 +112,7 @@ const PanelRoot: React.FC<PanelProps> = ({
   open: controlledOpen,
   onOpenChange,
 }) => {
+  const tA11y = useTranslations("common.a11y");
   const [internalOpen, setInternalOpen] = useState(false);
   // State, not a ref: overlays need to re-render once the panel element exists.
   const [contentElement, setContentElement] = useState<HTMLDivElement | null>(null);
@@ -227,7 +229,7 @@ const PanelRoot: React.FC<PanelProps> = ({
                   <Drawer.Handle className="cursor-grab !bg-(--default) active:cursor-grabbing" />
                 </div>
                 <CloseButton
-                  aria-label="Close panel"
+                  aria-label={tA11y("closePanel")}
                   className="absolute top-3 right-3 z-30"
                   onPress={close}
                 />

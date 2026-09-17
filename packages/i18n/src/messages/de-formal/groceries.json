@@ -121,7 +121,9 @@
     "ingredientsFailed": "Fehler beim Hinzufügen der Zutaten zur Einkaufsliste.",
     "addToGroceries": "Zur Einkaufsliste hinzufügen",
     "aisle": "Gang",
-    "noAisle": "Kein Gang"
+    "noAisle": "Kein Gang",
+    "decreaseServings": "Decrease servings",
+    "increaseServings": "Increase servings"
   },
   "picker": {
     "unlink": "Produkt entkoppeln",

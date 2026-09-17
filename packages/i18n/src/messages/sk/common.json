@@ -75,7 +75,8 @@
     "sortByTitle": "Názov",
     "sortByDate": "Dátum",
     "clearFilters": "Vymazať filtre",
-    "ariaLabel": "Filtre"
+    "ariaLabel": "Filtre",
+    "clear": "Vymazať"
   },
   "time": {
     "minutes": "min",
@@ -207,7 +208,10 @@
       "4": "Štvrtok",
       "5": "Piatok",
       "6": "Sobota"
-    }
+    },
+    "decreaseInterval": "Znížiť interval",
+    "increaseInterval": "Zvýšiť interval",
+    "remove": "Odstrániť opakovanie"
   },
   "badges": {
     "new": "Nové"
@@ -222,7 +226,12 @@
     "notification_title": "Časovač dokončený",
     "notification_body": "{label} je hotové!",
     "notifications_disabled": "Upozornenia sú vypnuté",
-    "notifications_disabled_hint": "Zapnite upozornenia v nastaveniach prehliadača, aby ste dostávali upozornenia, keď časovače dobehnú na pozadí."
+    "notifications_disabled_hint": "Zapnite upozornenia v nastaveniach prehliadača, aby ste dostávali upozornenia, keď časovače dobehnú na pozadí.",
+    "closeSummary": "Zavrieť súhrn časovačov",
+    "dismissCompleted": "Zrušiť dokončený časovač",
+    "pause": "Pozastaviť časovač",
+    "start": "Spustiť časovač",
+    "dismiss": "Zrušiť časovač"
   },
   "offlineStatus": {
     "title": "Pripojenie a offline",
@@ -292,5 +301,10 @@
     "title": "Nepodarilo sa spustiť",
     "description": "Cefiro nemohlo prečítať svoje zabezpečené úložisko, takže nedokáže určiť, ktorému serveru patrí. Nič sa nezmenilo. Skúste to znova alebo reštartujte aplikáciu.",
     "detailsLabel": "Technické podrobnosti"
+  },
+  "a11y": {
+    "closePanel": "Zavrieť panel",
+    "previousSlide": "Predchádzajúce",
+    "nextSlide": "Nasledujúce"
   }
 }

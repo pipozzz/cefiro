@@ -27,7 +27,8 @@
       "all": "Alt",
       "recipes": "Oppskrifter",
       "cookbooks": "Kokebøker"
-    }
+    },
+    "clearSearch": "Clear search"
   },
   "back": {
     "all": "Tilbake til biblioteket",
@@ -259,7 +260,9 @@
     "protein": "Protein",
     "showingPortions": "Viser verdier for {count} {count, plural, one {porsjon} other {porsjoner}}",
     "noInfo": "Ingen næringsinformasjon tilgjengelig",
-    "estimateWithAI": "Estimér med AI"
+    "estimateWithAI": "Estimér med AI",
+    "decreasePortions": "Decrease portions",
+    "increasePortions": "Increase portions"
   },
   "measurementSystem": {
     "label": "Målesystem",
@@ -412,5 +415,10 @@
     "decrease": "Decrease servings",
     "increase": "Increase servings"
   },
-  "stepImageOpen": "Open step {step} image"
+  "stepImageOpen": "Open step {step} image",
+  "favorite": {
+    "add": "Add to favorites",
+    "remove": "Remove from favorites"
+  },
+  "stepImageAlt": "Step {step}, image {index}"
 }

@@ -52,6 +52,8 @@
     "addNote": "Notitie toevoegen: {input}",
     "randomRecipe": "Willekeurig recept",
     "noRecipesFound": "Geen recepten gevonden.",
-    "failedToLoadRecipes": "Kan recepten niet laden."
+    "failedToLoadRecipes": "Kan recepten niet laden.",
+    "chooseSlot": "Choose slot",
+    "chooseSlotForNote": "Choose slot for note"
   }
 }

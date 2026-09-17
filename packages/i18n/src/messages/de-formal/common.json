@@ -75,7 +75,8 @@
     "sortByTitle": "Titel",
     "sortByDate": "Datum",
     "clearFilters": "Filter löschen",
-    "ariaLabel": "Filters"
+    "ariaLabel": "Filters",
+    "clear": "Clear"
   },
   "time": {
     "minutes": "Min",
@@ -207,7 +208,10 @@
       "4": "Donnerstag",
       "5": "Freitag",
       "6": "Samstag"
-    }
+    },
+    "decreaseInterval": "Decrease interval",
+    "increaseInterval": "Increase interval",
+    "remove": "Remove recurrence"
   },
   "badges": {
     "new": "Neu"
@@ -222,7 +226,12 @@
     "notification_title": "Timer abgelaufen",
     "notification_body": "{label} ist fertig!",
     "notifications_disabled": "Benachrichtigungen sind deaktiviert",
-    "notifications_disabled_hint": "Aktivieren Sie Benachrichtigungen in Ihren Browser-Einstellungen, um Hinweise zu erhalten, wenn Timer im Hintergrund ablaufen."
+    "notifications_disabled_hint": "Aktivieren Sie Benachrichtigungen in Ihren Browser-Einstellungen, um Hinweise zu erhalten, wenn Timer im Hintergrund ablaufen.",
+    "closeSummary": "Close timer summary",
+    "dismissCompleted": "Dismiss completed timer",
+    "pause": "Pause timer",
+    "start": "Start timer",
+    "dismiss": "Dismiss timer"
   },
   "offlineStatus": {
     "title": "Connection & offline",
@@ -292,5 +301,10 @@
     "title": "Start nicht möglich",
     "description": "Cefiro konnte den sicheren Speicher nicht lesen und weiß daher nicht, zu welchem Server diese App gehört. Es wurde nichts geändert. Versuchen Sie es erneut oder starten Sie die App neu.",
     "detailsLabel": "Technische Details"
+  },
+  "a11y": {
+    "closePanel": "Close panel",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide"
   }
 }

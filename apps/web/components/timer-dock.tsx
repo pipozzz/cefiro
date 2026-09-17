@@ -195,7 +195,7 @@ export function TimerDock({
                 >
                   {/* Header */}
                   <button
-                    aria-label="Close timer summary"
+                    aria-label={t("timer.closeSummary")}
                     className="border-border flex w-full cursor-pointer items-center justify-between border-b p-4"
                     type="button"
                     onClick={() => setIsExpanded(false)}
@@ -372,7 +372,7 @@ function TimerRow({
 
         {isCompleted ? (
           <Button
-            aria-label="Dismiss completed timer"
+            aria-label={t("timer.dismissCompleted")}
             size="sm"
             onPress={() => removeTimer(timer.id)}
             variant="danger-soft"
@@ -384,7 +384,7 @@ function TimerRow({
           <div className="flex items-center gap-1">
             <Button
               isIconOnly
-              aria-label={isRunning ? "Pause timer" : "Start timer"}
+              aria-label={isRunning ? t("timer.pause") : t("timer.start")}
               size="sm"
               onPress={() => (isRunning ? pauseTimer(timer.id) : startTimer(timer.id))}
               variant="tertiary"
@@ -394,7 +394,7 @@ function TimerRow({
 
             <Button
               isIconOnly
-              aria-label="Dismiss timer"
+              aria-label={t("timer.dismiss")}
               size="sm"
               onPress={() => removeTimer(timer.id)}
               variant="danger-soft"
