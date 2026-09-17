@@ -34,6 +34,7 @@ import {
   getCachedOIDCProvider,
   getCachedPasswordAuthEnabled,
 } from "./provider-cache";
+import { inviteAllowsRegistration } from "./registration-bypass";
 
 /**
  * Creates a wrapped adapter factory that intercepts user email lookups
@@ -306,7 +307,14 @@ function createBetterAuth() {
             const userCount = await countUsers();
             const isFirstUser = userCount === 0;
 
-            if (!registrationEnabled && !isFirstUser) {
+            // A valid, email-matched household invite is its own permission to
+            // register, so invited members can still join when public
+            // registration is locked.
+            if (
+              !registrationEnabled &&
+              !isFirstUser &&
+              !(await inviteAllowsRegistration(user.email))
+            ) {
               throw new APIError("FORBIDDEN", {
                 message: "Registration is currently disabled",
               });

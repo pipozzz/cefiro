@@ -44,7 +44,8 @@ import { HouseholdNameSchema, JoinCodeSchema } from "@norish/shared/lib/validati
 import type { HouseholdUserInfo } from "./types";
 import { emitConnectionInvalidation } from "../../connection-manager";
 import { authedProcedure } from "../../middleware";
-import { router } from "../../trpc";
+import { rateLimit } from "../../rate-limit-middleware";
+import { publicProcedure, router } from "../../trpc";
 import { permissionsEmitter } from "../permissions/emitter";
 import { householdEmitter } from "./emitter";
 
@@ -505,9 +506,9 @@ const transferAdmin = authedProcedure
     return { success: true };
   });
 
-/** Absolute URL that accepts an invite token. */
+/** Absolute URL of the public invite page for a token (works signed-out). */
 function inviteAcceptUrl(token: string): string {
-  return `${SERVER_CONFIG.AUTH_URL}/household/join?token=${encodeURIComponent(token)}`;
+  return `${SERVER_CONFIG.AUTH_URL}/invite/${encodeURIComponent(token)}`;
 }
 
 const inviteByEmail = authedProcedure
@@ -612,7 +613,12 @@ const revokeInvite = authedProcedure
   });
 
 /** Preview an invite from its token, so the join page can show what it is. */
-const getInvite = authedProcedure
+// Public: the invite landing page must render before the invitee has an
+// account (registration may be locked, so an invite is how they get one).
+// Only the household name is exposed, and rate-limited so a token cannot be
+// probed for.
+const getInvite = publicProcedure
+  .use(rateLimit({ name: "households.getInvite", limit: 30, windowSec: 60 }))
   .input(z.object({ token: z.string().min(1) }))
   .query(async ({ input }) => {
     const invite = await getHouseholdInviteByToken(input.token);
