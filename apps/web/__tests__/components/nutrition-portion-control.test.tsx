@@ -5,6 +5,10 @@ import "@testing-library/jest-dom";
 
 import NutritionPortionControl from "@/components/recipes/nutrition-portion-control";
 
+vi.mock("next-intl", () => ({
+  useTranslations: () => (key: string) => key,
+}));
+
 // Mock HeroUI components
 vi.mock("@heroui/react", () => ({
   Button: ({ children, onPress, "aria-label": ariaLabel, ...props }: any) => (
@@ -32,8 +36,8 @@ describe("NutritionPortionControl", () => {
       render(<NutritionPortionControl portions={1} onChange={onChange} />);
 
       expect(screen.getByText("1")).toBeInTheDocument();
-      expect(screen.getByLabelText("Decrease portions")).toBeInTheDocument();
-      expect(screen.getByLabelText("Increase portions")).toBeInTheDocument();
+      expect(screen.getByLabelText("decreasePortions")).toBeInTheDocument();
+      expect(screen.getByLabelText("increasePortions")).toBeInTheDocument();
     });
 
     it("displays fractional portions correctly", () => {
@@ -56,7 +60,7 @@ describe("NutritionPortionControl", () => {
     it("increments by 1 for values >= 1", () => {
       render(<NutritionPortionControl portions={1} onChange={onChange} />);
 
-      fireEvent.click(screen.getByLabelText("Increase portions"));
+      fireEvent.click(screen.getByLabelText("increasePortions"));
 
       expect(onChange).toHaveBeenCalledWith(2);
     });
@@ -64,7 +68,7 @@ describe("NutritionPortionControl", () => {
     it("increments from 4 to 5", () => {
       render(<NutritionPortionControl portions={4} onChange={onChange} />);
 
-      fireEvent.click(screen.getByLabelText("Increase portions"));
+      fireEvent.click(screen.getByLabelText("increasePortions"));
 
       expect(onChange).toHaveBeenCalledWith(5);
     });
@@ -72,7 +76,7 @@ describe("NutritionPortionControl", () => {
     it("doubles values < 1 (0.25 -> 0.5)", () => {
       render(<NutritionPortionControl portions={0.25} onChange={onChange} />);
 
-      fireEvent.click(screen.getByLabelText("Increase portions"));
+      fireEvent.click(screen.getByLabelText("increasePortions"));
 
       expect(onChange).toHaveBeenCalledWith(0.5);
     });
@@ -80,7 +84,7 @@ describe("NutritionPortionControl", () => {
     it("doubles 0.5 to 1", () => {
       render(<NutritionPortionControl portions={0.5} onChange={onChange} />);
 
-      fireEvent.click(screen.getByLabelText("Increase portions"));
+      fireEvent.click(screen.getByLabelText("increasePortions"));
 
       expect(onChange).toHaveBeenCalledWith(1);
     });
@@ -88,7 +92,7 @@ describe("NutritionPortionControl", () => {
     it("caps doubling at 1 for values between 0.5 and 1", () => {
       render(<NutritionPortionControl portions={0.75} onChange={onChange} />);
 
-      fireEvent.click(screen.getByLabelText("Increase portions"));
+      fireEvent.click(screen.getByLabelText("increasePortions"));
 
       expect(onChange).toHaveBeenCalledWith(1);
     });
@@ -98,7 +102,7 @@ describe("NutritionPortionControl", () => {
     it("decrements by 1 for values > 2", () => {
       render(<NutritionPortionControl portions={5} onChange={onChange} />);
 
-      fireEvent.click(screen.getByLabelText("Decrease portions"));
+      fireEvent.click(screen.getByLabelText("decreasePortions"));
 
       expect(onChange).toHaveBeenCalledWith(4);
     });
@@ -106,7 +110,7 @@ describe("NutritionPortionControl", () => {
     it("decrements from 2 to 1", () => {
       render(<NutritionPortionControl portions={2} onChange={onChange} />);
 
-      fireEvent.click(screen.getByLabelText("Decrease portions"));
+      fireEvent.click(screen.getByLabelText("decreasePortions"));
 
       expect(onChange).toHaveBeenCalledWith(1);
     });
@@ -114,7 +118,7 @@ describe("NutritionPortionControl", () => {
     it("goes from 1.5 to 1", () => {
       render(<NutritionPortionControl portions={1.5} onChange={onChange} />);
 
-      fireEvent.click(screen.getByLabelText("Decrease portions"));
+      fireEvent.click(screen.getByLabelText("decreasePortions"));
 
       expect(onChange).toHaveBeenCalledWith(1);
     });
@@ -122,7 +126,7 @@ describe("NutritionPortionControl", () => {
     it("halves values <= 1 (1 -> 0.5)", () => {
       render(<NutritionPortionControl portions={1} onChange={onChange} />);
 
-      fireEvent.click(screen.getByLabelText("Decrease portions"));
+      fireEvent.click(screen.getByLabelText("decreasePortions"));
 
       expect(onChange).toHaveBeenCalledWith(0.5);
     });
@@ -130,7 +134,7 @@ describe("NutritionPortionControl", () => {
     it("halves 0.5 to 0.25", () => {
       render(<NutritionPortionControl portions={0.5} onChange={onChange} />);
 
-      fireEvent.click(screen.getByLabelText("Decrease portions"));
+      fireEvent.click(screen.getByLabelText("decreasePortions"));
 
       expect(onChange).toHaveBeenCalledWith(0.25);
     });
@@ -138,7 +142,7 @@ describe("NutritionPortionControl", () => {
     it("halves 0.25 to 0.125", () => {
       render(<NutritionPortionControl portions={0.25} onChange={onChange} />);
 
-      fireEvent.click(screen.getByLabelText("Decrease portions"));
+      fireEvent.click(screen.getByLabelText("decreasePortions"));
 
       expect(onChange).toHaveBeenCalledWith(0.125);
     });
@@ -146,7 +150,7 @@ describe("NutritionPortionControl", () => {
     it("does not go below 0.125", () => {
       render(<NutritionPortionControl portions={0.125} onChange={onChange} />);
 
-      fireEvent.click(screen.getByLabelText("Decrease portions"));
+      fireEvent.click(screen.getByLabelText("decreasePortions"));
 
       expect(onChange).toHaveBeenCalledWith(0.125);
     });

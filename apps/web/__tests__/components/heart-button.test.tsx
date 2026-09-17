@@ -5,6 +5,10 @@ import "@testing-library/jest-dom";
 
 import HeartButton from "@/components/shared/heart-button";
 
+vi.mock("next-intl", () => ({
+  useTranslations: () => (key: string) => key,
+}));
+
 vi.mock("@heroui/react", () => ({
   Button: ({
     children,
