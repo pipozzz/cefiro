@@ -3,19 +3,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { sweepUserAvatars } from "@norish/shared-server/media/avatar-cleanup";
 
-const fsMocks = vi.hoisted(() => ({
-  readdir: vi.fn(),
-  unlink: vi.fn(),
+const storeMocks = vi.hoisted(() => ({
+  list: vi.fn(),
+  delete: vi.fn(),
 }));
 
-vi.mock("node:fs/promises", () => ({
-  default: { readdir: fsMocks.readdir, unlink: fsMocks.unlink },
-  readdir: fsMocks.readdir,
-  unlink: fsMocks.unlink,
-}));
-
-vi.mock("@norish/config/env-config-server", () => ({
-  SERVER_CONFIG: { UPLOADS_DIR: "/tmp/uploads" },
+vi.mock("@norish/shared-server/media/object-store", () => ({
+  getObjectStore: () => ({ list: storeMocks.list, delete: storeMocks.delete }),
 }));
 
 vi.mock("@norish/shared-server/logger", () => ({
@@ -25,59 +19,64 @@ vi.mock("@norish/shared-server/logger", () => ({
 describe("sweepUserAvatars", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    fsMocks.unlink.mockResolvedValue(undefined);
+    storeMocks.delete.mockResolvedValue(undefined);
   });
 
   it("deletes all avatar files for the user when nothing is kept", async () => {
-    fsMocks.readdir.mockResolvedValue([
-      "user-1-100.png",
-      "user-1-200.webp",
-      "user-1.jpg",
-      "user-2-100.png",
+    storeMocks.list.mockResolvedValue([
+      "avatars/user-1-100.png",
+      "avatars/user-1-200.webp",
+      "avatars/user-1.jpg",
+      "avatars/user-2-100.png",
     ]);
 
     await sweepUserAvatars("user-1");
 
-    const deleted = fsMocks.unlink.mock.calls.map(([p]: [string]) => p);
+    const deleted = storeMocks.delete.mock.calls.map(([k]: [string]) => k);
 
     expect(deleted).toEqual([
-      "/tmp/uploads/avatars/user-1-100.png",
-      "/tmp/uploads/avatars/user-1-200.webp",
-      "/tmp/uploads/avatars/user-1.jpg",
+      "avatars/user-1-100.png",
+      "avatars/user-1-200.webp",
+      "avatars/user-1.jpg",
     ]);
   });
 
   it("retains the kept filenames (current upload and its predecessor)", async () => {
-    fsMocks.readdir.mockResolvedValue(["user-1-100.png", "user-1-200.png", "user-1-300.png"]);
+    storeMocks.list.mockResolvedValue([
+      "avatars/user-1-100.png",
+      "avatars/user-1-200.png",
+      "avatars/user-1-300.png",
+    ]);
 
     await sweepUserAvatars("user-1", ["user-1-300.png", "user-1-200.png"]);
 
-    const deleted = fsMocks.unlink.mock.calls.map(([p]: [string]) => p);
+    const deleted = storeMocks.delete.mock.calls.map(([k]: [string]) => k);
 
-    expect(deleted).toEqual(["/tmp/uploads/avatars/user-1-100.png"]);
+    expect(deleted).toEqual(["avatars/user-1-100.png"]);
   });
 
   it("never touches other users' files", async () => {
-    fsMocks.readdir.mockResolvedValue(["user-2-100.png", "user-10-100.png"]);
+    storeMocks.list.mockResolvedValue(["avatars/user-2-100.png", "avatars/user-10-100.png"]);
 
     await sweepUserAvatars("user-1");
 
-    expect(fsMocks.unlink).not.toHaveBeenCalled();
+    expect(storeMocks.delete).not.toHaveBeenCalled();
   });
 
   it("swallows a missing avatars directory", async () => {
-    fsMocks.readdir.mockRejectedValue(Object.assign(new Error("ENOENT"), { code: "ENOENT" }));
+    // An absent prefix lists as empty rather than throwing.
+    storeMocks.list.mockResolvedValue([]);
 
     await expect(sweepUserAvatars("user-1")).resolves.toBeUndefined();
-    expect(fsMocks.unlink).not.toHaveBeenCalled();
+    expect(storeMocks.delete).not.toHaveBeenCalled();
   });
 
-  it("continues past individual unlink failures", async () => {
-    fsMocks.readdir.mockResolvedValue(["user-1-100.png", "user-1-200.png"]);
-    fsMocks.unlink.mockRejectedValueOnce(new Error("EACCES"));
+  it("continues past individual delete failures", async () => {
+    storeMocks.list.mockResolvedValue(["avatars/user-1-100.png", "avatars/user-1-200.png"]);
+    storeMocks.delete.mockRejectedValueOnce(new Error("EACCES"));
 
     await sweepUserAvatars("user-1");
 
-    expect(fsMocks.unlink).toHaveBeenCalledTimes(2);
+    expect(storeMocks.delete).toHaveBeenCalledTimes(2);
   });
 });
