@@ -148,11 +148,15 @@ export function TopProgressBar() {
       style={{ opacity: visible ? 1 : 0, transition: "opacity 300ms ease" }}
     >
       <div
-        // `text-primary` makes `currentColor` the brand colour, so the soft
-        // leading glow tints to match the bar whatever the theme.
-        className="bg-primary text-primary h-full shadow-[0_0_8px_currentColor]"
+        // Use the brand token `--accent` (defined on :root, so it reaches this
+        // bar mounted bare in <body> — the heroui `bg-primary` utility does
+        // not resolve here, it needs the provider context) with a hex fallback,
+        // and a soft leading glow in the same colour.
+        className="h-full"
         style={{
           width: `${progress}%`,
+          background: "var(--accent, #336640)",
+          boxShadow: "0 0 8px var(--accent, #336640)",
           transition: "width 200ms ease",
         }}
       />
