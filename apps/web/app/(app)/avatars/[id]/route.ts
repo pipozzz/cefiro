@@ -1,12 +1,9 @@
-import fs from "node:fs/promises";
-import path from "node:path";
 import { NextResponse } from "next/server";
 
-import { SERVER_CONFIG } from "@norish/config/env-config-server";
+import { getObjectStore } from "@norish/shared-server/media/object-store";
 
 export const runtime = "nodejs";
 
-const AVATARS_DISK_DIR = path.join(SERVER_CONFIG.UPLOADS_DIR, "avatars");
 const VALID_FILENAME_PATTERN = /^[a-zA-Z0-9_-]+\.[a-zA-Z0-9]+$/;
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -22,42 +19,22 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     return NextResponse.json({ error: "Invalid filename" }, { status: 400 });
   }
 
-  const filePath = path.join(AVATARS_DISK_DIR, id);
+  const object = await getObjectStore().get(`avatars/${id}`);
 
-  // Verify the resolved path is still within the avatars directory
-  const resolvedPath = path.resolve(filePath);
-  const resolvedDir = path.resolve(AVATARS_DISK_DIR);
-  const relative = path.relative(resolvedDir, resolvedPath);
-
-  if (relative.startsWith("..") || path.isAbsolute(relative)) {
-    return NextResponse.json({ error: "Invalid path" }, { status: 400 });
-  }
-
-  try {
-    const file = await fs.readFile(filePath);
-    const ext = path.extname(filePath).toLowerCase();
-    const type =
-      ext === ".png"
-        ? "image/png"
-        : ext === ".webp"
-          ? "image/webp"
-          : ext === ".jpg" || ext === ".jpeg"
-            ? "image/jpeg"
-            : "image/jpeg";
-
-    return new Response(new Uint8Array(file), {
-      headers: {
-        "Content-Type": type,
-        // ADR-0021: every upload mints a new filename, so the content behind a
-        // given URL never changes. `private` keeps shared caches out — the
-        // route sits behind the auth proxy.
-        "Cache-Control": "private, max-age=31536000, immutable",
-      },
-    });
-  } catch (_error) {
+  if (!object) {
     return NextResponse.json(
       { error: "Not found" },
       { status: 404, headers: { "Cache-Control": "no-store" } }
     );
   }
+
+  return new Response(new Uint8Array(object.bytes), {
+    headers: {
+      "Content-Type": object.contentType,
+      // ADR-0021: every upload mints a new filename, so the content behind a
+      // given URL never changes. `private` keeps shared caches out — the
+      // route sits behind the auth proxy.
+      "Cache-Control": "private, max-age=31536000, immutable",
+    },
+  });
 }

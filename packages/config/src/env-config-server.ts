@@ -104,6 +104,33 @@ const ServerConfigSchema = z.object({
     .pipe(z.array(z.string())),
   UPLOADS_DIR: z.string().default(defaultUploadsDir),
 
+  // Media storage backend. "fs" (default) keeps uploads on the local
+  // UPLOADS_DIR volume — the self-hosted default, unchanged. "s3" stores every
+  // image and video in an S3-compatible bucket instead, so no persistent volume
+  // is needed; the app still proxies the bytes through its own media routes, so
+  // stored URLs (and therefore the DB, OG images and crawlers) are identical
+  // either way. The S3_* values are required only when STORAGE_DRIVER is "s3"
+  // (validated at client init, not here, so an fs instance needs none of them).
+  STORAGE_DRIVER: z.enum(["fs", "s3"]).default("fs"),
+  // e.g. "https://s3.eu-central-1.amazonaws.com", "http://minio:9000",
+  // "https://<account>.r2.cloudflarestorage.com". Host[:port] also accepted.
+  S3_ENDPOINT: z.string().optional(),
+  S3_REGION: z.string().default("us-east-1"),
+  S3_BUCKET: z.string().optional(),
+  S3_ACCESS_KEY_ID: z.string().optional(),
+  S3_SECRET_ACCESS_KEY: z.string().optional(),
+  // Most self-hosted S3-compatible stores (MinIO, R2, B2) need path-style URLs
+  // (bucket in the path, not the host); real AWS S3 wants virtual-host style.
+  S3_FORCE_PATH_STYLE: z
+    .string()
+    .transform((val) => val !== "false" && val !== "0")
+    .pipe(z.boolean())
+    .default(true),
+  // Optional key prefix inside the bucket, so one bucket can hold several
+  // environments (e.g. "cefiro-prod"). No leading slash; a trailing slash is
+  // optional. Empty by default (objects sit at the bucket root).
+  S3_PREFIX: z.string().default(""),
+
   // Auth endpoint rate limiting. Defaults are the production values; they are
   // overridable so a harness driving many sessions against one server (the
   // browser E2E stack reuses a single server across a whole project) is not

@@ -1,5 +1,3 @@
-import { mkdir, writeFile } from "fs/promises";
-import path from "path";
 import { z } from "zod";
 
 import { SERVER_CONFIG } from "@norish/config/env-config-server";
@@ -22,6 +20,7 @@ import {
   deleteAvatarByFilename,
   sweepUserAvatars,
 } from "@norish/shared-server/media/avatar-cleanup";
+import { getObjectStore } from "@norish/shared-server/media/object-store";
 import { IMAGE_MIME_TO_EXTENSION } from "@norish/shared/contracts";
 import {
   DeleteUserAvatarInputSchema,
@@ -198,11 +197,6 @@ const uploadAvatar = authedProcedure.input(formDataInputSchema).mutation(async (
     return { success: false, error: "File too large. Maximum size is 5MB." };
   }
 
-  // Create avatars directory
-  const avatarDir = path.join(SERVER_CONFIG.UPLOADS_DIR, "avatars");
-
-  await mkdir(avatarDir, { recursive: true });
-
   // The DB-referenced file becomes the retained predecessor (ADR-0021), so
   // read it fresh rather than trusting the session snapshot.
   const currentUser = await getUserById(ctx.user.id);
@@ -210,9 +204,8 @@ const uploadAvatar = authedProcedure.input(formDataInputSchema).mutation(async (
 
   // Every upload mints a new versioned filename (ADR-0021)
   const filename = buildAvatarFilename(ctx.user.id, ext);
-  const filepath = path.join(avatarDir, filename);
 
-  await writeFile(filepath, buffer);
+  await getObjectStore().put(`avatars/${filename}`, buffer, file.type);
 
   // Use auth-protected URL pattern
   const protectedPath = `/avatars/${filename}`;

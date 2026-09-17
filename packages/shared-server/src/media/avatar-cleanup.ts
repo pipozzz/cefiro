@@ -1,13 +1,10 @@
-import fs from "node:fs/promises";
-import path from "node:path";
-
-import { SERVER_CONFIG } from "@norish/config/env-config-server";
 import { schedulerLogger } from "@norish/shared-server/logger";
 import { isAvatarFilenameForUser } from "@norish/shared/lib/helpers";
 
-function getAvatarsDiskDir() {
-  return path.join(SERVER_CONFIG.UPLOADS_DIR, "avatars");
-}
+import { getObjectStore } from "./object-store";
+
+/** Encrypted-user avatars live under the `avatars/` key prefix in the store. */
+const AVATARS_PREFIX = "avatars";
 
 /**
  * Delete every avatar file belonging to a user except the given filenames.
@@ -18,17 +15,12 @@ export async function sweepUserAvatars(
   userId: string,
   keep: readonly string[] = []
 ): Promise<void> {
-  let files: string[];
+  const store = getObjectStore();
+  const keys = await store.list(AVATARS_PREFIX);
 
-  try {
-    files = await fs.readdir(getAvatarsDiskDir());
-  } catch {
-    return;
-  }
-
-  const sweepable = files.filter(
-    (file) => isAvatarFilenameForUser(file, userId) && !keep.includes(file)
-  );
+  const sweepable = keys
+    .map((key) => key.slice(key.lastIndexOf("/") + 1))
+    .filter((file) => isAvatarFilenameForUser(file, userId) && !keep.includes(file));
 
   for (const file of sweepable) {
     await deleteAvatarByFilename(file);
@@ -40,10 +32,8 @@ export async function deleteAvatarByFilename(filename: string | null | undefined
     return;
   }
 
-  const filePath = path.join(getAvatarsDiskDir(), filename);
-
   try {
-    await fs.unlink(filePath);
+    await getObjectStore().delete(`${AVATARS_PREFIX}/${filename}`);
     schedulerLogger.info({ filename }, "Deleted avatar");
   } catch (err) {
     schedulerLogger.warn({ err, filename }, "Could not delete avatar");

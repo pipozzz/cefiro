@@ -26,6 +26,10 @@ const mockFs = vi.hoisted(() => ({
   writeFile: vi.fn(),
 }));
 
+const mockStore = vi.hoisted(() => ({
+  put: vi.fn(),
+}));
+
 vi.mock("@norish/db", () => ({
   getApiKeysForUser: vi.fn(),
   getUserById: mockDb.getUserById,
@@ -68,6 +72,10 @@ vi.mock("@norish/config/env-config-server", () => ({
 }));
 
 vi.mock("fs/promises", () => mockFs);
+
+vi.mock("@norish/shared-server/media/object-store", () => ({
+  getObjectStore: () => ({ put: mockStore.put }),
+}));
 
 const HOUSEHOLD: Context["household"] = {
   id: "house-1",
@@ -116,6 +124,7 @@ describe("avatar caching contract (ADR-0021)", () => {
 
     mockFs.mkdir.mockResolvedValue(undefined);
     mockFs.writeFile.mockResolvedValue(undefined);
+    mockStore.put.mockResolvedValue(undefined);
     mockAvatarCleanup.sweepUserAvatars.mockResolvedValue(undefined);
     mockAvatarCleanup.deleteAvatarByFilename.mockResolvedValue(undefined);
   });
@@ -134,8 +143,9 @@ describe("avatar caching contract (ADR-0021)", () => {
       const result = await createCaller().uploadAvatar(buildUploadInput());
 
       expect(result.success).toBe(true);
-      expect(mockFs.writeFile).toHaveBeenCalledWith(
-        "/tmp/uploads/avatars/user-1-1755000000000.png",
+      expect(mockStore.put).toHaveBeenCalledWith(
+        "avatars/user-1-1755000000000.png",
+        expect.anything(),
         expect.anything()
       );
       expect(mockDb.updateUserAvatar).toHaveBeenCalledWith(
@@ -156,10 +166,10 @@ describe("avatar caching contract (ADR-0021)", () => {
       nowSpy.mockReturnValue(1755000000002);
       await createCaller().uploadAvatar(buildUploadInput());
 
-      const [firstPath] = mockFs.writeFile.mock.calls[0]!;
-      const [secondPath] = mockFs.writeFile.mock.calls[1]!;
+      const [firstKey] = mockStore.put.mock.calls[0]!;
+      const [secondKey] = mockStore.put.mock.calls[1]!;
 
-      expect(firstPath).not.toBe(secondPath);
+      expect(firstKey).not.toBe(secondKey);
     });
 
     it("retains the immediate predecessor and sweeps older files after a successful update", async () => {
