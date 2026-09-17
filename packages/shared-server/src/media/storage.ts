@@ -577,12 +577,16 @@ export async function copyRecipeImageByUrl(
     return null;
   }
 
-  const sourcePath = path.join(RECIPES_BASE_DIR, match[1]!, match[2]!);
-
   try {
-    const bytes = await fs.readFile(sourcePath);
+    // Read the source image through the object store so this works on both the
+    // filesystem and S3 (the store key is the URL's tail).
+    const object = await objectStore.get(keyFromWebUrl(sourceUrl));
 
-    return await saveImageBytes(bytes, destRecipeId);
+    if (!object) {
+      return null;
+    }
+
+    return await saveImageBytes(object.bytes, destRecipeId);
   } catch (err) {
     log.warn({ err, sourceUrl, destRecipeId }, "Could not copy recipe image while saving a fork");
 
