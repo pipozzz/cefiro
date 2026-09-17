@@ -26,7 +26,11 @@ export function resolveExistingTargets(rootDir, candidates = DEFAULT_TARGETS) {
 
 export function buildMadgeArgs(targets) {
   return [
-    "dlx",
+    // `exec` runs the madge pinned in devDependencies. Previously this was
+    // `dlx`, which fetches madge from the network on every run — a registry
+    // hiccup then yielded empty/non-JSON output and a spurious cycle-check
+    // failure. The local binary makes the gate deterministic (and faster).
+    "exec",
     "madge",
     "--circular",
     "--json",
