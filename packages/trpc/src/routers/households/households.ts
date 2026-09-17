@@ -5,17 +5,24 @@ import type {
   HouseholdAdminSettingsDto,
   HouseholdSettingsDto,
 } from "@norish/shared/contracts/dto/household";
+import { SERVER_CONFIG } from "@norish/config/env-config-server";
 import {
   addUserToHousehold,
   createHousehold,
+  createHouseholdInvite,
   findHouseholdByJoinCode,
   getAllergiesForUsers,
+  getHouseholdById,
   getHouseholdForUser,
+  getHouseholdInviteByToken,
   getUsersByHouseholdId,
   isUserHouseholdAdmin,
   kickUserFromHousehold,
+  listPendingHouseholdInvites,
+  markHouseholdInviteAccepted,
   regenerateJoinCode,
   removeUserFromHousehold,
+  revokeHouseholdInvite,
   transferHouseholdAdmin,
 } from "@norish/db";
 import {
@@ -23,6 +30,8 @@ import {
   invalidateHouseholdCacheForUsers,
 } from "@norish/shared-server/cache/household";
 import { getRecipePermissionPolicy } from "@norish/shared-server/config/server-config-loader";
+import { isEmailConfigured, sendEmail } from "@norish/shared-server/email/mailer";
+import { buildHouseholdInviteEmail } from "@norish/shared-server/email/templates/household-invite";
 import { trpcLogger as log } from "@norish/shared-server/logger";
 import {
   KickHouseholdUserInputSchema,
@@ -496,6 +505,189 @@ const transferAdmin = authedProcedure
     return { success: true };
   });
 
+/** Absolute URL that accepts an invite token. */
+function inviteAcceptUrl(token: string): string {
+  return `${SERVER_CONFIG.AUTH_URL}/household/join?token=${encodeURIComponent(token)}`;
+}
+
+const inviteByEmail = authedProcedure
+  .input(z.object({ email: z.string().trim().email() }))
+  .mutation(async ({ ctx, input }) => {
+    const household = await getHouseholdForUser(ctx.user.id);
+
+    if (!household) {
+      throw new TRPCError({ code: "BAD_REQUEST", message: "You are not in a household" });
+    }
+
+    if (household.adminUserId !== ctx.user.id) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Only the household admin can invite members",
+      });
+    }
+
+    log.info({ userId: ctx.user.id, householdId: household.id }, "Inviting member by email");
+
+    const { invite, token } = await createHouseholdInvite({
+      householdId: household.id,
+      email: input.email,
+      invitedByUserId: ctx.user.id,
+    });
+
+    const acceptUrl = inviteAcceptUrl(token);
+    let emailed = false;
+
+    if (isEmailConfigured()) {
+      const { subject, html } = buildHouseholdInviteEmail({
+        householdName: household.name,
+        inviterName: ctx.user.name ?? null,
+        acceptUrl,
+      });
+
+      try {
+        const result = await sendEmail({ to: invite.email, subject, html });
+
+        emailed = result.sent;
+      } catch (err) {
+        // A delivery failure must not lose the invite: it still exists and the
+        // admin gets the copyable link back to share manually.
+        log.error({ err, householdId: household.id }, "Failed to send invite email");
+      }
+    }
+
+    return {
+      invite: {
+        id: invite.id,
+        email: invite.email,
+        expiresAt: invite.expiresAt.toISOString(),
+      },
+      // The admin who created the invite may share this link directly — useful
+      // when email is not configured or delivery is delayed.
+      link: acceptUrl,
+      emailed,
+    };
+  });
+
+const listInvites = authedProcedure.query(async ({ ctx }) => {
+  const household = await getHouseholdForUser(ctx.user.id);
+
+  if (!household || household.adminUserId !== ctx.user.id) {
+    // Only the admin sees pending invites; everyone else gets an empty list.
+    return { invites: [] };
+  }
+
+  const invites = await listPendingHouseholdInvites(household.id);
+
+  return {
+    invites: invites.map((invite) => ({
+      id: invite.id,
+      email: invite.email,
+      expiresAt: invite.expiresAt.toISOString(),
+      createdAt: invite.createdAt.toISOString(),
+    })),
+  };
+});
+
+const revokeInvite = authedProcedure
+  .input(z.object({ inviteId: z.string().uuid() }))
+  .mutation(async ({ ctx, input }) => {
+    const household = await getHouseholdForUser(ctx.user.id);
+
+    if (!household || household.adminUserId !== ctx.user.id) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Only the household admin can revoke invites",
+      });
+    }
+
+    const revoked = await revokeHouseholdInvite(household.id, input.inviteId);
+
+    if (!revoked) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Invite not found" });
+    }
+
+    log.info({ userId: ctx.user.id, inviteId: input.inviteId }, "Revoked household invite");
+
+    return { success: true };
+  });
+
+/** Preview an invite from its token, so the join page can show what it is. */
+const getInvite = authedProcedure
+  .input(z.object({ token: z.string().min(1) }))
+  .query(async ({ input }) => {
+    const invite = await getHouseholdInviteByToken(input.token);
+
+    if (!invite || invite.status !== "pending" || invite.expiresAt.getTime() < Date.now()) {
+      return { invite: null };
+    }
+
+    const household = await getHouseholdById(invite.householdId);
+
+    if (!household) {
+      return { invite: null };
+    }
+
+    return { invite: { householdName: household.name } };
+  });
+
+const acceptInvite = authedProcedure
+  .input(z.object({ token: z.string().min(1) }))
+  .mutation(async ({ ctx, input }) => {
+    const invite = await getHouseholdInviteByToken(input.token);
+
+    if (!invite || invite.status !== "pending" || invite.expiresAt.getTime() < Date.now()) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "This invite is invalid or has expired",
+      });
+    }
+
+    const existingHousehold = await getHouseholdForUser(ctx.user.id);
+
+    if (existingHousehold) {
+      throw new TRPCError({
+        code: "CONFLICT",
+        message: "You are already in a household. Leave it first to join another one.",
+      });
+    }
+
+    const householdId = invite.householdId;
+    const existingMembers = await getUsersByHouseholdId(householdId);
+    const existingMemberIds = existingMembers.map((u) => u.userId);
+
+    log.info({ userId: ctx.user.id, householdId }, "Accepting household invite");
+
+    const membership = await addUserToHousehold({ householdId, userId: ctx.user.id });
+
+    await markHouseholdInviteAccepted(invite.id, ctx.user.id);
+
+    const versionedMembership = membership as typeof membership & { version: number };
+
+    // Same event ordering as `join`: tell the joining user first, then the
+    // existing members, then invalidate caches and rebind connections.
+    const fullHousehold = await getHouseholdForUser(ctx.user.id);
+    const userIds = fullHousehold?.users.map((u) => u.id) ?? [];
+    const allergiesRows = await getAllergiesForUsers(userIds);
+    const allergies = [...new Set(allergiesRows.map((a) => a.tagName))];
+    const dto = toHouseholdDto(fullHousehold, ctx.user.id, allergies);
+
+    householdEmitter.emitToUser(ctx.user.id, "created", { household: dto! });
+
+    householdEmitter.emitToHousehold(householdId, "userJoined", {
+      user: {
+        id: ctx.user.id,
+        name: ctx.user.name ?? null,
+        isAdmin: false,
+        version: versionedMembership.version,
+      } as HouseholdUserInfo,
+    });
+
+    await invalidateHouseholdCacheForUsers([ctx.user.id, ...existingMemberIds]);
+    await emitConnectionInvalidation(ctx.user.id, "household-joined");
+
+    return { householdId };
+  });
+
 export const householdsRouter = router({
   get,
   create,
@@ -504,4 +696,9 @@ export const householdsRouter = router({
   kick,
   regenerateCode,
   transferAdmin,
+  inviteByEmail,
+  listInvites,
+  revokeInvite,
+  getInvite,
+  acceptInvite,
 });

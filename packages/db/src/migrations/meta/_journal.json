@@ -428,6 +428,13 @@
       "when": 1789625209665,
       "tag": "0060_repair_api_logs",
       "breakpoints": true
+    },
+    {
+      "idx": 61,
+      "version": "7",
+      "when": 1789629388681,
+      "tag": "0061_household_invites",
+      "breakpoints": true
     }
   ]
 }

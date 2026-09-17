@@ -13,6 +13,7 @@ export * from "./step-images";
 export * from "./step-ingredients";
 export * from "./recipe-images";
 export * from "./recipe-videos";
+export * from "./household-invites";
 export * from "./households";
 export * from "./household-users";
 export * from "./planned-items";
