@@ -260,7 +260,7 @@ export default function MiniGroceries({
                 <IconActionButton
                   action="decrease"
                   className="bg-surface-secondary"
-                  label="Decrease servings"
+                  label={t("decreaseServings")}
                   size="sm"
                   tooltipPlacement="bottom"
                   onPress={decrementServings}
@@ -271,7 +271,7 @@ export default function MiniGroceries({
                 <IconActionButton
                   action="increase"
                   className="bg-surface-secondary"
-                  label="Increase servings"
+                  label={t("increaseServings")}
                   size="sm"
                   tooltipPlacement="bottom"
                   onPress={incrementServings}

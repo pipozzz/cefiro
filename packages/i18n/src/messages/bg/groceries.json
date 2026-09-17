@@ -121,7 +121,9 @@
     "ingredientsFailed": "Добавянето на съставките в списъка с продукти не бе успешно.",
     "addToGroceries": "Добави в продуктите",
     "aisle": "Пътека",
-    "noAisle": "Без пътека"
+    "noAisle": "Без пътека",
+    "decreaseServings": "Decrease servings",
+    "increaseServings": "Increase servings"
   },
   "picker": {
     "unlink": "Премахни връзката с продукта",

@@ -121,7 +121,9 @@
     "ingredientsFailed": "Falha ao adicionar ingredientes à lista de compras.",
     "addToGroceries": "Adicionar à lista de compras",
     "aisle": "Corredor",
-    "noAisle": "Sem corredor"
+    "noAisle": "Sem corredor",
+    "decreaseServings": "Decrease servings",
+    "increaseServings": "Increase servings"
   },
   "picker": {
     "unlink": "Desvincular produto",

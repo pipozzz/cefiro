@@ -88,7 +88,7 @@ function FilterSearchInput({
       />
       {value.length > 0 && (
         <button
-          aria-label="Clear"
+          aria-label={t("clear")}
           className="text-muted hover:bg-surface-secondary hover:text-foreground absolute top-1/2 right-1.5 z-10 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full transition-colors"
           type="button"
           onClick={() => onChange("")}

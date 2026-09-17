@@ -352,7 +352,8 @@
       "emptyFiltered": "Aucun élément {status} trouvé",
       "emptyDefault": "Aucun enregistrement de synchronisation",
       "errorDetails": "Détails de l’erreur",
-      "pagination": "Page {current} of {total}"
+      "pagination": "Page {current} of {total}",
+      "ariaLabel": "CalDAV sync status"
     },
     "toasts": {
       "savedTitle": "Configuration saved",
@@ -701,7 +702,8 @@
       "cuisineStrategies": {
         "existing": "Cuisines existantes uniquement",
         "extend": "L'IA peut créer de nouvelles cuisines"
-      }
+      },
+      "temperatureAria": "Temperature"
     },
     "modelListing": {
       "empty": "Aucun modèle reçu. Vérifiez la clé API ou le point de terminaison, ou saisissez un nom de modèle.",

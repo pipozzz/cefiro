@@ -121,7 +121,9 @@
     "ingredientsFailed": "Nepodarilo sa pridať ingrediencie do nákupného zoznamu.",
     "addToGroceries": "Pridať do nákupov",
     "aisle": "Ulička",
-    "noAisle": "Bez uličky"
+    "noAisle": "Bez uličky",
+    "decreaseServings": "Znížiť počet porcií",
+    "increaseServings": "Zvýšiť počet porcií"
   },
   "picker": {
     "unlink": "Zrušiť prepojenie produktu",

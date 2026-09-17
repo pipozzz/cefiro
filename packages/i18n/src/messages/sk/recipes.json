@@ -27,7 +27,8 @@
       "all": "Všetko",
       "recipes": "Recepty",
       "cookbooks": "Kuchárske knihy"
-    }
+    },
+    "clearSearch": "Vymazať hľadanie"
   },
   "back": {
     "all": "Späť do knižnice",
@@ -259,7 +260,9 @@
     "protein": "Bielkoviny",
     "showingPortions": "Zobrazujú sa hodnoty pre {count} {count, plural, one {porciu} few {porcie} other {porcií}}",
     "noInfo": "Nie sú k dispozícii žiadne výživové informácie",
-    "estimateWithAI": "Odhadnúť pomocou AI"
+    "estimateWithAI": "Odhadnúť pomocou AI",
+    "decreasePortions": "Znížiť porcie",
+    "increasePortions": "Zvýšiť porcie"
   },
   "measurementSystem": {
     "label": "Sústava jednotiek",
@@ -412,5 +415,10 @@
     "decrease": "Znížiť počet porcií",
     "increase": "Zvýšiť počet porcií"
   },
-  "stepImageOpen": "Otvoriť obrázok kroku {step}"
+  "stepImageOpen": "Otvoriť obrázok kroku {step}",
+  "favorite": {
+    "add": "Pridať medzi obľúbené",
+    "remove": "Odobrať z obľúbených"
+  },
+  "stepImageAlt": "Krok {step}, obrázok {index}"
 }

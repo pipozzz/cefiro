@@ -52,6 +52,8 @@
     "addNote": "Добавить заметку: {input}",
     "randomRecipe": "Случайный рецепт",
     "noRecipesFound": "Рецепты не найдены.",
-    "failedToLoadRecipes": "Не удалось загрузить рецепты."
+    "failedToLoadRecipes": "Не удалось загрузить рецепты.",
+    "chooseSlot": "Choose slot",
+    "chooseSlotForNote": "Choose slot for note"
   }
 }

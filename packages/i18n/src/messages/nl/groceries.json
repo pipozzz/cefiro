@@ -121,7 +121,9 @@
     "ingredientsFailed": "Kan ingrediënten niet toevoegen aan boodschappenlijst.",
     "addToGroceries": "Toevoegen aan boodschappen",
     "aisle": "Gangpad",
-    "noAisle": "Geen gangpad"
+    "noAisle": "Geen gangpad",
+    "decreaseServings": "Decrease servings",
+    "increaseServings": "Increase servings"
   },
   "picker": {
     "unlink": "Product ontkoppelen",

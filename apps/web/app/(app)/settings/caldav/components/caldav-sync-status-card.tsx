@@ -182,7 +182,7 @@ export default function CalDavSyncStatusCard() {
       <Card.Content>
         <Table className="p-0">
           <Table.ScrollContainer>
-            <Table.Content aria-label="CalDAV sync status">
+            <Table.Content aria-label={t("ariaLabel")}>
               <Table.Header>
                 <Table.Column isRowHeader id="item">
                   {t("tableHeaders.item")}

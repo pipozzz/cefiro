@@ -75,7 +75,8 @@
     "sortByTitle": "Title",
     "sortByDate": "Date",
     "clearFilters": "Clear filters",
-    "ariaLabel": "Filters"
+    "ariaLabel": "Filters",
+    "clear": "Clear"
   },
   "time": {
     "minutes": "min",
@@ -207,7 +208,10 @@
       "4": "Thursday",
       "5": "Friday",
       "6": "Saturday"
-    }
+    },
+    "decreaseInterval": "Decrease interval",
+    "increaseInterval": "Increase interval",
+    "remove": "Remove recurrence"
   },
   "badges": {
     "new": "New"
@@ -222,7 +226,12 @@
     "notification_title": "Timer Complete",
     "notification_body": "{label} is done!",
     "notifications_disabled": "Notifications are disabled",
-    "notifications_disabled_hint": "Enable notifications in your browser settings to get alerts when timers finish in the background."
+    "notifications_disabled_hint": "Enable notifications in your browser settings to get alerts when timers finish in the background.",
+    "closeSummary": "Close timer summary",
+    "dismissCompleted": "Dismiss completed timer",
+    "pause": "Pause timer",
+    "start": "Start timer",
+    "dismiss": "Dismiss timer"
   },
   "offlineStatus": {
     "title": "Connection & offline",
@@ -292,5 +301,10 @@
     "title": "Couldn't start",
     "description": "Cefiro could not read its secure storage, so it cannot tell which server it belongs to. Nothing has been changed. Try again, or restart the app.",
     "detailsLabel": "Technical details"
+  },
+  "a11y": {
+    "closePanel": "Close panel",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide"
   }
 }

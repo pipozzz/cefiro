@@ -352,7 +352,8 @@
       "emptyFiltered": "{status} 항목을 찾을 수 없습니다.",
       "emptyDefault": "동기화 기록을 찾을 수 없습니다.",
       "errorDetails": "오류 세부정보",
-      "pagination": "Page {current} of {total}"
+      "pagination": "Page {current} of {total}",
+      "ariaLabel": "CalDAV sync status"
     },
     "toasts": {
       "savedTitle": "Configuration saved",
@@ -701,7 +702,8 @@
       "cuisineStrategies": {
         "existing": "기존 요리만",
         "extend": "AI가 새 요리를 추가할 수 있음"
-      }
+      },
+      "temperatureAria": "Temperature"
     },
     "modelListing": {
       "empty": "모델을 가져오지 못했습니다. API 키나 엔드포인트를 확인하거나 모델 이름을 입력하세요.",

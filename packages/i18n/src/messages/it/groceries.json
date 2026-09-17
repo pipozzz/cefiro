@@ -121,7 +121,9 @@
     "ingredientsFailed": "Aggiunta degli ingredienti alla lista della spesa non riuscita.",
     "addToGroceries": "Aggiungi alla spesa",
     "aisle": "Corsia",
-    "noAisle": "Nessuna corsia"
+    "noAisle": "Nessuna corsia",
+    "decreaseServings": "Decrease servings",
+    "increaseServings": "Increase servings"
   },
   "picker": {
     "unlink": "Scollega prodotto",

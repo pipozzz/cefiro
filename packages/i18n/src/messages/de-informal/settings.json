@@ -352,7 +352,8 @@
       "emptyFiltered": "Keine {status}-Einträge gefunden",
       "emptyDefault": "Keine Synchronisierungsdatensätze gefunden",
       "errorDetails": "Fehlerdetails",
-      "pagination": "Page {current} of {total}"
+      "pagination": "Page {current} of {total}",
+      "ariaLabel": "CalDAV sync status"
     },
     "toasts": {
       "savedTitle": "Configuration saved",
@@ -701,7 +702,8 @@
       "cuisineStrategies": {
         "existing": "Nur vorhandene Küchen",
         "extend": "KI darf neue Küchen anlegen"
-      }
+      },
+      "temperatureAria": "Temperature"
     },
     "modelListing": {
       "empty": "Keine Modelle erhalten. Prüf den API-Schlüssel oder den Endpunkt, oder gib einen Modellnamen ein.",

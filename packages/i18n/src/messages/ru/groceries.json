@@ -121,7 +121,9 @@
     "ingredientsFailed": "Не удалось добавить ингредиенты в список покупок.",
     "addToGroceries": "Добавить в список покупок",
     "aisle": "Ряд",
-    "noAisle": "Без ряда"
+    "noAisle": "Без ряда",
+    "decreaseServings": "Decrease servings",
+    "increaseServings": "Increase servings"
   },
   "picker": {
     "unlink": "Отвязать товар",

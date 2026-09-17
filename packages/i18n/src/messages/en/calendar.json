@@ -52,6 +52,8 @@
     "addNote": "Add Note: {input}",
     "randomRecipe": "Random Recipe",
     "noRecipesFound": "No recipes found.",
-    "failedToLoadRecipes": "Failed to load recipes."
+    "failedToLoadRecipes": "Failed to load recipes.",
+    "chooseSlot": "Choose slot",
+    "chooseSlotForNote": "Choose slot for note"
   }
 }

@@ -75,7 +75,8 @@
     "sortByTitle": "Titel",
     "sortByDate": "Datum",
     "clearFilters": "Filters wissen",
-    "ariaLabel": "Filters"
+    "ariaLabel": "Filters",
+    "clear": "Clear"
   },
   "time": {
     "minutes": "min",
@@ -207,7 +208,10 @@
       "4": "donderdag",
       "5": "vrijdag",
       "6": "zaterdag"
-    }
+    },
+    "decreaseInterval": "Decrease interval",
+    "increaseInterval": "Increase interval",
+    "remove": "Remove recurrence"
   },
   "badges": {
     "new": "Nieuw"
@@ -222,7 +226,12 @@
     "notification_title": "Timer afgelopen",
     "notification_body": "{label} is klaar!",
     "notifications_disabled": "Meldingen zijn uitgeschakeld",
-    "notifications_disabled_hint": "Schakel meldingen in via je browserinstellingen om waarschuwingen te ontvangen wanneer timers op de achtergrond aflopen."
+    "notifications_disabled_hint": "Schakel meldingen in via je browserinstellingen om waarschuwingen te ontvangen wanneer timers op de achtergrond aflopen.",
+    "closeSummary": "Close timer summary",
+    "dismissCompleted": "Dismiss completed timer",
+    "pause": "Pause timer",
+    "start": "Start timer",
+    "dismiss": "Dismiss timer"
   },
   "offlineStatus": {
     "title": "Connection & offline",
@@ -292,5 +301,10 @@
     "title": "Kan niet starten",
     "description": "Cefiro kon de beveiligde opslag niet lezen en weet daardoor niet bij welke server deze app hoort. Er is niets gewijzigd. Probeer het opnieuw of herstart de app.",
     "detailsLabel": "Technische details"
+  },
+  "a11y": {
+    "closePanel": "Close panel",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide"
   }
 }

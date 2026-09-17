@@ -75,7 +75,8 @@
     "sortByTitle": "Titolo",
     "sortByDate": "Data",
     "clearFilters": "Cancella filtri",
-    "ariaLabel": "Filters"
+    "ariaLabel": "Filters",
+    "clear": "Clear"
   },
   "time": {
     "minutes": "min",
@@ -207,7 +208,10 @@
       "4": "Giovedì",
       "5": "Venerdì",
       "6": "Sabato"
-    }
+    },
+    "decreaseInterval": "Decrease interval",
+    "increaseInterval": "Increase interval",
+    "remove": "Remove recurrence"
   },
   "badges": {
     "new": "Nuovo"
@@ -222,7 +226,12 @@
     "notification_title": "Timer completato",
     "notification_body": "{label} è pronto!",
     "notifications_disabled": "Le notifiche sono disabilitate",
-    "notifications_disabled_hint": "Abilita le notifiche nelle impostazioni del browser per ricevere avvisi quando i timer terminano in background."
+    "notifications_disabled_hint": "Abilita le notifiche nelle impostazioni del browser per ricevere avvisi quando i timer terminano in background.",
+    "closeSummary": "Close timer summary",
+    "dismissCompleted": "Dismiss completed timer",
+    "pause": "Pause timer",
+    "start": "Start timer",
+    "dismiss": "Dismiss timer"
   },
   "offlineStatus": {
     "title": "Connection & offline",
@@ -292,5 +301,10 @@
     "title": "Avvio non riuscito",
     "description": "Cefiro non è riuscita a leggere l'archivio sicuro e non sa a quale server appartiene questa app. Non è stato modificato nulla. Riprova o riavvia l'app.",
     "detailsLabel": "Dettagli tecnici"
+  },
+  "a11y": {
+    "closePanel": "Close panel",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide"
   }
 }

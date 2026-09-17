@@ -52,6 +52,8 @@
     "addNote": "Pridať poznámku: {input}",
     "randomRecipe": "Náhodný recept",
     "noRecipesFound": "Nenašli sa žiadne recepty.",
-    "failedToLoadRecipes": "Nepodarilo sa načítať recepty."
+    "failedToLoadRecipes": "Nepodarilo sa načítať recepty.",
+    "chooseSlot": "Vybrať slot",
+    "chooseSlotForNote": "Vybrať slot pre poznámku"
   }
 }

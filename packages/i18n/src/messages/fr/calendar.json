@@ -52,6 +52,8 @@
     "addNote": "Ajouter une note : {input}",
     "randomRecipe": "Recette aléatoire",
     "noRecipesFound": "Pas de recette trouvée.",
-    "failedToLoadRecipes": "Impossible de charger les recettes."
+    "failedToLoadRecipes": "Impossible de charger les recettes.",
+    "chooseSlot": "Choose slot",
+    "chooseSlotForNote": "Choose slot for note"
   }
 }

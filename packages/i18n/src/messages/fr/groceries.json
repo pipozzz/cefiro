@@ -121,7 +121,9 @@
     "ingredientsFailed": "Échec de l'ajout des ingrédients à la liste de courses.",
     "addToGroceries": "Ajouter aux courses",
     "aisle": "Rayon",
-    "noAisle": "Aucun rayon"
+    "noAisle": "Aucun rayon",
+    "decreaseServings": "Decrease servings",
+    "increaseServings": "Increase servings"
   },
   "picker": {
     "unlink": "Dissocier le produit",

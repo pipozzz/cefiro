@@ -3,6 +3,7 @@
 import { AnimatedNumber } from "@/components/recipes/animated-number";
 import { MinusIcon, PlusIcon } from "@heroicons/react/16/solid";
 import { Button } from "@heroui/react";
+import { useTranslations } from "next-intl";
 
 export interface NutritionPortionControlProps {
   portions: number;
@@ -12,6 +13,7 @@ export default function NutritionPortionControl({
   portions,
   onChange,
 }: NutritionPortionControlProps) {
+  const t = useTranslations("recipes.nutrition");
   const dec = () => {
     if (portions <= 1) {
       onChange(Math.max(0.125, portions / 2));
@@ -36,7 +38,7 @@ export default function NutritionPortionControl({
     <div className="inline-flex items-center gap-2">
       <Button
         isIconOnly
-        aria-label="Decrease portions"
+        aria-label={t("decreasePortions")}
         className="bg-surface-secondary"
         size="sm"
         onPress={dec}
@@ -47,7 +49,7 @@ export default function NutritionPortionControl({
       <AnimatedNumber className="min-w-8 justify-center text-sm" value={formatPortions(portions)} />
       <Button
         isIconOnly
-        aria-label="Increase portions"
+        aria-label={t("increasePortions")}
         className="bg-surface-secondary"
         size="sm"
         onPress={inc}

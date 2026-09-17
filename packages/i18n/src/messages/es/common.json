@@ -75,7 +75,8 @@
     "sortByTitle": "Título",
     "sortByDate": "Fecha",
     "clearFilters": "Borrar filtros",
-    "ariaLabel": "Filters"
+    "ariaLabel": "Filters",
+    "clear": "Clear"
   },
   "time": {
     "minutes": "min",
@@ -202,7 +203,10 @@
       "4": "Jueves",
       "5": "Viernes",
       "6": "Sábado"
-    }
+    },
+    "decreaseInterval": "Decrease interval",
+    "increaseInterval": "Increase interval",
+    "remove": "Remove recurrence"
   },
   "badges": {
     "new": "Nuevo"
@@ -222,7 +226,12 @@
     "notification_title": "Temporizador finalizado",
     "notification_body": "{label} ha terminado!",
     "notifications_disabled": "Las notificaciones están desactivadas",
-    "notifications_disabled_hint": "Activa las notificaciones en la configuración de tu navegador para recibir alertas cuando los temporizadores terminen en segundo plano."
+    "notifications_disabled_hint": "Activa las notificaciones en la configuración de tu navegador para recibir alertas cuando los temporizadores terminen en segundo plano.",
+    "closeSummary": "Close timer summary",
+    "dismissCompleted": "Dismiss completed timer",
+    "pause": "Pause timer",
+    "start": "Start timer",
+    "dismiss": "Dismiss timer"
   },
   "offlineStatus": {
     "title": "Connection & offline",
@@ -292,5 +301,10 @@
     "title": "No se pudo iniciar",
     "description": "Cefiro no pudo leer su almacenamiento seguro, por lo que no sabe a qué servidor pertenece esta aplicación. No se ha cambiado nada. Vuelve a intentarlo o reinicia la aplicación.",
     "detailsLabel": "Detalles técnicos"
+  },
+  "a11y": {
+    "closePanel": "Close panel",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide"
   }
 }

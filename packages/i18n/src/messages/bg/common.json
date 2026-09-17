@@ -75,7 +75,8 @@
     "sortByTitle": "Заглавие",
     "sortByDate": "Дата",
     "clearFilters": "Изчисти филтрите",
-    "ariaLabel": "Filters"
+    "ariaLabel": "Filters",
+    "clear": "Clear"
   },
   "time": {
     "minutes": "мин",
@@ -207,7 +208,10 @@
       "4": "Четвъртък",
       "5": "Петък",
       "6": "Събота"
-    }
+    },
+    "decreaseInterval": "Decrease interval",
+    "increaseInterval": "Increase interval",
+    "remove": "Remove recurrence"
   },
   "badges": {
     "new": "Ново"
@@ -222,7 +226,12 @@
     "notification_title": "Таймерът приключи",
     "notification_body": "{label} приключи!",
     "notifications_disabled": "Известията са изключени",
-    "notifications_disabled_hint": "Разреши известията в настройките на браузъра си, за да получаваш сигнали, когато таймерите приключат на заден план."
+    "notifications_disabled_hint": "Разреши известията в настройките на браузъра си, за да получаваш сигнали, когато таймерите приключат на заден план.",
+    "closeSummary": "Close timer summary",
+    "dismissCompleted": "Dismiss completed timer",
+    "pause": "Pause timer",
+    "start": "Start timer",
+    "dismiss": "Dismiss timer"
   },
   "offlineStatus": {
     "title": "Връзка и офлайн режим",
@@ -292,5 +301,10 @@
     "title": "Стартирането е неуспешно",
     "description": "Cefiro не можа да прочете защитеното хранилище и затова не знае към кой сървър принадлежи това приложение. Нищо не е променено. Опитайте отново или рестартирайте приложението.",
     "detailsLabel": "Технически подробности"
+  },
+  "a11y": {
+    "closePanel": "Close panel",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide"
   }
 }

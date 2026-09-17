@@ -83,7 +83,7 @@ export default function SearchInput() {
         />
         {inputValue.length > 0 && (
           <button
-            aria-label="Clear search"
+            aria-label={t("clearSearch")}
             className="text-muted hover:bg-surface-secondary hover:text-foreground absolute top-1/2 right-2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full transition-colors"
             type="button"
             onClick={() => {

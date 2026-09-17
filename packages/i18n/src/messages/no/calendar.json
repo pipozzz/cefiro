@@ -52,6 +52,8 @@
     "addNote": "Legg til notat: {input}",
     "randomRecipe": "Tilfeldig oppskrift",
     "noRecipesFound": "Ingen oppskrifter funnet.",
-    "failedToLoadRecipes": "Kunne ikke laste oppskrifter."
+    "failedToLoadRecipes": "Kunne ikke laste oppskrifter.",
+    "chooseSlot": "Choose slot",
+    "chooseSlotForNote": "Choose slot for note"
   }
 }

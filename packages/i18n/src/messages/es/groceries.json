@@ -121,7 +121,9 @@
     "ingredientsFailed": "No se han podido añadir los ingredientes a la lista de la compra.",
     "addToGroceries": "Añadir a la lista de la compra",
     "aisle": "Pasillo",
-    "noAisle": "Sin pasillo"
+    "noAisle": "Sin pasillo",
+    "decreaseServings": "Decrease servings",
+    "increaseServings": "Increase servings"
   },
   "picker": {
     "unlink": "Desvincular producto",
