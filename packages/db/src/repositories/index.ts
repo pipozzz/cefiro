@@ -8,6 +8,7 @@ export * from "@norish/db/repositories/store-products";
 export * from "@norish/db/repositories/aisles";
 export * from "@norish/db/repositories/household-invites";
 export * from "@norish/db/repositories/households";
+export * from "@norish/db/repositories/subscriptions";
 export * from "@norish/db/repositories/ingredients";
 export * from "@norish/db/repositories/steps";
 export * from "@norish/db/repositories/tags";

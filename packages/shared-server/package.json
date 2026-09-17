@@ -11,6 +11,7 @@
     "./config/server-config-loader": "./src/config/server-config-loader.ts",
     "./media/storage": "./src/media/storage.ts",
     "./email/mailer": "./src/email/mailer.ts",
+    "./billing/entitlements": "./src/billing/entitlements.ts",
     "./email/templates/household-invite": "./src/email/templates/household-invite.ts",
     "./media/avatar-cleanup": "./src/media/avatar-cleanup.ts",
     "./media/dish-color": "./src/media/dish-color.ts",

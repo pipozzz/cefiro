@@ -180,6 +180,20 @@ const ServerConfigSchema = z.object({
   // The From header, e.g. `Cefiro <no-reply@cefiro.example.com>`.
   EMAIL_FROM: z.string().optional(),
 
+  // Billing (Stripe) — all optional. Entitlement gating is active ONLY when
+  // BILLING_ENABLED is true; otherwise every user is treated as unlimited (the
+  // self-hosted default), so the app is never degraded without billing set up.
+  BILLING_ENABLED: z
+    .string()
+    .transform((val) => val === "true" || val === "1")
+    .pipe(z.boolean())
+    .default(false),
+  STRIPE_SECRET_KEY: z.string().optional(),
+  STRIPE_WEBHOOK_SECRET: z.string().optional(),
+  // Stripe Price IDs for the paid plans (used by checkout + webhook mapping).
+  STRIPE_PRICE_PLUS: z.string().optional(),
+  STRIPE_PRICE_FAMILY: z.string().optional(),
+
   // During build (SKIP_ENV_VALIDATION=1), use a placeholder key for Next.js compilation
   // At runtime, require a real 32+ char key - the placeholder is never persisted in the image
   MASTER_KEY: isBuild
