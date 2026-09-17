@@ -202,7 +202,7 @@ importers:
         version: link:../../tooling/prettier
       '@norish/tailwind-config':
         specifier: workspace:*
-        version: link:../../tooling/tailwind
+        version: file:tooling/tailwind
       '@norish/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
@@ -271,7 +271,7 @@ importers:
         version: file:packages/shared-react(19af4fe51c1557d89d5257a5eb78c24b)
       '@norish/tailwind-config':
         specifier: workspace:*
-        version: link:../../tooling/tailwind
+        version: file:tooling/tailwind
       '@norish/trpc':
         specifier: workspace:*
         version: file:packages/trpc(dd87d4c0cc298ad8965a37077d401683)
@@ -617,7 +617,7 @@ importers:
         version: link:../../tooling/prettier
       '@norish/tailwind-config':
         specifier: workspace:*
-        version: link:../../tooling/tailwind
+        version: file:tooling/tailwind
       '@norish/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
@@ -860,13 +860,13 @@ importers:
         version: link:../config
       '@norish/db-schema':
         specifier: workspace:*
-        version: file:packages/db-schema(@electric-sql/pglite@0.3.15)(@opentelemetry/api@1.9.0)(@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.3))(react@19.2.3)(typescript@6.0.3))(typescript@6.0.3))(@types/pg@8.23.1)(kysely@0.29.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.3))(react@19.2.3)(typescript@6.0.3))
+        version: link:../db-schema
       '@norish/shared':
         specifier: workspace:*
-        version: file:packages/shared(35a38faf0f85ac699f7d7602ebf2d864)
+        version: file:packages/shared(12aad0a198982bb8cdc69fa4f03befce)
       drizzle-orm:
         specifier: 'catalog:'
-        version: 0.45.2(@electric-sql/pglite@0.3.15)(@opentelemetry/api@1.9.0)(@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.3))(react@19.2.3)(typescript@6.0.3))(typescript@6.0.3))(@types/pg@8.23.1)(kysely@0.29.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.3))(react@19.2.3)(typescript@6.0.3))
+        version: 0.45.2(@electric-sql/pglite@0.3.15)(@opentelemetry/api@1.9.0)(@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3))(typescript@6.0.3))(@types/pg@8.23.1)(kysely@0.29.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3))
       fuse.js:
         specifier: 'catalog:'
         version: 7.5.0
@@ -1192,13 +1192,13 @@ importers:
         version: link:../config
       '@norish/db':
         specifier: workspace:*
-        version: file:packages/db(@better-fetch/fetch@1.1.21)(@electric-sql/pglite@0.3.15)(@opentelemetry/api@1.9.0)(@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3))(typescript@6.0.3))(@types/pg@8.23.1)(better-call@1.3.5(zod@4.4.3))(drizzle-kit@0.31.10)(jose@6.2.9)(kysely@0.29.5)(mongodb@7.1.0)(mysql2@3.15.3)(nanostores@1.5.2)(next@16.3.2(@opentelemetry/api@1.9.0)(@playwright/test@1.62.1)(@types/node@25.9.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(postgres@3.4.7)(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(typescript@6.0.3)(vitest@4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.9.5)(jsdom@30.0.1(@noble/hashes@2.3.0))(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.46.1)(tsx@4.23.12)(yaml@2.9.0)))
+        version: file:packages/db(@better-fetch/fetch@1.1.21)(@electric-sql/pglite@0.3.15)(@opentelemetry/api@1.9.0)(@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.3))(react@19.2.3)(typescript@6.0.3))(typescript@6.0.3))(@types/pg@8.23.1)(better-call@1.3.5(zod@4.4.3))(drizzle-kit@0.31.10)(jose@6.2.9)(kysely@0.29.5)(mongodb@7.1.0)(mysql2@3.15.3)(nanostores@1.5.2)(next@16.3.2(@opentelemetry/api@1.9.0)(@playwright/test@1.62.1)(@types/node@25.9.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.3))(react@19.2.3))(postgres@3.4.7)(prisma@7.4.2(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.3))(react@19.2.3)(typescript@6.0.3))(react-dom@19.2.8(react@19.2.3))(typescript@6.0.3)(vitest@4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.9.5)(jsdom@30.0.1(@noble/hashes@2.3.0))(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.46.1)(tsx@4.23.12)(yaml@2.9.0)))
       '@norish/i18n':
         specifier: workspace:*
         version: link:../i18n
       '@norish/shared':
         specifier: workspace:*
-        version: file:packages/shared(12aad0a198982bb8cdc69fa4f03befce)
+        version: file:packages/shared(35a38faf0f85ac699f7d7602ebf2d864)
       ai:
         specifier: ^6.0.262
         version: 6.0.262(zod@4.4.3)
@@ -1238,6 +1238,9 @@ importers:
       sharp:
         specifier: ^0.35.3
         version: 0.35.3(@types/node@25.9.5)
+      stripe:
+        specifier: ^22.6.2
+        version: 22.6.2(@types/node@25.9.5)
       superjson:
         specifier: 'catalog:'
         version: 2.2.6
@@ -3541,6 +3544,9 @@ packages:
 
   '@norish/shared@file:packages/shared':
     resolution: {directory: packages/shared, type: directory}
+
+  '@norish/tailwind-config@file:tooling/tailwind':
+    resolution: {directory: tooling/tailwind, type: directory}
 
   '@norish/trpc@file:packages/trpc':
     resolution: {directory: packages/trpc, type: directory}
@@ -10456,6 +10462,15 @@ packages:
     resolution: {integrity: sha512-1tB5mhVo7U+ETBKNf92xT4hrQa3pm0MZ0PQvuDnWgAAGHDsfp4lPSpiS6psrSiet87wyGPh9ft6wmhOMQ0hDiw==}
     engines: {node: '>=14.16'}
 
+  stripe@22.6.2:
+    resolution: {integrity: sha512-PwRE2scocvXqDKPiskMa5vRJEAEkq46W69XyUYmAwrNSLr675lQnfqLwnsndAWizwgihOWw/irLmoFRo3ez7ew==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@types/node': '>=18'
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+
   structured-headers@0.4.1:
     resolution: {integrity: sha512-0MP/Cxx5SzeeZ10p/bZI0S6MpgD+yxAhi1BOQ34jgnMXsCq3j1t6tQnZu+KdlL7dvJTLT3g9xN8tl10TqgFMcg==}
 
@@ -16565,6 +16580,12 @@ snapshots:
       - typescript
       - vitest
       - vue
+
+  '@norish/tailwind-config@file:tooling/tailwind':
+    dependencies:
+      '@tailwindcss/postcss': 4.3.3
+      postcss: 8.5.28
+      tailwindcss: 4.3.3
 
   '@norish/trpc@file:packages/trpc(44cda5a40f4597218a1b327eeecda2fd)':
     dependencies:
@@ -25468,6 +25489,10 @@ snapshots:
   strip-json-comments@3.1.1: {}
 
   strip-json-comments@5.0.3: {}
+
+  stripe@22.6.2(@types/node@25.9.5):
+    optionalDependencies:
+      '@types/node': 25.9.5
 
   structured-headers@0.4.1: {}
 
