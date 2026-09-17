@@ -411,5 +411,6 @@
   "servingsControl": {
     "decrease": "Decrease servings",
     "increase": "Increase servings"
-  }
+  },
+  "stepImageOpen": "Open step {step} image"
 }

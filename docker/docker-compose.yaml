@@ -16,7 +16,7 @@ services:
       MASTER_KEY: $MASTER_KEY
       OBSCURA_ENDPOINT: ws://obscura:9222
       UPLOADS_DIR: /app/uploads
-      REDIS_URL: redis://redis:6379
+      REDIS_URL: $REDIS_URL
     depends_on:
       - redis
     deploy:
@@ -26,14 +26,14 @@ services:
   obscura:
     image: norishapp/obscura:0.2.0-norish.1
     restart: unless-stopped
-  redis:
-    image: redis:8.10.1
-    restart: unless-stopped
-    # Sessions live in Redis (better-auth secondaryStorage). Persist them to a
-    # volume with AOF so a redeploy/restart doesn't log everyone out.
-    command: ["redis-server", "--appendonly", "yes", "--dir", "/data"]
-    volumes:
-      - redis_data:/data
+  # redis:
+  #   image: redis:8.10.1
+  #   restart: unless-stopped
+  #   # Sessions live in Redis (better-auth secondaryStorage). Persist them to a
+  #   # volume with AOF so a redeploy/restart doesn't log everyone out.
+  #   command: ["redis-server", "--appendonly", "yes", "--dir", "/data"]
+  #   volumes:
+  #     - redis_data:/data
 volumes:
   norish_data:
-  redis_data:
+  # redis_data:

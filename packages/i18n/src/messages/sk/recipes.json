@@ -411,5 +411,6 @@
   "servingsControl": {
     "decrease": "Znížiť počet porcií",
     "increase": "Zvýšiť počet porcií"
-  }
+  },
+  "stepImageOpen": "Otvoriť obrázok kroku {step}"
 }
