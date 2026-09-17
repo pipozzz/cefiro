@@ -199,5 +199,21 @@
     "saved": "Profile saved",
     "couldNotSave": "Could not save profile",
     "avatarLabel": "Profile photo"
+  },
+  "recipeShare": {
+    "heading": "Publish to community",
+    "visibilityLabel": "Who can see this recipe",
+    "private": "Private",
+    "unlisted": "Unlisted",
+    "public": "Public",
+    "privateHint": "Only you and your household.",
+    "unlistedHint": "Anyone with the link can view it. Not shown in discovery.",
+    "publicHint": "Anyone can find it on your profile and in discovery.",
+    "publicLink": "Public link",
+    "copyLink": "Copy",
+    "copied": "Copied",
+    "open": "Open",
+    "linkCopied": "Link copied",
+    "couldNotSave": "Could not update sharing"
   }
 }

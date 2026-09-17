@@ -3,15 +3,11 @@
 import { useState } from "react";
 import { useTRPC } from "@/app/providers/trpc-provider";
 import { showSafeErrorToast } from "@/lib/ui/safe-error-toast";
-import {
-  ArrowTopRightOnSquareIcon,
-  ClipboardDocumentIcon,
-  GlobeAltIcon,
-  LinkIcon,
-  LockClosedIcon,
-} from "@heroicons/react/24/outline";
+import { GlobeAltIcon, LinkIcon, LockClosedIcon } from "@heroicons/react/16/solid";
+import { ArrowTopRightOnSquareIcon, ClipboardDocumentIcon } from "@heroicons/react/24/outline";
 import { Button, Card, Spinner, toast } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 
 import type { RecipeVisibility } from "@norish/shared/contracts/zod";
 
@@ -19,35 +15,18 @@ type Props = {
   recipeId: string;
 };
 
-const OPTIONS: Array<{
-  value: RecipeVisibility;
-  label: string;
-  description: string;
-  icon: typeof GlobeAltIcon;
-}> = [
-  {
-    value: "private",
-    label: "Private",
-    description: "Only you and your household",
-    icon: LockClosedIcon,
-  },
-  {
-    value: "unlisted",
-    label: "Unlisted",
-    description: "Anyone with the link",
-    icon: LinkIcon,
-  },
-  {
-    value: "public",
-    label: "Public",
-    description: "On your profile & discovery",
-    icon: GlobeAltIcon,
-  },
-];
+const VISIBILITIES: RecipeVisibility[] = ["private", "unlisted", "public"];
+
+const VISIBILITY_ICON: Record<RecipeVisibility, typeof LockClosedIcon> = {
+  private: LockClosedIcon,
+  unlisted: LinkIcon,
+  public: GlobeAltIcon,
+};
 
 export default function RecipePublishControl({ recipeId }: Props) {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
+  const t = useTranslations("social.recipeShare");
   const [copied, setCopied] = useState(false);
 
   const stateQuery = useQuery({
@@ -65,7 +44,7 @@ export default function RecipePublishControl({ recipeId }: Props) {
         }));
       },
       onError: (error) => {
-        showSafeErrorToast(error, "Could not update sharing");
+        showSafeErrorToast(error, t("couldNotSave"));
       },
     })
   );
@@ -83,61 +62,70 @@ export default function RecipePublishControl({ recipeId }: Props) {
     try {
       await navigator.clipboard.writeText(publicUrl);
       setCopied(true);
-      toast.success("Link copied");
+      toast.success(t("linkCopied"));
       setTimeout(() => setCopied(false), 1500);
     } catch {
       // Clipboard may be unavailable; ignore.
     }
   };
 
+  const busy = setVisibilityMutation.isPending || stateQuery.isLoading;
+
   return (
     <Card className="bg-surface-secondary/40 border-border border">
       <Card.Content className="gap-3">
         <div className="flex items-center gap-2">
           <GlobeAltIcon className="text-primary h-5 w-5" />
-          <h3 className="text-sm font-semibold">Publish to community</h3>
+          <h3 className="text-sm font-semibold">{t("heading")}</h3>
           {stateQuery.isLoading ? <Spinner size="sm" /> : null}
         </div>
 
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-          {OPTIONS.map((option) => {
-            const Icon = option.icon;
-            const active = current === option.value;
+        <p className="text-default-500 text-xs">{t("visibilityLabel")}</p>
+        {/* Segmented control: a shared track with the selected option raised as a
+            filled pill, so it reads as one switch with a current choice. */}
+        <div
+          role="radiogroup"
+          aria-label={t("visibilityLabel")}
+          className="border-default-200 bg-content2 flex w-full gap-1 rounded-full border p-1"
+        >
+          {VISIBILITIES.map((v) => {
+            const Icon = VISIBILITY_ICON[v];
+            const active = current === v;
 
             return (
               <button
-                key={option.value}
+                key={v}
                 type="button"
-                disabled={setVisibilityMutation.isPending || stateQuery.isLoading}
-                onClick={() => setVisibilityMutation.mutate({ recipeId, visibility: option.value })}
-                className={[
-                  "flex flex-col items-start gap-1 rounded-2xl border p-3 text-left transition",
+                role="radio"
+                aria-checked={active}
+                disabled={busy}
+                onClick={() =>
+                  current !== v && setVisibilityMutation.mutate({ recipeId, visibility: v })
+                }
+                className={`flex flex-1 items-center justify-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition ${
                   active
-                    ? "border-primary bg-primary/10 ring-primary ring-1"
-                    : "border-border bg-content1 hover:bg-content2",
-                  setVisibilityMutation.isPending ? "opacity-60" : "",
-                ].join(" ")}
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "text-default-600 hover:text-foreground"
+                }`}
               >
-                <span className="flex items-center gap-1.5 text-sm font-medium">
-                  <Icon className="h-4 w-4" />
-                  {option.label}
-                </span>
-                <span className="text-default-500 text-xs">{option.description}</span>
+                <Icon className="h-4 w-4 shrink-0" />
+                <span className="truncate">{t(v)}</span>
               </button>
             );
           })}
         </div>
+        <p className="text-default-500 text-xs">{t(`${current}Hint`)}</p>
 
         {current !== "private" && publicUrl ? (
           <div className="border-success/30 bg-success/10 rounded-2xl border p-3">
-            <p className="mb-2 text-sm font-medium">Public link</p>
+            <p className="mb-2 text-sm font-medium">{t("publicLink")}</p>
             <div className="flex items-center gap-2">
               <code className="bg-content2 flex-1 truncate rounded-lg px-2 py-1.5 text-xs">
                 {publicUrl}
               </code>
               <Button size="sm" variant="tertiary" onPress={handleCopy} className="min-w-16">
                 <ClipboardDocumentIcon className="h-4 w-4" />
-                {copied ? "Copied" : "Copy"}
+                {copied ? t("copied") : t("copyLink")}
               </Button>
               <Button
                 as="a"
@@ -149,7 +137,7 @@ export default function RecipePublishControl({ recipeId }: Props) {
                 className="min-w-16"
               >
                 <ArrowTopRightOnSquareIcon className="h-4 w-4" />
-                Open
+                {t("open")}
               </Button>
             </div>
           </div>
