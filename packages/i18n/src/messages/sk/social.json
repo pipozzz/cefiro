@@ -20,7 +20,9 @@
     "empty": "Zatiaľ tu nie sú žiadne verejné recepty.",
     "loadMore": "Načítať ďalšie",
     "signIn": "Prihlásiť sa",
-    "openApp": "Otvoriť appku"
+    "openApp": "Otvoriť appku",
+    "modeCookbooks": "Kuchárky",
+    "noCookbooks": "Zatiaľ tu nie sú žiadne verejné kuchárky."
   },
   "categories": {
     "Breakfast": "Raňajky",

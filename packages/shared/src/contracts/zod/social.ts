@@ -165,6 +165,11 @@ export const DiscoverCooksInputSchema = z.object({
   cursor: z.string().optional(),
 });
 
+export const DiscoverCookbooksInputSchema = z.object({
+  limit: z.number().int().min(1).max(50).default(24),
+  cursor: z.string().optional(),
+});
+
 // --- Likes & comments ---------------------------------------------------
 
 export const ToggleLikeInputSchema = z.object({

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTRPC } from "@/app/providers/trpc-provider";
 import { CookGrid } from "@/components/social/cook-card";
+import { SocialCookbookGrid } from "@/components/social/social-cookbook-card";
 import { SocialProfileGrid } from "@/components/social/social-profile-card";
 import { SocialRecipeGrid } from "@/components/social/social-recipe-card";
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -13,7 +14,7 @@ import { useTranslations } from "next-intl";
 
 type Sort = "newest" | "trending";
 type Category = "Breakfast" | "Lunch" | "Dinner" | "Snack";
-type Mode = "recipes" | "cooks";
+type Mode = "recipes" | "cooks" | "cookbooks";
 
 const CATEGORIES: Category[] = ["Breakfast", "Lunch", "Dinner", "Snack"];
 
@@ -78,6 +79,17 @@ export default function DiscoverPage() {
   });
 
   const cookList = cooks.data?.pages.flatMap((page) => page.cooks) ?? [];
+
+  const cookbooks = useInfiniteQuery({
+    ...trpc.social.discoverCookbooks.infiniteQueryOptions(
+      { limit: 24 },
+      { getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined }
+    ),
+    enabled: !isSearching && mode === "cookbooks",
+    retry: false,
+  });
+
+  const cookbookList = cookbooks.data?.pages.flatMap((page) => page.cookbooks) ?? [];
 
   const searchQuery = useQuery({
     ...trpc.social.search.queryOptions({ q: searchTerm, limit: 24 }),
@@ -144,9 +156,41 @@ export default function DiscoverPage() {
             >
               {t("modeCooks")}
             </button>
+            <button
+              type="button"
+              className={pill(mode === "cookbooks")}
+              onClick={() => setMode("cookbooks")}
+            >
+              {t("modeCookbooks")}
+            </button>
           </div>
 
-          {mode === "cooks" ? (
+          {mode === "cookbooks" ? (
+            cookbooks.isLoading ? (
+              <div className="flex min-h-[30vh] items-center justify-center">
+                <Spinner />
+              </div>
+            ) : cookbookList.length === 0 ? (
+              <p className="bg-content2 text-default-500 rounded-2xl p-10 text-center">
+                {t("noCookbooks")}
+              </p>
+            ) : (
+              <>
+                <SocialCookbookGrid cookbooks={cookbookList} />
+                {cookbooks.hasNextPage ? (
+                  <div className="mt-8 flex justify-center">
+                    <Button
+                      variant="tertiary"
+                      onPress={() => cookbooks.fetchNextPage()}
+                      isPending={cookbooks.isFetchingNextPage}
+                    >
+                      {t("loadMore")}
+                    </Button>
+                  </div>
+                ) : null}
+              </>
+            )
+          ) : mode === "cooks" ? (
             cooks.isLoading ? (
               <div className="flex min-h-[30vh] items-center justify-center">
                 <Spinner />

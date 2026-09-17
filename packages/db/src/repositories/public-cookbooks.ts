@@ -313,6 +313,104 @@ export async function listPublicCookbooksByUserId(userId: string): Promise<Publi
     });
 }
 
+export interface DiscoverCookbookCard extends PublicCookbookCard {
+  owner: { handle: string; displayName: string | null; avatarUrl: string | null } | null;
+}
+
+/**
+ * PUBLIC cookbooks across the whole community for the Discover page, newest
+ * first, offset-paginated. Unlisted cookbooks are link-only and excluded; the
+ * owner must have a public profile so the card can credit and link to them.
+ */
+export async function listDiscoverCookbooks(
+  limit: number,
+  cursor?: string
+): Promise<{ items: DiscoverCookbookCard[]; nextCursor: string | null }> {
+  const offset = cursor ? Number.parseInt(cursor, 10) || 0 : 0;
+
+  const rows = await db
+    .select({
+      id: cookbooks.id,
+      slug: cookbooks.slug,
+      title: cookbooks.title,
+      description: cookbooks.description,
+      ownerHandle: userProfiles.handle,
+      ownerDisplayName: userProfiles.displayName,
+      ownerAvatarUrl: userProfiles.avatarUrl,
+    })
+    .from(cookbooks)
+    .innerJoin(userProfiles, eq(userProfiles.userId, cookbooks.userId))
+    .where(
+      and(
+        eq(cookbooks.visibility, "public"),
+        isNotNull(cookbooks.slug),
+        eq(userProfiles.isPublic, true)
+      )
+    )
+    .orderBy(desc(cookbooks.createdAt))
+    .limit(limit + 1)
+    .offset(offset);
+
+  const hasMore = rows.length > limit;
+  const page = hasMore ? rows.slice(0, limit) : rows;
+  const nextCursor = hasMore ? String(offset + limit) : null;
+
+  if (page.length === 0) {
+    return { items: [], nextCursor };
+  }
+
+  const ids = page.map((r) => r.id);
+
+  const members = await db
+    .select({
+      cookbookId: cookbookRecipes.cookbookId,
+      image: PRIMARY_IMAGE_SQL,
+      recipeSlug: recipes.slug,
+      publishedAt: recipes.publishedAt,
+    })
+    .from(cookbookRecipes)
+    .innerJoin(recipes, eq(recipes.id, cookbookRecipes.recipeId))
+    .where(and(inArray(cookbookRecipes.cookbookId, ids), eq(recipes.visibility, "public")))
+    .orderBy(desc(recipes.publishedAt));
+
+  const byCookbook = new Map<string, { count: number; covers: CookbookCover[] }>();
+
+  for (const m of members) {
+    const entry = byCookbook.get(m.cookbookId) ?? { count: 0, covers: [] };
+
+    entry.count += 1;
+
+    if (m.image && entry.covers.length < 4) {
+      entry.covers.push({ image: m.image, recipeSlug: m.recipeSlug });
+    }
+
+    byCookbook.set(m.cookbookId, entry);
+  }
+
+  const items = page
+    .filter((r): r is typeof r & { slug: string } => r.slug !== null)
+    .map((r) => {
+      const agg = byCookbook.get(r.id) ?? { count: 0, covers: [] };
+
+      return {
+        slug: r.slug,
+        title: r.title,
+        description: r.description,
+        recipeCount: agg.count,
+        coverImages: agg.covers,
+        owner: r.ownerHandle
+          ? {
+              handle: r.ownerHandle,
+              displayName: r.ownerDisplayName,
+              avatarUrl: r.ownerAvatarUrl,
+            }
+          : null,
+      };
+    });
+
+  return { items, nextCursor };
+}
+
 /** All PUBLIC cookbook slugs (for the sitemap), newest first. */
 export async function listPublicCookbookSlugs(
   limit = 50000
