@@ -97,7 +97,7 @@ describe("household invites — inviteByEmail", () => {
       expect.objectContaining({ to: "guest@example.com" })
     );
     expect(result.emailed).toBe(true);
-    expect(result.link).toBe("https://cefiro.example/household/join?token=raw-token");
+    expect(result.link).toBe("https://cefiro.example/invite/raw-token");
   });
 
   it("still returns a shareable link when email is not configured", async () => {
@@ -111,7 +111,7 @@ describe("household invites — inviteByEmail", () => {
 
     expect(mailer.sendEmail).not.toHaveBeenCalled();
     expect(result.emailed).toBe(false);
-    expect(result.link).toContain("token=tok2");
+    expect(result.link).toContain("/invite/tok2");
   });
 
   it("rejects a non-admin", async () => {
