@@ -18,6 +18,8 @@ import "@testing-library/jest-dom";
 import Panel from "@/components/Panel/Panel";
 import { IconActionButton } from "@/components/shared/action-button";
 
+vi.mock("next-intl", () => ({ useTranslations: () => (key: string) => key }));
+
 /**
  * vaul stubbed down to what matters here: the Content element the Panel hands
  * to overlays, with its ref forwarded as the real one does.
