@@ -93,7 +93,10 @@ jobs:
           build-args: |
             NORISH_VERSION_REPORT_JSON=${{ steps.ver.outputs.json }}
           cache-from: type=gha
-          cache-to: type=gha,mode=min
+          # mode=max caches every intermediate stage (deps install, turbo
+          # build), not just the final image layers, so unchanged stages are
+          # reused across builds — worth the larger cache for a multi-stage build.
+          cache-to: type=gha,mode=max
 
   # Deployment is pull-based: the "nomploy" UI (nomploy.spertulo.sk) runs the
   # Cefiro service on Nomad and pulls ghcr.io/pipozzz/cefiro:latest. GitHub only
