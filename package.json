@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "@norish/prettier-config": "workspace:*",
+    "madge": "^8.0.0",
     "turbo": "catalog:",
     "typescript": "catalog:"
   },
