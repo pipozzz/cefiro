@@ -11,8 +11,27 @@ import {
   getViewableRecipeRefBySlug,
 } from "@norish/db/repositories/user-profiles";
 import { primaryRecipeImage } from "@norish/shared/lib/recipe-media";
+import { appRouter, createHttpContextFromHeaders } from "@norish/trpc/server";
 
 import { PublicRecipeView } from "./recipe-view";
+
+/**
+ * Server-load the same payload the client query returns, so the recipe body is
+ * present in the initial HTML (crawlers and first paint see the real recipe,
+ * not a loading skeleton) and hydrates without a refetch flash. Deduped per
+ * request via React `cache`. Returns null on any error (not-found, etc.) — the
+ * client view then falls back to its own fetch / not-found handling.
+ */
+const loadPublicRecipeView = cache(async (slug: string) => {
+  try {
+    const ctx = await createHttpContextFromHeaders(new Headers(await headers()), null);
+    const caller = appRouter.createCaller(ctx);
+
+    return await caller.social.getPublicRecipe({ slug });
+  } catch {
+    return null;
+  }
+});
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -193,7 +212,7 @@ function buildRecipeJsonLd(
 
 export default async function PublicRecipePage({ params }: Props) {
   const { slug } = await params;
-  const data = await loadRecipe(slug);
+  const [data, initialRecipe] = await Promise.all([loadRecipe(slug), loadPublicRecipeView(slug)]);
 
   // Structured data only for indexable (public) recipes.
   let jsonLd: string | null = null;
@@ -221,7 +240,7 @@ export default async function PublicRecipePage({ params }: Props) {
           dangerouslySetInnerHTML={{ __html: jsonLd }}
         />
       ) : null}
-      <PublicRecipeView slug={slug} />
+      <PublicRecipeView slug={slug} initialData={initialRecipe ?? undefined} />
     </>
   );
 }
