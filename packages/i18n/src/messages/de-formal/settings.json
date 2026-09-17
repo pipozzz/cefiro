@@ -7,7 +7,8 @@
     "user": "Benutzer",
     "household": "Haushalt",
     "caldav": "CalDAV",
-    "admin": "Admin"
+    "admin": "Admin",
+    "billing": "Plan"
   },
   "user": {
     "profile": {
@@ -941,6 +942,55 @@
       "failedDescription": "Das Rezeptarchiv konnte nicht heruntergeladen werden. Bitte versuchen Sie es erneut.",
       "signedOut": "Ihre Sitzung ist abgelaufen. Melden Sie sich erneut an, um zu exportieren.",
       "notAllowed": "Sie haben keine Berechtigung, dies zu exportieren."
+    }
+  },
+  "billing": {
+    "title": "Your plan",
+    "currentPlan": "Current plan: {plan}",
+    "currentBadge": "Current",
+    "taxNote": "Prices exclude any applicable taxes. Manage or cancel anytime.",
+    "planName": {
+      "free": "Free",
+      "plus": "Plus",
+      "family": "Family"
+    },
+    "price": {
+      "free": "€0",
+      "plus": "€4",
+      "family": "€8",
+      "perMonth": "/mo"
+    },
+    "tagline": {
+      "free": "The essentials, free forever.",
+      "plus": "AI and calendar sync for keen cooks.",
+      "family": "Everything, shared with your whole household."
+    },
+    "features": {
+      "householdMembers": "{count} household members",
+      "householdMembersUnlimited": "Unlimited household members",
+      "aiCredits": "{count} AI actions per month",
+      "aiCreditsUnlimited": "Unlimited AI actions",
+      "aiImageGeneration": "AI recipe images",
+      "caldavSync": "Calendar (CalDAV) sync"
+    },
+    "cta": {
+      "current": "Current plan",
+      "upgrade": "Upgrade",
+      "manage": "Manage billing"
+    },
+    "selfHosted": {
+      "title": "Everything is unlocked",
+      "body": "This instance runs without billing, so every feature is available to all members."
+    },
+    "status": {
+      "successTitle": "You are upgraded",
+      "success": "Welcome to your new plan — enjoy!",
+      "cancelTitle": "Checkout canceled",
+      "cancel": "No changes were made."
+    },
+    "errors": {
+      "title": "Something went wrong",
+      "generic": "Please try again in a moment."
     }
   }
 }

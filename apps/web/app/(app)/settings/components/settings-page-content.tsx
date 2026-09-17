@@ -6,12 +6,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import SettingsPageSkeleton from "@/components/skeleton/settings-page-skeleton";
 import SettingsSkeleton from "@/components/skeleton/settings-skeleton";
 import {
+  CreditCardIcon as CreditCardIconSolid,
   HomeIcon as HomeIconSolid,
   ServerIcon as ServerIconSolid,
   ShieldCheckIcon as ShieldCheckIconSolid,
   UserCircleIcon as UserCircleIconSolid,
 } from "@heroicons/react/20/solid";
 import {
+  CreditCardIcon as CreditCardIconOutline,
   HomeIcon as HomeIconOutline,
   ServerIcon as ServerIconOutline,
   ShieldCheckIcon as ShieldCheckIconOutline,
@@ -35,6 +37,10 @@ const CalDavSettingsTab = dynamic(() => import("../caldav/components/caldav-sett
   loading: () => <SettingsSkeleton />,
 });
 
+const BillingSettingsTab = dynamic(() => import("../billing/components/billing-settings-content"), {
+  loading: () => <SettingsSkeleton />,
+});
+
 const AdminSettingsTab = dynamic(() => import("../admin/components/admin-settings-content"), {
   loading: () => <SettingsSkeleton />,
 });
@@ -48,6 +54,7 @@ function SettingsContent({ showAdminTab }: { showAdminTab: boolean }) {
     requestedTab === "user" ||
     requestedTab === "household" ||
     requestedTab === "caldav" ||
+    requestedTab === "billing" ||
     (requestedTab === "admin" && showAdminTab)
       ? requestedTab
       : "user";
@@ -69,6 +76,12 @@ function SettingsContent({ showAdminTab }: { showAdminTab: boolean }) {
       label: t("tabs.caldav"),
       activeIcon: ServerIconSolid,
       inactiveIcon: ServerIconOutline,
+    },
+    {
+      id: "billing",
+      label: t("tabs.billing"),
+      activeIcon: CreditCardIconSolid,
+      inactiveIcon: CreditCardIconOutline,
     },
     ...(showAdminTab
       ? [
@@ -130,6 +143,10 @@ function SettingsContent({ showAdminTab }: { showAdminTab: boolean }) {
 
         <Tabs.Panel id="caldav" className="py-4">
           <CalDavSettingsTab />
+        </Tabs.Panel>
+
+        <Tabs.Panel id="billing" className="py-4">
+          <BillingSettingsTab />
         </Tabs.Panel>
 
         {showAdminTab ? (

@@ -49,8 +49,8 @@ const createCheckoutSession = authedProcedure
       customer_email: ctx.user.email ?? undefined,
       // Stamp the user on the subscription so every later webhook can attach it.
       subscription_data: { metadata: { userId: ctx.user.id } },
-      success_url: `${baseUrl}/settings?billing=success`,
-      cancel_url: `${baseUrl}/settings?billing=cancel`,
+      success_url: `${baseUrl}/settings?tab=billing&billing=success`,
+      cancel_url: `${baseUrl}/settings?tab=billing&billing=cancel`,
       allow_promotion_codes: true,
     });
 
@@ -80,7 +80,7 @@ const createPortalSession = authedProcedure.mutation(async ({ ctx }) => {
 
   const session = await getStripe().billingPortal.sessions.create({
     customer: subscription.stripeCustomerId,
-    return_url: `${SERVER_CONFIG.AUTH_URL}/settings`,
+    return_url: `${SERVER_CONFIG.AUTH_URL}/settings?tab=billing`,
   });
 
   return { url: session.url };
