@@ -199,5 +199,21 @@
     "saved": "Profil uložený",
     "couldNotSave": "Nepodarilo sa uložiť profil",
     "avatarLabel": "Profilová fotka"
+  },
+  "recipeShare": {
+    "heading": "Zverejniť pre komunitu",
+    "visibilityLabel": "Kto vidí tento recept",
+    "private": "Súkromný",
+    "unlisted": "Cez odkaz",
+    "public": "Verejný",
+    "privateHint": "Len ty a tvoja domácnosť.",
+    "unlistedHint": "Ktokoľvek s odkazom ho vidí. Nezobrazuje sa v Objavuj.",
+    "publicHint": "Ktokoľvek ho nájde na tvojom profile a v Objavuj.",
+    "publicLink": "Verejný odkaz",
+    "copyLink": "Kopírovať",
+    "copied": "Skopírované",
+    "open": "Otvoriť",
+    "linkCopied": "Odkaz skopírovaný",
+    "couldNotSave": "Nepodarilo sa upraviť zdieľanie"
   }
 }
