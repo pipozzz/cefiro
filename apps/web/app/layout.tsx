@@ -1,6 +1,8 @@
 import "@/styles/globals.css";
 
+import { Suspense } from "react";
 import RegisterServiceWorker from "@/components/register-service-worker";
+import { TopProgressBar } from "@/components/top-progress-bar";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 
@@ -20,6 +22,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <meta content="yes" name="apple-mobile-web-app-capable" />
       </head>
       <body className="bg-background text-foreground min-h-dvh font-sans antialiased">
+        <Suspense fallback={null}>
+          <TopProgressBar />
+        </Suspense>
         <AppThemeProvider>
           <NextIntlClientProvider locale={locale} messages={messages}>
             {children}
