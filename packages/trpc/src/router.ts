@@ -1,5 +1,6 @@
 import { adminRouter } from "./routers/admin";
 import { archive } from "./routers/archive";
+import { billingRouter } from "./routers/billing";
 import { caldavRouter, caldavSubscriptions } from "./routers/caldav";
 import { calendarRouter } from "./routers/calendar";
 import { configRouter } from "./routers/config";
@@ -25,6 +26,7 @@ export const appRouter = router({
   library: libraryRouter,
   permissions: permissionsRouter,
   admin: adminRouter,
+  billing: billingRouter,
   households: householdsAppRouter,
   user: userRouter,
   caldav: caldavRouter,
