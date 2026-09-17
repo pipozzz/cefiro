@@ -1,7 +1,7 @@
-# Cefiro deploy compose. Secrets (AUTH_URL, DATABASE_URL, MASTER_KEY) are read
-# from the environment — set them in nomploy / the host, never inline here. The
-# web app connects to the external Postgres via DATABASE_URL, so no local db
-# service is defined.
+# Cefiro deploy compose. Secrets (AUTH_URL, DATABASE_URL, MASTER_KEY, REDIS_URL)
+# are read from the environment — set them in nomploy / the host, never inline
+# here. Postgres and Redis both run externally (the app reaches them via
+# DATABASE_URL and REDIS_URL), so no local db/redis service is defined.
 services:
   norish:
     image: ghcr.io/pipozzz/cefiro:latest
@@ -17,8 +17,6 @@ services:
       OBSCURA_ENDPOINT: ws://obscura:9222
       UPLOADS_DIR: /app/uploads
       REDIS_URL: $REDIS_URL
-    depends_on:
-      - redis
     deploy:
       resources:
         limits:
@@ -26,14 +24,5 @@ services:
   obscura:
     image: norishapp/obscura:0.2.0-norish.1
     restart: unless-stopped
-  # redis:
-  #   image: redis:8.10.1
-  #   restart: unless-stopped
-  #   # Sessions live in Redis (better-auth secondaryStorage). Persist them to a
-  #   # volume with AOF so a redeploy/restart doesn't log everyone out.
-  #   command: ["redis-server", "--appendonly", "yes", "--dir", "/data"]
-  #   volumes:
-  #     - redis_data:/data
 volumes:
   norish_data:
-  # redis_data:
