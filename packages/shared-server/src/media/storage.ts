@@ -560,6 +560,40 @@ export async function saveImageBytes(bytes: Buffer, recipeId: string): Promise<s
 }
 
 /**
+ * Copy a gallery image that already lives under one recipe (referenced by its
+ * stored `/recipes/{id}/{file}` web URL) into another recipe's storage,
+ * returning the new web URL. Used when a public recipe is saved (forked) so the
+ * copy owns its own picture and keeps it even if the original is later deleted
+ * or made private. Returns null when the source file can't be read, so the
+ * caller can save the recipe without an image rather than fail the whole save.
+ */
+export async function copyRecipeImageByUrl(
+  sourceUrl: string,
+  destRecipeId: string
+): Promise<string | null> {
+  const [pathname] = sourceUrl.split("?", 1);
+  // Only same-origin gallery images (`/recipes/{id}/{file}`) are on our disk;
+  // step images (`/recipes/{id}/steps/{file}`) and external URLs are skipped.
+  const match = pathname?.match(/^\/recipes\/([^/]+)\/([^/]+)$/);
+
+  if (!match) {
+    return null;
+  }
+
+  const sourcePath = path.join(RECIPES_BASE_DIR, match[1]!, match[2]!);
+
+  try {
+    const bytes = await fs.readFile(sourcePath);
+
+    return await saveImageBytes(bytes, destRecipeId);
+  } catch (err) {
+    log.warn({ err, sourceUrl, destRecipeId }, "Could not copy recipe image while saving a fork");
+
+    return null;
+  }
+}
+
+/**
  * Save a public profile avatar (cefiro social). Cover-cropped and content-
  * hashed like recipe media; served publicly from `/public-avatars/{hash}.jpg`.
  */

@@ -951,6 +951,32 @@ export async function createRecipeWithRefs(
   return result;
 }
 
+/**
+ * The recipe a user already created by saving (forking) `sourceRecipeId`, if
+ * any — so a repeat save can reopen that copy instead of piling up duplicates.
+ * Returns the fork's id and slug, or null when they have not saved it.
+ */
+export async function getSavedForkForUser(
+  userId: string,
+  sourceRecipeId: string
+): Promise<{ recipeId: string; slug: string | null } | null> {
+  const [row] = await db
+    .select({ recipeId: recipes.id, slug: recipes.slug })
+    .from(recipes)
+    .where(and(eq(recipes.userId, userId), eq(recipes.savedFromRecipeId, sourceRecipeId)))
+    .limit(1);
+
+  return row ?? null;
+}
+
+/** Record that `recipeId` was created by saving (forking) `sourceRecipeId`. */
+export async function setRecipeSavedFrom(recipeId: string, sourceRecipeId: string): Promise<void> {
+  await db
+    .update(recipes)
+    .set({ savedFromRecipeId: sourceRecipeId })
+    .where(eq(recipes.id, recipeId));
+}
+
 export async function setActiveSystemForRecipe(
   recipeId: string,
   system: MeasurementSystem,

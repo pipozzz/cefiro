@@ -46,7 +46,10 @@
   "save": {
     "cta": "Save recipe",
     "saved": "Saved to your recipes",
-    "couldNotSave": "Could not save recipe"
+    "couldNotSave": "Could not save recipe",
+    "alreadySaved": "Already in your recipes",
+    "openCopy": "Open your copy",
+    "errorTitle": "Save failed"
   },
   "rating": {
     "noRating": "No ratings yet",

@@ -25,6 +25,9 @@ export const RecipeSelectBaseSchema = createSelectSchema(recipes).extend({
   visibility: z.enum(["private", "unlisted", "public"]).optional(),
   slug: z.string().nullable().optional(),
   publishedAt: z.date().nullable().optional(),
+  // Provenance for a saved (forked) recipe; like the other social columns it is
+  // not selected by every read projection, so keep it optional.
+  savedFromRecipeId: z.string().nullable().optional(),
 });
 export const RecipeInsertBaseSchema = createInsertSchema(recipes).omit({
   id: true,
