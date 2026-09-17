@@ -15,6 +15,7 @@ import {
   getCaldavSyncStatusesByUser,
   getSyncStatusSummary,
 } from "@norish/db/repositories/caldav-sync-status";
+import { isEntitledTo } from "@norish/shared-server/billing/entitlements";
 import { CalDavClient, testCalDavConnection } from "@norish/shared-server/caldav/client";
 import { createLogger } from "@norish/shared-server/logger";
 
@@ -67,6 +68,14 @@ export const caldavRouter = router({
       const userId = ctx.user.id;
 
       log.info({ userId }, "Saving CalDAV configuration");
+
+      // Turning sync on is a paid feature; a no-op when billing is disabled.
+      if (input.enabled && !(await isEntitledTo(userId, "caldavSync"))) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "CalDAV sync requires an upgraded plan.",
+        });
+      }
 
       // When updating, use existing password if not provided, as this is not sent when updating
       let password = input.password;

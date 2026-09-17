@@ -36,6 +36,7 @@ import {
 import { announceUsableRecipe } from "@norish/queue/enrichment/announce";
 import { getRecipeEnrichmentStatus } from "@norish/queue/enrichment/status";
 import { getQueues } from "@norish/queue/registry";
+import { isEntitledTo } from "@norish/shared-server/billing/entitlements";
 import {
   getRecipePermissionPolicy,
   isVideoParsingEnabled,
@@ -734,6 +735,14 @@ const requestEnrichment = authedProcedure
 
     if (!(await checkAIEnabled())) {
       throw new TRPCError({ code: "PRECONDITION_FAILED", message: "AI features are disabled" });
+    }
+
+    // AI image generation is a paid feature; a no-op when billing is disabled.
+    if (kind === "image-generation" && !(await isEntitledTo(ctx.user.id, "aiImageGeneration"))) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "AI image generation requires an upgraded plan.",
+      });
     }
 
     const recipe = await getRecipeFull(recipeId);

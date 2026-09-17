@@ -30,3 +30,29 @@ export async function resolveEntitlements(userId: string): Promise<ResolvedEntit
 
   return { planId, entitlements: entitlementsForPlan(planId) };
 }
+
+/** The boolean, per-feature entitlements callers gate on. */
+export type BooleanFeature = {
+  [K in keyof Entitlements]: Entitlements[K] extends boolean ? K : never;
+}[keyof Entitlements];
+
+/**
+ * Whether a user may use a boolean feature. Always true when billing is off, so
+ * gating callers never need to special-case self-hosting.
+ */
+export async function isEntitledTo(userId: string, feature: BooleanFeature): Promise<boolean> {
+  const { entitlements } = await resolveEntitlements(userId);
+
+  return entitlements[feature];
+}
+
+/**
+ * The household member cap that governs `ownerUserId`'s household. The owner's
+ * plan sets the size (a family plan is a shared subscription), so an invite is
+ * checked against the *owner's* entitlement, not the joiner's.
+ */
+export async function householdMemberLimit(ownerUserId: string): Promise<number> {
+  const { entitlements } = await resolveEntitlements(ownerUserId);
+
+  return entitlements.maxHouseholdMembers;
+}
