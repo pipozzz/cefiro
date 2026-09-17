@@ -4,10 +4,12 @@
   "type": "module",
   "exports": {
     "./heroui-theme": {
+      "style": "./heroui-theme.css",
       "node": "./heroui-theme.js",
       "default": "./heroui-theme.css"
     },
     "./marks": {
+      "style": "./marks.css",
       "node": "./marks.js",
       "default": "./marks.css"
     },
