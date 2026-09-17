@@ -4,6 +4,7 @@ import type { Key } from "react";
 import { useMemo } from "react";
 import { usePanelPortalContainer } from "@/components/Panel/Panel";
 import { Label, ListBox, Select } from "@heroui/react";
+import { useTranslations } from "next-intl";
 
 import type { StoreDto } from "@norish/shared/contracts";
 
@@ -31,13 +32,14 @@ export function StoreSelector({
   stores,
   selectedStoreId,
   onSelectionChange,
-  label = "Store",
-  placeholder = "Select a store",
+  label,
+  placeholder,
   size = "md",
-  noStoreLabel = "Auto detect from history",
+  noStoreLabel,
   noStoreDescription,
   showWhenEmpty = false,
 }: StoreSelectorProps) {
+  const t = useTranslations("groceries.storeSelector");
   const sortedStores = useMemo(
     () => [...stores].sort((a, b) => a.sortOrder - b.sortOrder),
     [stores]
@@ -60,21 +62,21 @@ export function StoreSelector({
   return (
     <Select
       fullWidth
-      placeholder={placeholder}
+      placeholder={placeholder ?? t("placeholder")}
       selectedKey={selectedValue}
       variant="secondary"
       onSelectionChange={handleChange}
     >
-      <Label>{label}</Label>
+      <Label>{label ?? t("label")}</Label>
       <Select.Trigger className={`${size === "sm" ? "min-h-10" : "min-h-12"} items-center`}>
         <Select.Value className="flex items-center" />
         <Select.Indicator />
       </Select.Trigger>
       <Select.Popover UNSTABLE_portalContainer={portalContainer}>
         <ListBox>
-          <ListBox.Item id="none" textValue={noStoreDescription ?? noStoreLabel}>
+          <ListBox.Item id="none" textValue={noStoreDescription ?? noStoreLabel ?? t("autoDetect")}>
             <span className={noStoreDescription ? "text-muted" : ""}>
-              {noStoreDescription ?? noStoreLabel}
+              {noStoreDescription ?? noStoreLabel ?? t("autoDetect")}
             </span>
             <ListBox.ItemIndicator />
           </ListBox.Item>

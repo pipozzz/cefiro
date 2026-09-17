@@ -231,7 +231,7 @@
     "dragToReorder": "Przeciągnij, aby zmienić kolejność",
     "maxImagesReached": "Maksymalnie {max} obrazów",
     "maxVideosReached": "Maksymalnie {max} filmów",
-    "invalidFileType": "Nieprawidłowy typ pliku"
+    "invalidFileType": "Invalid file type"
   },
   "carousel": {
     "noImageAvailable": "Brak obrazu",

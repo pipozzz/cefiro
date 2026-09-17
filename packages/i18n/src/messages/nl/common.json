@@ -36,7 +36,8 @@
   "secret": {
     "reveal": "Geheim tonen",
     "hide": "Geheim verbergen",
-    "keepsCurrent": "Laat leeg om de opgeslagen waarde te behouden."
+    "keepsCurrent": "Laat leeg om de opgeslagen waarde te behouden.",
+    "placeholder": "Enter value"
   },
   "status": {
     "loading": "Laden...",

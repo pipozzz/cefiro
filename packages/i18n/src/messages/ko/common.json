@@ -36,7 +36,8 @@
   "secret": {
     "reveal": "시크릿 표시",
     "hide": "시크릿 숨기기",
-    "keepsCurrent": "저장된 값을 유지하려면 비워 두세요."
+    "keepsCurrent": "저장된 값을 유지하려면 비워 두세요.",
+    "placeholder": "Enter value"
   },
   "status": {
     "loading": "불러오는 중...",

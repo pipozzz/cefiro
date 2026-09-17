@@ -36,7 +36,8 @@
   "secret": {
     "reveal": "Vis hemmelighet",
     "hide": "Skjul hemmelighet",
-    "keepsCurrent": "La feltet stå tomt for å beholde den lagrede verdien."
+    "keepsCurrent": "La feltet stå tomt for å beholde den lagrede verdien.",
+    "placeholder": "Enter value"
   },
   "status": {
     "loading": "Laster...",

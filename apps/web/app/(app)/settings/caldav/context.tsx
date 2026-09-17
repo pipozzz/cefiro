@@ -81,6 +81,7 @@ const CalDavSettingsContext = createContext<CalDavSettingsContextType | null>(nu
 
 export function CalDavSettingsProvider({ children }: { children: ReactNode }) {
   const tErrors = useTranslations("common.errors");
+  const tToast = useTranslations("settings.caldav.toasts");
   // Queries
   const { config, isLoading: isLoadingConfig, setConfig: _setConfig } = useCaldavConfigQuery();
   const { password: storedPassword, isLoading: _isLoadingPassword } = useCaldavPasswordQuery();
@@ -125,8 +126,8 @@ export function CalDavSettingsProvider({ children }: { children: ReactNode }) {
     async (configInput: SaveCaldavConfigInput) => {
       try {
         await saveConfigMutation(configInput);
-        toast("Configuration saved", {
-          description: "Your CalDAV settings have been saved successfully.",
+        toast(tToast("savedTitle"), {
+          description: tToast("savedBody"),
           variant: "success",
         });
       } catch (error) {
@@ -188,8 +189,8 @@ export function CalDavSettingsProvider({ children }: { children: ReactNode }) {
     async (deleteEvents: boolean) => {
       try {
         await deleteConfigMutation(deleteEvents);
-        toast("Configuration deleted", {
-          description: "Your CalDAV settings have been removed.",
+        toast(tToast("deletedTitle"), {
+          description: tToast("deletedBody"),
           variant: "success",
         });
       } catch (error) {
@@ -209,8 +210,8 @@ export function CalDavSettingsProvider({ children }: { children: ReactNode }) {
   const triggerManualSync = useCallback(async () => {
     try {
       await triggerSync();
-      toast("Sync started", {
-        description: "Retrying pending and failed items...",
+      toast(tToast("syncStartedTitle"), {
+        description: tToast("syncStartedBody"),
         variant: "accent",
       });
     } catch (error) {
@@ -228,8 +229,8 @@ export function CalDavSettingsProvider({ children }: { children: ReactNode }) {
   const syncAll = useCallback(async () => {
     try {
       await syncAllMutation();
-      toast("Full sync started", {
-        description: "Syncing all future items to CalDAV...",
+      toast(tToast("fullSyncTitle"), {
+        description: tToast("fullSyncBody"),
         variant: "accent",
       });
     } catch (error) {

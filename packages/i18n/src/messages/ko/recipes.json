@@ -231,7 +231,7 @@
     "dragToReorder": "드래그하여 재정렬하세요.",
     "maxImagesReached": "이미지는 최대 {max}개까지 가능합니다.",
     "maxVideosReached": "동영상은 최대 {max}개까지 가능합니다.",
-    "invalidFileType": "잘못된 파일 형식"
+    "invalidFileType": "Invalid file type"
   },
   "carousel": {
     "noImageAvailable": "이미지가 없습니다.",

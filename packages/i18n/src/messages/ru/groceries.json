@@ -18,7 +18,8 @@
   "item": {
     "unnamedItem": "Без названия",
     "fromRecipes": "{count, plural, one {Из # рецепта} few {Из # рецептов} many {Из # рецептов} other {Из # рецептов}}",
-    "items": "{count, plural, one {# позиция} few {# позиции} many {# позиций} other {# позиций}}"
+    "items": "{count, plural, one {# позиция} few {# позиции} many {# позиций} other {# позиций}}",
+    "unknownItem": "Unknown item"
   },
   "store": {
     "unsorted": "Без категории",
@@ -157,5 +158,10 @@
     "onePack": "посчитано как одна упаковка",
     "sale": "Скидка",
     "regularPrice": "Обычная цена {price}"
+  },
+  "storeSelector": {
+    "label": "Store",
+    "placeholder": "Select a store",
+    "autoDetect": "Auto detect from history"
   }
 }

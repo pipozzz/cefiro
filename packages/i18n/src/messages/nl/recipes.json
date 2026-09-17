@@ -231,7 +231,7 @@
     "dragToReorder": "Sleep afbeeldingen om te herordenen",
     "maxImagesReached": "Maximaal {max} afbeeldingen toegestaan",
     "maxVideosReached": "Maximaal {max} video's toegestaan",
-    "invalidFileType": "Ongeldig bestandstype"
+    "invalidFileType": "Invalid file type"
   },
   "carousel": {
     "noImageAvailable": "Geen afbeelding beschikbaar",

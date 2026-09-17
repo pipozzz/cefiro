@@ -46,7 +46,7 @@ export default function SecretInput({
   onValueChange,
   isConfigured,
   onReveal,
-  placeholder = "Enter value",
+  placeholder,
   description,
   isDisabled = false,
   isRequired = false,
@@ -122,7 +122,9 @@ export default function SecretInput({
       <Label>{label}</Label>
       <InputGroup variant="secondary">
         <InputGroup.Input
-          placeholder={isConfigured && !hasTypedValue ? STORED_PLACEHOLDER : placeholder}
+          placeholder={
+            isConfigured && !hasTypedValue ? STORED_PLACEHOLDER : (placeholder ?? t("placeholder"))
+          }
         />
         {hasSomethingToShow && (
           <InputGroup.Suffix>

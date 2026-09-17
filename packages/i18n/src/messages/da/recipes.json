@@ -231,7 +231,7 @@
     "dragToReorder": "Træk for at omarrangere",
     "maxImagesReached": "Maksimalt {max} billeder er tilladt",
     "maxVideosReached": "Maksimalt {max} videoer er tilladt",
-    "invalidFileType": "Ugyldig filtype"
+    "invalidFileType": "Invalid file type"
   },
   "carousel": {
     "noImageAvailable": "Intet billede tilgængeligt",

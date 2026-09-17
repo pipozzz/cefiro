@@ -36,7 +36,8 @@
   "secret": {
     "reveal": "Geheimnis anzeigen",
     "hide": "Geheimnis verbergen",
-    "keepsCurrent": "Lass das Feld leer, um den gespeicherten Wert zu behalten."
+    "keepsCurrent": "Lass das Feld leer, um den gespeicherten Wert zu behalten.",
+    "placeholder": "Enter value"
   },
   "status": {
     "loading": "Wird geladen...",

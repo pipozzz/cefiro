@@ -245,7 +245,7 @@ function SourceItem({ source, recurringGroceries, onToggle, onEdit }: SourceItem
       <GroceryCheckbox
         delayChangeOnSelect
         storeColored
-        aria-label={grocery.name || "Grocery item"}
+        aria-label={grocery.name || t("unknownItem")}
         isSelected={grocery.isDone}
         size="md"
         onChange={(checked) => onToggle(grocery.id, checked)}
@@ -272,7 +272,7 @@ function SourceItem({ source, recurringGroceries, onToggle, onEdit }: SourceItem
               grocery.isDone ? "text-muted line-through" : "text-foreground"
             }`}
           >
-            {grocery.name || "Unknown item"}
+            {grocery.name || t("unknownItem")}
           </span>
         </div>
 

@@ -18,7 +18,8 @@
   "item": {
     "unnamedItem": "이름이 없는 항목",
     "fromRecipes": "총 {count, plural, one {#개 레시피} other {#개 레시피}} 기준",
-    "items": "{count, plural, one {#개 항목} other {#개 항목}}"
+    "items": "{count, plural, one {#개 항목} other {#개 항목}}",
+    "unknownItem": "Unknown item"
   },
   "store": {
     "unsorted": "정렬되지 않음",
@@ -157,5 +158,10 @@
     "onePack": "1개 포장으로 계산됨",
     "sale": "할인",
     "regularPrice": "정가 {price}"
+  },
+  "storeSelector": {
+    "label": "Store",
+    "placeholder": "Select a store",
+    "autoDetect": "Auto detect from history"
   }
 }

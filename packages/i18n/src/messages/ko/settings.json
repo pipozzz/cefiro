@@ -230,7 +230,7 @@
       "shareDescription": "이 코드를 다른 사람과 공유하여 가구에 초대하세요.",
       "expiresIn": "만료까지:",
       "regenerateButton": "재생성",
-      "expired": "만료됨",
+      "expired": "Expired",
       "noCodeDescription": "활성 참여 코드가 없습니다. 새 구성원을 초대하려면 코드를 생성하세요.",
       "generateButton": "참여 코드 만들기",
       "copySuccess": "참여 코드가 복사되었습니다",
@@ -353,6 +353,16 @@
       "emptyDefault": "동기화 기록을 찾을 수 없습니다.",
       "errorDetails": "오류 세부정보",
       "pagination": "Page {current} of {total}"
+    },
+    "toasts": {
+      "savedTitle": "Configuration saved",
+      "savedBody": "Your CalDAV settings have been saved.",
+      "deletedTitle": "Configuration deleted",
+      "deletedBody": "Your CalDAV settings have been removed.",
+      "syncStartedTitle": "Sync started",
+      "syncStartedBody": "Retrying pending and failed items…",
+      "fullSyncTitle": "Full sync started",
+      "fullSyncBody": "Syncing all future items to CalDAV…"
     }
   },
   "admin": {
@@ -577,7 +587,10 @@
         "secondsLabel": "초 키워드",
         "secondsPlaceholder": "초, second, seconds, sec, secs, s",
         "secondsHelp": "초에 대한 키워드(예: 초, second, sekunde, seconde)",
-        "unsavedChanges": "저장되지 않은 변경사항"
+        "unsavedChanges": "저장되지 않은 변경사항",
+        "errorNeedKeyword": "At least one keyword is required in hours, minutes, or seconds.",
+        "errorSaveFailed": "Failed to save",
+        "errorRestoreFailed": "Failed to restore defaults"
       }
     },
     "aiProcessing": {

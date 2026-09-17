@@ -231,7 +231,7 @@
     "dragToReorder": "Trascina per riordinare",
     "maxImagesReached": "Massimo {max} immagini consentite",
     "maxVideosReached": "Massimo {max} video consentiti",
-    "invalidFileType": "Tipo di file non valido"
+    "invalidFileType": "Invalid file type"
   },
   "carousel": {
     "noImageAvailable": "Nessuna immagine disponibile",
