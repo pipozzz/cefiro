@@ -249,6 +249,31 @@
       "codeLabel": "Kód na pripojenie",
       "codePlaceholder": "8-znakový kód",
       "submitButton": "Pripojiť sa k domácnosti"
+    },
+    "invite": {
+      "title": "Pozvať cez email",
+      "description": "Pozvi niekoho do domácnosti cez email. Dostane odkaz na pripojenie.",
+      "emailPlaceholder": "name@example.com",
+      "sendButton": "Poslať pozvánku",
+      "sent": "Pozvánka odoslaná",
+      "createdNoEmail": "Pozvánka vytvorená — zdieľaj odkaz nižšie",
+      "shareLinkHint": "Zdieľaj tento odkaz na pripojenie:",
+      "copyLink": "Kopírovať odkaz",
+      "linkCopied": "Odkaz skopírovaný",
+      "couldNotCopy": "Nepodarilo sa skopírovať odkaz",
+      "pendingHeading": "Čakajúce pozvánky",
+      "revoke": "Zrušiť pozvánku",
+      "couldNotInvite": "Nepodarilo sa poslať pozvánku",
+      "couldNotRevoke": "Nepodarilo sa zrušiť pozvánku"
+    },
+    "joinPage": {
+      "title": "Pripojiť sa k {household}",
+      "body": "Domácnosť zdieľa recepty, nákupy a plán jedál.",
+      "acceptButton": "Prijať pozvánku",
+      "invalidTitle": "Pozvánka nie je dostupná",
+      "invalidBody": "Táto pozvánka je neplatná alebo vypršala.",
+      "goToHousehold": "Prejsť na domácnosť",
+      "couldNotJoin": "Nepodarilo sa pripojiť k domácnosti"
     }
   },
   "caldav": {
