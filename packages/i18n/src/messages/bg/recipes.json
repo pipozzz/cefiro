@@ -231,7 +231,7 @@
     "dragToReorder": "Плъзни, за да пренаредиш",
     "maxImagesReached": "Разрешени са максимум {max} изображения",
     "maxVideosReached": "Разрешени са максимум {max} видеоклипа",
-    "invalidFileType": "Невалиден тип файл"
+    "invalidFileType": "Invalid file type"
   },
   "carousel": {
     "noImageAvailable": "Няма налично изображение",

@@ -18,7 +18,8 @@
   "item": {
     "unnamedItem": "Item sem nome",
     "fromRecipes": "De {count, plural, one {# receita} other {# receitas}}",
-    "items": "{count, plural, one {# item} other {# itens}}"
+    "items": "{count, plural, one {# item} other {# itens}}",
+    "unknownItem": "Unknown item"
   },
   "store": {
     "unsorted": "Sem classificação",
@@ -157,5 +158,10 @@
     "onePack": "contado como uma embalagem",
     "sale": "Oferta",
     "regularPrice": "Preço normal {price}"
+  },
+  "storeSelector": {
+    "label": "Store",
+    "placeholder": "Select a store",
+    "autoDetect": "Auto detect from history"
   }
 }

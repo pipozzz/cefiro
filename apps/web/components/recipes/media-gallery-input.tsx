@@ -266,7 +266,7 @@ export default function MediaGalleryInput({
       const isImage = file.type.startsWith("image/");
 
       if (!isVideo && !isImage) {
-        setUploadError("Invalid file type");
+        setUploadError(t("invalidFileType"));
         setTimeout(() => setUploadError(null), 3000);
 
         return;

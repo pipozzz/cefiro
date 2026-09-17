@@ -230,7 +230,7 @@
       "shareDescription": "Zdieľajte tento kód s ostatnými a pozvite ich do svojej domácnosti.",
       "expiresIn": "Vyprší o:",
       "regenerateButton": "Vygenerovať znova",
-      "expired": "Vypršaný",
+      "expired": "Vypršané",
       "noCodeDescription": "Žiadny aktívny kód na pripojenie. Vygenerujte jeden a pozvite nových členov.",
       "generateButton": "Vygenerovať kód na pripojenie",
       "copySuccess": "Kód na pripojenie skopírovaný",
@@ -353,6 +353,16 @@
       "emptyDefault": "Nenašli sa žiadne záznamy synchronizácie",
       "errorDetails": "Podrobnosti chyby",
       "pagination": "Strana {current} z {total}"
+    },
+    "toasts": {
+      "savedTitle": "Konfigurácia uložená",
+      "savedBody": "Nastavenia CalDAV boli uložené.",
+      "deletedTitle": "Konfigurácia zmazaná",
+      "deletedBody": "Nastavenia CalDAV boli odstránené.",
+      "syncStartedTitle": "Synchronizácia spustená",
+      "syncStartedBody": "Opakujem čakajúce a zlyhané položky…",
+      "fullSyncTitle": "Úplná synchronizácia spustená",
+      "fullSyncBody": "Synchronizujem všetky budúce položky do CalDAV…"
     }
   },
   "admin": {
@@ -577,7 +587,10 @@
         "secondsLabel": "Kľúčové slová pre sekundy",
         "secondsPlaceholder": "sekunda, sekundy, sek, s",
         "secondsHelp": "Kľúčové slová pre sekundy (napr. sekunda, sekunde, seconde)",
-        "unsavedChanges": "Neuložené zmeny"
+        "unsavedChanges": "Neuložené zmeny",
+        "errorNeedKeyword": "Aspoň jedno kľúčové slovo v hodinách, minútach alebo sekundách.",
+        "errorSaveFailed": "Nepodarilo sa uložiť",
+        "errorRestoreFailed": "Nepodarilo sa obnoviť predvolené"
       }
     },
     "aiProcessing": {

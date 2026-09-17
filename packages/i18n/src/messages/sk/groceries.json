@@ -18,7 +18,8 @@
   "item": {
     "unnamedItem": "Nepomenovaná položka",
     "fromRecipes": "Z {count, plural, one {# receptu} few {# receptov} many {# receptu} other {# receptov}}",
-    "items": "{count, plural, one {# položka} few {# položky} many {# položky} other {# položiek}}"
+    "items": "{count, plural, one {# položka} few {# položky} many {# položky} other {# položiek}}",
+    "unknownItem": "Neznáma položka"
   },
   "store": {
     "unsorted": "Nezaradené",
@@ -157,5 +158,10 @@
     "onePack": "cena za jedno balenie",
     "sale": "Zľava",
     "regularPrice": "Bežná cena {price}"
+  },
+  "storeSelector": {
+    "label": "Obchod",
+    "placeholder": "Vyber obchod",
+    "autoDetect": "Automaticky z histórie"
   }
 }

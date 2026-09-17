@@ -18,7 +18,8 @@
   "item": {
     "unnamedItem": "Unavngivet vare",
     "fromRecipes": "Fra {count, plural, one {# opskrift} other {# opskrifter}}",
-    "items": "{count, plural, one {# vare} other {# varer}}"
+    "items": "{count, plural, one {# vare} other {# varer}}",
+    "unknownItem": "Unknown item"
   },
   "store": {
     "unsorted": "Usorteret",
@@ -157,5 +158,10 @@
     "onePack": "talt som én pakke",
     "sale": "Tilbud",
     "regularPrice": "Normalpris {price}"
+  },
+  "storeSelector": {
+    "label": "Store",
+    "placeholder": "Select a store",
+    "autoDetect": "Auto detect from history"
   }
 }

@@ -230,7 +230,7 @@
       "shareDescription": "Comparte este código para invitar a otras personas a tu hogar.",
       "expiresIn": "Caduca en:",
       "regenerateButton": "Regenerar",
-      "expired": "Caducado",
+      "expired": "Expired",
       "noCodeDescription": "No hay código de unión activo. Genera uno para invitar nuevos miembros.",
       "generateButton": "Generar código",
       "copySuccess": "Código copiado",
@@ -353,6 +353,16 @@
       "emptyDefault": "No hay registros de sincronización",
       "errorDetails": "Detalles del error",
       "pagination": "Page {current} of {total}"
+    },
+    "toasts": {
+      "savedTitle": "Configuration saved",
+      "savedBody": "Your CalDAV settings have been saved.",
+      "deletedTitle": "Configuration deleted",
+      "deletedBody": "Your CalDAV settings have been removed.",
+      "syncStartedTitle": "Sync started",
+      "syncStartedBody": "Retrying pending and failed items…",
+      "fullSyncTitle": "Full sync started",
+      "fullSyncBody": "Syncing all future items to CalDAV…"
     }
   },
   "admin": {
@@ -577,7 +587,10 @@
         "secondsLabel": "Palabras clave para segundos",
         "secondsPlaceholder": "second, seconds, sec, secs, s",
         "secondsHelp": "Palabras clave para segundos (p. ej., second, sekunde, seconde)",
-        "unsavedChanges": "Cambios sin guardar"
+        "unsavedChanges": "Cambios sin guardar",
+        "errorNeedKeyword": "At least one keyword is required in hours, minutes, or seconds.",
+        "errorSaveFailed": "Failed to save",
+        "errorRestoreFailed": "Failed to restore defaults"
       }
     },
     "aiProcessing": {

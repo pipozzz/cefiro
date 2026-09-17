@@ -18,7 +18,8 @@
   "item": {
     "unnamedItem": "Unnamed item",
     "fromRecipes": "From {count, plural, one {# recipe} other {# recipes}}",
-    "items": "{count, plural, one {# item} other {# items}}"
+    "items": "{count, plural, one {# item} other {# items}}",
+    "unknownItem": "Unknown item"
   },
   "store": {
     "unsorted": "Unsorted",
@@ -157,5 +158,10 @@
     "onePack": "priced as one pack",
     "sale": "Sale",
     "regularPrice": "Regular price {price}"
+  },
+  "storeSelector": {
+    "label": "Store",
+    "placeholder": "Select a store",
+    "autoDetect": "Auto detect from history"
   }
 }

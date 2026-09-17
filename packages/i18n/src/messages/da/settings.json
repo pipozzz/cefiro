@@ -230,7 +230,7 @@
       "shareDescription": "Del denne kode med andre for at invitere dem til din husstand.",
       "expiresIn": "Udløber om:",
       "regenerateButton": "Generer ny",
-      "expired": "Udløbet",
+      "expired": "Expired",
       "noCodeDescription": "Ingen aktiv tilmeldingskode. Generer én for at invitere nye medlemmer.",
       "generateButton": "Generer tilmeldingskode",
       "copySuccess": "Tilmeldingskode kopieret",
@@ -353,6 +353,16 @@
       "emptyDefault": "Ingen synkroniseringsposter fundet",
       "errorDetails": "Fejldetaljer",
       "pagination": "Page {current} of {total}"
+    },
+    "toasts": {
+      "savedTitle": "Configuration saved",
+      "savedBody": "Your CalDAV settings have been saved.",
+      "deletedTitle": "Configuration deleted",
+      "deletedBody": "Your CalDAV settings have been removed.",
+      "syncStartedTitle": "Sync started",
+      "syncStartedBody": "Retrying pending and failed items…",
+      "fullSyncTitle": "Full sync started",
+      "fullSyncBody": "Syncing all future items to CalDAV…"
     }
   },
   "admin": {
@@ -577,7 +587,10 @@
         "secondsLabel": "Sekund-nøgleord",
         "secondsPlaceholder": "sekund, sekunder, sek",
         "secondsHelp": "Nøgleord for sekunder (f.eks. second, sekunde, seconde)",
-        "unsavedChanges": "Ugemte ændringer"
+        "unsavedChanges": "Ugemte ændringer",
+        "errorNeedKeyword": "At least one keyword is required in hours, minutes, or seconds.",
+        "errorSaveFailed": "Failed to save",
+        "errorRestoreFailed": "Failed to restore defaults"
       }
     },
     "aiProcessing": {

@@ -76,7 +76,7 @@ export default function TimerKeywordsEditor({
         const hasMinutes = field === "minutes" ? newText.trim() !== "" : minutesText.trim() !== "";
         const hasSeconds = field === "seconds" ? newText.trim() !== "" : secondsText.trim() !== "";
         if (!hasHours && !hasMinutes && !hasSeconds) {
-          setError("At least one keyword required in hours, minutes, or seconds");
+          setError(t("errorNeedKeyword"));
         }
       }
     },
@@ -106,7 +106,7 @@ export default function TimerKeywordsEditor({
       parsedMinutes.length === 0 &&
       parsedSeconds.length === 0
     ) {
-      setError("At least one keyword required in hours, minutes, or seconds");
+      setError(t("errorNeedKeyword"));
       return;
     }
     setSaving(true);
@@ -123,7 +123,7 @@ export default function TimerKeywordsEditor({
         setError(result.error);
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to save");
+      setError(e instanceof Error ? e.message : t("errorSaveFailed"));
     } finally {
       setSaving(false);
     }
@@ -136,7 +136,7 @@ export default function TimerKeywordsEditor({
         setError(result.error);
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to restore defaults");
+      setError(e instanceof Error ? e.message : t("errorRestoreFailed"));
     } finally {
       setSaving(false);
     }

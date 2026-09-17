@@ -38,7 +38,7 @@ export default function JoinCodeCard() {
       const expires = new Date(household.joinCodeExpiresAt);
       const diff = expires.getTime() - now.getTime();
       if (diff <= 0) {
-        setTimeRemaining("Expired");
+        setTimeRemaining(t("expired"));
         return;
       }
       const minutes = Math.floor(diff / 60000);

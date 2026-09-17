@@ -36,7 +36,8 @@
   "secret": {
     "reveal": "Révéler le secret",
     "hide": "Masquer le secret",
-    "keepsCurrent": "Laissez le champ vide pour conserver la valeur enregistrée."
+    "keepsCurrent": "Laissez le champ vide pour conserver la valeur enregistrée.",
+    "placeholder": "Enter value"
   },
   "status": {
     "loading": "Chargement...",

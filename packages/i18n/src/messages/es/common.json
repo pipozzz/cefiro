@@ -36,7 +36,8 @@
   "secret": {
     "reveal": "Mostrar secreto",
     "hide": "Ocultar secreto",
-    "keepsCurrent": "Déjalo vacío para conservar el valor guardado."
+    "keepsCurrent": "Déjalo vacío para conservar el valor guardado.",
+    "placeholder": "Enter value"
   },
   "status": {
     "loading": "Cargando...",

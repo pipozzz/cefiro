@@ -36,7 +36,8 @@
   "secret": {
     "reveal": "Pokaż sekret",
     "hide": "Ukryj sekret",
-    "keepsCurrent": "Pozostaw puste, aby zachować zapisaną wartość."
+    "keepsCurrent": "Pozostaw puste, aby zachować zapisaną wartość.",
+    "placeholder": "Enter value"
   },
   "status": {
     "loading": "Ładowanie...",

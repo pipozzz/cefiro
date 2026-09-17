@@ -230,7 +230,7 @@
       "shareDescription": "Сподели този код с други, за да ги поканиш в домакинството си.",
       "expiresIn": "Изтича след:",
       "regenerateButton": "Генерирай нов",
-      "expired": "Изтекъл",
+      "expired": "Expired",
       "noCodeDescription": "Няма активен код за присъединяване. Генерирай такъв, за да поканиш нови членове.",
       "generateButton": "Генерирай код за присъединяване",
       "copySuccess": "Кодът за присъединяване е копиран",
@@ -353,6 +353,16 @@
       "emptyDefault": "Не са намерени записи от синхронизация",
       "errorDetails": "Подробности за грешката",
       "pagination": "Страница {current} от {total}"
+    },
+    "toasts": {
+      "savedTitle": "Configuration saved",
+      "savedBody": "Your CalDAV settings have been saved.",
+      "deletedTitle": "Configuration deleted",
+      "deletedBody": "Your CalDAV settings have been removed.",
+      "syncStartedTitle": "Sync started",
+      "syncStartedBody": "Retrying pending and failed items…",
+      "fullSyncTitle": "Full sync started",
+      "fullSyncBody": "Syncing all future items to CalDAV…"
     }
   },
   "admin": {
@@ -577,7 +587,10 @@
         "secondsLabel": "Ключови думи за секунди",
         "secondsPlaceholder": "секунда, секунди, сек",
         "secondsHelp": "Ключови думи за секунди (напр. секунда, Sekunde, seconde)",
-        "unsavedChanges": "Незапазени промени"
+        "unsavedChanges": "Незапазени промени",
+        "errorNeedKeyword": "At least one keyword is required in hours, minutes, or seconds.",
+        "errorSaveFailed": "Failed to save",
+        "errorRestoreFailed": "Failed to restore defaults"
       }
     },
     "aiProcessing": {

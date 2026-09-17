@@ -18,7 +18,8 @@
   "item": {
     "unnamedItem": "Продукт без име",
     "fromRecipes": "От {count, plural, one {# рецепта} other {# рецепти}}",
-    "items": "{count, plural, one {# продукт} other {# продукта}}"
+    "items": "{count, plural, one {# продукт} other {# продукта}}",
+    "unknownItem": "Unknown item"
   },
   "store": {
     "unsorted": "Некатегоризирани",
@@ -157,5 +158,10 @@
     "onePack": "броено като една опаковка",
     "sale": "Промоция",
     "regularPrice": "Редовна цена {price}"
+  },
+  "storeSelector": {
+    "label": "Store",
+    "placeholder": "Select a store",
+    "autoDetect": "Auto detect from history"
   }
 }

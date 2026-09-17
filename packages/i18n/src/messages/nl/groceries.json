@@ -18,7 +18,8 @@
   "item": {
     "unnamedItem": "Naamloos item",
     "fromRecipes": "Uit {count, plural, one {# recept} other {# recepten}}",
-    "items": "{count, plural, one {# item} other {# items}}"
+    "items": "{count, plural, one {# item} other {# items}}",
+    "unknownItem": "Unknown item"
   },
   "store": {
     "unsorted": "Ongeordend",
@@ -157,5 +158,10 @@
     "onePack": "geteld als één verpakking",
     "sale": "Aanbieding",
     "regularPrice": "Normale prijs {price}"
+  },
+  "storeSelector": {
+    "label": "Store",
+    "placeholder": "Select a store",
+    "autoDetect": "Auto detect from history"
   }
 }

@@ -36,7 +36,8 @@
   "secret": {
     "reveal": "Zobraziť tajný kľúč",
     "hide": "Skryť tajný kľúč",
-    "keepsCurrent": "Ponechajte prázdne, ak chcete zachovať uloženú hodnotu."
+    "keepsCurrent": "Ponechajte prázdne, ak chcete zachovať uloženú hodnotu.",
+    "placeholder": "Zadaj hodnotu"
   },
   "status": {
     "loading": "Načítava sa…",
