@@ -409,7 +409,8 @@
     "searchRecipes": "Cerca ricette",
     "noRecipesToAdd": "Nessuna ricetta trovata.",
     "addCount": "{count, plural, one {Aggiungi # ricetta} other {Aggiungi # ricette}}",
-    "everythingAlreadyIn": "Tutte le ricette sono già in questo libro."
+    "everythingAlreadyIn": "Tutte le ricette sono già in questo libro.",
+    "share": "Sharing"
   },
   "servingsControl": {
     "decrease": "Decrease servings",

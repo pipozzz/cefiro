@@ -409,7 +409,8 @@
     "searchRecipes": "레시피 검색",
     "noRecipesToAdd": "레시피를 찾을 수 없습니다.",
     "addCount": "{count, plural, other {레시피 #개 추가}}",
-    "everythingAlreadyIn": "모든 레시피가 이미 이 요리책에 있습니다."
+    "everythingAlreadyIn": "모든 레시피가 이미 이 요리책에 있습니다.",
+    "share": "Sharing"
   },
   "servingsControl": {
     "decrease": "Decrease servings",

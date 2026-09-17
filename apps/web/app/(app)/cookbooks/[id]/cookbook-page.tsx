@@ -8,6 +8,7 @@ import { CookbookEditPanel, DeleteCookbookModal } from "@/components/cookbooks/c
 import { CookbookShareCard } from "@/components/cookbooks/cookbook-share-card";
 import RecipeViewModeToggle from "@/components/dashboard/recipe-view-mode-toggle";
 import SearchInput from "@/components/dashboard/search-input";
+import Panel from "@/components/Panel/Panel";
 import { NotFoundView } from "@/components/shared/not-found-view";
 import { usePermissionsContext } from "@/context/permissions-context";
 import {
@@ -19,6 +20,7 @@ import { useBackDestination } from "@/hooks/use-back-destination";
 import { recipeViewModePreference } from "@/lib/recipe-view-mode";
 import {
   ArrowLeftIcon,
+  ArrowUpOnSquareIcon,
   EllipsisHorizontalIcon,
   PencilSquareIcon,
   PlusIcon,
@@ -47,6 +49,7 @@ function CookbookPageContent({ cookbookId }: { cookbookId: string }) {
   const router = useRouter();
   const [viewMode, setViewMode] = useRecipeDashboardViewMode();
   const t = useTranslations("recipes.cookbooks");
+  const tShare = useTranslations("social.cookbookShare");
   const { cookbook, isNotFound } = useCookbookQuery(cookbookId);
   const { deleteCookbook } = useCookbooksMutations();
   const { canEditRecipe, canDeleteRecipe } = usePermissionsContext();
@@ -54,6 +57,7 @@ function CookbookPageContent({ cookbookId }: { cookbookId: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   const handleDelete = useCallback(() => {
@@ -178,6 +182,30 @@ function CookbookPageContent({ cookbookId }: { cookbookId: string }) {
                           </Button>
                         </Dropdown.Item>
                       ) : null}
+                      {canEdit ? (
+                        <Dropdown.Item
+                          key="share"
+                          className="py-1 data-[focus=true]:bg-transparent data-[hovered=true]:bg-transparent"
+                          id="share"
+                          textValue={t("share")}
+                        >
+                          <Button
+                            className={twMerge(
+                              "w-full justify-start bg-transparent",
+                              cssButtonPill
+                            )}
+                            size="md"
+                            variant="tertiary"
+                            onPress={() => {
+                              setMenuOpen(false);
+                              setShareOpen(true);
+                            }}
+                          >
+                            <ArrowUpOnSquareIcon className="text-muted size-4" />
+                            <Label className="text-sm font-medium">{t("share")}</Label>
+                          </Button>
+                        </Dropdown.Item>
+                      ) : null}
                       {canDelete ? (
                         <Dropdown.Item
                           key="delete"
@@ -211,8 +239,6 @@ function CookbookPageContent({ cookbookId }: { cookbookId: string }) {
             </div>
           </div>
 
-          {canEdit ? <CookbookShareCard cookbookId={cookbookId} /> : null}
-
           <div className="min-w-0">
             <SearchInput />
           </div>
@@ -229,6 +255,14 @@ function CookbookPageContent({ cookbookId }: { cookbookId: string }) {
       <CookbookEditPanel cookbook={cookbook} open={editOpen} onOpenChange={setEditOpen} />
 
       <CookbookAddRecipesPanel cookbook={cookbook} open={addOpen} onOpenChange={setAddOpen} />
+
+      {canEdit ? (
+        <Panel open={shareOpen} title={tShare("heading")} onOpenChange={setShareOpen}>
+          <Panel.Body>
+            <CookbookShareCard cookbookId={cookbookId} />
+          </Panel.Body>
+        </Panel>
+      ) : null}
 
       <DeleteCookbookModal
         isOpen={deleteOpen}

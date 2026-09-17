@@ -409,7 +409,8 @@
     "searchRecipes": "Hľadať recepty",
     "noRecipesToAdd": "Nenašli sa žiadne recepty.",
     "addCount": "{count, plural, one {Pridať # recept} few {Pridať # recepty} other {Pridať # receptov}}",
-    "everythingAlreadyIn": "Každý recept je už v tejto kuchárskej knihe."
+    "everythingAlreadyIn": "Každý recept je už v tejto kuchárskej knihe.",
+    "share": "Zdieľanie"
   },
   "servingsControl": {
     "decrease": "Znížiť počet porcií",

@@ -409,7 +409,8 @@
     "searchRecipes": "Recepten zoeken",
     "noRecipesToAdd": "Geen recepten gevonden.",
     "addCount": "{count, plural, one {# recept toevoegen} other {# recepten toevoegen}}",
-    "everythingAlreadyIn": "Alle recepten staan al in dit kookboek."
+    "everythingAlreadyIn": "Alle recepten staan al in dit kookboek.",
+    "share": "Sharing"
   },
   "servingsControl": {
     "decrease": "Decrease servings",
