@@ -115,7 +115,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
       siteName: "Cefiro",
       url,
-      images: image ? [{ url: image, alt: title }] : undefined,
+      // The branded fallback card is rendered by `/r/[slug]/og` at a fixed
+      // 1200×630 PNG, so we can declare its exact dimensions. Real photos have
+      // unknown dimensions, so those carry only the URL.
+      images: image
+        ? [
+            photo
+              ? { url: image, alt: title }
+              : { url: image, alt: title, width: 1200, height: 630, type: "image/png" },
+          ]
+        : undefined,
     },
     twitter: {
       card: image ? "summary_large_image" : "summary",
