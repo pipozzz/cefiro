@@ -233,12 +233,10 @@ describe("household invites — getInvite & acceptInvite", () => {
       email: "joiner@example.com",
     });
     // First call: existing-household check (none). Second: dto after joining.
-    householdDb.getHouseholdForUser
-      .mockResolvedValueOnce(null)
-      .mockResolvedValueOnce({
-        ...(adminHousehold as object),
-        users: [{ id: joiner.id, name: "Joiner", version: 1 }],
-      });
+    householdDb.getHouseholdForUser.mockResolvedValueOnce(null).mockResolvedValueOnce({
+      ...(adminHousehold as object),
+      users: [{ id: joiner.id, name: "Joiner", version: 1 }],
+    });
     householdDb.getUsersByHouseholdId.mockResolvedValue([{ userId: adminUser.id }]);
     householdDb.addUserToHousehold.mockResolvedValue({ version: 1 });
 
