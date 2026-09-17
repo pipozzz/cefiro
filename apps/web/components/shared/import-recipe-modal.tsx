@@ -34,6 +34,26 @@ export default function ImportRecipeModal({ isOpen, onOpenChange }: ImportRecipe
 
     async function fillUrlFromClipboard() {
       try {
+        // Only read the clipboard when the browser has ALREADY granted
+        // permission, so the read is silent. A cold read otherwise pops an
+        // intrusive native "Paste" confirmation (Safari/WebKit, and Chrome on
+        // first use) that floats over — and blocks — this dialog. Where we
+        // can't confirm a silent read, skip the convenience; the user can
+        // still paste into the field normally.
+        const permissions = navigator.permissions;
+
+        if (!permissions?.query) {
+          return;
+        }
+
+        const status = await permissions
+          .query({ name: "clipboard-read" as PermissionName })
+          .catch(() => null);
+
+        if (!status || status.state !== "granted" || isCancelled) {
+          return;
+        }
+
         const clipboardText = (await navigator.clipboard.readText()).trim();
 
         if (!clipboardText) {

@@ -70,9 +70,19 @@ vi.mock("@heroui/react", () => ({
   toast: vi.fn(),
 }));
 
+function grantClipboardPermission(state: PermissionState = "granted") {
+  Object.defineProperty(navigator, "permissions", {
+    configurable: true,
+    value: { query: vi.fn().mockResolvedValue({ state }) },
+  });
+}
+
 describe("ImportRecipeModal", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // The modal only auto-reads the clipboard when the browser has already
+    // granted clipboard-read permission (a silent read); grant it by default.
+    grantClipboardPermission("granted");
   });
 
   it("renders above desktop menu and overlay stacks", () => {
@@ -98,6 +108,24 @@ describe("ImportRecipeModal", () => {
     await waitFor(() => {
       expect(screen.getByRole("textbox")).toHaveValue("https://example.com/recipe");
     });
+  });
+
+  it("does not read the clipboard when permission is not granted", async () => {
+    // A cold read would pop the intrusive native "Paste" prompt, so we skip it.
+    grantClipboardPermission("prompt");
+    const readText = vi.fn().mockResolvedValue("https://example.com/recipe");
+
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { readText },
+    });
+
+    render(<ImportRecipeModal isOpen onOpenChange={vi.fn()} />);
+
+    await Promise.resolve();
+
+    expect(readText).not.toHaveBeenCalled();
+    expect(screen.getByRole("textbox")).toHaveValue("");
   });
 
   it("does not fill the URL input when clipboard text is not a URL", async () => {
