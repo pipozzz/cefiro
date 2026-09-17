@@ -75,6 +75,29 @@ For an OIDC/GitHub/Google provider instead of password auth, set
 `password_auth_enabled="false"` and add the provider's env vars to the `web`
 task's template (see `.env.example` in the repo root for the full list).
 
+### Email (optional)
+
+To send transactional mail (household invites, etc.), add SMTP keys to the
+same Nomad Variable. They're all optional; sending turns on only when both
+`smtp_host` and `email_from` are set — otherwise those features fall back to a
+copyable link. Works with any SMTP provider (your own server, Fastmail,
+Mailgun, a Gmail app-password, …).
+
+```bash
+nomad var put nomad/jobs/cefiro \
+  master_key="…" postgres_password="…" password_auth_enabled="true" \
+  smtp_host="smtp.example.com" \
+  smtp_port="587" \
+  smtp_secure="false" \
+  smtp_user="postmaster@example.com" \
+  smtp_password="…" \
+  email_from="Cefiro <no-reply@example.com>"
+```
+
+> `smtp_port` 587 with `smtp_secure="false"` is STARTTLS (the common default);
+> use 465 with `smtp_secure="true"` for implicit TLS. Set up SPF/DKIM for your
+> `email_from` domain so mail isn't flagged as spam.
+
 ## 4. Deploy
 
 ```bash

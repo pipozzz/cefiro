@@ -249,6 +249,31 @@
       "codeLabel": "Kod dołączenia",
       "codePlaceholder": "8-znakowy kod",
       "submitButton": "Dołącz do gospodarstwa domowego"
+    },
+    "invite": {
+      "title": "Invite by email",
+      "description": "Invite someone to your household by email. They will get a link to join.",
+      "emailPlaceholder": "name@example.com",
+      "sendButton": "Send invite",
+      "sent": "Invite sent",
+      "createdNoEmail": "Invite created — share the link below",
+      "shareLinkHint": "Share this link to let them join:",
+      "copyLink": "Copy link",
+      "linkCopied": "Link copied",
+      "couldNotCopy": "Could not copy the link",
+      "pendingHeading": "Pending invites",
+      "revoke": "Revoke invite",
+      "couldNotInvite": "Could not send the invite",
+      "couldNotRevoke": "Could not revoke the invite"
+    },
+    "joinPage": {
+      "title": "Join {household}",
+      "body": "A household shares recipes, groceries and meal plans.",
+      "acceptButton": "Accept invite",
+      "invalidTitle": "Invite not available",
+      "invalidBody": "This invite is invalid or has expired.",
+      "goToHousehold": "Go to household",
+      "couldNotJoin": "Could not join the household"
     }
   },
   "caldav": {

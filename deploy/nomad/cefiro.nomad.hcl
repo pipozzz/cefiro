@@ -203,6 +203,12 @@ job "cefiro" {
         MASTER_KEY={{ .master_key }}
         DATABASE_URL=postgres://postgres:{{ .postgres_password }}@localhost:5432/cefiro
         PASSWORD_AUTH_ENABLED={{ .password_auth_enabled }}
+        {{ if .smtp_host }}SMTP_HOST={{ .smtp_host }}{{ end }}
+        {{ if .smtp_port }}SMTP_PORT={{ .smtp_port }}{{ end }}
+        {{ if .smtp_secure }}SMTP_SECURE={{ .smtp_secure }}{{ end }}
+        {{ if .smtp_user }}SMTP_USER={{ .smtp_user }}{{ end }}
+        {{ if .smtp_password }}SMTP_PASSWORD={{ .smtp_password }}{{ end }}
+        {{ if .email_from }}EMAIL_FROM={{ .email_from }}{{ end }}
         {{- end }}
         EOH
       }
