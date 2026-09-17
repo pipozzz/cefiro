@@ -70,3 +70,49 @@ describe("resolveEntitlements", () => {
     expect(result.planId).toBe("free");
   });
 });
+
+describe("feature gating helpers", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    getActiveSubscriptionForUser.mockReset();
+  });
+
+  it("isEntitledTo is always true when billing is off", async () => {
+    mockBilling(false);
+    const { isEntitledTo } = await loadEntitlements();
+
+    expect(await isEntitledTo("user-1", "caldavSync")).toBe(true);
+    expect(await isEntitledTo("user-1", "aiImageGeneration")).toBe(true);
+  });
+
+  it("isEntitledTo denies paid features on the free plan", async () => {
+    mockBilling(true);
+    getActiveSubscriptionForUser.mockResolvedValue(null);
+    const { isEntitledTo } = await loadEntitlements();
+
+    expect(await isEntitledTo("user-1", "caldavSync")).toBe(false);
+    expect(await isEntitledTo("user-1", "aiImageGeneration")).toBe(false);
+  });
+
+  it("isEntitledTo grants paid features on a paid plan", async () => {
+    mockBilling(true);
+    getActiveSubscriptionForUser.mockResolvedValue({ plan: "plus", status: "active" });
+    const { isEntitledTo } = await loadEntitlements();
+
+    expect(await isEntitledTo("user-1", "caldavSync")).toBe(true);
+  });
+
+  it("householdMemberLimit is unlimited when billing is off, capped otherwise", async () => {
+    mockBilling(false);
+    const off = await loadEntitlements();
+    expect(await off.householdMemberLimit("owner")).toBe(Number.POSITIVE_INFINITY);
+
+    vi.resetModules();
+    mockBilling(true);
+    getActiveSubscriptionForUser.mockResolvedValue(null);
+    const on = await loadEntitlements();
+    expect(await on.householdMemberLimit("owner")).toBe(
+      entitlementsForPlan("free").maxHouseholdMembers
+    );
+  });
+});
