@@ -5,8 +5,6 @@ import type { Readable } from "stream";
 
 import { SERVER_CONFIG } from "@norish/config/env-config-server";
 
-import { serverLogger as log } from "../logger";
-
 /**
  * The media object store: one small seam that both the filesystem (the
  * self-hosted default) and an S3-compatible bucket implement, so the rest of
@@ -402,13 +400,10 @@ let store: ObjectStore | null = null;
  */
 export function getObjectStore(): ObjectStore {
   if (!store) {
-    if (SERVER_CONFIG.STORAGE_DRIVER === "s3") {
-      log.info("Media object store: S3-compatible bucket");
-      store = new S3ObjectStore();
-    } else {
-      log.info({ root: SERVER_CONFIG.UPLOADS_DIR }, "Media object store: filesystem");
-      store = new FsObjectStore(SERVER_CONFIG.UPLOADS_DIR);
-    }
+    store =
+      SERVER_CONFIG.STORAGE_DRIVER === "s3"
+        ? new S3ObjectStore()
+        : new FsObjectStore(SERVER_CONFIG.UPLOADS_DIR);
   }
 
   return store;
