@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTRPC } from "@/app/providers/trpc-provider";
 import { showSafeErrorToast } from "@/lib/ui/safe-error-toast";
+import { GlobeAltIcon, LinkIcon as LinkIconMini, LockClosedIcon } from "@heroicons/react/16/solid";
 import { ArrowTopRightOnSquareIcon, LinkIcon } from "@heroicons/react/24/outline";
 import { Button, toast } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -11,6 +12,12 @@ import { useTranslations } from "next-intl";
 type Visibility = "private" | "unlisted" | "public";
 
 const VISIBILITIES: Visibility[] = ["private", "unlisted", "public"];
+
+const VISIBILITY_ICON: Record<Visibility, typeof LockClosedIcon> = {
+  private: LockClosedIcon,
+  unlisted: LinkIconMini,
+  public: GlobeAltIcon,
+};
 
 export function CookbookShareCard({ cookbookId }: { cookbookId: string }) {
   const trpc = useTRPC();
@@ -62,13 +69,6 @@ export function CookbookShareCard({ cookbookId }: { cookbookId: string }) {
   const isShared = visibility !== "private";
   const publicUrl = slug ? `${window.location.origin}/c/${slug}` : null;
 
-  const pill = (active: boolean) =>
-    `rounded-full px-4 py-1.5 text-sm font-medium transition ${
-      active
-        ? "bg-primary text-primary-foreground"
-        : "bg-content2 text-default-600 hover:bg-content3"
-    }`;
-
   const onCopy = async () => {
     if (!publicUrl) return;
 
@@ -85,18 +85,38 @@ export function CookbookShareCard({ cookbookId }: { cookbookId: string }) {
       <h2 className="text-foreground mb-3 text-sm font-semibold">{t("heading")}</h2>
 
       <p className="text-default-500 mb-2 text-xs">{t("visibilityLabel")}</p>
-      <div className="flex flex-wrap gap-2">
-        {VISIBILITIES.map((v) => (
-          <button
-            key={v}
-            type="button"
-            className={pill(visibility === v)}
-            disabled={setVisibility.isPending}
-            onClick={() => visibility !== v && setVisibility.mutate({ cookbookId, visibility: v })}
-          >
-            {t(v)}
-          </button>
-        ))}
+      {/* Segmented control: a shared track with the selected option raised as a
+          filled pill, so it reads as one switch with a current choice. */}
+      <div
+        role="radiogroup"
+        aria-label={t("visibilityLabel")}
+        className="border-default-200 bg-content2 flex w-full gap-1 rounded-full border p-1"
+      >
+        {VISIBILITIES.map((v) => {
+          const Icon = VISIBILITY_ICON[v];
+          const active = visibility === v;
+
+          return (
+            <button
+              key={v}
+              type="button"
+              role="radio"
+              aria-checked={active}
+              className={`flex flex-1 items-center justify-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition ${
+                active
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-default-600 hover:text-foreground"
+              }`}
+              disabled={setVisibility.isPending}
+              onClick={() =>
+                visibility !== v && setVisibility.mutate({ cookbookId, visibility: v })
+              }
+            >
+              <Icon className="h-4 w-4 shrink-0" />
+              <span className="truncate">{t(v)}</span>
+            </button>
+          );
+        })}
       </div>
       <p className="text-default-500 mt-2 text-xs">{t(`${visibility}Hint`)}</p>
 
