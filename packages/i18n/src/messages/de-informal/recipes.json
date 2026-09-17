@@ -409,7 +409,8 @@
     "searchRecipes": "Rezepte suchen",
     "noRecipesToAdd": "Keine Rezepte gefunden.",
     "addCount": "{count, plural, one {# Rezept hinzufügen} other {# Rezepte hinzufügen}}",
-    "everythingAlreadyIn": "Alle Rezepte sind bereits in diesem Kochbuch."
+    "everythingAlreadyIn": "Alle Rezepte sind bereits in diesem Kochbuch.",
+    "share": "Sharing"
   },
   "servingsControl": {
     "decrease": "Decrease servings",

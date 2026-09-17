@@ -409,7 +409,8 @@
     "searchRecipes": "Търси рецепти",
     "noRecipesToAdd": "Няма намерени рецепти.",
     "addCount": "{count, plural, one {Добави # рецепта} other {Добави # рецепти}}",
-    "everythingAlreadyIn": "Всички рецепти вече са в тази готварска книга."
+    "everythingAlreadyIn": "Всички рецепти вече са в тази готварска книга.",
+    "share": "Sharing"
   },
   "servingsControl": {
     "decrease": "Decrease servings",

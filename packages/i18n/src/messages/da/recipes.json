@@ -409,7 +409,8 @@
     "searchRecipes": "Søg opskrifter",
     "noRecipesToAdd": "Ingen opskrifter fundet.",
     "addCount": "{count, plural, one {Tilføj # opskrift} other {Tilføj # opskrifter}}",
-    "everythingAlreadyIn": "Alle opskrifter er allerede i denne kogebog."
+    "everythingAlreadyIn": "Alle opskrifter er allerede i denne kogebog.",
+    "share": "Sharing"
   },
   "servingsControl": {
     "decrease": "Decrease servings",

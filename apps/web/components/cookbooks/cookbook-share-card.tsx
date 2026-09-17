@@ -81,9 +81,7 @@ export function CookbookShareCard({ cookbookId }: { cookbookId: string }) {
   };
 
   return (
-    <div className="bg-content1 ring-default-100 rounded-2xl p-4 ring-1">
-      <h2 className="text-foreground mb-3 text-sm font-semibold">{t("heading")}</h2>
-
+    <div className="flex flex-col">
       <p className="text-default-500 mb-2 text-xs">{t("visibilityLabel")}</p>
       {/* Segmented control: a shared track with the selected option raised as a
           filled pill, so it reads as one switch with a current choice. */}
