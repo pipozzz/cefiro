@@ -61,6 +61,8 @@ COPY tooling/prettier/package.json ./tooling/prettier/package.json
 COPY tooling/tailwind/package.json ./tooling/tailwind/package.json
 COPY tooling/tailwind/heroui-theme.css ./tooling/tailwind/heroui-theme.css
 COPY tooling/tailwind/heroui-theme.js ./tooling/tailwind/heroui-theme.js
+COPY tooling/tailwind/marks.css ./tooling/tailwind/marks.css
+COPY tooling/tailwind/marks.js ./tooling/tailwind/marks.js
 COPY tooling/tailwind/postcss-config.js ./tooling/tailwind/postcss-config.js
 COPY tooling/typescript/package.json ./tooling/typescript/package.json
 
