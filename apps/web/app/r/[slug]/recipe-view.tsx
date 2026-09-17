@@ -11,6 +11,8 @@ import { SaveRecipeButton } from "@/components/social/save-recipe-button";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
+import type { RouterOutputs } from "@norish/trpc/client";
+
 function formatAmount(amount: number | null | undefined): string {
   if (amount === null || amount === undefined) {
     return "";
@@ -62,12 +64,23 @@ function AuthorChip({
   );
 }
 
-export function PublicRecipeView({ slug }: { slug: string }) {
+/** The payload the public-recipe query returns; the page server-loads it and
+ * hands it in as `initialData` so this view renders content on the server. */
+type PublicRecipeData = RouterOutputs["social"]["getPublicRecipe"];
+
+export function PublicRecipeView({
+  slug,
+  initialData,
+}: {
+  slug: string;
+  initialData?: PublicRecipeData;
+}) {
   const trpc = useTRPC();
   const t = useTranslations("social.recipe");
   const tCat = useTranslations("social.categories");
   const { data, isLoading, isError } = useQuery({
     ...trpc.social.getPublicRecipe.queryOptions({ slug }),
+    initialData,
     retry: false,
   });
 
