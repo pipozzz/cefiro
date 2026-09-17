@@ -10,6 +10,7 @@
     "./cache/household": "./src/cache/household.ts",
     "./config/server-config-loader": "./src/config/server-config-loader.ts",
     "./media/storage": "./src/media/storage.ts",
+    "./email/mailer": "./src/email/mailer.ts",
     "./media/avatar-cleanup": "./src/media/avatar-cleanup.ts",
     "./media/dish-color": "./src/media/dish-color.ts",
     "./media/generated-image": "./src/media/generated-image.ts",
@@ -79,6 +80,7 @@
     "heic-convert": "^2.1.0",
     "ioredis": "catalog:",
     "jszip": "catalog:",
+    "nodemailer": "^10.0.10",
     "ollama": "^0.6.3",
     "openai": "7.5.0",
     "pino": "^10.3.1",
@@ -96,6 +98,7 @@
     "@norish/prettier-config": "workspace:*",
     "@norish/tsconfig": "workspace:*",
     "@types/archiver": "catalog:",
+    "@types/nodemailer": "^8.0.2",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "vitest": "catalog:"
