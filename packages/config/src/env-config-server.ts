@@ -164,6 +164,22 @@ const ServerConfigSchema = z.object({
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),
 
+  // Email (SMTP) — all optional. Sending is enabled only when SMTP_HOST and
+  // EMAIL_FROM are both set; otherwise the mailer is a no-op and features that
+  // would email (e.g. household invites) fall back to a shareable link.
+  SMTP_HOST: z.string().optional(),
+  SMTP_PORT: z.coerce.number().int().positive().default(587),
+  // STARTTLS on 587 (secure=false) is the common default; set true for 465.
+  SMTP_SECURE: z
+    .string()
+    .transform((val) => val === "true" || val === "1")
+    .pipe(z.boolean())
+    .default(false),
+  SMTP_USER: z.string().optional(),
+  SMTP_PASSWORD: z.string().optional(),
+  // The From header, e.g. `Cefiro <no-reply@cefiro.example.com>`.
+  EMAIL_FROM: z.string().optional(),
+
   // During build (SKIP_ENV_VALIDATION=1), use a placeholder key for Next.js compilation
   // At runtime, require a real 32+ char key - the placeholder is never persisted in the image
   MASTER_KEY: isBuild
