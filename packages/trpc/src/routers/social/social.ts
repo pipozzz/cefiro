@@ -1,7 +1,10 @@
 import { TRPCError } from "@trpc/server";
 
 import type { FeedRecipeRow } from "@norish/db/repositories/follows";
-import type { PublicCookbookCard } from "@norish/db/repositories/public-cookbooks";
+import type {
+  DiscoverCookbookCard,
+  PublicCookbookCard,
+} from "@norish/db/repositories/public-cookbooks";
 import type { RatingStats } from "@norish/db/repositories/ratings";
 import type { PublicProfile, PublicProfileCard } from "@norish/db/repositories/user-profiles";
 import type { FullRecipeDTO } from "@norish/shared/contracts";
@@ -31,6 +34,7 @@ import {
 import {
   getCookbookPublishState,
   getPublicCookbookBySlug,
+  listDiscoverCookbooks,
   listPublicCookbooksByUserId,
   setCookbookDescription,
   setCookbookVisibility,
@@ -72,6 +76,7 @@ import {
   CheckHandleInputSchema,
   CookbookPublishStateInputSchema,
   DeleteCommentInputSchema,
+  DiscoverCookbooksInputSchema,
   DiscoverCooksInputSchema,
   DiscoverInputSchema,
   FeedInputSchema,
@@ -244,6 +249,10 @@ function toCookbookCard(row: PublicCookbookCard) {
       .map((c) => (c.recipeSlug ? toSlugMediaUrl(c.image, c.recipeSlug) : null))
       .filter((u): u is string => !!u),
   };
+}
+
+function toDiscoverCookbookCard(row: DiscoverCookbookCard) {
+  return { ...toCookbookCard(row), owner: row.owner };
 }
 
 function toRatingDto(stats: RatingStats | undefined): { average: number | null; count: number } {
@@ -438,6 +447,14 @@ const discoverCooks = publicProcedure.input(DiscoverCooksInputSchema).query(asyn
 
   return { cooks: items.map(toProfileCard), nextCursor };
 });
+
+const discoverCookbooks = publicProcedure
+  .input(DiscoverCookbooksInputSchema)
+  .query(async ({ input }) => {
+    const { items, nextCursor } = await listDiscoverCookbooks(input.limit, input.cursor);
+
+    return { cookbooks: items.map(toDiscoverCookbookCard), nextCursor };
+  });
 
 // --- Public cookbooks ---------------------------------------------------
 
@@ -974,6 +991,7 @@ export const socialProcedures = router({
   search,
   suggestedCooks,
   discoverCooks,
+  discoverCookbooks,
   getPublicCookbook,
   listPublicCookbooks,
   getCookbookPublishState: getCookbookPublishStateProc,

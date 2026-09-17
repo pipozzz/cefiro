@@ -20,7 +20,9 @@
     "empty": "No public recipes here yet.",
     "loadMore": "Load more",
     "signIn": "Sign in",
-    "openApp": "Open app"
+    "openApp": "Open app",
+    "modeCookbooks": "Cookbooks",
+    "noCookbooks": "No public cookbooks yet."
   },
   "categories": {
     "Breakfast": "Breakfast",
