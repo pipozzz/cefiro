@@ -24,7 +24,7 @@ const moments: {
     tint: "text-tint-site",
     track: "bg-tint-site/20",
     fill: "bg-tint-site",
-    body: "A link, a video, a photo or plain text. Norish parses it into a clean readable recipe.",
+    body: "A link, a video, a photo or plain text. Cefiro parses it into a clean readable recipe.",
   },
   {
     title: "Plan",

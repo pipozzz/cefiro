@@ -47,7 +47,7 @@ export function SiteHeader() {
       data-hidden={hidden}
     >
       <div className="bg-surface mx-auto flex h-14 max-w-5xl items-center justify-between gap-4 rounded-full px-4 shadow-[0_8px_28px_-10px_rgb(0_0_0/0.3)] sm:h-16 sm:px-5">
-        <a aria-label="Norish home" className="shrink-0" href="#top">
+        <a aria-label="Cefiro home" className="shrink-0" href="#top">
           <BrandLogo height={26} width={97} />
         </a>
 
@@ -65,7 +65,7 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-1">
           <a
-            aria-label="Norish on GitHub"
+            aria-label="Cefiro on GitHub"
             className="text-muted hover:text-foreground hover:bg-default grid size-9 place-items-center rounded-full transition-colors"
             href={links.github}
             rel="noreferrer"

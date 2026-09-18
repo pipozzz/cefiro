@@ -25,7 +25,7 @@ const groups: Group[] = [
     features: [
       {
         title: "From a link",
-        body: "Websites, blogs and recipe apps. Norish turns the structured data into a clean recipe, no clutter.",
+        body: "Websites, blogs and recipe apps. Cefiro turns the structured data into a clean recipe, no clutter.",
       },
       {
         title: "From a video",
@@ -110,7 +110,7 @@ const groups: Group[] = [
       },
       {
         title: "Installs like an app",
-        body: "Add Norish as a PWA and use it just like an app.",
+        body: "Add Cefiro as a PWA and use it just like an app.",
       },
       {
         title: "Native apps",

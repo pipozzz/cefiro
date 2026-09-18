@@ -34,7 +34,7 @@ export function SelfHost() {
               Your recipes, your server
             </h2>
             <p className="text-muted mt-4 text-pretty">
-              Norish is free and fully open source under the AGPL-3.0 license. Run it on your own
+              Cefiro is free and fully open source under the AGPL-3.0 license. Run it on your own
               hardware with Docker: no subscription, no account with us, nothing to migrate away
               from later.
             </p>

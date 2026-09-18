@@ -13,7 +13,7 @@ import { FireIcon } from "@heroicons/react/24/solid";
 
 import { Shot } from "./shot";
 
-/** Amount, unit, name — the unit is the part Norish colours. */
+/** Amount, unit, name — the unit is the part Cefiro colours. */
 const ingredients = [
   { amount: "2", unit: "tablespoons", name: "olive oil" },
   { amount: "2", unit: "", name: "garlic cloves crushed" },
@@ -34,7 +34,7 @@ function Control({ children }: { children: React.ReactNode }) {
 }
 
 /**
- * The top of a real Norish recipe page, rebuilt in markup: the photo, the
+ * The top of a real Cefiro recipe page, rebuilt in markup: the photo, the
  * header card and the ingredients beneath it, cut off partway with a fade
  * because that is what it is — a slice of a longer page. Everything here
  * mirrors the running app, down to the bold amount, the green unit and the

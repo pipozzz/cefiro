@@ -32,6 +32,6 @@ export const siteConfig = {
     },
   ],
   links: {
-    github: "https://github.com/norish-recipes/norish",
+    github: "https://github.com/pipozzz/cefiro",
   },
 };
