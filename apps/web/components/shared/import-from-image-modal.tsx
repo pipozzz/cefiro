@@ -168,7 +168,7 @@ export default function ImportFromImageModal({ isOpen, onOpenChange }: ImportFro
       });
       setFiles([]);
       onOpenChange(false);
-      router.push("/");
+      router.push("/library");
     } catch (error) {
       showSafeErrorToast({
         title: t("failed"),

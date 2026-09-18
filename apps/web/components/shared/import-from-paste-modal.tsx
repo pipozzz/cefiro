@@ -37,7 +37,7 @@ export default function ImportFromPasteModal({ isOpen, onOpenChange }: ImportFro
       });
       onOpenChange(false);
       setText("");
-      router.push("/");
+      router.push("/library");
     } catch (error) {
       showSafeErrorToast({
         title: t("failed"),
@@ -73,7 +73,7 @@ export default function ImportFromPasteModal({ isOpen, onOpenChange }: ImportFro
       });
       onOpenChange(false);
       setText("");
-      router.push("/");
+      router.push("/library");
     } catch (error) {
       showSafeErrorToast({
         title: t("failed"),

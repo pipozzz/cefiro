@@ -32,6 +32,7 @@
   },
   "nav": {
     "home": "레시피",
+    "library": "내 레시피",
     "calendar": "달력",
     "groceries": "장보기",
     "feed": "Feed",

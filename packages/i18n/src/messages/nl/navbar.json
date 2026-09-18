@@ -32,6 +32,7 @@
   },
   "nav": {
     "home": "Recepten",
+    "library": "Mijn recepten",
     "calendar": "Kalender",
     "groceries": "Boodschappen",
     "feed": "Feed",

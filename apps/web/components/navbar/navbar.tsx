@@ -15,9 +15,10 @@ import { siteConfig } from "@norish/web/config/site";
 // Map hrefs to translation keys
 const navLabelKeys: Record<
   string,
-  "home" | "calendar" | "groceries" | "feed" | "discover" | "profile"
+  "home" | "library" | "calendar" | "groceries" | "feed" | "discover" | "profile"
 > = {
   "/": "home",
+  "/library": "library",
   "/groceries": "groceries",
   "/calendar": "calendar",
   "/feed": "feed",
@@ -50,8 +51,8 @@ export const Navbar = () => {
         onMouseLeave={onHoverEnd}
       >
         <nav
-          className="bg-surface mx-auto flex h-16 w-full items-center justify-between gap-4 rounded-[40px] px-4 shadow-[0_8px_28px_-10px_rgba(0,0,0,0.3)] transition-all"
           aria-label={t("mainNav")}
+          className="bg-surface mx-auto flex h-16 w-full items-center justify-between gap-4 rounded-[40px] px-4 shadow-[0_8px_28px_-10px_rgba(0,0,0,0.3)] transition-all"
         >
           {/* Left */}
           <div className="flex min-w-0 items-center justify-start">

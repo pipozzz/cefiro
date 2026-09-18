@@ -85,7 +85,7 @@ export default function ActionsMenu({ id, buttonClassName }: Props) {
   const handleDeleteConfirm = React.useCallback(() => {
     onDeleteModalClose();
     deleteRecipe(id, recipe.version);
-    router.push("/");
+    router.push("/library");
   }, [deleteRecipe, id, recipe.version, router, onDeleteModalClose]);
 
   const menuItems = useMemo(() => {
@@ -111,6 +111,7 @@ export default function ActionsMenu({ id, buttonClassName }: Props) {
         onPress: () => setOpenCookbooks(true),
       },
     ];
+
     if (canEdit) {
       items.push({
         key: "share",
@@ -228,6 +229,7 @@ export default function ActionsMenu({ id, buttonClassName }: Props) {
         iconClassName: "text-danger",
       });
     }
+
     return items;
   }, [
     canEdit,
@@ -244,6 +246,7 @@ export default function ActionsMenu({ id, buttonClassName }: Props) {
     allergies,
     enrichment,
   ]);
+
   return (
     <>
       <Dropdown isOpen={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
@@ -265,9 +268,9 @@ export default function ActionsMenu({ id, buttonClassName }: Props) {
           >
             {(item: MenuItem) => (
               <Dropdown.Item
-                id={item.key}
                 key={item.key}
                 className="py-1 data-[focus=true]:bg-transparent data-[hovered=true]:bg-transparent"
+                id={item.key}
                 textValue={item.label}
               >
                 <Button
@@ -280,11 +283,11 @@ export default function ActionsMenu({ id, buttonClassName }: Props) {
                   )}
                   isDisabled={item.isDisabled}
                   size="md"
+                  variant="tertiary"
                   onPress={() => {
                     setIsDropdownOpen(false);
                     item.onPress();
                   }}
-                  variant="tertiary"
                 >
                   {<span className={item.iconClassName ?? "text-muted"}>{item.icon}</span>}
                   <span className="flex flex-col items-start">

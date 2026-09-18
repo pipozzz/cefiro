@@ -32,6 +32,7 @@
   },
   "nav": {
     "home": "Recepty",
+    "library": "Moje recepty",
     "calendar": "Kalendár",
     "groceries": "Nákupy",
     "feed": "Feed",
