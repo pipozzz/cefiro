@@ -1,26 +1,24 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useTRPC } from "@/app/providers/trpc-provider";
+import { PublicSlugSmartInstruction } from "@/components/recipe/public-slug-smart-instruction";
+import AmountDisplayToggle from "@/components/recipes/amount-display-toggle";
+import { PublicServingsControl } from "@/components/recipes/public-servings-control";
+import { ReadonlyIngredientsList } from "@/components/recipes/readonly-ingredients-list";
+import { ReadonlyStepsList } from "@/components/recipes/readonly-steps-list";
 import { NotFoundView } from "@/components/shared/not-found-view";
 import RecipeSkeleton from "@/components/skeleton/recipe-skeleton";
 import { CommentsSection } from "@/components/social/comments-section";
 import { LikeButton } from "@/components/social/like-button";
 import { RecipeRating } from "@/components/social/recipe-rating";
 import { SaveRecipeButton } from "@/components/social/save-recipe-button";
+import { usePublicRecipeConfigQuery } from "@/hooks/recipes/use-public-recipe-config-query";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import type { RouterOutputs } from "@norish/trpc/client";
-
-function formatAmount(amount: number | null | undefined): string {
-  if (amount === null || amount === undefined) {
-    return "";
-  }
-
-  // Trim trailing zeros; keep up to 2 decimals.
-  return Number.parseFloat(amount.toFixed(2)).toString();
-}
 
 function MetaPill({ label, value }: { label: string; value: string }) {
   return (
@@ -48,12 +46,12 @@ function AuthorChip({
 
   return (
     <Link
-      href={`/u/${author.handle}`}
       className="bg-content2 hover:bg-content3 inline-flex items-center gap-2 rounded-full py-1 pr-3 pl-1 transition"
+      href={`/u/${author.handle}`}
     >
       {author.avatarUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={author.avatarUrl} alt="" className="h-7 w-7 rounded-full object-cover" />
+        <img alt="" className="h-7 w-7 rounded-full object-cover" src={author.avatarUrl} />
       ) : (
         <span className="bg-primary text-primary-foreground flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold">
           {name.charAt(0).toUpperCase()}
@@ -77,7 +75,6 @@ export function PublicRecipeView({
 }) {
   const trpc = useTRPC();
   const t = useTranslations("social.recipe");
-  const tCat = useTranslations("social.categories");
   const { data, isLoading, isError } = useQuery({
     ...trpc.social.getPublicRecipe.queryOptions({ slug }),
     initialData,
@@ -89,10 +86,39 @@ export function PublicRecipeView({
   }
 
   if (isError || !data) {
-    return <NotFoundView title={t("notFoundTitle")} message={t("notFoundMessage")} />;
+    return <NotFoundView message={t("notFoundMessage")} title={t("notFoundTitle")} />;
   }
 
+  return <PublicRecipeBody data={data} slug={slug} />;
+}
+
+/**
+ * The rendered recipe. Split out from {@link PublicRecipeView} so the servings
+ * state can be seeded from the (now guaranteed) recipe yield. This gives the
+ * discovered recipe the same cooking affordances as the in-app page — scale
+ * the yield, tick off ingredients, and cook through timer-aware steps — while
+ * keeping the discovery-only social bar (like, save, rate, comment).
+ */
+function PublicRecipeBody({ slug, data }: { slug: string; data: PublicRecipeData }) {
+  const t = useTranslations("social.recipe");
+  const tCat = useTranslations("social.categories");
+  const { units } = usePublicRecipeConfigQuery();
+
   const { recipe, author, recipeId, favoriteCount, rating } = data;
+
+  // A recipe may state no yield (null); fall back to 1 so scaling is a no-op
+  // rather than dividing by zero.
+  const baseServings = recipe.servings && recipe.servings > 0 ? recipe.servings : 1;
+  const [servings, setServings] = useState(Math.max(0.125, baseServings));
+  const ratio = servings / baseServings;
+  const adjustedIngredients = useMemo(
+    () =>
+      recipe.recipeIngredients.map((ingredient) => ({
+        ...ingredient,
+        amount: ingredient.amount != null ? ingredient.amount * ratio : null,
+      })),
+    [recipe.recipeIngredients, ratio]
+  );
 
   const timePills = [
     recipe.prepMinutes ? { label: t("prep"), value: `${recipe.prepMinutes} min` } : null,
@@ -109,7 +135,7 @@ export function PublicRecipeView({
         {recipe.image ? (
           <div className="relative h-64 w-full md:h-96">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={recipe.image} alt={recipe.name} className="h-full w-full object-cover" />
+            <img alt={recipe.name} className="h-full w-full object-cover" src={recipe.image} />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
             <div className="absolute inset-x-0 bottom-0 p-6 md:p-8">
               <div className="mb-3">
@@ -153,8 +179,8 @@ export function PublicRecipeView({
           {recipe.tags.map((tag) => (
             <Link
               key={`tag-${tag.name}`}
-              href={`/discover?tag=${encodeURIComponent(tag.name)}`}
               className="bg-content2 text-default-600 hover:bg-content3 hover:text-foreground rounded-full px-3 py-1 text-xs font-medium transition"
+              href={`/discover?tag=${encodeURIComponent(tag.name)}`}
             >
               #{tag.name}
             </Link>
@@ -172,67 +198,50 @@ export function PublicRecipeView({
       )}
 
       <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4">
-        <LikeButton recipeId={recipeId} slug={slug} initialCount={favoriteCount} />
+        <LikeButton initialCount={favoriteCount} recipeId={recipeId} slug={slug} />
         <SaveRecipeButton recipeId={recipeId} slug={slug} />
       </div>
 
       <div className="mt-4">
         <RecipeRating
-          recipeId={recipeId}
-          slug={slug}
           initialAverage={rating.average}
           initialCount={rating.count}
+          recipeId={recipeId}
+          slug={slug}
         />
       </div>
 
       {/* Ingredients + steps */}
-      <div className="mt-10 grid gap-10 md:grid-cols-[minmax(0,20rem)_1fr]">
+      <div className="mt-10 grid gap-10 md:grid-cols-[minmax(0,22rem)_1fr]">
         <aside className="md:sticky md:top-6 md:self-start">
-          <h2 className="text-foreground mb-4 text-xl font-semibold">{t("ingredients")}</h2>
-          <ul className="space-y-2">
-            {recipe.recipeIngredients.map((ing, i) => (
-              <li
-                key={`${ing.ingredientName}-${i}`}
-                className="border-default-100 flex items-baseline gap-2 border-b pb-2 text-sm"
-              >
-                <span className="text-foreground font-medium">
-                  {formatAmount(ing.amount)} {ing.unit ?? ""}
-                </span>
-                <span className="text-default-600">{ing.ingredientName}</span>
-              </li>
-            ))}
-          </ul>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <h2 className="text-foreground text-xl font-semibold">{t("ingredients")}</h2>
+            <div className="flex items-center gap-2">
+              <AmountDisplayToggle />
+              <PublicServingsControl servings={servings} onChange={setServings} />
+            </div>
+          </div>
+          <ReadonlyIngredientsList
+            interactive
+            ingredients={adjustedIngredients}
+            systemUsed={recipe.systemUsed}
+            units={units}
+          />
         </aside>
 
         <section>
           <h2 className="text-foreground mb-4 text-xl font-semibold">{t("steps")}</h2>
-          <ol className="space-y-6">
-            {recipe.steps.map((step, i) => (
-              <li key={`step-${i}`} className="flex gap-4">
-                <span className="bg-primary text-primary-foreground flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold">
-                  {i + 1}
-                </span>
-                <div className="flex-1">
-                  <p className="text-default-700 leading-relaxed">{step.step}</p>
-                  {step.images && step.images.length > 0 && (
-                    <div className="mt-3 flex flex-wrap gap-3">
-                      {step.images.map((img, j) =>
-                        img.image ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            key={j}
-                            src={img.image}
-                            alt=""
-                            className="h-32 w-32 rounded-xl object-cover"
-                          />
-                        ) : null
-                      )}
-                    </div>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ol>
+          <ReadonlyStepsList
+            enableTimers
+            interactive
+            InstructionComponent={PublicSlugSmartInstruction}
+            ingredients={adjustedIngredients}
+            recipeId={recipeId}
+            recipeName={recipe.name}
+            steps={recipe.steps}
+            systemUsed={recipe.systemUsed}
+            units={units}
+          />
 
           {recipe.notes ? (
             <div className="bg-content2 mt-8 rounded-2xl p-5">
@@ -261,10 +270,10 @@ export function PublicRecipeView({
         <p className="text-default-500 mt-10 text-sm">
           {t("source")}{" "}
           <a
-            href={recipe.url}
-            target="_blank"
-            rel="noreferrer noopener"
             className="text-primary hover:underline"
+            href={recipe.url}
+            rel="noreferrer noopener"
+            target="_blank"
           >
             {recipe.url}
           </a>
@@ -272,9 +281,9 @@ export function PublicRecipeView({
       ) : null}
 
       <CommentsSection
+        recipeAuthorHandle={author?.handle ?? null}
         recipeId={recipeId}
         slug={slug}
-        recipeAuthorHandle={author?.handle ?? null}
       />
     </article>
   );

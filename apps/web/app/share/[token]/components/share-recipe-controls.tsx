@@ -1,9 +1,9 @@
 "use client";
 
 import AmountDisplayToggle from "@/components/recipes/amount-display-toggle";
+import { PublicServingsControl } from "@/components/recipes/public-servings-control";
 
 import { usePublicRecipeContext } from "../public/public-recipe-context";
-import { ShareServingsControl } from "./share-servings-control";
 import { ShareSystemSwitcher } from "./share-system-switcher";
 
 export function ShareRecipeControls() {
@@ -12,7 +12,7 @@ export function ShareRecipeControls() {
   return (
     <>
       <AmountDisplayToggle />
-      <ShareServingsControl servings={state.servings} onChange={state.setServings} />
+      <PublicServingsControl servings={state.servings} onChange={state.setServings} />
       <ShareSystemSwitcher
         activeSystem={state.activeSystem}
         availableSystems={state.availableSystems}

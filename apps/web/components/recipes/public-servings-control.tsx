@@ -10,7 +10,13 @@ function formatServings(n: number): string {
   return n.toFixed(2).replace(/\.?0+$/, "");
 }
 
-export function ShareServingsControl({
+/**
+ * The stepper the signed-out recipe views (share links and discover) use to
+ * scale a recipe's yield. Presentational only — the caller owns the servings
+ * state and the ingredient rescaling — so it is shared across both public
+ * pages.
+ */
+export function PublicServingsControl({
   servings,
   onChange,
 }: {
