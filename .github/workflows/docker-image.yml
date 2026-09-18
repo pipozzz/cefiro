@@ -18,7 +18,13 @@ on:
 
 concurrency:
   group: docker-image-${{ github.ref }}
-  cancel-in-progress: true
+  # Never cancel an in-progress image build on a burst of merges: each push to
+  # main must produce a deployable image (tagged by commit SHA), and `latest`
+  # must advance to the newest commit. cancel-in-progress:true meant a rapid
+  # series of merges left only the last build running — and if that was
+  # interrupted too, no image was published at all. `false` queues builds so
+  # they run one after another in merge order instead.
+  cancel-in-progress: false
 
 env:
   REGISTRY: ghcr.io
