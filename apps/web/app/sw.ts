@@ -171,6 +171,14 @@ const serwist = new Serwist({
       matcher: ({ url, sameOrigin }) => sameOrigin && url.pathname.startsWith("/api/"),
       handler: new NetworkOnly({ networkTimeoutSeconds: 10 }),
     },
+    // Cross-origin requests the app doesn't own (e.g. a browser extension
+    // probing GitHub for upstream tags) pass straight to the network. Without
+    // this they reach `defaultCache` below, which has no rule for them and logs
+    // a "FetchEvent.respondWith ... no-response" — noise, not a real failure.
+    {
+      matcher: ({ sameOrigin }) => !sameOrigin,
+      handler: new NetworkOnly(),
+    },
     // Everything else keeps Serwist's Next.js-aware defaults: runtime page/RSC
     // caches for visited routes, static assets and fonts.
     ...defaultCache,
