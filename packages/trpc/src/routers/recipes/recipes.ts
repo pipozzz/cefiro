@@ -36,7 +36,7 @@ import {
 import { announceUsableRecipe } from "@norish/queue/enrichment/announce";
 import { getRecipeEnrichmentStatus } from "@norish/queue/enrichment/status";
 import { getQueues } from "@norish/queue/registry";
-import { isEntitledTo } from "@norish/shared-server/billing/entitlements";
+import { consumeAiCredit, isEntitledTo } from "@norish/shared-server/billing/entitlements";
 import {
   getRecipePermissionPolicy,
   isVideoParsingEnabled,
@@ -381,6 +381,13 @@ export const importFromUrlProcedure = authedProcedure
   .input(RecipeImportInputSchema.extend({ forceAI: z.boolean().optional() }))
   .output(RecipeImportResultSchema)
   .mutation(async ({ ctx, input }) => {
+    if (!(await consumeAiCredit(ctx.user.id))) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You've reached your monthly AI limit. Upgrade for more AI actions.",
+      });
+    }
+
     const { url, forceAI } = input;
     const recipeId = randomUUID();
 
@@ -618,6 +625,13 @@ const getRandomRecipe = authedProcedure
 const importFromImagesProcedure = authedProcedure
   .input(formDataInputSchema)
   .mutation(async ({ ctx, input }) => {
+    if (!(await consumeAiCredit(ctx.user.id))) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You've reached your monthly AI limit. Upgrade for more AI actions.",
+      });
+    }
+
     const files: Array<{ data: string; mimeType: string; filename: string }> = [];
 
     // Process files from FormData
@@ -693,6 +707,13 @@ export const importFromPasteProcedure = authedProcedure
   .input(recipeImportPasteInputSchema)
   .output(recipeImportPasteOutputSchema)
   .mutation(async ({ ctx, input }) => {
+    if (!(await consumeAiCredit(ctx.user.id))) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You've reached your monthly AI limit. Upgrade for more AI actions.",
+      });
+    }
+
     const preparedImport = await preparePasteImport(input.text, input.forceAI);
 
     log.info(
@@ -742,6 +763,16 @@ const requestEnrichment = authedProcedure
       throw new TRPCError({
         code: "FORBIDDEN",
         message: "AI image generation requires an upgraded plan.",
+      });
+    }
+
+    // Enrichment is a metered AI action; consumes a monthly credit (a no-op
+    // when billing is disabled). Checked after the entitlement gate so a denied
+    // image generation never burns a credit.
+    if (!(await consumeAiCredit(ctx.user.id))) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You've reached your monthly AI limit. Upgrade for more AI actions.",
       });
     }
 

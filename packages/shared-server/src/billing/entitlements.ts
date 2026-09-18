@@ -1,5 +1,6 @@
 import type { Entitlements, PlanId } from "@norish/shared/lib/plans";
 import { SERVER_CONFIG } from "@norish/config/env-config-server";
+import { consumeAiUsage, currentAiUsagePeriod } from "@norish/db/repositories/ai-usage";
 import { getActiveSubscriptionForUser } from "@norish/db/repositories/subscriptions";
 import { entitlementsForPlan, isPlanId, UNLIMITED_ENTITLEMENTS } from "@norish/shared/lib/plans";
 
@@ -55,4 +56,20 @@ export async function householdMemberLimit(ownerUserId: string): Promise<number>
   const { entitlements } = await resolveEntitlements(ownerUserId);
 
   return entitlements.maxHouseholdMembers;
+}
+
+/**
+ * Try to consume one monthly AI credit (a URL/paste/image/video import or an
+ * enrichment) for a user. Returns true if allowed — and, when metered, records
+ * the use. Unlimited plans and billing-disabled instances always allow and
+ * never touch the counter, so self-hosting is unmetered.
+ */
+export async function consumeAiCredit(userId: string): Promise<boolean> {
+  const { entitlements } = await resolveEntitlements(userId);
+
+  if (entitlements.aiCreditsPerMonth === Number.POSITIVE_INFINITY) {
+    return true;
+  }
+
+  return consumeAiUsage(userId, currentAiUsagePeriod(), entitlements.aiCreditsPerMonth);
 }

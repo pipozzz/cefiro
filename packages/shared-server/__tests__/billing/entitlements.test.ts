@@ -8,6 +8,13 @@ vi.mock("@norish/db/repositories/subscriptions", () => ({
   getActiveSubscriptionForUser,
 }));
 
+const consumeAiUsage = vi.fn();
+
+vi.mock("@norish/db/repositories/ai-usage", () => ({
+  consumeAiUsage,
+  currentAiUsagePeriod: () => "2026-09",
+}));
+
 function mockBilling(enabled: boolean) {
   vi.doMock("@norish/config/env-config-server", () => ({
     SERVER_CONFIG: { BILLING_ENABLED: enabled },
@@ -114,5 +121,45 @@ describe("feature gating helpers", () => {
     expect(await on.householdMemberLimit("owner")).toBe(
       entitlementsForPlan("free").maxHouseholdMembers
     );
+  });
+});
+
+describe("consumeAiCredit", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    getActiveSubscriptionForUser.mockReset();
+    consumeAiUsage.mockReset();
+  });
+
+  it("always allows and never meters when billing is off", async () => {
+    mockBilling(false);
+    const { consumeAiCredit } = await loadEntitlements();
+
+    expect(await consumeAiCredit("user-1")).toBe(true);
+    // Unlimited plans never touch the counter.
+    expect(consumeAiUsage).not.toHaveBeenCalled();
+  });
+
+  it("meters against the plan limit and allows while under it", async () => {
+    mockBilling(true);
+    getActiveSubscriptionForUser.mockResolvedValue(null);
+    consumeAiUsage.mockResolvedValue(true);
+    const { consumeAiCredit } = await loadEntitlements();
+
+    expect(await consumeAiCredit("user-1")).toBe(true);
+    expect(consumeAiUsage).toHaveBeenCalledWith(
+      "user-1",
+      "2026-09",
+      entitlementsForPlan("free").aiCreditsPerMonth
+    );
+  });
+
+  it("denies once the monthly limit is reached", async () => {
+    mockBilling(true);
+    getActiveSubscriptionForUser.mockResolvedValue(null);
+    consumeAiUsage.mockResolvedValue(false);
+    const { consumeAiCredit } = await loadEntitlements();
+
+    expect(await consumeAiCredit("user-1")).toBe(false);
   });
 });
