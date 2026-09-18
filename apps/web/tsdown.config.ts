@@ -1,7 +1,7 @@
 import { defineConfig } from "tsdown";
 
 export default defineConfig({
-  entry: ["server/index.ts"],
+  entry: ["server/index.ts", "server/otel.ts"],
   format: ["esm"],
   outDir: "../../dist-server",
   tsconfig: "./tsconfig.server.json",
@@ -18,6 +18,12 @@ export default defineConfig({
   // Some lightweight transitive deps get pulled in — this is fine and expected.
   inlineOnly: false,
   external: [
+    // --- OpenTelemetry (opt-in tracing) ---
+    // Must stay external and load from node_modules so the auto-instrumentation
+    // hooks can patch pg/ioredis/http/etc.; bundling them breaks the patching.
+    /^@opentelemetry\//,
+    "import-in-the-middle",
+    "require-in-the-middle",
     // --- Native / binary modules ---
     "pg",
     "pg-pool",
