@@ -4,18 +4,18 @@ import type { Metadata, Viewport } from "next";
 
 import { Providers } from "./providers";
 
-const title = "Norish: any recipe, any source.";
+const title = "Cefiro: any recipe, any source.";
 const description =
   "The open-source recipe app for families & friends. Import recipes from any link, plan your meals together, and keep your grocery lists in sync when shopping together. Free, open source and self-hostable.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://norish.dev"),
+  metadataBase: new URL("https://cefiro.spertulo.sk"),
   title: {
     default: title,
-    template: "%s | Norish",
+    template: "%s | Cefiro",
   },
   description,
-  applicationName: "Norish",
+  applicationName: "Cefiro",
   keywords: [
     "recipe app",
     "meal planning",
@@ -34,11 +34,11 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    url: "https://norish.dev",
-    siteName: "Norish",
+    url: "https://cefiro.spertulo.sk",
+    siteName: "Cefiro",
     title,
     description,
-    images: [{ url: "/screenshots/og.jpg", width: 1200, height: 630, alt: "Norish" }],
+    images: [{ url: "/screenshots/og.jpg", width: 1200, height: 630, alt: "Cefiro" }],
   },
   twitter: {
     card: "summary_large_image",

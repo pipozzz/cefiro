@@ -26,7 +26,7 @@ export function Screen({ children, className }: FrameProps) {
         <span className="size-2 rounded-full bg-[#28c840] sm:size-2.5" />
         <span className="bg-surface text-muted border-border mx-auto hidden max-w-3xs flex-1 items-center justify-center gap-1.5 rounded-full border px-3 py-1 text-[11px] sm:flex">
           <LockIcon className="size-3" />
-          norish.dev
+          cefiro.spertulo.sk
         </span>
       </div>
       {children}

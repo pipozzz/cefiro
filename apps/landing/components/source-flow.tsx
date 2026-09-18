@@ -133,7 +133,7 @@ function Strand({ d, line, position }: { d: string; line: string; position: numb
 /**
  * The hero diagram: five genuinely different sources, one stored recipe. It is
  * drawn as a diagram rather than a mock of the app, so it illustrates what
- * Norish does without implying an interface that does not exist. Each strand
+ * Cefiro does without implying an interface that does not exist. Each strand
  * keeps its own colour so the fan reads at a glance; they draw themselves as
  * the hero reveals and then carry something along themselves for as long as
  * they are on the page (see `.stroke-in` and `.flow-pulse` in globals.css).

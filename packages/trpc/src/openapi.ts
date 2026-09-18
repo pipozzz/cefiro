@@ -84,8 +84,8 @@ export function handleOpenApiRequest(req: Request) {
 
 export function getOpenApiDocument(baseUrl: string) {
   return generateOpenApiDocument(openApiRouter, {
-    title: "Norish Recipe API",
-    description: "API access for Norish recipes and imports.",
+    title: "Cefiro Recipe API",
+    description: "API access for Cefiro recipes and imports.",
     version: "1.0.0",
     baseUrl: new URL("/api/v1", `${baseUrl}/`).toString(),
     tags: ["Health", "Recipes", "Recipe Imports", "Groceries", "Stores", "Planned Recipes"],

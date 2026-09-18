@@ -1,6 +1,6 @@
 /*
  * Takes all twenty tour captures (5 screens x web/mobile x light/dark) from a
- * running Norish instance and writes them into `assets/screenshots`, ready for
+ * running Cefiro instance and writes them into `assets/screenshots`, ready for
  * `pnpm --filter @norish/landing shots`.
  *
  *   NORISH_URL=http://localhost:3000 \

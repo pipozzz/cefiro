@@ -5,7 +5,7 @@ import type { NextConfig } from "next";
 const configDirectory = dirname(fileURLToPath(import.meta.url));
 
 // basePath/assetPrefix come from env so the same build works at the root domain
-// (norish.dev → "") or under a subpath (e.g. "/norish") if ever needed.
+// (cefiro.spertulo.sk → "") or under a subpath (e.g. "/norish") if ever needed.
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 const nextConfig: NextConfig = {
