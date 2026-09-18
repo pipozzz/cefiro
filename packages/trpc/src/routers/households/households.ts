@@ -25,6 +25,7 @@ import {
   revokeHouseholdInvite,
   transferHouseholdAdmin,
 } from "@norish/db";
+import { householdMemberLimit } from "@norish/shared-server/billing/entitlements";
 import {
   invalidateHouseholdCache,
   invalidateHouseholdCacheForUsers,
@@ -101,6 +102,32 @@ function toHouseholdDto(
     users,
     allergies,
   } as HouseholdSettingsDto;
+}
+
+/**
+ * Throw FORBIDDEN if the household is already at its member cap. The cap is the
+ * *owner's* plan entitlement (a family plan is a shared subscription), and is
+ * unlimited when billing is off — so this never fires on a self-hosted or
+ * billing-disabled instance.
+ */
+async function assertHouseholdHasRoom(householdId: string): Promise<void> {
+  const household = await getHouseholdById(householdId);
+
+  if (!household) {
+    return;
+  }
+
+  const [members, limit] = await Promise.all([
+    getUsersByHouseholdId(householdId),
+    householdMemberLimit(household.adminUserId),
+  ]);
+
+  if (members.length >= limit) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "This household is full. The owner can upgrade their plan to add more members.",
+    });
+  }
 }
 
 const get = authedProcedure.query(async ({ ctx }) => {
@@ -211,6 +238,9 @@ const join = authedProcedure
     }
 
     const householdId = household.id;
+
+    // Enforce the owner's plan member cap before adding (no-op when billing off).
+    await assertHouseholdHasRoom(householdId);
 
     // Fetch existing member IDs for cache invalidation
     const existingMembers = await getUsersByHouseholdId(householdId);
@@ -527,6 +557,10 @@ const inviteByEmail = authedProcedure
       });
     }
 
+    // Fail fast if the household is already at its plan cap, rather than
+    // sending an invite that can't be accepted (no-op when billing off).
+    await assertHouseholdHasRoom(household.id);
+
     log.info({ userId: ctx.user.id, householdId: household.id }, "Inviting member by email");
 
     const { invite, token } = await createHouseholdInvite({
@@ -658,6 +692,10 @@ const acceptInvite = authedProcedure
     }
 
     const householdId = invite.householdId;
+
+    // Enforce the owner's plan member cap before adding (no-op when billing off).
+    await assertHouseholdHasRoom(householdId);
+
     const existingMembers = await getUsersByHouseholdId(householdId);
     const existingMemberIds = existingMembers.map((u) => u.userId);
 

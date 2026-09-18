@@ -30,7 +30,12 @@ const mailer = vi.hoisted(() => ({
   sendEmail: vi.fn(),
 }));
 
+const billing = vi.hoisted(() => ({
+  householdMemberLimit: vi.fn(),
+}));
+
 vi.mock("@norish/db", () => householdDb);
+vi.mock("@norish/shared-server/billing/entitlements", () => billing);
 vi.mock("@norish/config/env-config-server", () => ({
   SERVER_CONFIG: { AUTH_URL: "https://cefiro.example" },
 }));
@@ -75,6 +80,9 @@ beforeEach(() => {
   vi.clearAllMocks();
   householdDb.getHouseholdForUser.mockResolvedValue(adminHousehold);
   householdDb.getAllergiesForUsers.mockResolvedValue([]);
+  // Unlimited by default (billing off) so the member cap never fires unless a
+  // test opts in below.
+  billing.householdMemberLimit.mockResolvedValue(Number.POSITIVE_INFINITY);
 });
 
 describe("household invites — inviteByEmail", () => {
@@ -248,6 +256,35 @@ describe("household invites — getInvite & acceptInvite", () => {
       userId: joiner.id,
     });
     expect(householdDb.markHouseholdInviteAccepted).toHaveBeenCalledWith("inv-1", joiner.id);
+  });
+
+  it("rejects accepting into a household already at its plan member cap", async () => {
+    const joiner = createMockUser({ id: "joiner-id", name: "Joiner" });
+    const joinerCaller = householdsRouter.createCaller({
+      ...createMockAuthedContext(joiner),
+      multiplexer: null,
+    } as never);
+
+    householdDb.getHouseholdInviteByToken.mockResolvedValue({
+      id: "inv-1",
+      householdId: "house-1",
+      status: "pending",
+      expiresAt: future(),
+      email: "joiner@example.com",
+    });
+    householdDb.getHouseholdForUser.mockResolvedValueOnce(null); // not already in a household
+    householdDb.getHouseholdById.mockResolvedValue(adminHousehold);
+    // Plan allows 2; the household already has 2 → full.
+    billing.householdMemberLimit.mockResolvedValue(2);
+    householdDb.getUsersByHouseholdId.mockResolvedValue([
+      { userId: adminUser.id },
+      { userId: "other-id" },
+    ]);
+
+    await expect(joinerCaller.acceptInvite({ token: "tok" })).rejects.toMatchObject({
+      code: "FORBIDDEN",
+    });
+    expect(householdDb.addUserToHousehold).not.toHaveBeenCalled();
   });
 
   it("rejects an expired invite on accept", async () => {
