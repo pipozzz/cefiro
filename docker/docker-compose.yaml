@@ -17,6 +17,29 @@ services:
       OBSCURA_ENDPOINT: ws://obscura:9222
       UPLOADS_DIR: /app/uploads
       REDIS_URL: $REDIS_URL
+      # Serve HTTP only; background jobs run in the worker service below.
+      CEFIRO_ROLE: web
+    deploy:
+      resources:
+        limits:
+          memory: 2g
+  # Background worker: same image, processes the queues, CalDAV sync, video
+  # transcode and the importer so heavy jobs never block request serving.
+  # Shares the uploads volume (it writes imported/generated images) and needs
+  # the same DB/Redis/MASTER_KEY. No published port — it serves no HTTP.
+  worker:
+    image: ghcr.io/pipozzz/cefiro:latest
+    restart: always
+    volumes:
+      - norish_data:/app/uploads
+    environment:
+      AUTH_URL: $AUTH_URL
+      DATABASE_URL: $DATABASE_URL
+      MASTER_KEY: $MASTER_KEY
+      OBSCURA_ENDPOINT: ws://obscura:9222
+      UPLOADS_DIR: /app/uploads
+      REDIS_URL: $REDIS_URL
+      CEFIRO_ROLE: worker
     deploy:
       resources:
         limits:

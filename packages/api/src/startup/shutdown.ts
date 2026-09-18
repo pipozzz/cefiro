@@ -77,7 +77,7 @@ let isShuttingDown = false;
  * 5. Redis connections - close after all consumers stopped
  */
 async function performShutdown(
-  server: Server,
+  server: Server | null,
   signal: string,
   shutdownTasks: ShutdownTask[]
 ): Promise<void> {
@@ -95,11 +95,14 @@ async function performShutdown(
   forceExitTimeout.unref();
 
   try {
-    // 1. Stop accepting new connections and drain existing
-    try {
-      await withTimeout(closeHttpServer(server), SHUTDOWN_TIMEOUT_MS, "HTTP server close");
-    } catch (err) {
-      log.warn({ err }, "HTTP server close failed or timed out, continuing shutdown");
+    // 1. Stop accepting new connections and drain existing (worker-only
+    // processes have no HTTP server — skip straight to draining workers).
+    if (server) {
+      try {
+        await withTimeout(closeHttpServer(server), SHUTDOWN_TIMEOUT_MS, "HTTP server close");
+      } catch (err) {
+        log.warn({ err }, "HTTP server close failed or timed out, continuing shutdown");
+      }
     }
 
     // 2. Stop CalDAV sync service (aborts event subscriptions)
@@ -141,7 +144,10 @@ async function performShutdown(
  * Register shutdown handlers for SIGTERM and SIGINT.
  * Call this after the HTTP server is created.
  */
-export function registerShutdownHandlers(server: Server, shutdownTasks: ShutdownTask[] = []): void {
+export function registerShutdownHandlers(
+  server: Server | null,
+  shutdownTasks: ShutdownTask[] = []
+): void {
   process.on("SIGTERM", () => performShutdown(server, "SIGTERM", shutdownTasks));
   process.on("SIGINT", () => performShutdown(server, "SIGINT", shutdownTasks));
 }
