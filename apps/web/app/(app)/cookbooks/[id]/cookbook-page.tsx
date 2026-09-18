@@ -64,7 +64,7 @@ function CookbookPageContent({ cookbookId }: { cookbookId: string }) {
     if (!cookbook) return;
     setDeleteOpen(false);
     deleteCookbook({ id: cookbook.id, version: cookbook.version });
-    router.push("/");
+    router.push("/library");
   }, [cookbook, deleteCookbook, router]);
 
   if (isNotFound) {

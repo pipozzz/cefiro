@@ -5,16 +5,16 @@ export const siteConfig = {
   description: "Any recipe, any source.",
   navItems: [
     {
-      label: "Home",
-      href: "/",
+      label: "Discover",
+      href: "/discover",
+    },
+    {
+      label: "My Recipes",
+      href: "/library",
     },
     {
       label: "Feed",
       href: "/feed",
-    },
-    {
-      label: "Discover",
-      href: "/discover",
     },
     {
       label: "Groceries",

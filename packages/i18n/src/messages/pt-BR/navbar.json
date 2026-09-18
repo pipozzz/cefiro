@@ -32,6 +32,7 @@
   },
   "nav": {
     "home": "Receitas",
+    "library": "Minhas receitas",
     "calendar": "Calendário",
     "groceries": "Compras",
     "feed": "Feed",

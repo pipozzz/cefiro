@@ -7,11 +7,11 @@ import NavbarUserMenu from "@/components/navbar/navbar-user-menu";
 import { NotificationBell } from "@/components/navbar/notification-bell";
 import { useAutoHide } from "@/hooks/auto-hide";
 import {
+  BookOpenIcon,
   CalendarDaysIcon,
   ClipboardDocumentListIcon,
   Cog6ToothIcon,
   GlobeAltIcon,
-  HomeIcon,
   NewspaperIcon,
 } from "@heroicons/react/20/solid";
 import { AnimatePresence, motion } from "motion/react";
@@ -23,9 +23,10 @@ import { siteConfig } from "@norish/web/config/site";
 // Map hrefs to translation keys (same as navbar.tsx)
 const navLabelKeys: Record<
   string,
-  "home" | "calendar" | "groceries" | "feed" | "discover" | "profile"
+  "home" | "library" | "calendar" | "groceries" | "feed" | "discover" | "profile"
 > = {
   "/": "home",
+  "/library": "library",
   "/groceries": "groceries",
   "/calendar": "calendar",
   "/feed": "feed",
@@ -102,16 +103,15 @@ export const MobileNav = () => {
                 const isActive =
                   pathname === item.href ||
                   (item.href !== "/" && pathname?.startsWith(item.href + "/"));
-                const Icon =
-                  item.href === "/"
-                    ? HomeIcon
+                const Icon = item.href.startsWith("/discover")
+                  ? GlobeAltIcon
+                  : item.href.startsWith("/library")
+                    ? BookOpenIcon
                     : item.href.startsWith("/feed")
                       ? NewspaperIcon
-                      : item.href.startsWith("/discover")
-                        ? GlobeAltIcon
-                        : item.href.startsWith("/calendar")
-                          ? CalendarDaysIcon
-                          : ClipboardDocumentListIcon;
+                      : item.href.startsWith("/calendar")
+                        ? CalendarDaysIcon
+                        : ClipboardDocumentListIcon;
                 const label = navLabelKeys[item.href] ? tNav(navLabelKeys[item.href]) : item.label;
 
                 return (

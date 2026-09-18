@@ -32,6 +32,7 @@
   },
   "nav": {
     "home": "Рецепти",
+    "library": "Моите рецепти",
     "calendar": "Календар",
     "groceries": "Продукти",
     "feed": "Feed",
