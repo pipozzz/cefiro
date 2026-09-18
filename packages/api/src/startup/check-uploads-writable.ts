@@ -18,6 +18,12 @@ import { serverLogger as log } from "@norish/shared-server/logger";
  * than refuse to start.
  */
 export async function checkUploadsWritable(): Promise<void> {
+  if (SERVER_CONFIG.STORAGE_DRIVER === "s3") {
+    log.info("S3 storage — skipping local uploads writable check");
+
+    return;
+  }
+
   const dir = SERVER_CONFIG.UPLOADS_DIR;
   const uid = typeof process.getuid === "function" ? process.getuid() : "unknown";
 
