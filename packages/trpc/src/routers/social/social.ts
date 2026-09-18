@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import type { FeedRecipeRow } from "@norish/db/repositories/follows";
 import type {
@@ -10,6 +11,7 @@ import type { PublicProfile, PublicProfileCard } from "@norish/db/repositories/u
 import type { FullRecipeDTO } from "@norish/shared/contracts";
 import type { PublicRecipeViewDTO } from "@norish/shared/contracts/dto/recipe-shares";
 import { SERVER_CONFIG } from "@norish/config/env-config-server";
+import { TimerKeywordsSchema, UnitsMapSchema } from "@norish/config/zod/server-config";
 import {
   addFavorite,
   countRecipeFavorites,
@@ -73,6 +75,11 @@ import {
   setRecipeVisibility,
   upsertProfile,
 } from "@norish/db/repositories/user-profiles";
+import {
+  getTimerKeywords,
+  getUnits,
+  isTimersEnabled,
+} from "@norish/shared-server/config/server-config-loader";
 import { trpcLogger as log } from "@norish/shared-server/logger";
 import { copyRecipeImageByUrl, saveProfileAvatarBytes } from "@norish/shared-server/media/storage";
 import { ALLOWED_IMAGE_MIME_SET } from "@norish/shared/contracts";
@@ -834,6 +841,31 @@ const getPublicRecipe = publicProcedure
     };
   });
 
+/**
+ * The server-global rendering config the public recipe view needs: unit
+ * definitions and timer-keyword detection. This is the same data
+ * `recipes.sharePublicConfig` returns, but tokenless — a discovered recipe is
+ * public by definition, so its cooking view (interactive ingredients and
+ * timer-aware steps) can read this without a share token.
+ */
+const publicRecipeConfig = publicProcedure
+  .output(
+    z.object({
+      units: UnitsMapSchema,
+      timersEnabled: z.boolean(),
+      timerKeywords: TimerKeywordsSchema,
+    })
+  )
+  .query(async () => {
+    const [units, timersEnabled, timerKeywords] = await Promise.all([
+      getUnits(),
+      isTimersEnabled(),
+      getTimerKeywords(),
+    ]);
+
+    return { units, timersEnabled, timerKeywords };
+  });
+
 // --- Ratings -------------------------------------------------------------
 
 const getMyRecipeRating = authedProcedure
@@ -1056,6 +1088,7 @@ export const socialProcedures = router({
   getProfile,
   listProfileRecipes,
   getPublicRecipe,
+  publicRecipeConfig,
   follow,
   unfollow,
   getFollowStatus,
