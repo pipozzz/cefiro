@@ -185,6 +185,9 @@ job "cefiro" {
       env {
         NODE_ENV = "production"
         AUTH_URL = "https://${var.domain}"
+        # Serve HTTP only; background jobs run in the "worker" task below so a
+        # heavy import/AI/transcode never blocks request serving.
+        CEFIRO_ROLE = "web"
         # Same-group tasks share the network namespace → reach them on localhost.
         REDIS_URL        = "redis://localhost:6379"
         OBSCURA_ENDPOINT = "ws://localhost:9222"
@@ -217,6 +220,66 @@ job "cefiro" {
         {{ if .otel_endpoint }}OTEL_EXPORTER_OTLP_ENDPOINT={{ .otel_endpoint }}{{ end }}
         {{ if .otel_headers }}OTEL_EXPORTER_OTLP_HEADERS={{ .otel_headers }}{{ end }}
         {{ if .otel_endpoint }}OTEL_SERVICE_NAME=cefiro{{ end }}
+        {{- end }}
+        EOH
+      }
+
+      resources {
+        cpu    = 1000
+        memory = 1024
+      }
+    }
+
+    # --- Cefiro background worker -------------------------------------------
+    # Same image, run with CEFIRO_ROLE=worker: it processes the queues (recipe
+    # imports, AI image generation, video transcode, nutrition, tagging…),
+    # CalDAV sync and scheduled jobs, and runs the embedded parser the importer
+    # calls. Kept out of the "web" task so a CPU-heavy job never blocks request
+    # serving. No port/health check — it serves no HTTP.
+    task "worker" {
+      driver = "docker"
+
+      config {
+        image = "ghcr.io/pipozzz/cefiro:${var.image_tag}"
+
+        # Remove this block if the GHCR package is public.
+        auth {
+          username = "pipozzz"
+          password = var.registry_password
+        }
+      }
+
+      volume_mount {
+        volume      = "uploads"
+        destination = "/app/uploads"
+      }
+
+      env {
+        NODE_ENV    = "production"
+        AUTH_URL    = "https://${var.domain}"
+        CEFIRO_ROLE = "worker"
+        REDIS_URL        = "redis://localhost:6379"
+        OBSCURA_ENDPOINT = "ws://localhost:9222"
+        UPLOADS_DIR      = "/app/uploads"
+      }
+
+      template {
+        destination = "secrets/worker.env"
+        env         = true
+        data        = <<-EOH
+        {{ with nomadVar "nomad/jobs/cefiro" -}}
+        MASTER_KEY={{ .master_key }}
+        DATABASE_URL=postgres://postgres:{{ .postgres_password }}@localhost:5432/cefiro
+        PASSWORD_AUTH_ENABLED={{ .password_auth_enabled }}
+        {{ if .smtp_host }}SMTP_HOST={{ .smtp_host }}{{ end }}
+        {{ if .smtp_port }}SMTP_PORT={{ .smtp_port }}{{ end }}
+        {{ if .smtp_secure }}SMTP_SECURE={{ .smtp_secure }}{{ end }}
+        {{ if .smtp_user }}SMTP_USER={{ .smtp_user }}{{ end }}
+        {{ if .smtp_password }}SMTP_PASSWORD={{ .smtp_password }}{{ end }}
+        {{ if .email_from }}EMAIL_FROM={{ .email_from }}{{ end }}
+        {{ if .otel_endpoint }}OTEL_EXPORTER_OTLP_ENDPOINT={{ .otel_endpoint }}{{ end }}
+        {{ if .otel_headers }}OTEL_EXPORTER_OTLP_HEADERS={{ .otel_headers }}{{ end }}
+        {{ if .otel_endpoint }}OTEL_SERVICE_NAME=cefiro-worker{{ end }}
         {{- end }}
         EOH
       }
