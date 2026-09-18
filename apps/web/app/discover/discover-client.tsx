@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useTRPC } from "@/app/providers/trpc-provider";
 import RecipeCard from "@/components/dashboard/recipe-card";
 import { CookGrid } from "@/components/social/cook-card";
@@ -22,7 +22,6 @@ const CATEGORIES: Category[] = ["Breakfast", "Lunch", "Dinner", "Snack"];
 
 export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
   const trpc = useTRPC();
-  const router = useRouter();
   const searchParams = useSearchParams();
   const t = useTranslations("social.discover");
   const tCat = useTranslations("social.categories");
@@ -43,7 +42,11 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
   }, [q]);
 
   // Keep the URL in sync so a search / tag filter is shareable and survives
-  // reload.
+  // reload. Use history.replaceState rather than router.replace: this page is a
+  // server component under an auth-adaptive layout, so a router navigation on
+  // every keystroke would re-run the server render (session read + shell) and
+  // flash the whole page. The URL bar still updates; the initial values are
+  // read from the query string on load, so shareability is unaffected.
   useEffect(() => {
     const params = new URLSearchParams();
     const trimmed = debouncedQ.trim();
@@ -55,9 +58,9 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
     const next = query ? `/discover?${query}` : "/discover";
 
     if (`${window.location.pathname}${window.location.search}` !== next) {
-      router.replace(next, { scroll: false });
+      window.history.replaceState(null, "", next);
     }
-  }, [debouncedQ, tag, router]);
+  }, [debouncedQ, tag]);
 
   const searchTerm = debouncedQ.trim();
   const isSearching = searchTerm.length >= 2;
