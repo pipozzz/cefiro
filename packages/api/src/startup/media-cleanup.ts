@@ -96,6 +96,14 @@ function registerStepImageReference(
  * - Deletes unreferenced root files in uploads/recipes/{recipeId}/
  */
 export async function cleanupOrphanedImages(): Promise<{ deleted: number; errors: number }> {
+  if (SERVER_CONFIG.STORAGE_DRIVER === "s3") {
+    schedulerLogger.info(
+      "S3 storage — skipping local orphan media cleanup (an S3-aware sweep is a future enhancement)"
+    );
+
+    return { deleted: 0, errors: 0 };
+  }
+
   let deleted = 0;
   let errors = 0;
 
@@ -249,6 +257,14 @@ export async function deleteImageByUrl(imageUrl: string | null | undefined): Pro
  * Clean up orphaned avatar images that are not referenced in the database.
  */
 export async function cleanupOrphanedAvatars(): Promise<{ deleted: number; errors: number }> {
+  if (SERVER_CONFIG.STORAGE_DRIVER === "s3") {
+    schedulerLogger.info(
+      "S3 storage — skipping local orphan avatar cleanup (an S3-aware sweep is a future enhancement)"
+    );
+
+    return { deleted: 0, errors: 0 };
+  }
+
   let deleted = 0;
   let errors = 0;
 
@@ -346,6 +362,14 @@ export async function deleteAvatarByFilename(filename: string | null | undefined
  * Clean up orphaned step images in uploads/recipes/{recipeId}/steps.
  */
 export async function cleanupOrphanedStepImages(): Promise<{ deleted: number; errors: number }> {
+  if (SERVER_CONFIG.STORAGE_DRIVER === "s3") {
+    schedulerLogger.info(
+      "S3 storage — skipping local orphan step-image cleanup (an S3-aware sweep is a future enhancement)"
+    );
+
+    return { deleted: 0, errors: 0 };
+  }
+
   let deleted = 0;
   let errors = 0;
 
