@@ -16,6 +16,7 @@ export * from "./recipe-videos";
 export * from "./household-invites";
 export * from "./households";
 export * from "./subscriptions";
+export * from "./ai-usage";
 export * from "./household-users";
 export * from "./planned-items";
 export * from "./recipe-categories";
