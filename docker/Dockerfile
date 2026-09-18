@@ -268,5 +268,8 @@ VOLUME ["/app/uploads"]
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000/api/v1/health', r => process.exit(r.statusCode===200?0:1))" || exit 1
 
-# Run directly with node; the custom server starts the embedded parser API when needed
-CMD ["node", "/app/dist-server/index.mjs"]
+# Run directly with node. `--import` preloads the OpenTelemetry bootstrap so it
+# can instrument pg/ioredis/http before they load; it is a no-op (loads no SDK)
+# unless OTEL_EXPORTER_OTLP_ENDPOINT is set, so there is zero overhead when
+# tracing is off.
+CMD ["node", "--import", "/app/dist-server/otel.mjs", "/app/dist-server/index.mjs"]

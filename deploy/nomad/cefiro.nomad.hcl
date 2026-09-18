@@ -209,6 +209,14 @@ job "cefiro" {
         {{ if .smtp_user }}SMTP_USER={{ .smtp_user }}{{ end }}
         {{ if .smtp_password }}SMTP_PASSWORD={{ .smtp_password }}{{ end }}
         {{ if .email_from }}EMAIL_FROM={{ .email_from }}{{ end }}
+        {{/* OpenTelemetry → SigNoz. Set otel_endpoint (and otel_headers with the
+             SigNoz access token) in the Nomad Variable to turn tracing on;
+             leaving them unset keeps it off with zero overhead. e.g.
+             otel_endpoint = "https://ingest.<region>.signoz.cloud:443"
+             otel_headers  = "signoz-access-token=<ingestion-key>" */}}
+        {{ if .otel_endpoint }}OTEL_EXPORTER_OTLP_ENDPOINT={{ .otel_endpoint }}{{ end }}
+        {{ if .otel_headers }}OTEL_EXPORTER_OTLP_HEADERS={{ .otel_headers }}{{ end }}
+        {{ if .otel_endpoint }}OTEL_SERVICE_NAME=cefiro{{ end }}
         {{- end }}
         EOH
       }
