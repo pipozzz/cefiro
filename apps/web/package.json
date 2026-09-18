@@ -47,6 +47,7 @@
     "@opentelemetry/auto-instrumentations-node": "^0.80.0",
     "@opentelemetry/exporter-metrics-otlp-http": "^0.222.0",
     "@opentelemetry/exporter-trace-otlp-http": "^0.222.0",
+    "@opentelemetry/host-metrics": "^0.39.0",
     "@opentelemetry/sdk-node": "^0.222.0",
     "@scalar/nextjs-api-reference": "catalog:",
     "@serwist/turbopack": "^9.5.12",
