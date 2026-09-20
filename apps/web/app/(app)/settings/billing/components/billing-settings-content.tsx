@@ -6,7 +6,7 @@ import { useTRPC } from "@/app/providers/trpc-provider";
 import SettingsSkeleton from "@/components/skeleton/settings-skeleton";
 import { showSafeErrorToast } from "@/lib/ui/safe-error-toast";
 import { CheckIcon, SparklesIcon } from "@heroicons/react/24/outline";
-import { Button, Progress } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
@@ -114,9 +114,9 @@ function PlanCard({
 function AiUsageMeter({ used, limit }: { used: number; limit: number }) {
   const t = useTranslations("settings");
   const remaining = Math.max(0, limit - used);
-  const ratio = limit > 0 ? used / limit : 1;
+  const ratio = limit > 0 ? Math.min(1, used / limit) : 1;
   const atLimit = remaining === 0;
-  const color = atLimit ? "danger" : ratio >= 0.8 ? "warning" : "primary";
+  const fillColor = atLimit ? "bg-danger" : ratio >= 0.8 ? "bg-warning" : "bg-primary";
 
   return (
     <div className="border-default-200 flex flex-col gap-3 rounded-2xl border p-5">
@@ -130,7 +130,19 @@ function AiUsageMeter({ used, limit }: { used: number; limit: number }) {
         </span>
       </div>
 
-      <Progress aria-label={t("billing.usage.title")} color={color} maxValue={limit} value={used} />
+      <div
+        aria-label={t("billing.usage.title")}
+        aria-valuemax={limit}
+        aria-valuemin={0}
+        aria-valuenow={used}
+        className="bg-content3 h-2 w-full overflow-hidden rounded-full"
+        role="progressbar"
+      >
+        <div
+          className={`h-full rounded-full transition-all ${fillColor}`}
+          style={{ width: `${ratio * 100}%` }}
+        />
+      </div>
 
       <p className="text-default-500 text-sm">
         {atLimit ? t("billing.usage.atLimit") : t("billing.usage.remaining", { count: remaining })}
