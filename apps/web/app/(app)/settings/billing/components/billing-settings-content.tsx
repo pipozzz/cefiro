@@ -130,17 +130,10 @@ function AiUsageMeter({ used, limit }: { used: number; limit: number }) {
         </span>
       </div>
 
-      <Progress
-        aria-label={t("billing.usage.title")}
-        color={color}
-        maxValue={limit}
-        value={used}
-      />
+      <Progress aria-label={t("billing.usage.title")} color={color} maxValue={limit} value={used} />
 
       <p className="text-default-500 text-sm">
-        {atLimit
-          ? t("billing.usage.atLimit")
-          : t("billing.usage.remaining", { count: remaining })}
+        {atLimit ? t("billing.usage.atLimit") : t("billing.usage.remaining", { count: remaining })}
       </p>
     </div>
   );
