@@ -89,7 +89,12 @@
   "errors": {
     "operationFailed": "Falha na operação",
     "nameCannotBeEmpty": "O nome não pode ficar em branco",
-    "technicalDetails": "Algo deu errado. Verifique o console do navegador para detalhes técnicos."
+    "technicalDetails": "Algo deu errado. Verifique o console do navegador para detalhes técnicos.",
+    "aiLimit": {
+      "title": "Limite de IA atingido",
+      "description": "Você usou todas as suas ações de IA neste mês. Faça upgrade do seu plano para mais.",
+      "upgrade": "Ver planos"
+    }
   },
   "slots": {
     "breakfast": "Café da manhã",

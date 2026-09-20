@@ -991,6 +991,11 @@
     "errors": {
       "title": "Niečo sa pokazilo",
       "generic": "Skús to prosím o chvíľu znova."
+    },
+    "usage": {
+      "title": "AI akcie tento mesiac",
+      "remaining": "Zostáva {count} tento mesiac",
+      "atLimit": "Vyčerpal si všetky AI akcie tento mesiac."
     }
   }
 }

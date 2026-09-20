@@ -1,7 +1,9 @@
 "use client";
 
 import { useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { useUserContext } from "@/context/user-context";
+import { isAiUpgradeError } from "@/lib/ui/ai-upgrade-error";
 import { toast } from "@heroui/react";
 import { useTranslations } from "next-intl";
 
@@ -21,15 +23,31 @@ const sharedUseRecipeEnrichment = sharedRecipeFamilyHooks.useRecipeEnrichment;
 export function useRecipeEnrichment(recipeId: string) {
   const { user } = useUserContext();
   const t = useTranslations("recipes.enrichment");
+  const tErrors = useTranslations("common.errors");
+  const router = useRouter();
 
   const onManualError = useCallback(
     (kind: RecipeEnrichmentKind, error: unknown) => {
+      // An entitlement gate (out of AI credits, or a plan without image
+      // generation) is an upgrade prompt, not a failed run.
+      if (isAiUpgradeError(error)) {
+        toast(tErrors("aiLimit.title"), {
+          description: tErrors("aiLimit.description"),
+          actionProps: {
+            children: tErrors("aiLimit.upgrade"),
+            onPress: () => router.push("/settings?tab=billing"),
+          },
+        });
+
+        return;
+      }
+
       toast(t("failed"), {
         variant: "danger",
         description: error instanceof Error && error.message ? error.message : t(`kinds.${kind}`),
       });
     },
-    [t]
+    [t, tErrors, router]
   );
 
   return sharedUseRecipeEnrichment(recipeId, user?.id ?? null, { onManualError });

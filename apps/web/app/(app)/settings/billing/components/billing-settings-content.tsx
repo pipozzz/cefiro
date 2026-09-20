@@ -91,17 +91,62 @@ function PlanCard({
 
       <div className="mt-5">
         {isCurrent ? (
-          <Button className="w-full" variant="tertiary" isDisabled>
+          <Button isDisabled className="w-full" variant="tertiary">
             {t("billing.cta.current")}
           </Button>
         ) : onChoose ? (
-          <Button className="w-full" variant="primary" onPress={onChoose} isLoading={isBusy}>
+          <Button className="w-full" isLoading={isBusy} variant="primary" onPress={onChoose}>
             {t("billing.cta.upgrade")}
           </Button>
         ) : (
-          <div className="h-10" aria-hidden />
+          <div aria-hidden className="h-10" />
         )}
       </div>
+    </div>
+  );
+}
+
+/**
+ * How much of the caller's monthly AI-action allowance is spent. Shown only on
+ * metered (billing-enabled, non-unlimited) plans; the bar warns amber as the
+ * cap nears and turns red once it is reached, with a nudge toward upgrading.
+ */
+function AiUsageMeter({ used, limit }: { used: number; limit: number }) {
+  const t = useTranslations("settings");
+  const remaining = Math.max(0, limit - used);
+  const ratio = limit > 0 ? Math.min(1, used / limit) : 1;
+  const atLimit = remaining === 0;
+  const fillColor = atLimit ? "bg-danger" : ratio >= 0.8 ? "bg-warning" : "bg-primary";
+
+  return (
+    <div className="border-default-200 flex flex-col gap-3 rounded-2xl border p-5">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <SparklesIcon className="text-primary h-5 w-5" />
+          <h3 className="font-semibold">{t("billing.usage.title")}</h3>
+        </div>
+        <span className="text-default-500 text-sm tabular-nums">
+          {used} / {limit}
+        </span>
+      </div>
+
+      <div
+        aria-label={t("billing.usage.title")}
+        aria-valuemax={limit}
+        aria-valuemin={0}
+        aria-valuenow={used}
+        className="bg-content3 h-2 w-full overflow-hidden rounded-full"
+        role="progressbar"
+      >
+        <div
+          className={`h-full rounded-full transition-all ${fillColor}`}
+          style={{ width: `${ratio * 100}%` }}
+        />
+      </div>
+
+      <p className="text-default-500 text-sm">
+        {atLimit ? t("billing.usage.atLimit") : t("billing.usage.remaining", { count: remaining })}
+      </p>
     </div>
   );
 }
@@ -114,6 +159,7 @@ export default function BillingSettingsContent() {
   const searchParams = useSearchParams();
 
   const { data, isLoading } = useQuery(trpc.billing.getMyEntitlements.queryOptions());
+  const usage = useQuery(trpc.billing.getMyAiUsage.queryOptions());
 
   const checkout = useMutation(
     trpc.billing.createCheckoutSession.mutationOptions({
@@ -159,6 +205,10 @@ export default function BillingSettingsContent() {
       void queryClient.invalidateQueries({
         queryKey: trpc.billing.getMyEntitlements.queryKey(),
       });
+      // The new plan has a different AI allowance, so refresh the meter too.
+      void queryClient.invalidateQueries({
+        queryKey: trpc.billing.getMyAiUsage.queryKey(),
+      });
       showSafeErrorToast({
         title: t("billing.status.successTitle"),
         description: t("billing.status.success"),
@@ -174,7 +224,14 @@ export default function BillingSettingsContent() {
 
     router.replace("/settings?tab=billing");
     // Run once per redirect result; the deps below are stable references.
-  }, [billingResult, queryClient, router, t, trpc.billing.getMyEntitlements]);
+  }, [
+    billingResult,
+    queryClient,
+    router,
+    t,
+    trpc.billing.getMyEntitlements,
+    trpc.billing.getMyAiUsage,
+  ]);
 
   if (isLoading || !data) {
     return <SettingsSkeleton />;
@@ -208,11 +265,15 @@ export default function BillingSettingsContent() {
           </p>
         </div>
         {isPaidCurrent ? (
-          <Button variant="outline" onPress={() => portal.mutate()} isLoading={portal.isPending}>
+          <Button isLoading={portal.isPending} variant="outline" onPress={() => portal.mutate()}>
             {t("billing.cta.manage")}
           </Button>
         ) : null}
       </div>
+
+      {usage.data && usage.data.limit !== null ? (
+        <AiUsageMeter limit={usage.data.limit} used={usage.data.used} />
+      ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {PLAN_IDS.map((plan) => {
@@ -226,10 +287,10 @@ export default function BillingSettingsContent() {
           return (
             <PlanCard
               key={plan}
-              plan={plan}
-              isCurrent={isCurrent}
-              onChoose={onChoose}
               isBusy={busyPlan === plan}
+              isCurrent={isCurrent}
+              plan={plan}
+              onChoose={onChoose}
             />
           );
         })}

@@ -991,6 +991,11 @@
     "errors": {
       "title": "Something went wrong",
       "generic": "Please try again in a moment."
+    },
+    "usage": {
+      "title": "Ações de IA neste mês",
+      "remaining": "Restam {count} neste mês",
+      "atLimit": "Você usou todas as suas ações de IA neste mês."
     }
   }
 }

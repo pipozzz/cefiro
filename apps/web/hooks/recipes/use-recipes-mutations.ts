@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useTRPC } from "@/app/providers/trpc-provider";
 import { useWarmSet } from "@/hooks/use-warm-set";
+import { isAiUpgradeError } from "@/lib/ui/ai-upgrade-error";
 import { isQueuedForReplay, showQueuedOfflineToast } from "@/lib/ui/queued-offline-toast";
 import { showSafeErrorToast } from "@/lib/ui/safe-error-toast";
 import { toast } from "@heroui/react";
@@ -48,6 +49,20 @@ export function useRecipesMutations(): RecipesMutationsResult {
       showQueuedOfflineToast({
         title: tQueued("title"),
         description: tQueued("description"),
+      });
+
+      return;
+    }
+
+    // Hitting the AI entitlement gate isn't a technical failure — tell the user
+    // they're out of AI actions and point them at their plan.
+    if (isAiUpgradeError(error)) {
+      toast(tErrors("aiLimit.title"), {
+        description: tErrors("aiLimit.description"),
+        actionProps: {
+          children: tErrors("aiLimit.upgrade"),
+          onPress: () => router.push("/settings?tab=billing"),
+        },
       });
 
       return;

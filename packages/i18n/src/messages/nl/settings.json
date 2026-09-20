@@ -991,6 +991,11 @@
     "errors": {
       "title": "Something went wrong",
       "generic": "Please try again in a moment."
+    },
+    "usage": {
+      "title": "AI-acties deze maand",
+      "remaining": "Nog {count} deze maand",
+      "atLimit": "Je hebt al je AI-acties deze maand gebruikt."
     }
   }
 }

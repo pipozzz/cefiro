@@ -991,6 +991,11 @@
     "errors": {
       "title": "Something went wrong",
       "generic": "Please try again in a moment."
+    },
+    "usage": {
+      "title": "AI actions this month",
+      "remaining": "{count} left this month",
+      "atLimit": "You've used all your AI actions this month."
     }
   }
 }

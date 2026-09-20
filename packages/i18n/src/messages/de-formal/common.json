@@ -89,7 +89,12 @@
   "errors": {
     "operationFailed": "Vorgang fehlgeschlagen",
     "nameCannotBeEmpty": "Name darf nicht leer sein",
-    "technicalDetails": "Etwas ist schiefgelaufen. Sehen Sie in der Browser-Konsole nach technischen Details."
+    "technicalDetails": "Etwas ist schiefgelaufen. Sehen Sie in der Browser-Konsole nach technischen Details.",
+    "aiLimit": {
+      "title": "KI-Limit erreicht",
+      "description": "Sie haben diesen Monat alle KI-Aktionen aufgebraucht. Führen Sie ein Upgrade durch, um mehr zu erhalten.",
+      "upgrade": "Pläne ansehen"
+    }
   },
   "slots": {
     "breakfast": "Frühstück",
