@@ -991,6 +991,11 @@
     "errors": {
       "title": "Something went wrong",
       "generic": "Please try again in a moment."
+    },
+    "usage": {
+      "title": "AI действия този месец",
+      "remaining": "Остават {count} този месец",
+      "atLimit": "Използвахте всички AI действия този месец."
     }
   }
 }

@@ -89,7 +89,12 @@
   "errors": {
     "operationFailed": "Operácia zlyhala",
     "nameCannotBeEmpty": "Názov nemôže byť prázdny",
-    "technicalDetails": "Niečo sa pokazilo. Technické podrobnosti nájdete v konzole prehliadača."
+    "technicalDetails": "Niečo sa pokazilo. Technické podrobnosti nájdete v konzole prehliadača.",
+    "aiLimit": {
+      "title": "Dosiahnutý AI limit",
+      "description": "Vyčerpal si všetky AI akcie tento mesiac. Upgraduj plán pre viac.",
+      "upgrade": "Zobraziť plány"
+    }
   },
   "slots": {
     "breakfast": "Raňajky",

@@ -991,6 +991,11 @@
     "errors": {
       "title": "Something went wrong",
       "generic": "Please try again in a moment."
+    },
+    "usage": {
+      "title": "KI-Aktionen diesen Monat",
+      "remaining": "Noch {count} diesen Monat",
+      "atLimit": "Sie haben diesen Monat alle KI-Aktionen aufgebraucht."
     }
   }
 }

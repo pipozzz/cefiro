@@ -89,7 +89,12 @@
   "errors": {
     "operationFailed": "L'opération a échoué",
     "nameCannotBeEmpty": "Le nom ne peut pas être vide",
-    "technicalDetails": "Une erreur s'est produite. Consultez la console du navigateur pour les détails techniques."
+    "technicalDetails": "Une erreur s'est produite. Consultez la console du navigateur pour les détails techniques.",
+    "aiLimit": {
+      "title": "Limite IA atteinte",
+      "description": "Vous avez utilisé toutes vos actions IA ce mois-ci. Passez à un forfait supérieur pour en avoir plus.",
+      "upgrade": "Voir les forfaits"
+    }
   },
   "slots": {
     "breakfast": "Petit déjeuner",

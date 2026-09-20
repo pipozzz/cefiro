@@ -991,6 +991,11 @@
     "errors": {
       "title": "Something went wrong",
       "generic": "Please try again in a moment."
+    },
+    "usage": {
+      "title": "AI-handlinger denne måneden",
+      "remaining": "{count} igjen denne måneden",
+      "atLimit": "Du har brukt alle AI-handlingene dine denne måneden."
     }
   }
 }

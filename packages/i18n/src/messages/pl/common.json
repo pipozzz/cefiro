@@ -89,7 +89,12 @@
   "errors": {
     "operationFailed": "Operacja nie powiodła się",
     "nameCannotBeEmpty": "Nazwa nie może być pusta",
-    "technicalDetails": "Coś poszło nie tak. Sprawdź konsolę przeglądarki."
+    "technicalDetails": "Coś poszło nie tak. Sprawdź konsolę przeglądarki.",
+    "aiLimit": {
+      "title": "Osiągnięto limit AI",
+      "description": "Wykorzystałeś wszystkie akcje AI w tym miesiącu. Ulepsz plan, aby uzyskać więcej.",
+      "upgrade": "Zobacz plany"
+    }
   },
   "slots": {
     "breakfast": "Śniadanie",

@@ -89,7 +89,12 @@
   "errors": {
     "operationFailed": "Handlingen mislykkedes",
     "nameCannotBeEmpty": "Navn kan ikke være tomt",
-    "technicalDetails": "Noget gik galt. Tjek browserkonsollen for tekniske detaljer."
+    "technicalDetails": "Noget gik galt. Tjek browserkonsollen for tekniske detaljer.",
+    "aiLimit": {
+      "title": "AI-grænse nået",
+      "description": "Du har brugt alle dine AI-handlinger denne måned. Opgrader for flere.",
+      "upgrade": "Se abonnementer"
+    }
   },
   "slots": {
     "breakfast": "Morgenmad",

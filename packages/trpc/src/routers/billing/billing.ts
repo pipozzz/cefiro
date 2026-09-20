@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { SERVER_CONFIG } from "@norish/config/env-config-server";
+import { currentAiUsagePeriod, getAiUsage } from "@norish/db/repositories/ai-usage";
 import { getActiveSubscriptionForUser } from "@norish/db/repositories/subscriptions";
 import { resolveEntitlements } from "@norish/shared-server/billing/entitlements";
 import {
@@ -25,6 +26,26 @@ const getMyEntitlements = authedProcedure.query(async ({ ctx }) => {
   const { planId } = await resolveEntitlements(ctx.user.id);
 
   return { planId, billingEnabled: SERVER_CONFIG.BILLING_ENABLED };
+});
+
+/**
+ * The caller's AI-action usage this calendar month, for the usage meter.
+ * `limit` is null when the plan is unmetered (self-hosted / unlimited), so the
+ * `Infinity` allowance never has to cross the wire, and `used` is left at 0
+ * because those instances never touch the counter.
+ */
+const getMyAiUsage = authedProcedure.query(async ({ ctx }) => {
+  const { entitlements } = await resolveEntitlements(ctx.user.id);
+  const unlimited = entitlements.aiCreditsPerMonth === Number.POSITIVE_INFINITY;
+  const period = currentAiUsagePeriod();
+  const used = unlimited ? 0 : await getAiUsage(ctx.user.id, period);
+
+  return {
+    period,
+    used,
+    limit: unlimited ? null : entitlements.aiCreditsPerMonth,
+    unlimited,
+  };
 });
 
 /** Start a Stripe Checkout for a paid plan; returns the URL to redirect to. */
@@ -88,6 +109,7 @@ const createPortalSession = authedProcedure.mutation(async ({ ctx }) => {
 
 export const billingRouter = router({
   getMyEntitlements,
+  getMyAiUsage,
   createCheckoutSession,
   createPortalSession,
 });

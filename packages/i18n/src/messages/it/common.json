@@ -89,7 +89,12 @@
   "errors": {
     "operationFailed": "Operazione non riuscita",
     "nameCannotBeEmpty": "Il nome non può essere vuoto",
-    "technicalDetails": "Qualcosa è andato storto. Controlla la console del browser per i dettagli tecnici."
+    "technicalDetails": "Qualcosa è andato storto. Controlla la console del browser per i dettagli tecnici.",
+    "aiLimit": {
+      "title": "Limite IA raggiunto",
+      "description": "Hai usato tutte le tue azioni IA questo mese. Passa a un piano superiore per averne di più.",
+      "upgrade": "Vedi i piani"
+    }
   },
   "slots": {
     "breakfast": "Colazione",
