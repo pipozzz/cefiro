@@ -11,7 +11,10 @@ import { defineDevicePreference } from "@/lib/device-preferences";
 export const recipePageColorPreference = defineDevicePreference({
   cookieName: "norish_recipe_page_color",
   values: ["dish", "theme"] as const,
-  defaultValue: "dish",
+  // Default to the plain, light theme colours so recipe pages and cook mode
+  // match the light discovery look out of the box; readers who want the page
+  // tinted from the dish photo can opt in via Settings → Preferences.
+  defaultValue: "theme",
 });
 
 export type RecipePageColorMode = (typeof recipePageColorPreference.values)[number];
