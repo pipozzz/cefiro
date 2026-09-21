@@ -23,7 +23,9 @@ beforeEach(() => {
 
 describe("RecipePageTint", () => {
   it("scopes the channel variables and paints the viewport underlay for a Dish Colour", () => {
-    const { container, getByTestId } = renderTint("#c04020");
+    // Dish tint is opt-in now (default is the plain `theme`), so this path
+    // selects it explicitly.
+    const { container, getByTestId } = renderTint("#c04020", "dish");
     const scope = container.querySelector("[data-dish-tint]") as HTMLElement;
 
     expect(scope).not.toBeNull();
