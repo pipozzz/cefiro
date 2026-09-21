@@ -24,7 +24,11 @@
     "modeCookbooks": "Cookbooks",
     "noCookbooks": "No public cookbooks yet.",
     "sectionYourRecipes": "Twoje przepisy",
-    "sectionCommunityRecipes": "Od społeczności"
+    "sectionCommunityRecipes": "Od społeczności",
+    "modeByIngredient": "Według składników",
+    "ingredientPlaceholder": "Dodaj składnik…",
+    "ingredientHint": "Dodaj co masz — znajdziemy przepisy, które zrobisz.",
+    "noIngredientResults": "Brak publicznych przepisów z tymi składnikami."
   },
   "categories": {
     "Breakfast": "Breakfast",
