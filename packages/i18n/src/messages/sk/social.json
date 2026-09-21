@@ -13,8 +13,6 @@
     "categoryAll": "Všetko",
     "sectionPeople": "Ľudia",
     "sectionRecipes": "Recepty",
-    "sectionYourRecipes": "Tvoje recepty",
-    "sectionCommunityRecipes": "Od komunity",
     "modeRecipes": "Recepty",
     "modeCooks": "Kuchári",
     "noCooks": "Zatiaľ tu nie sú žiadni kuchári.",
@@ -51,8 +49,7 @@
     "couldNotSave": "Nepodarilo sa uložiť recept",
     "alreadySaved": "Už máte vo svojich receptoch",
     "openCopy": "Otvoriť moju kópiu",
-    "errorTitle": "Uloženie zlyhalo",
-    "view": "Zobraziť"
+    "errorTitle": "Uloženie zlyhalo"
   },
   "rating": {
     "noRating": "Zatiaľ bez hodnotenia",
@@ -131,10 +128,7 @@
     "carbs": "Sacharidy",
     "fat": "Tuky",
     "source": "Zdroj:",
-    "metaDescription": "Recept zdieľaný na Cefiro.",
-    "share": "Zdieľať",
-    "linkCopied": "Odkaz skopírovaný",
-    "shareFailed": "Odkaz sa nepodarilo skopírovať"
+    "metaDescription": "Recept zdieľaný na Cefiro."
   },
   "feed": {
     "title": "Tvoj feed",
@@ -185,7 +179,8 @@
     "comment": "komentoval(a) tvoj recept",
     "saveNamed": "uložil(a) si tvoj recept {name}",
     "save": "uložil(a) si tvoj recept",
-    "report": "Komentár na tvojom recepte bol nahlásený."
+    "report": "Komentár na tvojom recepte bol nahlásený.",
+    "loadMore": "Načítať viac"
   },
   "profileSettings": {
     "title": "Verejný profil",
