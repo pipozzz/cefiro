@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
+import { AiCreditsHint } from "@/components/billing/ai-credits-hint";
 import { usePermissionsContext } from "@/context/permissions-context";
 import { useRecipesMutations } from "@/hooks/recipes";
 import { showSafeErrorToast } from "@/lib/ui/safe-error-toast";
@@ -114,6 +115,7 @@ export default function ImportFromPasteModal({ isOpen, onOpenChange }: ImportFro
                     max: MAX_RECIPE_PASTE_CHARS.toLocaleString(),
                   })}
                 </p>
+                {isAIEnabled && <AiCreditsHint />}
               </Modal.Body>
               <Modal.Footer>
                 {isAIEnabled && (

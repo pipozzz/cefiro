@@ -4,6 +4,7 @@ import type { DropZoneAreaProps } from "@/components/ui/drop-zone";
 import { useCallback, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { AiCreditsHint } from "@/components/billing/ai-credits-hint";
 import { DropZone } from "@/components/ui/drop-zone";
 import { useUploadLimitsQuery } from "@/hooks/config";
 import { useRecipesMutations } from "@/hooks/recipes";
@@ -254,6 +255,8 @@ export default function ImportFromImageModal({ isOpen, onOpenChange }: ImportFro
                     })}
                   </p>
                 )}
+
+                <AiCreditsHint className="mt-2 justify-center" />
               </Modal.Body>
               <Modal.Footer>
                 <Button
