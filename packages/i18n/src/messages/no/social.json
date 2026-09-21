@@ -25,10 +25,7 @@
     "noCookbooks": "No public cookbooks yet.",
     "sectionYourRecipes": "Dine oppskrifter",
     "sectionCommunityRecipes": "Fra fellesskapet",
-    "modeByIngredient": "Etter ingrediens",
-    "ingredientPlaceholder": "Legg til en ingrediens…",
-    "ingredientHint": "Legg til det du har — vi finner oppskrifter du kan lage.",
-    "noIngredientResults": "Ingen offentlige oppskrifter bruker disse ingrediensene ennå."
+    "topicsHeading": "Populære emner"
   },
   "categories": {
     "Breakfast": "Breakfast",

@@ -25,10 +25,7 @@
     "noCookbooks": "No public cookbooks yet.",
     "sectionYourRecipes": "Ihre Rezepte",
     "sectionCommunityRecipes": "Aus der Community",
-    "modeByIngredient": "Nach Zutaten",
-    "ingredientPlaceholder": "Zutat hinzufügen…",
-    "ingredientHint": "Fügen Sie hinzu, was Sie haben — wir finden passende Rezepte.",
-    "noIngredientResults": "Noch keine öffentlichen Rezepte mit diesen Zutaten."
+    "topicsHeading": "Beliebte Themen"
   },
   "categories": {
     "Breakfast": "Breakfast",

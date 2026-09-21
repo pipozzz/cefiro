@@ -16,6 +16,7 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import { IngredientDiscovery } from "./ingredient-discovery";
+import { TrendingTopics } from "./trending-topics";
 
 type Sort = "newest" | "trending";
 type Category = "Breakfast" | "Lunch" | "Dinner" | "Snack";
@@ -272,6 +273,11 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
                   </button>
                 ))}
               </div>
+
+              {/* Trending topics: most-used public tags, as a shortcut into the
+                  tag filter. Hidden while a tag is already active so it doesn't
+                  compete with the active-tag chip below. */}
+              {tag ? null : <TrendingTopics activeTag={tag} onSelect={setTag} />}
 
               {tag ? (
                 <div className="mb-6 flex items-center gap-2">

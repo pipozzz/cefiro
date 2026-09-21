@@ -22,6 +22,7 @@ import {
   isFollowing,
   listDiscoverRecipes,
   listFeedRecipes,
+  listTrendingTopics,
   searchPublicRecipes,
   searchPublicRecipesByIngredients,
   unfollowUser,
@@ -106,6 +107,7 @@ import {
   SetRecipeVisibilityInputSchema,
   SuggestedCooksInputSchema,
   ToggleLikeInputSchema,
+  TrendingTopicsInputSchema,
   UpsertProfileInputSchema,
 } from "@norish/shared/contracts/zod";
 import { PublicRecipeViewSchema } from "@norish/shared/contracts/zod/recipe-shares";
@@ -452,6 +454,12 @@ const searchByIngredients = publicProcedure
 
     return { recipes: await toFeedCardsWithRatings(rows) };
   });
+
+// Trending discovery topics: the most-used tags across public recipes, for the
+// clickable topic chips on /discover.
+const trendingTopics = publicProcedure.input(TrendingTopicsInputSchema).query(async ({ input }) => {
+  return { topics: await listTrendingTopics(input.limit) };
+});
 
 const suggestedCooks = authedProcedure
   .input(SuggestedCooksInputSchema)
@@ -1092,6 +1100,7 @@ export const socialProcedures = router({
   discover,
   search,
   searchByIngredients,
+  trendingTopics,
   suggestedCooks,
   discoverCooks,
   discoverCookbooks,

@@ -162,6 +162,11 @@ export const SearchByIngredientsInputSchema = z.object({
   limit: z.number().int().min(1).max(50).default(24),
 });
 
+/** Trending discovery topics: the most-used tags across public recipes. */
+export const TrendingTopicsInputSchema = z.object({
+  limit: z.number().int().min(1).max(30).default(12),
+});
+
 export const SuggestedCooksInputSchema = z.object({
   limit: z.number().int().min(1).max(24).default(6),
 });
