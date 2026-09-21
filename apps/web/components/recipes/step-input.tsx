@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { StepIngredientChips } from "@/components/recipes/step-ingredient-chips";
 import SmartTextInput from "@/components/shared/smart-text-input";
 import { useRecipeImages } from "@/hooks/recipes";
-import { Bars3Icon, PhotoIcon, XMarkIcon } from "@heroicons/react/16/solid";
+import { Bars3Icon, ClockIcon, PhotoIcon, XMarkIcon } from "@heroicons/react/16/solid";
 import { Button } from "@heroui/react";
 import { Reorder, useDragControls } from "motion/react";
 import { useTranslations } from "next-intl";
@@ -57,6 +57,11 @@ interface StepItem {
   version?: number;
 }
 let nextId = 0;
+
+// Quick durations for the manual step timer. Inserting "N min" into the step
+// text lets the existing timer parser turn it into a live countdown chip — no
+// schema change, and it works the same on the recipe page and in cook mode.
+const TIMER_PRESETS = [5, 10, 15, 20, 30, 45, 60] as const;
 
 function createStepItem(
   text: string,
@@ -488,12 +493,22 @@ function StepRow({
   onStepIngredientsChange,
   onIngredientMention,
 }: StepRowProps) {
+  const tStep = useTranslations("recipes.stepInput");
   const controls = useDragControls();
+  const [timerOpen, setTimerOpen] = useState(false);
   const hasContent = !!item.text || item.images.length > 0;
   const canDrag = !isLast && hasContent;
   // Heading rows cannot receive chips, and the trailing empty row has no step
   // for them to belong to yet.
   const canCarryStepIngredients = !!item.text.trim() && !item.text.trim().startsWith("#");
+
+  // Append a recognized "N min" token so the parser renders a timer chip.
+  const insertTimer = (minutes: number) => {
+    const base = item.text.trimEnd();
+
+    onValueChange(base ? `${base} ${minutes} min` : `${minutes} min`);
+    setTimerOpen(false);
+  };
 
   return (
     <Reorder.Item
@@ -542,6 +557,21 @@ function StepRow({
             onValueChange={onValueChange}
           />
 
+          {timerOpen && canCarryStepIngredients && (
+            <div className="flex flex-wrap items-center gap-1.5">
+              {TIMER_PRESETS.map((minutes) => (
+                <button
+                  key={minutes}
+                  className="bg-content2 text-default-600 hover:bg-content3 rounded-full px-2.5 py-1 text-xs font-medium transition"
+                  type="button"
+                  onClick={() => insertTimer(minutes)}
+                >
+                  {minutes} min
+                </button>
+              ))}
+            </div>
+          )}
+
           {canCarryStepIngredients && (
             <StepIngredientChips
               autoEntryOrder={autoEntryOrder}
@@ -578,6 +608,20 @@ function StepRow({
 
         {/* Action buttons - stacked vertically */}
         <div className="mt-1 flex flex-shrink-0 flex-col gap-0.5">
+          {/* Timer button — inserts a recognized "N min" duration into the step */}
+          {canCarryStepIngredients && (
+            <Button
+              isIconOnly
+              aria-label={tStep("addTimer")}
+              size="sm"
+              title={tStep("addTimer")}
+              variant={timerOpen ? "primary" : "tertiary"}
+              onPress={() => setTimerOpen((v) => !v)}
+            >
+              <ClockIcon className="h-4 w-4" />
+            </Button>
+          )}
+
           {/* Image upload button */}
           {recipeId && (
             <>

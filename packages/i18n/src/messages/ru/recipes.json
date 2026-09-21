@@ -277,7 +277,8 @@
   },
   "stepInput": {
     "stepPlaceholder": "Шаг {number}: Опишите действие...",
-    "stepPlaceholderShort": "Шаг {number}"
+    "stepPlaceholderShort": "Шаг {number}",
+    "addTimer": "Добавить таймер"
   },
   "stepIngredients": {
     "rowLabel": "Связанные ингредиенты",

@@ -277,7 +277,8 @@
   },
   "stepInput": {
     "stepPlaceholder": "Krok {number}: Opíš krok...",
-    "stepPlaceholderShort": "Krok {number}"
+    "stepPlaceholderShort": "Krok {number}",
+    "addTimer": "Pridať časovač"
   },
   "stepIngredients": {
     "rowLabel": "Prepojené ingrediencie",

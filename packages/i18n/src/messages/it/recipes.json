@@ -277,7 +277,8 @@
   },
   "stepInput": {
     "stepPlaceholder": "Passaggio {number}: Descrivi il passaggio...",
-    "stepPlaceholderShort": "Passaggio {number}"
+    "stepPlaceholderShort": "Passaggio {number}",
+    "addTimer": "Aggiungi timer"
   },
   "stepIngredients": {
     "rowLabel": "Ingredienti collegati",
