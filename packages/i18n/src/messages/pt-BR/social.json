@@ -29,7 +29,10 @@
     "modeSurprise": "Surpreenda-me",
     "surpriseShuffle": "Embaralhar",
     "surpriseHint": "Uma seleção aleatória da comunidade — embaralhe para ver mais.",
-    "noSurprise": "Ainda não há receitas públicas para te surpreender."
+    "noSurprise": "Ainda não há receitas públicas para te surpreender.",
+    "readyInHeading": "Pronto em",
+    "readyInAny": "Qualquer",
+    "readyInUnder": "≤{minutes} min"
   },
   "categories": {
     "Breakfast": "Breakfast",

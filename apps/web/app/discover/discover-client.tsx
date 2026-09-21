@@ -24,6 +24,7 @@ type Category = "Breakfast" | "Lunch" | "Dinner" | "Snack";
 type Mode = "recipes" | "byIngredient" | "surprise" | "cooks" | "cookbooks";
 
 const CATEGORIES: Category[] = ["Breakfast", "Lunch", "Dinner", "Snack"];
+const TIME_OPTIONS = [15, 30, 60] as const;
 
 export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
   const trpc = useTRPC();
@@ -34,6 +35,7 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
   const [mode, setMode] = useState<Mode>("recipes");
   const [sort, setSort] = useState<Sort>("newest");
   const [category, setCategory] = useState<Category | null>(null);
+  const [maxMinutes, setMaxMinutes] = useState<number | null>(null);
   const [tag, setTag] = useState<string | null>(() => searchParams.get("tag"));
 
   const [q, setQ] = useState(() => searchParams.get("q") ?? "");
@@ -72,7 +74,13 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
 
   const browse = useInfiniteQuery({
     ...trpc.social.discover.infiniteQueryOptions(
-      { sort, category: category ?? undefined, tag: tag ?? undefined, limit: 24 },
+      {
+        sort,
+        category: category ?? undefined,
+        tag: tag ?? undefined,
+        maxMinutes: maxMinutes ?? undefined,
+        limit: 24,
+      },
       { getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined }
     ),
     enabled: !isSearching && mode === "recipes",
@@ -261,6 +269,28 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
                 >
                   {t("sortTrending")}
                 </button>
+              </div>
+
+              {/* "Ready in" time filter */}
+              <div className="mb-3 flex flex-wrap items-center gap-2">
+                <span className="text-default-500 mr-1 text-sm">{t("readyInHeading")}</span>
+                <button
+                  className={pill(maxMinutes === null)}
+                  type="button"
+                  onClick={() => setMaxMinutes(null)}
+                >
+                  {t("readyInAny")}
+                </button>
+                {TIME_OPTIONS.map((minutes) => (
+                  <button
+                    key={minutes}
+                    className={pill(maxMinutes === minutes)}
+                    type="button"
+                    onClick={() => setMaxMinutes(minutes)}
+                  >
+                    {t("readyInUnder", { minutes })}
+                  </button>
+                ))}
               </div>
 
               {/* Category filter */}

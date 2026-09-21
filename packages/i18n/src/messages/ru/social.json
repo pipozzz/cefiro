@@ -29,7 +29,10 @@
     "modeSurprise": "Удиви меня",
     "surpriseShuffle": "Перемешать",
     "surpriseHint": "Случайная подборка от сообщества — перемешайте, чтобы увидеть ещё.",
-    "noSurprise": "Пока нет публичных рецептов, чтобы вас удивить."
+    "noSurprise": "Пока нет публичных рецептов, чтобы вас удивить.",
+    "readyInHeading": "Готово за",
+    "readyInAny": "Любое",
+    "readyInUnder": "≤{minutes} мин"
   },
   "categories": {
     "Breakfast": "Breakfast",

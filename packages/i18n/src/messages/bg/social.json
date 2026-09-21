@@ -29,7 +29,10 @@
     "modeSurprise": "Изненадай ме",
     "surpriseShuffle": "Разбъркай",
     "surpriseHint": "Случайна селекция от общността — разбъркай за още.",
-    "noSurprise": "Все още няма публични рецепти за изненада."
+    "noSurprise": "Все още няма публични рецепти за изненада.",
+    "readyInHeading": "Готово за",
+    "readyInAny": "Всяко",
+    "readyInUnder": "≤{minutes} мин"
   },
   "categories": {
     "Breakfast": "Breakfast",

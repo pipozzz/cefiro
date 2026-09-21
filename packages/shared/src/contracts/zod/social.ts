@@ -145,6 +145,8 @@ export const DiscoverInputSchema = z.object({
   sort: DiscoverSortSchema.default("newest"),
   category: z.enum(recipeCategoryValues).optional(),
   tag: z.string().trim().min(1).max(50).optional(),
+  // "Ready in ≤N minutes" quick filter (total time).
+  maxMinutes: z.number().int().min(1).max(1440).optional(),
   limit: z.number().int().min(1).max(50).default(24),
   cursor: z.string().optional(),
 });

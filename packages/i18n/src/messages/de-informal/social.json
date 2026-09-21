@@ -29,7 +29,10 @@
     "modeSurprise": "Überrasch mich",
     "surpriseShuffle": "Mischen",
     "surpriseHint": "Eine zufällige Auswahl aus der Community – misch für mehr.",
-    "noSurprise": "Noch keine öffentlichen Rezepte, um dich zu überraschen."
+    "noSurprise": "Noch keine öffentlichen Rezepte, um dich zu überraschen.",
+    "readyInHeading": "Fertig in",
+    "readyInAny": "Beliebig",
+    "readyInUnder": "≤{minutes} Min."
   },
   "categories": {
     "Breakfast": "Breakfast",

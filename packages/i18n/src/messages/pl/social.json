@@ -29,7 +29,10 @@
     "modeSurprise": "Zaskocz mnie",
     "surpriseShuffle": "Losuj",
     "surpriseHint": "Losowa garść od społeczności — losuj, by zobaczyć więcej.",
-    "noSurprise": "Nie ma jeszcze publicznych przepisów na niespodziankę."
+    "noSurprise": "Nie ma jeszcze publicznych przepisów na niespodziankę.",
+    "readyInHeading": "Gotowe w",
+    "readyInAny": "Dowolnie",
+    "readyInUnder": "≤{minutes} min"
   },
   "categories": {
     "Breakfast": "Breakfast",
