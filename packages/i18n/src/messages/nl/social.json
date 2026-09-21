@@ -128,7 +128,8 @@
     "carbs": "Carbs",
     "fat": "Fat",
     "source": "Source:",
-    "metaDescription": "A recipe shared on Cefiro."
+    "metaDescription": "A recipe shared on Cefiro.",
+    "print": "Afdrukken"
   },
   "feed": {
     "title": "Your feed",
