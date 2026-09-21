@@ -12,6 +12,7 @@ import { NotFoundView } from "@/components/shared/not-found-view";
 import RecipeSkeleton from "@/components/skeleton/recipe-skeleton";
 import { CommentsSection } from "@/components/social/comments-section";
 import { LikeButton } from "@/components/social/like-button";
+import { PrintRecipeButton } from "@/components/social/print-recipe-button";
 import { RecipeRating } from "@/components/social/recipe-rating";
 import { SaveRecipeButton } from "@/components/social/save-recipe-button";
 import { ShareRecipeButton } from "@/components/social/share-recipe-button";
@@ -198,13 +199,14 @@ function PublicRecipeBody({ slug, data }: { slug: string; data: PublicRecipeData
         </div>
       )}
 
-      <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4">
+      <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4 print:hidden">
         <LikeButton initialCount={favoriteCount} recipeId={recipeId} slug={slug} />
         <SaveRecipeButton recipeId={recipeId} slug={slug} />
         <ShareRecipeButton slug={slug} title={recipe.name} />
+        <PrintRecipeButton />
       </div>
 
-      <div className="mt-4">
+      <div className="mt-4 print:hidden">
         <RecipeRating
           initialAverage={rating.average}
           initialCount={rating.count}
@@ -218,7 +220,7 @@ function PublicRecipeBody({ slug, data }: { slug: string; data: PublicRecipeData
         <aside className="md:sticky md:top-6 md:self-start">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <h2 className="text-foreground text-xl font-semibold">{t("ingredients")}</h2>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 print:hidden">
               <AmountDisplayToggle />
               <PublicServingsControl servings={servings} onChange={setServings} />
             </div>
@@ -282,11 +284,13 @@ function PublicRecipeBody({ slug, data }: { slug: string; data: PublicRecipeData
         </p>
       ) : null}
 
-      <CommentsSection
-        recipeAuthorHandle={author?.handle ?? null}
-        recipeId={recipeId}
-        slug={slug}
-      />
+      <div className="print:hidden">
+        <CommentsSection
+          recipeAuthorHandle={author?.handle ?? null}
+          recipeId={recipeId}
+          slug={slug}
+        />
+      </div>
     </article>
   );
 }

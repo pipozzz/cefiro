@@ -49,7 +49,8 @@
     "couldNotSave": "Could not save recipe",
     "alreadySaved": "Already in your recipes",
     "openCopy": "Open your copy",
-    "errorTitle": "Save failed"
+    "errorTitle": "Save failed",
+    "view": "Vis"
   },
   "rating": {
     "noRating": "No ratings yet",
@@ -128,7 +129,11 @@
     "carbs": "Carbs",
     "fat": "Fat",
     "source": "Source:",
-    "metaDescription": "A recipe shared on Cefiro."
+    "metaDescription": "A recipe shared on Cefiro.",
+    "print": "Skriv ut",
+    "share": "Del",
+    "linkCopied": "Lenke kopiert",
+    "shareFailed": "Kunne ikke kopiere lenken"
   },
   "feed": {
     "title": "Your feed",
