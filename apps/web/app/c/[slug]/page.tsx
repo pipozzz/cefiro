@@ -3,7 +3,7 @@ import { cache } from "react";
 import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
 
-import { getPublicCookbookBySlug } from "@norish/db/repositories/public-cookbooks";
+import { appRouter, createHttpContextFromHeaders } from "@norish/trpc/server";
 
 import { PublicCookbookView } from "./cookbook-view";
 
@@ -17,12 +17,26 @@ async function siteOrigin(): Promise<string> {
   return host ? `${proto}://${host}` : "";
 }
 
-/** Deduped per-request loader shared by generateMetadata and the page render. */
-const loadCookbook = cache(async (slug: string) => getPublicCookbookBySlug(slug));
+/**
+ * Server-load the same payload the client query returns, deduped per request,
+ * so the cookbook renders in the initial HTML (fast first paint, and crawlers
+ * see the recipes) and metadata reads from the one source. Returns null on any
+ * error so the client view falls back to its own fetch / not-found handling.
+ */
+const loadCookbookView = cache(async (slug: string) => {
+  try {
+    const ctx = await createHttpContextFromHeaders(new Headers(await headers()), null);
+    const caller = appRouter.createCaller(ctx);
+
+    return await caller.social.getPublicCookbook({ slug });
+  } catch {
+    return null;
+  }
+});
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const cookbook = await loadCookbook(slug);
+  const cookbook = await loadCookbookView(slug);
   const t = await getTranslations("social.cookbook");
 
   if (!cookbook) {
@@ -59,6 +73,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function PublicCookbookPage({ params }: Props) {
   const { slug } = await params;
+  const initialData = await loadCookbookView(slug);
 
-  return <PublicCookbookView slug={slug} />;
+  return <PublicCookbookView initialData={initialData ?? undefined} slug={slug} />;
 }

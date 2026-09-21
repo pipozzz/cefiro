@@ -9,12 +9,23 @@ import { Spinner } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
-export function PublicCookbookView({ slug }: { slug: string }) {
+import type { RouterOutputs } from "@norish/trpc/client";
+
+type PublicCookbookData = RouterOutputs["social"]["getPublicCookbook"];
+
+export function PublicCookbookView({
+  slug,
+  initialData,
+}: {
+  slug: string;
+  initialData?: PublicCookbookData;
+}) {
   const trpc = useTRPC();
   const t = useTranslations("social.cookbook");
 
   const { data, isLoading, isError } = useQuery({
     ...trpc.social.getPublicCookbook.queryOptions({ slug }),
+    initialData,
     retry: false,
   });
 
@@ -34,7 +45,7 @@ export function PublicCookbookView({ slug }: { slug: string }) {
   const authorName = owner ? (owner.displayName ?? `@${owner.handle}`) : null;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 pb-24 md:px-6">
+    <div className="mx-auto max-w-7xl px-4 pb-24 md:px-6">
       <header className="pt-10">
         <p className="text-primary text-sm font-medium tracking-wide uppercase">📚</p>
         <h1 className="text-foreground mt-1 text-3xl font-bold md:text-4xl">{title}</h1>
