@@ -390,7 +390,9 @@ const unfollow = authedProcedure
   });
 
 /** The current viewer's follow relationship to a handle (self => null). */
-const getFollowStatus = authedProcedure
+// Public so a signed-out visitor viewing a profile doesn't trigger an
+// UNAUTHORIZED console error; anonymous callers get isFollowing/isSelf false.
+const getFollowStatus = publicProcedure
   .input(FollowByHandleInputSchema)
   .query(async ({ ctx, input }) => {
     const profile = await getProfileByHandle(input.handle);
@@ -399,10 +401,10 @@ const getFollowStatus = authedProcedure
       throw new TRPCError({ code: "NOT_FOUND", message: "Profile not found" });
     }
 
-    const isSelf = profile.userId === ctx.user.id;
-    const following = isSelf ? false : await isFollowing(ctx.user.id, profile.userId);
+    const isSelf = ctx.user ? profile.userId === ctx.user.id : false;
+    const following = ctx.user && !isSelf ? await isFollowing(ctx.user.id, profile.userId) : false;
 
-    return { handle: input.handle, isSelf, isFollowing: following };
+    return { handle: input.handle, isSelf, isFollowing: following, isAuthenticated: !!ctx.user };
   });
 
 // --- Feed & discovery ---------------------------------------------------
@@ -546,10 +548,13 @@ const setCookbookDescriptionProc = authedProcedure
 
 // --- Likes (favourites double as public likes) --------------------------
 
-const getLikeStatus = authedProcedure.input(LikeStatusInputSchema).query(async ({ ctx, input }) => {
-  const liked = await isFavorite(ctx.user.id, input.recipeId);
+// Public so the like state can be read on the public recipe page without an
+// UNAUTHORIZED error spamming the console for signed-out viewers; anonymous
+// callers simply get `liked: false` and `isAuthenticated: false`.
+const getLikeStatus = publicProcedure.input(LikeStatusInputSchema).query(async ({ ctx, input }) => {
+  const liked = ctx.user ? await isFavorite(ctx.user.id, input.recipeId) : false;
 
-  return { recipeId: input.recipeId, liked };
+  return { recipeId: input.recipeId, liked, isAuthenticated: !!ctx.user };
 });
 
 const toggleLike = authedProcedure
@@ -994,23 +999,35 @@ const saveRecipe = authedProcedure
  * button's three states without the client guessing: their own recipe (no save
  * offered), a recipe they have already saved (reopen the copy), or a fresh one.
  */
-const getSaveState = authedProcedure
+// Public so the save state can be read on the public recipe page without an
+// UNAUTHORIZED console error; anonymous callers get isAuthenticated:false and
+// no fork, and the client sends them to sign in when they press Save.
+const getSaveState = publicProcedure
   .input(SaveRecipeInputSchema)
-  .query(async ({ ctx, input }): Promise<{ isOwn: boolean; savedRecipeId: string | null }> => {
-    const ref = await getViewableRecipeRefById(input.recipeId);
+  .query(
+    async ({
+      ctx,
+      input,
+    }): Promise<{ isOwn: boolean; savedRecipeId: string | null; isAuthenticated: boolean }> => {
+      const ref = await getViewableRecipeRefById(input.recipeId);
 
-    if (!ref) {
-      throw new TRPCError({ code: "NOT_FOUND", message: "Recipe not found" });
+      if (!ref) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Recipe not found" });
+      }
+
+      if (!ctx.user) {
+        return { isOwn: false, savedRecipeId: null, isAuthenticated: false };
+      }
+
+      if (ref.userId === ctx.user.id) {
+        return { isOwn: true, savedRecipeId: null, isAuthenticated: true };
+      }
+
+      const existingFork = await getSavedForkForUser(ctx.user.id, input.recipeId);
+
+      return { isOwn: false, savedRecipeId: existingFork?.recipeId ?? null, isAuthenticated: true };
     }
-
-    if (ref.userId === ctx.user.id) {
-      return { isOwn: true, savedRecipeId: null };
-    }
-
-    const existingFork = await getSavedForkForUser(ctx.user.id, input.recipeId);
-
-    return { isOwn: false, savedRecipeId: existingFork?.recipeId ?? null };
-  });
+  );
 
 const uploadProfileAvatar = authedProcedure
   .use(rateLimit({ name: "social.uploadProfileAvatar", limit: 10, windowSec: 60 }))

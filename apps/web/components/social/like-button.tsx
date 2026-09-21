@@ -42,7 +42,9 @@ export function LikeButton({
     })
   );
 
-  const isAnonymous = statusQuery.isError;
+  // The status query is public now, so it resolves for signed-out viewers with
+  // isAuthenticated:false rather than erroring.
+  const isAnonymous = statusQuery.data ? !statusQuery.data.isAuthenticated : false;
   const liked = statusQuery.data?.liked ?? false;
 
   const onPress = () => {
@@ -59,15 +61,15 @@ export function LikeButton({
 
   return (
     <button
-      type="button"
-      onClick={onPress}
-      disabled={toggle.isPending}
       aria-pressed={liked}
       className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition ${
         liked
           ? "border-red-400/40 bg-red-500/10 text-red-500"
           : "border-default-200 bg-content1 text-default-600 hover:bg-content2"
       }`}
+      disabled={toggle.isPending}
+      type="button"
+      onClick={onPress}
     >
       {liked ? (
         <HeartSolid className="h-5 w-5 text-red-500" />
