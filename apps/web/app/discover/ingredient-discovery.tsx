@@ -6,7 +6,7 @@ import { useTRPC } from "@/app/providers/trpc-provider";
 import { SocialRecipeGrid } from "@/components/social/social-recipe-card";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Spinner } from "@heroui/react";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 /**
@@ -44,13 +44,21 @@ export function IngredientDiscovery() {
     }
   };
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isFetching } = useQuery({
     ...trpc.social.searchByIngredients.queryOptions({ ingredients: chips, limit: 24 }),
     enabled: chips.length > 0,
+    // Adding/removing a chip changes the query key. Without this the grid would
+    // drop to a full-height spinner on every edit — read as the whole page
+    // flickering. Keep the previous results visible and just fade them while the
+    // new set loads.
+    placeholderData: keepPreviousData,
     retry: false,
   });
 
   const recipes = data?.recipes ?? [];
+  // Only the very first search (no results yet) shows the big spinner; later
+  // edits refetch underneath the existing grid.
+  const showSpinner = isLoading && recipes.length === 0;
 
   return (
     <div>
@@ -84,7 +92,7 @@ export function IngredientDiscovery() {
       <p className="text-default-500 mt-2 text-sm">{t("ingredientHint")}</p>
 
       <div className="mt-8">
-        {chips.length === 0 ? null : isLoading ? (
+        {chips.length === 0 ? null : showSpinner ? (
           <div className="flex min-h-[30vh] items-center justify-center">
             <Spinner />
           </div>
@@ -93,7 +101,9 @@ export function IngredientDiscovery() {
             {t("noIngredientResults")}
           </p>
         ) : (
-          <SocialRecipeGrid recipes={recipes} />
+          <div className={isFetching ? "opacity-60 transition-opacity" : "transition-opacity"}>
+            <SocialRecipeGrid recipes={recipes} />
+          </div>
         )}
       </div>
     </div>
