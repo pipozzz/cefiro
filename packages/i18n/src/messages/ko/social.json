@@ -29,7 +29,10 @@
     "modeSurprise": "랜덤 추천",
     "surpriseShuffle": "섞기",
     "surpriseHint": "커뮤니티에서 무작위로 골랐어요 — 더 보려면 섞으세요.",
-    "noSurprise": "아직 추천할 공개 레시피가 없어요."
+    "noSurprise": "아직 추천할 공개 레시피가 없어요.",
+    "readyInHeading": "조리 시간",
+    "readyInAny": "전체",
+    "readyInUnder": "≤{minutes}분"
   },
   "categories": {
     "Breakfast": "Breakfast",

@@ -29,7 +29,10 @@
     "modeSurprise": "Overrask meg",
     "surpriseShuffle": "Bland",
     "surpriseHint": "Et tilfeldig utvalg fra fellesskapet — bland for flere.",
-    "noSurprise": "Ingen offentlige oppskrifter å overraske deg med ennå."
+    "noSurprise": "Ingen offentlige oppskrifter å overraske deg med ennå.",
+    "readyInHeading": "Klar på",
+    "readyInAny": "Alle",
+    "readyInUnder": "≤{minutes} min"
   },
   "categories": {
     "Breakfast": "Breakfast",

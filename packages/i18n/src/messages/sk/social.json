@@ -29,7 +29,10 @@
     "modeSurprise": "Prekvap ma",
     "surpriseShuffle": "Zamiešať",
     "surpriseHint": "Náhodný výber z komunity — zamiešaj pre ďalšie.",
-    "noSurprise": "Zatiaľ žiadne verejné recepty na prekvapenie."
+    "noSurprise": "Zatiaľ žiadne verejné recepty na prekvapenie.",
+    "readyInHeading": "Hotové do",
+    "readyInAny": "Ľubovoľne",
+    "readyInUnder": "≤{minutes} min"
   },
   "categories": {
     "Breakfast": "Raňajky",

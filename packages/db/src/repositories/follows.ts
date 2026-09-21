@@ -1,4 +1,4 @@
-import { and, desc, eq, lt, sql } from "drizzle-orm";
+import { and, desc, eq, lt, lte, sql } from "drizzle-orm";
 
 import { db } from "@norish/db/drizzle";
 
@@ -147,15 +147,22 @@ export async function listDiscoverRecipes(params: {
   sort: DiscoverSort;
   category?: string;
   tag?: string;
+  maxMinutes?: number;
   limit: number;
   cursor?: string;
 }): Promise<{ items: FeedRecipeRow[]; nextCursor: string | null }> {
-  const { sort, category, tag, limit } = params;
+  const { sort, category, tag, maxMinutes, limit } = params;
 
   const conditions = [eq(recipes.visibility, "public")];
 
   if (category) {
     conditions.push(sql`${category} = ANY(${recipes.categories})`);
+  }
+
+  // "Ready in ≤N minutes". Recipes without a stated total time are excluded
+  // (lte on NULL is false) — we can't promise a time we don't know.
+  if (maxMinutes) {
+    conditions.push(lte(recipes.totalMinutes, maxMinutes));
   }
 
   if (tag) {

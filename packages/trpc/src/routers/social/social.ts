@@ -426,6 +426,7 @@ const discover = publicProcedure.input(DiscoverInputSchema).query(async ({ input
     sort: input.sort,
     category: input.category,
     tag: input.tag,
+    maxMinutes: input.maxMinutes,
     limit: input.limit,
     cursor: input.cursor,
   });

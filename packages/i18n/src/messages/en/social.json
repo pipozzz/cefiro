@@ -29,7 +29,10 @@
     "modeSurprise": "Surprise me",
     "surpriseShuffle": "Shuffle",
     "surpriseHint": "A random handful from the community — shuffle for more.",
-    "noSurprise": "No public recipes to surprise you with yet."
+    "noSurprise": "No public recipes to surprise you with yet.",
+    "readyInHeading": "Ready in",
+    "readyInAny": "Any",
+    "readyInUnder": "≤{minutes} min"
   },
   "categories": {
     "Breakfast": "Breakfast",
