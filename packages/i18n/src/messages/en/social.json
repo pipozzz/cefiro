@@ -13,8 +13,6 @@
     "categoryAll": "All",
     "sectionPeople": "People",
     "sectionRecipes": "Recipes",
-    "sectionYourRecipes": "Your recipes",
-    "sectionCommunityRecipes": "From the community",
     "modeRecipes": "Recipes",
     "modeCooks": "Cooks",
     "noCooks": "No cooks here yet.",
@@ -51,8 +49,7 @@
     "couldNotSave": "Could not save recipe",
     "alreadySaved": "Already in your recipes",
     "openCopy": "Open your copy",
-    "errorTitle": "Save failed",
-    "view": "View"
+    "errorTitle": "Save failed"
   },
   "rating": {
     "noRating": "No ratings yet",
@@ -131,10 +128,7 @@
     "carbs": "Carbs",
     "fat": "Fat",
     "source": "Source:",
-    "metaDescription": "A recipe shared on Cefiro.",
-    "share": "Share",
-    "linkCopied": "Link copied",
-    "shareFailed": "Couldn't copy the link"
+    "metaDescription": "A recipe shared on Cefiro."
   },
   "feed": {
     "title": "Your feed",
@@ -185,7 +179,8 @@
     "comment": "commented on your recipe",
     "saveNamed": "saved your recipe {name}",
     "save": "saved your recipe",
-    "report": "A comment on your recipe was reported."
+    "report": "A comment on your recipe was reported.",
+    "loadMore": "Load more"
   },
   "profileSettings": {
     "title": "Public profile",

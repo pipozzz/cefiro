@@ -4,8 +4,8 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { useTRPC } from "@/app/providers/trpc-provider";
 import { FlagIcon } from "@heroicons/react/24/outline";
-import { Spinner } from "@heroui/react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Button, Spinner } from "@heroui/react";
+import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 type NotificationsTranslator = ReturnType<typeof useTranslations<"social.notifications">>;
@@ -77,8 +77,11 @@ export default function NotificationsPage() {
   const t = useTranslations("social.notifications");
   const markedRef = useRef(false);
 
-  const query = useQuery({
-    ...trpc.social.getNotifications.queryOptions({ limit: 50 }),
+  const query = useInfiniteQuery({
+    ...trpc.social.getNotifications.infiniteQueryOptions(
+      { limit: 20 },
+      { getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined }
+    ),
     retry: false,
   });
 
@@ -100,7 +103,8 @@ export default function NotificationsPage() {
     }
   }, [query.isSuccess, markRead]);
 
-  const notifications = (query.data?.notifications ?? []) as Notification[];
+  const notifications = (query.data?.pages.flatMap((page) => page.notifications) ??
+    []) as Notification[];
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
@@ -121,7 +125,7 @@ export default function NotificationsPage() {
 
             return (
               <li key={n.id} className={n.read ? "" : "bg-primary/5"}>
-                <Link href={href(n)} className="hover:bg-content2 flex items-center gap-3 p-4">
+                <Link className="hover:bg-content2 flex items-center gap-3 p-4" href={href(n)}>
                   {anonymous ? (
                     <span className="bg-danger/15 text-danger flex h-9 w-9 shrink-0 items-center justify-center rounded-full">
                       <FlagIcon className="h-4 w-4" />
@@ -129,9 +133,9 @@ export default function NotificationsPage() {
                   ) : n.actor?.avatarUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
-                      src={n.actor.avatarUrl}
                       alt=""
                       className="h-9 w-9 rounded-full object-cover"
+                      src={n.actor.avatarUrl}
                     />
                   ) : (
                     <span className="bg-primary text-primary-foreground flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold">
@@ -158,6 +162,18 @@ export default function NotificationsPage() {
           })}
         </ul>
       )}
+
+      {query.hasNextPage ? (
+        <div className="mt-6 flex justify-center">
+          <Button
+            isPending={query.isFetchingNextPage}
+            variant="tertiary"
+            onPress={() => query.fetchNextPage()}
+          >
+            {t("loadMore")}
+          </Button>
+        </div>
+      ) : null}
     </div>
   );
 }

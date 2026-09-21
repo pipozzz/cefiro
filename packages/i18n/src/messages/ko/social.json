@@ -13,8 +13,6 @@
     "categoryAll": "All",
     "sectionPeople": "People",
     "sectionRecipes": "Recipes",
-    "sectionYourRecipes": "내 레시피",
-    "sectionCommunityRecipes": "커뮤니티",
     "modeRecipes": "Recipes",
     "modeCooks": "Cooks",
     "noCooks": "No cooks here yet.",
@@ -51,8 +49,7 @@
     "couldNotSave": "Could not save recipe",
     "alreadySaved": "Already in your recipes",
     "openCopy": "Open your copy",
-    "errorTitle": "Save failed",
-    "view": "보기"
+    "errorTitle": "Save failed"
   },
   "rating": {
     "noRating": "No ratings yet",
@@ -131,10 +128,7 @@
     "carbs": "Carbs",
     "fat": "Fat",
     "source": "Source:",
-    "metaDescription": "A recipe shared on Cefiro.",
-    "share": "공유",
-    "linkCopied": "링크 복사됨",
-    "shareFailed": "링크를 복사하지 못했습니다"
+    "metaDescription": "A recipe shared on Cefiro."
   },
   "feed": {
     "title": "Your feed",
@@ -185,7 +179,8 @@
     "comment": "commented on your recipe",
     "saveNamed": "saved your recipe {name}",
     "save": "saved your recipe",
-    "report": "A comment on your recipe was reported."
+    "report": "A comment on your recipe was reported.",
+    "loadMore": "더 보기"
   },
   "profileSettings": {
     "title": "Public profile",
