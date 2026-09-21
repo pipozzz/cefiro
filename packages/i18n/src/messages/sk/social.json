@@ -118,7 +118,7 @@
     "notFoundTitle": "Recept sa nenašiel",
     "notFoundMessage": "Tento recept je súkromný alebo neexistuje.",
     "prep": "Príprava",
-    "cook": "Varenie",
+    "cook": "Variť",
     "total": "Spolu",
     "servings": "Porcie",
     "calories": "Kalórie",
@@ -133,7 +133,12 @@
     "print": "Tlačiť",
     "share": "Zdieľať",
     "linkCopied": "Odkaz skopírovaný",
-    "shareFailed": "Odkaz sa nepodarilo skopírovať"
+    "shareFailed": "Odkaz sa nepodarilo skopírovať",
+    "cookStep": "Krok {current} z {total}",
+    "cookClose": "Zavrieť",
+    "cookPrev": "Späť",
+    "cookNext": "Ďalej",
+    "cookDone": "Hotovo"
   },
   "feed": {
     "title": "Tvoj feed",

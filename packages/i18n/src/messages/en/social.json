@@ -133,7 +133,12 @@
     "print": "Print",
     "share": "Share",
     "linkCopied": "Link copied",
-    "shareFailed": "Couldn't copy the link"
+    "shareFailed": "Couldn't copy the link",
+    "cookStep": "Step {current} of {total}",
+    "cookClose": "Close",
+    "cookPrev": "Back",
+    "cookNext": "Next",
+    "cookDone": "Done"
   },
   "feed": {
     "title": "Your feed",

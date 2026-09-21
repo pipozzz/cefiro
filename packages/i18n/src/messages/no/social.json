@@ -118,7 +118,7 @@
     "notFoundTitle": "Recipe not found",
     "notFoundMessage": "This recipe is private or does not exist.",
     "prep": "Prep",
-    "cook": "Cook",
+    "cook": "Lag mat",
     "total": "Total",
     "servings": "Servings",
     "calories": "Calories",
@@ -133,7 +133,12 @@
     "print": "Skriv ut",
     "share": "Del",
     "linkCopied": "Lenke kopiert",
-    "shareFailed": "Kunne ikke kopiere lenken"
+    "shareFailed": "Kunne ikke kopiere lenken",
+    "cookStep": "Trinn {current} av {total}",
+    "cookClose": "Lukk",
+    "cookPrev": "Tilbake",
+    "cookNext": "Neste",
+    "cookDone": "Ferdig"
   },
   "feed": {
     "title": "Your feed",
