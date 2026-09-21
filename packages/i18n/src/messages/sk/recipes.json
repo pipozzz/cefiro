@@ -2,7 +2,7 @@
   "dashboard": {
     "libraryTitle": "Tvoja knižnica",
     "recipesTitle": "Tvoje recepty",
-    "cookbooksTitle": "Tvoje kuchárske knihy",
+    "cookbooksTitle": "Tvoje receptáre",
     "searchPlaceholder": "Hľadaj alebo pridaj recept...",
     "searchRecipesPlaceholder": "Hľadať recepty...",
     "libraryCount": "{count, plural, one {# položka} few {# položky} other {# položiek}}",
@@ -26,16 +26,16 @@
       "label": "Zobraziť",
       "all": "Všetko",
       "recipes": "Recepty",
-      "cookbooks": "Kuchárske knihy"
+      "cookbooks": "Receptáre"
     },
     "clearSearch": "Vymazať hľadanie"
   },
   "back": {
     "all": "Späť do knižnice",
     "recipes": "Späť na recepty",
-    "cookbooks": "Späť na kuchárske knihy",
+    "cookbooks": "Späť na receptáre",
     "named": "Späť na {name}",
-    "cookbook": "Späť na kuchársku knihu",
+    "cookbook": "Späť na receptár",
     "generic": "Späť"
   },
   "empty": {
@@ -43,8 +43,8 @@
     "description": "Vlož URL adresu receptu do vyhľadávacieho poľa vyššie a sleduj, ako sa deje kúzlo.",
     "noResults": "Nenašli sa žiadne recepty",
     "noResultsHint": "Skús upraviť alebo vymazať filtre.",
-    "noCookbooks": "Zatiaľ žiadne kuchárske knihy",
-    "noCookbooksHint": "Kuchárska kniha je pomenovaná zbierka receptov. Vytvor si svoju prvú a daj knižnici poriadok.",
+    "noCookbooks": "Zatiaľ žiadne receptáre",
+    "noCookbooksHint": "Receptár je pomenovaná zbierka receptov. Vytvor si svoj prvý a daj knižnici poriadok.",
     "recipeSuggestions": "Návrhy receptov",
     "ingredientSuggestions": "Návrhy ingrediencií"
   },
@@ -107,7 +107,7 @@
     "enrichmentFailed": "Posledný pokus zlyhal",
     "generateImage": "Vygenerovať obrázok",
     "generatingImage": "Generuje sa obrázok…",
-    "cookbooks": "Kuchárske knihy"
+    "cookbooks": "Receptáre"
   },
   "sharePanel": {
     "title": "Zdieľať recept",
@@ -380,28 +380,28 @@
     "total": "Spolu"
   },
   "cookbooks": {
-    "addCookbook": "Pridať kuchársku knihu",
-    "createTitle": "Nová kuchárska kniha",
-    "editTitle": "Upraviť kuchársku knihu",
+    "addCookbook": "Pridať receptár",
+    "createTitle": "Nový receptár",
+    "editTitle": "Upraviť receptár",
     "titleLabel": "Názov",
     "titlePlaceholder": "napr. Večere počas týždňa",
-    "options": "Možnosti kuchárskej knihy",
-    "deleteTitle": "Odstrániť kuchársku knihu",
+    "options": "Možnosti receptára",
+    "deleteTitle": "Odstrániť receptár",
     "deleteConfirm": "Naozaj chceš odstrániť „{title}“?",
     "deleteKeepsRecipes": "Recepty, ktoré obsahuje, zostanú v tvojej knižnici.",
     "recipeCount": "{count, plural, one {# recept} few {# recepty} other {# receptov}}",
     "empty": "Zatiaľ žiadne recepty",
-    "singular": "Kuchárska kniha",
-    "notFound": "Kuchárska kniha sa nenašla",
+    "singular": "Receptár",
+    "notFound": "Receptár sa nenašiel",
     "notFoundHint": "Možno bola odstránená alebo pre teba nie je viditeľná.",
     "emptyHint": "Pridaj recepty z ponuky rýchlych akcií ktoréhokoľvek receptu.",
-    "panelTitle": "Pridať do kuchárskej knihy",
-    "newWithRecipe": "Nová kuchárska kniha s týmto receptom",
-    "noneEditable": "Zatiaľ nemáš žiadne kuchárske knihy, ktoré môžeš upravovať.",
-    "cardTitle": "V kuchárskych knihách",
-    "removeFromCookbook": "Odstrániť z kuchárskej knihy",
-    "noMatchingMembers": "Žiadne recepty v tejto kuchárskej knihe nezodpovedajú tvojim filtrom.",
-    "membersLabel": "Recepty v tejto kuchárskej knihe",
+    "panelTitle": "Pridať do receptára",
+    "newWithRecipe": "Nový receptár s týmto receptom",
+    "noneEditable": "Zatiaľ nemáš žiadne receptáre, ktoré môžeš upravovať.",
+    "cardTitle": "V receptároch",
+    "removeFromCookbook": "Odstrániť z receptára",
+    "noMatchingMembers": "Žiadne recepty v tomto receptári nezodpovedajú tvojim filtrom.",
+    "membersLabel": "Recepty v tomto receptári",
     "showMore": "Zobraziť viac",
     "willBeCreated": "Vytvorí sa pri uložení",
     "manage": "Spravovať",
@@ -410,7 +410,7 @@
     "searchRecipes": "Hľadať recepty",
     "noRecipesToAdd": "Nenašli sa žiadne recepty.",
     "addCount": "{count, plural, one {Pridať # recept} few {Pridať # recepty} other {Pridať # receptov}}",
-    "everythingAlreadyIn": "Každý recept je už v tejto kuchárskej knihe.",
+    "everythingAlreadyIn": "Každý recept je už v tomto receptári.",
     "share": "Zdieľanie"
   },
   "servingsControl": {
