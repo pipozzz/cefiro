@@ -49,7 +49,8 @@
     "couldNotSave": "Could not save recipe",
     "alreadySaved": "Already in your recipes",
     "openCopy": "Open your copy",
-    "errorTitle": "Save failed"
+    "errorTitle": "Save failed",
+    "view": "Виж"
   },
   "rating": {
     "noRating": "No ratings yet",
@@ -129,7 +130,10 @@
     "fat": "Fat",
     "source": "Source:",
     "metaDescription": "A recipe shared on Cefiro.",
-    "print": "Печат"
+    "print": "Печат",
+    "share": "Сподели",
+    "linkCopied": "Връзката е копирана",
+    "shareFailed": "Връзката не можа да се копира"
   },
   "feed": {
     "title": "Your feed",

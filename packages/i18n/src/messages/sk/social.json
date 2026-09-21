@@ -49,7 +49,8 @@
     "couldNotSave": "Nepodarilo sa uložiť recept",
     "alreadySaved": "Už máte vo svojich receptoch",
     "openCopy": "Otvoriť moju kópiu",
-    "errorTitle": "Uloženie zlyhalo"
+    "errorTitle": "Uloženie zlyhalo",
+    "view": "Zobraziť"
   },
   "rating": {
     "noRating": "Zatiaľ bez hodnotenia",
@@ -129,7 +130,10 @@
     "fat": "Tuky",
     "source": "Zdroj:",
     "metaDescription": "Recept zdieľaný na Cefiro.",
-    "print": "Tlačiť"
+    "print": "Tlačiť",
+    "share": "Zdieľať",
+    "linkCopied": "Odkaz skopírovaný",
+    "shareFailed": "Odkaz sa nepodarilo skopírovať"
   },
   "feed": {
     "title": "Tvoj feed",

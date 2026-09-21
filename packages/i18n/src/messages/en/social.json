@@ -49,7 +49,8 @@
     "couldNotSave": "Could not save recipe",
     "alreadySaved": "Already in your recipes",
     "openCopy": "Open your copy",
-    "errorTitle": "Save failed"
+    "errorTitle": "Save failed",
+    "view": "View"
   },
   "rating": {
     "noRating": "No ratings yet",
@@ -129,7 +130,10 @@
     "fat": "Fat",
     "source": "Source:",
     "metaDescription": "A recipe shared on Cefiro.",
-    "print": "Print"
+    "print": "Print",
+    "share": "Share",
+    "linkCopied": "Link copied",
+    "shareFailed": "Couldn't copy the link"
   },
   "feed": {
     "title": "Your feed",

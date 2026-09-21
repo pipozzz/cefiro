@@ -49,7 +49,8 @@
     "couldNotSave": "Could not save recipe",
     "alreadySaved": "Already in your recipes",
     "openCopy": "Open your copy",
-    "errorTitle": "Save failed"
+    "errorTitle": "Save failed",
+    "view": "보기"
   },
   "rating": {
     "noRating": "No ratings yet",
@@ -129,7 +130,10 @@
     "fat": "Fat",
     "source": "Source:",
     "metaDescription": "A recipe shared on Cefiro.",
-    "print": "인쇄"
+    "print": "인쇄",
+    "share": "공유",
+    "linkCopied": "링크 복사됨",
+    "shareFailed": "링크를 복사하지 못했습니다"
   },
   "feed": {
     "title": "Your feed",
