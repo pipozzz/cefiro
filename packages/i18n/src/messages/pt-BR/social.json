@@ -149,7 +149,8 @@
     "cookClose": "Fechar",
     "cookPrev": "Voltar",
     "cookNext": "Próximo",
-    "cookDone": "Concluído"
+    "cookDone": "Concluído",
+    "moreLikeThis": "Mais como esta"
   },
   "feed": {
     "title": "Your feed",

@@ -149,7 +149,8 @@
     "cookClose": "Luk",
     "cookPrev": "Tilbage",
     "cookNext": "Næste",
-    "cookDone": "Færdig"
+    "cookDone": "Færdig",
+    "moreLikeThis": "Flere som denne"
   },
   "feed": {
     "title": "Your feed",

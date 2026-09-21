@@ -149,7 +149,8 @@
     "cookClose": "Zamknij",
     "cookPrev": "Wstecz",
     "cookNext": "Dalej",
-    "cookDone": "Gotowe"
+    "cookDone": "Gotowe",
+    "moreLikeThis": "Podobne przepisy"
   },
   "feed": {
     "title": "Your feed",

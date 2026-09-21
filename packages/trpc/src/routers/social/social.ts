@@ -23,6 +23,7 @@ import {
   isFollowing,
   listDiscoverRecipes,
   listFeedRecipes,
+  listRelatedPublicRecipes,
   listTrendingTopics,
   searchPublicRecipes,
   searchPublicRecipesByIngredients,
@@ -100,6 +101,7 @@ import {
   ListPublicRecipesByHandleInputSchema,
   MyRatingInputSchema,
   RateRecipeInputSchema,
+  RelatedRecipesInputSchema,
   ReportCommentInputSchema,
   SaveRecipeInputSchema,
   SearchByIngredientsInputSchema,
@@ -474,6 +476,13 @@ const searchByIngredients = publicProcedure
 // clickable topic chips on /discover.
 const trendingTopics = publicProcedure.input(TrendingTopicsInputSchema).query(async ({ input }) => {
   return { topics: await listTrendingTopics(input.limit) };
+});
+
+// "More like this": public recipes sharing the most tags with a given recipe.
+const relatedRecipes = publicProcedure.input(RelatedRecipesInputSchema).query(async ({ input }) => {
+  const rows = await listRelatedPublicRecipes(input.recipeId, input.limit);
+
+  return { recipes: await toFeedCardsWithRatings(rows) };
 });
 
 // "Surprise me": a random handful of public recipes; refetch reshuffles.
@@ -1124,6 +1133,7 @@ export const socialProcedures = router({
   searchByIngredients,
   trendingTopics,
   surpriseRecipes,
+  relatedRecipes,
   suggestedCooks,
   discoverCooks,
   discoverCookbooks,

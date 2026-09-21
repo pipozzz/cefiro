@@ -24,6 +24,8 @@ import { useTranslations } from "next-intl";
 
 import type { RouterOutputs } from "@norish/trpc/client";
 
+import { RelatedRecipes } from "./related-recipes";
+
 function MetaPill({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-content2 flex flex-col items-center rounded-2xl px-5 py-3 text-center">
@@ -296,6 +298,10 @@ function PublicRecipeBody({ slug, data }: { slug: string; data: PublicRecipeData
           </a>
         </p>
       ) : null}
+
+      <div className="print:hidden">
+        <RelatedRecipes recipeId={recipeId} />
+      </div>
 
       <div className="print:hidden">
         <CommentsSection
