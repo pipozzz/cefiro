@@ -25,7 +25,11 @@
     "noCookbooks": "Zatiaľ tu nie sú žiadne verejné kuchárky.",
     "sectionYourRecipes": "Tvoje recepty",
     "sectionCommunityRecipes": "Od komunity",
-    "topicsHeading": "Obľúbené témy"
+    "topicsHeading": "Obľúbené témy",
+    "modeSurprise": "Prekvap ma",
+    "surpriseShuffle": "Zamiešať",
+    "surpriseHint": "Náhodný výber z komunity — zamiešaj pre ďalšie.",
+    "noSurprise": "Zatiaľ žiadne verejné recepty na prekvapenie."
   },
   "categories": {
     "Breakfast": "Raňajky",

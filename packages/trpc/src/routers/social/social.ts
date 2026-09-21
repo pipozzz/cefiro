@@ -19,6 +19,7 @@ import {
 import {
   followUser,
   getFollowCounts,
+  getRandomPublicRecipes,
   isFollowing,
   listDiscoverRecipes,
   listFeedRecipes,
@@ -106,6 +107,7 @@ import {
   SetCookbookVisibilityInputSchema,
   SetRecipeVisibilityInputSchema,
   SuggestedCooksInputSchema,
+  SurpriseRecipesInputSchema,
   ToggleLikeInputSchema,
   TrendingTopicsInputSchema,
   UpsertProfileInputSchema,
@@ -460,6 +462,13 @@ const searchByIngredients = publicProcedure
 const trendingTopics = publicProcedure.input(TrendingTopicsInputSchema).query(async ({ input }) => {
   return { topics: await listTrendingTopics(input.limit) };
 });
+
+// "Surprise me": a random handful of public recipes; refetch reshuffles.
+const surpriseRecipes = publicProcedure
+  .input(SurpriseRecipesInputSchema)
+  .query(async ({ input }) => {
+    return { recipes: await toFeedCardsWithRatings(await getRandomPublicRecipes(input.limit)) };
+  });
 
 const suggestedCooks = authedProcedure
   .input(SuggestedCooksInputSchema)
@@ -1101,6 +1110,7 @@ export const socialProcedures = router({
   search,
   searchByIngredients,
   trendingTopics,
+  surpriseRecipes,
   suggestedCooks,
   discoverCooks,
   discoverCookbooks,

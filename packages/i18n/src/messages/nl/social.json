@@ -25,7 +25,11 @@
     "noCookbooks": "No public cookbooks yet.",
     "sectionYourRecipes": "Jouw recepten",
     "sectionCommunityRecipes": "Van de community",
-    "topicsHeading": "Populaire onderwerpen"
+    "topicsHeading": "Populaire onderwerpen",
+    "modeSurprise": "Verras me",
+    "surpriseShuffle": "Schud",
+    "surpriseHint": "Een willekeurige greep uit de community — schud voor meer.",
+    "noSurprise": "Nog geen openbare recepten om je te verrassen."
   },
   "categories": {
     "Breakfast": "Breakfast",

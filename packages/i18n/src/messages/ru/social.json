@@ -25,7 +25,11 @@
     "noCookbooks": "No public cookbooks yet.",
     "sectionYourRecipes": "Ваши рецепты",
     "sectionCommunityRecipes": "От сообщества",
-    "topicsHeading": "Популярные темы"
+    "topicsHeading": "Популярные темы",
+    "modeSurprise": "Удиви меня",
+    "surpriseShuffle": "Перемешать",
+    "surpriseHint": "Случайная подборка от сообщества — перемешайте, чтобы увидеть ещё.",
+    "noSurprise": "Пока нет публичных рецептов, чтобы вас удивить."
   },
   "categories": {
     "Breakfast": "Breakfast",
