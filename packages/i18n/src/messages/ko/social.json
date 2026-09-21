@@ -51,7 +51,8 @@
     "couldNotSave": "Could not save recipe",
     "alreadySaved": "Already in your recipes",
     "openCopy": "Open your copy",
-    "errorTitle": "Save failed"
+    "errorTitle": "Save failed",
+    "view": "보기"
   },
   "rating": {
     "noRating": "No ratings yet",

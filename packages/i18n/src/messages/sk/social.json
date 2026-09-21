@@ -51,7 +51,8 @@
     "couldNotSave": "Nepodarilo sa uložiť recept",
     "alreadySaved": "Už máte vo svojich receptoch",
     "openCopy": "Otvoriť moju kópiu",
-    "errorTitle": "Uloženie zlyhalo"
+    "errorTitle": "Uloženie zlyhalo",
+    "view": "Zobraziť"
   },
   "rating": {
     "noRating": "Zatiaľ bez hodnotenia",
