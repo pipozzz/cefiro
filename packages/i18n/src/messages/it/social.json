@@ -33,7 +33,8 @@
     "readyInHeading": "Pronto in",
     "readyInAny": "Qualsiasi",
     "readyInUnder": "≤{minutes} min",
-    "hideAllergens": "Nascondi i miei allergeni"
+    "hideAllergens": "Nascondi i miei allergeni",
+    "recipeOfTheDay": "Ricetta del giorno"
   },
   "categories": {
     "Breakfast": "Breakfast",

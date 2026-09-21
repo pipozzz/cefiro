@@ -33,7 +33,8 @@
     "readyInHeading": "Klar på",
     "readyInAny": "Alle",
     "readyInUnder": "≤{minutes} min",
-    "hideAllergens": "Skjul mine allergener"
+    "hideAllergens": "Skjul mine allergener",
+    "recipeOfTheDay": "Dagens opskrift"
   },
   "categories": {
     "Breakfast": "Breakfast",
