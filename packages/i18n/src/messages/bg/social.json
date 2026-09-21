@@ -34,7 +34,11 @@
     "readyInAny": "Всяко",
     "readyInUnder": "≤{minutes} мин",
     "hideAllergens": "Скрий моите алергени",
-    "recipeOfTheDay": "Рецепта на деня"
+    "recipeOfTheDay": "Рецепта на деня",
+    "modeByIngredient": "По съставки",
+    "ingredientPlaceholder": "Добави съставка…",
+    "ingredientHint": "Добавете каквото имате — ще намерим рецепти.",
+    "noIngredientResults": "Все още няма публични рецепти с тези съставки."
   },
   "categories": {
     "Breakfast": "Breakfast",

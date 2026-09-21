@@ -34,7 +34,11 @@
     "readyInAny": "Любое",
     "readyInUnder": "≤{minutes} мин",
     "hideAllergens": "Скрыть мои аллергены",
-    "recipeOfTheDay": "Рецепт дня"
+    "recipeOfTheDay": "Рецепт дня",
+    "modeByIngredient": "По ингредиентам",
+    "ingredientPlaceholder": "Добавьте ингредиент…",
+    "ingredientHint": "Добавьте, что у вас есть — найдём подходящие рецепты.",
+    "noIngredientResults": "Пока нет публичных рецептов с этими ингредиентами."
   },
   "categories": {
     "Breakfast": "Breakfast",
