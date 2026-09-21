@@ -159,7 +159,8 @@
     "emptyTitle": "Your feed is empty.",
     "emptyBody": "Follow some cooks to see their latest recipes here.",
     "discoverCta": "Discover recipes",
-    "loadMore": "Load more"
+    "loadMore": "Load more",
+    "popularTitle": "지금 인기"
   },
   "avatar": {
     "upload": "Upload photo",

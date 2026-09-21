@@ -5,7 +5,7 @@ import { useTRPC } from "@/app/providers/trpc-provider";
 import { SocialRecipeGrid } from "@/components/social/social-recipe-card";
 import { SuggestedCooks } from "@/components/social/suggested-cooks";
 import { Button, Spinner } from "@heroui/react";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 export default function FeedPage() {
@@ -21,6 +21,17 @@ export default function FeedPage() {
   });
 
   const recipes = query.data?.pages.flatMap((page) => page.recipes) ?? [];
+  const isEmpty = !query.isLoading && recipes.length === 0;
+
+  // Cold-start feed (following nobody yet): fetch trending public recipes so
+  // the empty state still has real content, not just a "go follow people" nudge.
+  const popular = useQuery({
+    ...trpc.social.discover.queryOptions({ sort: "trending", limit: 12 }),
+    enabled: isEmpty,
+    retry: false,
+  });
+
+  const popularRecipes = popular.data?.recipes ?? [];
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
@@ -33,7 +44,7 @@ export default function FeedPage() {
         <div className="flex min-h-[30vh] items-center justify-center">
           <Spinner />
         </div>
-      ) : recipes.length === 0 ? (
+      ) : isEmpty ? (
         <div className="space-y-8">
           <div className="bg-content2 rounded-2xl p-10 text-center">
             <p className="text-default-600">{t("emptyTitle")}</p>
@@ -44,6 +55,13 @@ export default function FeedPage() {
           </div>
 
           <SuggestedCooks />
+
+          {popularRecipes.length > 0 ? (
+            <section>
+              <h2 className="text-foreground mb-4 text-lg font-semibold">{t("popularTitle")}</h2>
+              <SocialRecipeGrid recipes={popularRecipes} />
+            </section>
+          ) : null}
         </div>
       ) : (
         <>

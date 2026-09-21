@@ -159,7 +159,8 @@
     "emptyTitle": "Tvoj feed je prázdny.",
     "emptyBody": "Začni sledovať kuchárov a uvidíš tu ich najnovšie recepty.",
     "discoverCta": "Objavuj recepty",
-    "loadMore": "Načítať ďalšie"
+    "loadMore": "Načítať ďalšie",
+    "popularTitle": "Práve populárne"
   },
   "avatar": {
     "upload": "Nahrať fotku",
