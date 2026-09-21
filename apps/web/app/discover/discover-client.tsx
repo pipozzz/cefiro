@@ -8,6 +8,7 @@ import { CookGrid } from "@/components/social/cook-card";
 import { SocialCookbookGrid } from "@/components/social/social-cookbook-card";
 import { SocialProfileGrid } from "@/components/social/social-profile-card";
 import { SocialRecipeGrid } from "@/components/social/social-recipe-card";
+import { SuggestedCooks } from "@/components/social/suggested-cooks";
 import { useRecipesContext } from "@/context/recipes-context";
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Button, Spinner } from "@heroui/react";
@@ -302,6 +303,15 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
                   ) : null}
                 </>
               )}
+
+              {/* Personalised "cooks to follow" for signed-in readers, so the
+                  discover page also helps them grow their feed. Renders nothing
+                  for anonymous readers or when there are no suggestions. */}
+              {isAuthed ? (
+                <div className="mt-12">
+                  <SuggestedCooks limit={6} />
+                </div>
+              ) : null}
             </>
           )}
         </>
