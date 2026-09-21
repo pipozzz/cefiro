@@ -265,7 +265,11 @@ export async function searchPublicRecipesByIngredients(
   )})`;
 
   return db
-    .select({ ...RECIPE_CARD_COLUMNS, favoriteCount: favoriteCountSql, matchedCount: matchedCountSql })
+    .select({
+      ...RECIPE_CARD_COLUMNS,
+      favoriteCount: favoriteCountSql,
+      matchedCount: matchedCountSql,
+    })
     .from(recipes)
     .leftJoin(userProfiles, eq(userProfiles.userId, recipes.userId))
     .where(and(eq(recipes.visibility, "public"), sql`${matchedCountSql} > 0`))
