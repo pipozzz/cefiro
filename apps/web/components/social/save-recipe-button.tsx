@@ -17,10 +17,12 @@ import { useTranslations } from "next-intl";
  *   save; they already have it),
  * - they have already saved it → the button opens their existing copy instead
  *   of making a duplicate,
- * - otherwise → it forks the recipe (copying its image) and opens the copy.
+ * - otherwise → it forks the recipe (copying its image).
  *
- * An anonymous viewer (the status query errors, as it is auth-only) is sent to
- * log in first, then returned here.
+ * Saving does not navigate away: the reader stays in discovery, the button
+ * flips to "open your copy" in place, and a confirmation toast offers a "View"
+ * action to jump to the copy when they choose. An anonymous viewer (the status
+ * query errors, as it is auth-only) is sent to log in first, then returned here.
  */
 export function SaveRecipeButton({ recipeId, slug }: { recipeId: string; slug: string }) {
   const trpc = useTRPC();
@@ -36,11 +38,17 @@ export function SaveRecipeButton({ recipeId, slug }: { recipeId: string; slug: s
   const save = useMutation(
     trpc.social.saveRecipe.mutationOptions({
       onSuccess: (data) => {
-        toast.success(data.status === "existing" ? t("alreadySaved") : t("saved"));
         void queryClient.invalidateQueries({
           queryKey: trpc.social.getSaveState.queryKey({ recipeId }),
         });
-        router.push(`/recipes/${data.recipeId}`);
+        // Stay in discovery; confirm the save and offer a jump to the copy
+        // rather than force-navigating away from the page they were reading.
+        toast.success(data.status === "existing" ? t("alreadySaved") : t("saved"), {
+          actionProps: {
+            children: t("view"),
+            onPress: () => router.push(`/recipes/${data.recipeId}`),
+          },
+        });
       },
       onError: (error) => {
         if (error.data?.code === "UNAUTHORIZED") {
@@ -86,7 +94,7 @@ export function SaveRecipeButton({ recipeId, slug }: { recipeId: string; slug: s
   };
 
   return (
-    <Button variant="primary" size="sm" isPending={save.isPending} onPress={onPress}>
+    <Button isPending={save.isPending} size="sm" variant="primary" onPress={onPress}>
       {savedRecipeId ? (
         <BookmarkSolidIcon className="h-4 w-4" />
       ) : (
