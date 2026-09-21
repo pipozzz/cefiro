@@ -17,22 +17,45 @@ export function FollowButton({ handle }: { handle: string }) {
     retry: false,
   });
 
+  const statusKey = trpc.social.getFollowStatus.queryKey({ handle });
+
   const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: trpc.social.getFollowStatus.queryKey({ handle }) });
+    queryClient.invalidateQueries({ queryKey: statusKey });
     queryClient.invalidateQueries({ queryKey: trpc.social.getProfile.queryKey({ handle }) });
+  };
+
+  // Optimistically flip the follow state so the button responds instantly;
+  // roll back if the mutation fails, then reconcile with the server on settle.
+  const optimisticToggle = (isFollowing: boolean) => async () => {
+    await queryClient.cancelQueries({ queryKey: statusKey });
+    const previous = queryClient.getQueryData(statusKey);
+
+    queryClient.setQueryData(statusKey, (old) =>
+      old ? { ...(old as Record<string, unknown>), isFollowing } : old
+    );
+
+    return { previous };
   };
 
   const followMutation = useMutation(
     trpc.social.follow.mutationOptions({
-      onSuccess: invalidate,
-      onError: (error) => showSafeErrorToast(error, t("couldNotFollow")),
+      onMutate: optimisticToggle(true),
+      onError: (error, _vars, context) => {
+        queryClient.setQueryData(statusKey, context?.previous);
+        showSafeErrorToast(error, t("couldNotFollow"));
+      },
+      onSettled: invalidate,
     })
   );
 
   const unfollowMutation = useMutation(
     trpc.social.unfollow.mutationOptions({
-      onSuccess: invalidate,
-      onError: (error) => showSafeErrorToast(error, t("couldNotUnfollow")),
+      onMutate: optimisticToggle(false),
+      onError: (error, _vars, context) => {
+        queryClient.setQueryData(statusKey, context?.previous);
+        showSafeErrorToast(error, t("couldNotUnfollow"));
+      },
+      onSettled: invalidate,
     })
   );
 
@@ -40,7 +63,7 @@ export function FollowButton({ handle }: { handle: string }) {
   // to sign in, preserving the profile as the return destination.
   if (statusQuery.isError) {
     return (
-      <Button as={Link} href={`/login?callbackUrl=/u/${handle}`} variant="primary" size="sm">
+      <Button as={Link} href={`/login?callbackUrl=/u/${handle}`} size="sm" variant="primary">
         {t("follow")}
       </Button>
     );
@@ -48,7 +71,7 @@ export function FollowButton({ handle }: { handle: string }) {
 
   if (statusQuery.isLoading || !statusQuery.data) {
     return (
-      <Button variant="tertiary" size="sm" isDisabled>
+      <Button isDisabled size="sm" variant="tertiary">
         …
       </Button>
     );
@@ -56,7 +79,7 @@ export function FollowButton({ handle }: { handle: string }) {
 
   if (statusQuery.data.isSelf) {
     return (
-      <Button as={Link} href="/profile" variant="tertiary" size="sm">
+      <Button as={Link} href="/profile" size="sm" variant="tertiary">
         {t("editProfile")}
       </Button>
     );
@@ -67,9 +90,9 @@ export function FollowButton({ handle }: { handle: string }) {
 
   return (
     <Button
-      variant={following ? "tertiary" : "primary"}
-      size="sm"
       isPending={pending}
+      size="sm"
+      variant={following ? "tertiary" : "primary"}
       onPress={() =>
         following ? unfollowMutation.mutate({ handle }) : followMutation.mutate({ handle })
       }
