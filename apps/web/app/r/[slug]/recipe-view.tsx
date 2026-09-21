@@ -16,6 +16,7 @@ import { PrintRecipeButton } from "@/components/social/print-recipe-button";
 import { RecipeRating } from "@/components/social/recipe-rating";
 import { SaveRecipeButton } from "@/components/social/save-recipe-button";
 import { ShareRecipeButton } from "@/components/social/share-recipe-button";
+import { TimerTicker } from "@/components/timer-dock";
 import { usePublicRecipeConfigQuery } from "@/hooks/recipes/use-public-recipe-config-query";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -132,6 +133,11 @@ function PublicRecipeBody({ slug, data }: { slug: string; data: PublicRecipeData
 
   return (
     <article className="mx-auto max-w-5xl px-4 pb-24 md:px-6">
+      {/* Drives the 1s countdown for the step timer chips (norish-timer links).
+          The chips render via PublicSlugSmartInstruction, but without a ticker
+          mounted they never count down — same pattern the share page uses. */}
+      <TimerTicker />
+
       {/* Hero */}
       <header className="relative mt-4 overflow-hidden rounded-3xl">
         {recipe.image ? (
