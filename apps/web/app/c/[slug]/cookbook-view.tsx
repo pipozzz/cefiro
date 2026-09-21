@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useTRPC } from "@/app/providers/trpc-provider";
 import { NotFoundView } from "@/components/shared/not-found-view";
+import { ShareLinkButton } from "@/components/social/share-link-button";
 import { SocialRecipeGrid } from "@/components/social/social-recipe-card";
 import { Spinner } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
@@ -26,7 +27,7 @@ export function PublicCookbookView({ slug }: { slug: string }) {
   }
 
   if (isError || !data) {
-    return <NotFoundView title={t("notFoundTitle")} message={t("notFoundMessage")} />;
+    return <NotFoundView message={t("notFoundMessage")} title={t("notFoundTitle")} />;
   }
 
   const { title, description, owner, recipes } = data;
@@ -43,12 +44,12 @@ export function PublicCookbookView({ slug }: { slug: string }) {
           <span>{t("recipesCount", { count: recipes.length })}</span>
           {owner && authorName ? (
             <Link
-              href={`/u/${owner.handle}`}
               className="hover:text-foreground inline-flex items-center gap-2"
+              href={`/u/${owner.handle}`}
             >
               {owner.avatarUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={owner.avatarUrl} alt="" className="h-6 w-6 rounded-full object-cover" />
+                <img alt="" className="h-6 w-6 rounded-full object-cover" src={owner.avatarUrl} />
               ) : (
                 <span className="bg-primary text-primary-foreground flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-semibold">
                   {authorName.charAt(0).toUpperCase()}
@@ -57,6 +58,10 @@ export function PublicCookbookView({ slug }: { slug: string }) {
               <span>{authorName}</span>
             </Link>
           ) : null}
+        </div>
+
+        <div className="mt-4">
+          <ShareLinkButton path={`/c/${slug}`} title={title} />
         </div>
       </header>
 
