@@ -300,6 +300,21 @@ export async function searchPublicRecipesByIngredients(
     .limit(limit);
 }
 
+/**
+ * "Surprise me": a random handful of PUBLIC recipes. Each call reshuffles
+ * (ORDER BY random()), so refetching serves a fresh set — the basis for the
+ * shuffle button on /discover.
+ */
+export async function getRandomPublicRecipes(limit: number): Promise<FeedRecipeRow[]> {
+  return db
+    .select({ ...RECIPE_CARD_COLUMNS, favoriteCount: favoriteCountSql })
+    .from(recipes)
+    .leftJoin(userProfiles, eq(userProfiles.userId, recipes.userId))
+    .where(eq(recipes.visibility, "public"))
+    .orderBy(sql`random()`)
+    .limit(limit);
+}
+
 function paginateByPublishedAt(
   rows: FeedRecipeRow[],
   limit: number

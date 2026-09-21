@@ -25,7 +25,11 @@
     "noCookbooks": "No public cookbooks yet.",
     "sectionYourRecipes": "Dine oppskrifter",
     "sectionCommunityRecipes": "Fra fellesskapet",
-    "topicsHeading": "Populære emner"
+    "topicsHeading": "Populære emner",
+    "modeSurprise": "Overrask meg",
+    "surpriseShuffle": "Bland",
+    "surpriseHint": "Et tilfeldig utvalg fra fellesskapet — bland for flere.",
+    "noSurprise": "Ingen offentlige oppskrifter å overraske deg med ennå."
   },
   "categories": {
     "Breakfast": "Breakfast",

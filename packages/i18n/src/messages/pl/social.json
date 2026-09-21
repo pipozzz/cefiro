@@ -25,7 +25,11 @@
     "noCookbooks": "No public cookbooks yet.",
     "sectionYourRecipes": "Twoje przepisy",
     "sectionCommunityRecipes": "Od społeczności",
-    "topicsHeading": "Popularne tematy"
+    "topicsHeading": "Popularne tematy",
+    "modeSurprise": "Zaskocz mnie",
+    "surpriseShuffle": "Losuj",
+    "surpriseHint": "Losowa garść od społeczności — losuj, by zobaczyć więcej.",
+    "noSurprise": "Nie ma jeszcze publicznych przepisów na niespodziankę."
   },
   "categories": {
     "Breakfast": "Breakfast",

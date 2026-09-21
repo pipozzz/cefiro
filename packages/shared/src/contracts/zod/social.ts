@@ -167,6 +167,11 @@ export const TrendingTopicsInputSchema = z.object({
   limit: z.number().int().min(1).max(30).default(12),
 });
 
+/** "Surprise me": a random handful of public recipes. */
+export const SurpriseRecipesInputSchema = z.object({
+  limit: z.number().int().min(1).max(24).default(9),
+});
+
 export const SuggestedCooksInputSchema = z.object({
   limit: z.number().int().min(1).max(24).default(6),
 });

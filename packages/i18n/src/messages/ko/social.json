@@ -25,7 +25,11 @@
     "noCookbooks": "No public cookbooks yet.",
     "sectionYourRecipes": "내 레시피",
     "sectionCommunityRecipes": "커뮤니티",
-    "topicsHeading": "인기 주제"
+    "topicsHeading": "인기 주제",
+    "modeSurprise": "랜덤 추천",
+    "surpriseShuffle": "섞기",
+    "surpriseHint": "커뮤니티에서 무작위로 골랐어요 — 더 보려면 섞으세요.",
+    "noSurprise": "아직 추천할 공개 레시피가 없어요."
   },
   "categories": {
     "Breakfast": "Breakfast",

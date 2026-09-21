@@ -16,11 +16,12 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import { IngredientDiscovery } from "./ingredient-discovery";
+import { SurpriseDiscovery } from "./surprise-discovery";
 import { TrendingTopics } from "./trending-topics";
 
 type Sort = "newest" | "trending";
 type Category = "Breakfast" | "Lunch" | "Dinner" | "Snack";
-type Mode = "recipes" | "byIngredient" | "cooks" | "cookbooks";
+type Mode = "recipes" | "byIngredient" | "surprise" | "cooks" | "cookbooks";
 
 const CATEGORIES: Category[] = ["Breakfast", "Lunch", "Dinner", "Snack"];
 
@@ -166,6 +167,13 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
               {t("modeByIngredient")}
             </button>
             <button
+              className={pill(mode === "surprise")}
+              type="button"
+              onClick={() => setMode("surprise")}
+            >
+              {t("modeSurprise")}
+            </button>
+            <button
               className={pill(mode === "cooks")}
               type="button"
               onClick={() => setMode("cooks")}
@@ -183,6 +191,8 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
 
           {mode === "byIngredient" ? (
             <IngredientDiscovery />
+          ) : mode === "surprise" ? (
+            <SurpriseDiscovery />
           ) : mode === "cookbooks" ? (
             cookbooks.isLoading ? (
               <div className="flex min-h-[30vh] items-center justify-center">

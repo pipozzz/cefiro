@@ -25,7 +25,11 @@
     "noCookbooks": "No public cookbooks yet.",
     "sectionYourRecipes": "Вашите рецепти",
     "sectionCommunityRecipes": "От общността",
-    "topicsHeading": "Популярни теми"
+    "topicsHeading": "Популярни теми",
+    "modeSurprise": "Изненадай ме",
+    "surpriseShuffle": "Разбъркай",
+    "surpriseHint": "Случайна селекция от общността — разбъркай за още.",
+    "noSurprise": "Все още няма публични рецепти за изненада."
   },
   "categories": {
     "Breakfast": "Breakfast",
