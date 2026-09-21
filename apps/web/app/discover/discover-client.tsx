@@ -113,7 +113,7 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
     }`;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 pb-24 md:px-6">
+    <div className="mx-auto max-w-7xl px-4 pb-24 md:px-6">
       <header className="mb-6">
         <h1 className="text-foreground text-3xl font-bold">{t("title")}</h1>
         <p className="text-default-500">{t("subtitle")}</p>
