@@ -15,9 +15,11 @@ import { Button, Spinner } from "@heroui/react";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
+import { IngredientDiscovery } from "./ingredient-discovery";
+
 type Sort = "newest" | "trending";
 type Category = "Breakfast" | "Lunch" | "Dinner" | "Snack";
-type Mode = "recipes" | "cooks" | "cookbooks";
+type Mode = "recipes" | "byIngredient" | "cooks" | "cookbooks";
 
 const CATEGORIES: Category[] = ["Breakfast", "Lunch", "Dinner", "Snack"];
 
@@ -156,6 +158,13 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
               {t("modeRecipes")}
             </button>
             <button
+              className={pill(mode === "byIngredient")}
+              type="button"
+              onClick={() => setMode("byIngredient")}
+            >
+              {t("modeByIngredient")}
+            </button>
+            <button
               className={pill(mode === "cooks")}
               type="button"
               onClick={() => setMode("cooks")}
@@ -171,7 +180,9 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
             </button>
           </div>
 
-          {mode === "cookbooks" ? (
+          {mode === "byIngredient" ? (
+            <IngredientDiscovery />
+          ) : mode === "cookbooks" ? (
             cookbooks.isLoading ? (
               <div className="flex min-h-[30vh] items-center justify-center">
                 <Spinner />

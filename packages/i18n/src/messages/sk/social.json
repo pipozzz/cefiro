@@ -24,7 +24,11 @@
     "modeCookbooks": "Kuchárky",
     "noCookbooks": "Zatiaľ tu nie sú žiadne verejné kuchárky.",
     "sectionYourRecipes": "Tvoje recepty",
-    "sectionCommunityRecipes": "Od komunity"
+    "sectionCommunityRecipes": "Od komunity",
+    "modeByIngredient": "Podľa surovín",
+    "ingredientPlaceholder": "Pridaj surovinu…",
+    "ingredientHint": "Pridaj čo máš — nájdeme recepty, ktoré z toho spravíš.",
+    "noIngredientResults": "Zatiaľ žiadne verejné recepty s týmito surovinami."
   },
   "categories": {
     "Breakfast": "Raňajky",

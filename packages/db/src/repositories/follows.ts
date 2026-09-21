@@ -2,7 +2,16 @@ import { and, desc, eq, lt, sql } from "drizzle-orm";
 
 import { db } from "@norish/db/drizzle";
 
-import { follows, recipeFavorites, recipes, recipeTags, tags, userProfiles } from "../schema";
+import {
+  follows,
+  ingredients,
+  recipeFavorites,
+  recipeIngredients,
+  recipes,
+  recipeTags,
+  tags,
+  userProfiles,
+} from "../schema";
 import { PRIMARY_IMAGE_SQL } from "./recipe-image-sql";
 
 export async function followUser(followerId: string, followeeId: string): Promise<void> {
@@ -219,6 +228,52 @@ export async function searchPublicRecipes(q: string, limit: number): Promise<Fee
       )
     )
     .orderBy(desc(favoriteCountSql), desc(recipes.publishedAt))
+    .limit(limit);
+}
+
+/**
+ * "Cook with what you have": PUBLIC recipes ranked by how many of the given
+ * ingredient terms they use. `matchedCount` is the number of distinct input
+ * terms that match at least one of the recipe's ingredients (case-insensitive
+ * substring), so a recipe using more of your ingredients ranks higher; ties
+ * break on favourites then recency. Only recipes matching ≥1 term are returned.
+ */
+export async function searchPublicRecipesByIngredients(
+  ingredientNames: string[],
+  limit: number
+): Promise<(FeedRecipeRow & { matchedCount: number })[]> {
+  const terms = Array.from(
+    new Set(ingredientNames.map((s) => s.trim().toLowerCase()).filter(Boolean))
+  ).slice(0, 10);
+
+  if (terms.length === 0) {
+    return [];
+  }
+
+  // One correlated EXISTS per term, summed → how many of the caller's
+  // ingredients this recipe uses. Inlined (not a SELECT alias) so it can be
+  // reused in WHERE and ORDER BY.
+  const matchedCountSql = sql<number>`(${sql.join(
+    terms.map(
+      (term) =>
+        sql`(EXISTS (SELECT 1 FROM ${recipeIngredients}
+          JOIN ${ingredients} ON ${ingredients.id} = ${recipeIngredients.ingredientId}
+          WHERE ${recipeIngredients.recipeId} = ${recipes.id}
+          AND ${ingredients.name} ILIKE ${`%${escapeLike(term)}%`}))::int`
+    ),
+    sql` + `
+  )})`;
+
+  return db
+    .select({
+      ...RECIPE_CARD_COLUMNS,
+      favoriteCount: favoriteCountSql,
+      matchedCount: matchedCountSql,
+    })
+    .from(recipes)
+    .leftJoin(userProfiles, eq(userProfiles.userId, recipes.userId))
+    .where(and(eq(recipes.visibility, "public"), sql`${matchedCountSql} > 0`))
+    .orderBy(desc(matchedCountSql), desc(favoriteCountSql), desc(recipes.publishedAt))
     .limit(limit);
 }
 

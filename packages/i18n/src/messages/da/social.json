@@ -24,7 +24,11 @@
     "modeCookbooks": "Cookbooks",
     "noCookbooks": "No public cookbooks yet.",
     "sectionYourRecipes": "Dine opskrifter",
-    "sectionCommunityRecipes": "Fra fællesskabet"
+    "sectionCommunityRecipes": "Fra fællesskabet",
+    "modeByIngredient": "Efter ingrediens",
+    "ingredientPlaceholder": "Tilføj en ingrediens…",
+    "ingredientHint": "Tilføj hvad du har — vi finder opskrifter du kan lave.",
+    "noIngredientResults": "Ingen offentlige opskrifter bruger de ingredienser endnu."
   },
   "categories": {
     "Breakfast": "Breakfast",

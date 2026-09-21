@@ -156,6 +156,12 @@ export const SearchInputSchema = z.object({
   limit: z.number().int().min(1).max(50).default(20),
 });
 
+/** "Cook with what you have": discover public recipes by ingredients on hand. */
+export const SearchByIngredientsInputSchema = z.object({
+  ingredients: z.array(z.string().trim().min(1).max(40)).min(1).max(10),
+  limit: z.number().int().min(1).max(50).default(24),
+});
+
 export const SuggestedCooksInputSchema = z.object({
   limit: z.number().int().min(1).max(24).default(6),
 });
