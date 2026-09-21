@@ -204,6 +204,29 @@ export async function listDiscoverRecipes(params: {
   return paginateByPublishedAt(rows, limit);
 }
 
+/**
+ * Trending discovery topics: the tags used by the most PUBLIC recipes, most
+ * used first (ties broken alphabetically for a stable order). Powers the
+ * clickable topic chips on /discover, which drive the existing tag filter.
+ */
+export async function listTrendingTopics(
+  limit: number
+): Promise<{ name: string; recipeCount: number }[]> {
+  const recipeCount = sql<number>`count(distinct ${recipeTags.recipeId})`;
+
+  const rows = await db
+    .select({ name: tags.name, recipeCount })
+    .from(recipeTags)
+    .innerJoin(tags, eq(tags.id, recipeTags.tagId))
+    .innerJoin(recipes, eq(recipes.id, recipeTags.recipeId))
+    .where(eq(recipes.visibility, "public"))
+    .groupBy(tags.name)
+    .orderBy(desc(recipeCount), tags.name)
+    .limit(limit);
+
+  return rows.map((row) => ({ name: row.name, recipeCount: Number(row.recipeCount) }));
+}
+
 /** Escape LIKE/ILIKE wildcards so user input is matched literally. */
 function escapeLike(value: string): string {
   return value.replace(/[\\%_]/g, (ch) => `\\${ch}`);

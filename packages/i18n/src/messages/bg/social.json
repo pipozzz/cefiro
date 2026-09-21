@@ -25,10 +25,7 @@
     "noCookbooks": "No public cookbooks yet.",
     "sectionYourRecipes": "Вашите рецепти",
     "sectionCommunityRecipes": "От общността",
-    "modeByIngredient": "По съставки",
-    "ingredientPlaceholder": "Добави съставка…",
-    "ingredientHint": "Добавете каквото имате — ще намерим рецепти.",
-    "noIngredientResults": "Все още няма публични рецепти с тези съставки."
+    "topicsHeading": "Популярни теми"
   },
   "categories": {
     "Breakfast": "Breakfast",

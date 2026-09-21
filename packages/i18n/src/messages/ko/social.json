@@ -25,10 +25,7 @@
     "noCookbooks": "No public cookbooks yet.",
     "sectionYourRecipes": "내 레시피",
     "sectionCommunityRecipes": "커뮤니티",
-    "modeByIngredient": "재료별",
-    "ingredientPlaceholder": "재료 추가…",
-    "ingredientHint": "가진 재료를 추가하면 만들 수 있는 레시피를 찾아드려요.",
-    "noIngredientResults": "아직 해당 재료를 사용하는 공개 레시피가 없습니다."
+    "topicsHeading": "인기 주제"
   },
   "categories": {
     "Breakfast": "Breakfast",

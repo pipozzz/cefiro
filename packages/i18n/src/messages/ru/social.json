@@ -25,10 +25,7 @@
     "noCookbooks": "No public cookbooks yet.",
     "sectionYourRecipes": "Ваши рецепты",
     "sectionCommunityRecipes": "От сообщества",
-    "modeByIngredient": "По ингредиентам",
-    "ingredientPlaceholder": "Добавьте ингредиент…",
-    "ingredientHint": "Добавьте, что у вас есть — найдём подходящие рецепты.",
-    "noIngredientResults": "Пока нет публичных рецептов с этими ингредиентами."
+    "topicsHeading": "Популярные темы"
   },
   "categories": {
     "Breakfast": "Breakfast",

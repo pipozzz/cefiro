@@ -25,10 +25,7 @@
     "noCookbooks": "No public cookbooks yet.",
     "sectionYourRecipes": "Jouw recepten",
     "sectionCommunityRecipes": "Van de community",
-    "modeByIngredient": "Op ingrediënt",
-    "ingredientPlaceholder": "Voeg een ingrediënt toe…",
-    "ingredientHint": "Voeg toe wat je hebt — wij vinden recepten die je kunt maken.",
-    "noIngredientResults": "Nog geen openbare recepten met die ingrediënten."
+    "topicsHeading": "Populaire onderwerpen"
   },
   "categories": {
     "Breakfast": "Breakfast",
