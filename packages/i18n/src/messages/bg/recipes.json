@@ -277,7 +277,8 @@
   },
   "stepInput": {
     "stepPlaceholder": "Стъпка {number}: Опиши стъпката...",
-    "stepPlaceholderShort": "Стъпка {number}"
+    "stepPlaceholderShort": "Стъпка {number}",
+    "addTimer": "Добави таймер"
   },
   "stepIngredients": {
     "rowLabel": "Свързани съставки",

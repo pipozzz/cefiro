@@ -277,7 +277,8 @@
   },
   "stepInput": {
     "stepPlaceholder": "Trin {number}: Beskriv trinnet...",
-    "stepPlaceholderShort": "Trin {number}"
+    "stepPlaceholderShort": "Trin {number}",
+    "addTimer": "Tilføj timer"
   },
   "stepIngredients": {
     "rowLabel": "Tilknyttede ingredienser",

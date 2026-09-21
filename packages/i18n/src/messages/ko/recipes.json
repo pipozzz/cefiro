@@ -277,7 +277,8 @@
   },
   "stepInput": {
     "stepPlaceholder": "{number} 단계: 단계를 설명하세요...",
-    "stepPlaceholderShort": "{number} 단계"
+    "stepPlaceholderShort": "{number} 단계",
+    "addTimer": "타이머 추가"
   },
   "stepIngredients": {
     "rowLabel": "연결된 재료",
