@@ -19,7 +19,12 @@
     "time",
     "timer",
     "시간",
-    "시"
+    "시",
+    "hodina",
+    "hodiny",
+    "hodín",
+    "hodinu",
+    "hod"
   ],
   "minutes": [
     "minute",
@@ -33,7 +38,12 @@
     "minutter",
     "minuto",
     "minuti",
-    "분"
+    "분",
+    "minúta",
+    "minúty",
+    "minút",
+    "minútu",
+    "minúto"
   ],
   "seconds": [
     "second",
@@ -50,6 +60,10 @@
     "sekunder",
     "secondo",
     "secondi",
-    "초"
+    "초",
+    "sekunda",
+    "sekundy",
+    "sekúnd",
+    "sekundu"
   ]
 }
