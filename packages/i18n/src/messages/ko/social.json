@@ -32,7 +32,8 @@
     "noSurprise": "아직 추천할 공개 레시피가 없어요.",
     "readyInHeading": "조리 시간",
     "readyInAny": "전체",
-    "readyInUnder": "≤{minutes}분"
+    "readyInUnder": "≤{minutes}분",
+    "hideAllergens": "내 알레르기 유발 요소 숨기기"
   },
   "categories": {
     "Breakfast": "Breakfast",

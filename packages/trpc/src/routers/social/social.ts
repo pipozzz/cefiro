@@ -62,6 +62,7 @@ import {
   getSavedForkForUser,
   setRecipeSavedFrom,
 } from "@norish/db/repositories/recipes";
+import { getUserAllergies } from "@norish/db/repositories/user-allergies";
 import {
   getProfileByHandle,
   getProfileByUserId,
@@ -421,12 +422,23 @@ const feed = authedProcedure.input(FeedInputSchema).query(async ({ ctx, input })
   return { recipes: await toFeedCardsWithRatings(items), nextCursor };
 });
 
-const discover = publicProcedure.input(DiscoverInputSchema).query(async ({ input }) => {
+const discover = publicProcedure.input(DiscoverInputSchema).query(async ({ ctx, input }) => {
+  // Dietary-aware discovery: resolve the reader's allergen tags server-side from
+  // the session, so the sensitive list never travels in the (GET) query string.
+  // Anonymous readers have no session, so the filter is simply a no-op for them.
+  let excludeAllergenTags: string[] | undefined;
+
+  if (input.hideMyAllergens && ctx.user) {
+    const { allergies } = await getUserAllergies(ctx.user.id);
+    excludeAllergenTags = allergies;
+  }
+
   const { items, nextCursor } = await listDiscoverRecipes({
     sort: input.sort,
     category: input.category,
     tag: input.tag,
     maxMinutes: input.maxMinutes,
+    excludeAllergenTags,
     limit: input.limit,
     cursor: input.cursor,
   });

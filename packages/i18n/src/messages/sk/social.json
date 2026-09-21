@@ -32,7 +32,8 @@
     "noSurprise": "Zatiaľ žiadne verejné recepty na prekvapenie.",
     "readyInHeading": "Hotové do",
     "readyInAny": "Ľubovoľne",
-    "readyInUnder": "≤{minutes} min"
+    "readyInUnder": "≤{minutes} min",
+    "hideAllergens": "Skryť moje alergény"
   },
   "categories": {
     "Breakfast": "Raňajky",

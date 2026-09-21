@@ -32,7 +32,8 @@
     "noSurprise": "Nog geen openbare recepten om je te verrassen.",
     "readyInHeading": "Klaar in",
     "readyInAny": "Alles",
-    "readyInUnder": "≤{minutes} min"
+    "readyInUnder": "≤{minutes} min",
+    "hideAllergens": "Verberg mijn allergenen"
   },
   "categories": {
     "Breakfast": "Breakfast",
