@@ -59,9 +59,10 @@ export function FollowButton({ handle }: { handle: string }) {
     })
   );
 
-  // Anonymous viewers get UNAUTHORIZED from the authed status query — send them
-  // to sign in, preserving the profile as the return destination.
-  if (statusQuery.isError) {
+  // Anonymous viewers (the public status query resolves with
+  // isAuthenticated:false) — send them to sign in, preserving the profile as
+  // the return destination. isError covers any real failure the same way.
+  if (statusQuery.isError || (statusQuery.data && !statusQuery.data.isAuthenticated)) {
     return (
       <Button as={Link} href={`/login?callbackUrl=/u/${handle}`} size="sm" variant="primary">
         {t("follow")}

@@ -67,7 +67,9 @@ export function SaveRecipeButton({ recipeId, slug }: { recipeId: string; slug: s
     })
   );
 
-  const isAnonymous = stateQuery.isError;
+  // Public query now: signed-out viewers resolve with isAuthenticated:false
+  // instead of an UNAUTHORIZED error.
+  const isAnonymous = stateQuery.data ? !stateQuery.data.isAuthenticated : false;
   const isOwn = stateQuery.data?.isOwn ?? false;
   const savedRecipeId = stateQuery.data?.savedRecipeId ?? null;
 
