@@ -53,6 +53,19 @@ export default withSerwist(
   withNextIntl({
     output: "standalone",
     transpilePackages: workspacePackages,
+    // Keep client-side navigation snappy, especially Back/Forward: without this
+    // Next 16 uses staleTimes.dynamic=0, so returning to a dynamic page (e.g.
+    // pressing Back out of a recipe to /discover or /library) re-fetches that
+    // page's RSC payload from the server every time — the visible "long load".
+    // A short reuse window serves the already-rendered segment from the client
+    // router cache instead; the persisted TanStack cache still refreshes the
+    // data underneath.
+    experimental: {
+      staleTimes: {
+        dynamic: 60,
+        static: 180,
+      },
+    },
     turbopack: {
       root: resolve(configDirectory, "../.."),
     },
