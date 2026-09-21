@@ -17,6 +17,7 @@ import { useTranslations } from "next-intl";
 
 import { DietaryFilterToggle } from "./dietary-filter-toggle";
 import { IngredientDiscovery } from "./ingredient-discovery";
+import { RecipeOfTheDay } from "./recipe-of-the-day";
 import { SurpriseDiscovery } from "./surprise-discovery";
 import { TrendingTopics } from "./trending-topics";
 
@@ -256,6 +257,11 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
             )
           ) : (
             <>
+              {/* Recipe of the day: a curated daily hero, shown only on the
+                  default landing (no active filter) so it never competes with a
+                  narrowed result set. */}
+              {!category && !tag && !maxMinutes ? <RecipeOfTheDay /> : null}
+
               {/* Sort */}
               <div className="mb-3 flex gap-2">
                 <button

@@ -254,6 +254,23 @@ export async function listTrendingTopics(
 }
 
 /**
+ * "Recipe of the day": one PUBLIC recipe chosen deterministically per calendar
+ * day (a hash of id + today's date), so every visitor sees the same pick and it
+ * rotates once a day. Returns null when there are no public recipes.
+ */
+export async function getRecipeOfTheDay(): Promise<FeedRecipeRow | null> {
+  const [row] = await db
+    .select({ ...RECIPE_CARD_COLUMNS, favoriteCount: favoriteCountSql })
+    .from(recipes)
+    .leftJoin(userProfiles, eq(userProfiles.userId, recipes.userId))
+    .where(eq(recipes.visibility, "public"))
+    .orderBy(sql`md5(${recipes.id}::text || current_date::text)`)
+    .limit(1);
+
+  return row ?? null;
+}
+
+/**
  * "More like this": other PUBLIC recipes that share the most tags with the
  * given recipe, ranked by shared-tag count then favourites then recency. The
  * recipe itself is excluded, and only recipes sharing ≥1 tag are returned (so

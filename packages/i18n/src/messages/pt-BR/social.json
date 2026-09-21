@@ -33,7 +33,8 @@
     "readyInHeading": "Pronto em",
     "readyInAny": "Qualquer",
     "readyInUnder": "≤{minutes} min",
-    "hideAllergens": "Ocultar meus alérgenos"
+    "hideAllergens": "Ocultar meus alérgenos",
+    "recipeOfTheDay": "Receita do dia"
   },
   "categories": {
     "Breakfast": "Breakfast",

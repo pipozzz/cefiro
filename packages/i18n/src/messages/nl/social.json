@@ -33,7 +33,8 @@
     "readyInHeading": "Klaar in",
     "readyInAny": "Alles",
     "readyInUnder": "≤{minutes} min",
-    "hideAllergens": "Verberg mijn allergenen"
+    "hideAllergens": "Verberg mijn allergenen",
+    "recipeOfTheDay": "Recept van de dag"
   },
   "categories": {
     "Breakfast": "Breakfast",

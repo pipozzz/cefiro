@@ -33,7 +33,8 @@
     "readyInHeading": "조리 시간",
     "readyInAny": "전체",
     "readyInUnder": "≤{minutes}분",
-    "hideAllergens": "내 알레르기 유발 요소 숨기기"
+    "hideAllergens": "내 알레르기 유발 요소 숨기기",
+    "recipeOfTheDay": "오늘의 레시피"
   },
   "categories": {
     "Breakfast": "Breakfast",

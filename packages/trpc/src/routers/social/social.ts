@@ -20,6 +20,7 @@ import {
   followUser,
   getFollowCounts,
   getRandomPublicRecipes,
+  getRecipeOfTheDay,
   isFollowing,
   listDiscoverRecipes,
   listFeedRecipes,
@@ -476,6 +477,14 @@ const searchByIngredients = publicProcedure
 // clickable topic chips on /discover.
 const trendingTopics = publicProcedure.input(TrendingTopicsInputSchema).query(async ({ input }) => {
   return { topics: await listTrendingTopics(input.limit) };
+});
+
+// "Recipe of the day": one public recipe, deterministic per calendar day.
+const recipeOfTheDay = publicProcedure.query(async () => {
+  const row = await getRecipeOfTheDay();
+  const [recipe] = row ? await toFeedCardsWithRatings([row]) : [];
+
+  return { recipe: recipe ?? null };
 });
 
 // "More like this": public recipes sharing the most tags with a given recipe.
@@ -1134,6 +1143,7 @@ export const socialProcedures = router({
   trendingTopics,
   surpriseRecipes,
   relatedRecipes,
+  recipeOfTheDay,
   suggestedCooks,
   discoverCooks,
   discoverCookbooks,
