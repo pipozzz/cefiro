@@ -32,7 +32,8 @@
     "noSurprise": "Ingen offentlige oppskrifter å overraske deg med ennå.",
     "readyInHeading": "Klar på",
     "readyInAny": "Alle",
-    "readyInUnder": "≤{minutes} min"
+    "readyInUnder": "≤{minutes} min",
+    "hideAllergens": "Skjul allergenene mine"
   },
   "categories": {
     "Breakfast": "Breakfast",

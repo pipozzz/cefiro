@@ -15,6 +15,7 @@ import { Button, Spinner } from "@heroui/react";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
+import { DietaryFilterToggle } from "./dietary-filter-toggle";
 import { IngredientDiscovery } from "./ingredient-discovery";
 import { SurpriseDiscovery } from "./surprise-discovery";
 import { TrendingTopics } from "./trending-topics";
@@ -36,6 +37,7 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
   const [sort, setSort] = useState<Sort>("newest");
   const [category, setCategory] = useState<Category | null>(null);
   const [maxMinutes, setMaxMinutes] = useState<number | null>(null);
+  const [hideMyAllergens, setHideMyAllergens] = useState(false);
   const [tag, setTag] = useState<string | null>(() => searchParams.get("tag"));
 
   const [q, setQ] = useState(() => searchParams.get("q") ?? "");
@@ -79,6 +81,7 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
         category: category ?? undefined,
         tag: tag ?? undefined,
         maxMinutes: maxMinutes ?? undefined,
+        hideMyAllergens: hideMyAllergens || undefined,
         limit: 24,
       },
       { getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined }
@@ -291,6 +294,12 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
                     {t("readyInUnder", { minutes })}
                   </button>
                 ))}
+
+                {/* Dietary-aware: hide recipes with the signed-in reader's
+                    allergens. Renders nothing for anon or allergen-free cooks. */}
+                {isAuthed ? (
+                  <DietaryFilterToggle enabled={hideMyAllergens} onChange={setHideMyAllergens} />
+                ) : null}
               </div>
 
               {/* Category filter */}

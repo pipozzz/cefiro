@@ -32,7 +32,8 @@
     "noSurprise": "Nie ma jeszcze publicznych przepisów na niespodziankę.",
     "readyInHeading": "Gotowe w",
     "readyInAny": "Dowolnie",
-    "readyInUnder": "≤{minutes} min"
+    "readyInUnder": "≤{minutes} min",
+    "hideAllergens": "Ukryj moje alergeny"
   },
   "categories": {
     "Breakfast": "Breakfast",

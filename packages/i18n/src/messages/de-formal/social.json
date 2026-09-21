@@ -32,7 +32,8 @@
     "noSurprise": "Noch keine öffentlichen Rezepte, um Sie zu überraschen.",
     "readyInHeading": "Fertig in",
     "readyInAny": "Beliebig",
-    "readyInUnder": "≤{minutes} Min."
+    "readyInUnder": "≤{minutes} Min.",
+    "hideAllergens": "Meine Allergene ausblenden"
   },
   "categories": {
     "Breakfast": "Breakfast",

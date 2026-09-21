@@ -32,7 +32,8 @@
     "noSurprise": "Пока нет публичных рецептов, чтобы вас удивить.",
     "readyInHeading": "Готово за",
     "readyInAny": "Любое",
-    "readyInUnder": "≤{minutes} мин"
+    "readyInUnder": "≤{minutes} мин",
+    "hideAllergens": "Скрыть мои аллергены"
   },
   "categories": {
     "Breakfast": "Breakfast",

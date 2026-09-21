@@ -147,6 +147,10 @@ export const DiscoverInputSchema = z.object({
   tag: z.string().trim().min(1).max(50).optional(),
   // "Ready in ≤N minutes" quick filter (total time).
   maxMinutes: z.number().int().min(1).max(1440).optional(),
+  // Dietary-aware discovery: when true, the server excludes recipes tagged with
+  // any of the signed-in reader's allergen tags. A boolean only — the actual
+  // allergens are resolved server-side from the session, never sent in the URL.
+  hideMyAllergens: z.boolean().optional(),
   limit: z.number().int().min(1).max(50).default(24),
   cursor: z.string().optional(),
 });

@@ -148,10 +148,11 @@ export async function listDiscoverRecipes(params: {
   category?: string;
   tag?: string;
   maxMinutes?: number;
+  excludeAllergenTags?: string[];
   limit: number;
   cursor?: string;
 }): Promise<{ items: FeedRecipeRow[]; nextCursor: string | null }> {
-  const { sort, category, tag, maxMinutes, limit } = params;
+  const { sort, category, tag, maxMinutes, excludeAllergenTags, limit } = params;
 
   const conditions = [eq(recipes.visibility, "public")];
 
@@ -163,6 +164,24 @@ export async function listDiscoverRecipes(params: {
   // (lte on NULL is false) — we can't promise a time we don't know.
   if (maxMinutes) {
     conditions.push(lte(recipes.totalMinutes, maxMinutes));
+  }
+
+  // Dietary-aware discovery: drop recipes tagged with any of the reader's
+  // allergen tags (case-insensitive name match, mirroring isAllergenTag).
+  const allergens = (excludeAllergenTags ?? [])
+    .map((name) => name.trim().toLowerCase())
+    .filter(Boolean);
+
+  if (allergens.length > 0) {
+    conditions.push(sql`NOT EXISTS (
+      SELECT 1 FROM ${recipeTags} rt
+      JOIN ${tags} tg ON tg.id = rt.tag_id
+      WHERE rt.recipe_id = ${recipes.id}
+      AND lower(tg.name) IN (${sql.join(
+        allergens.map((name) => sql`${name}`),
+        sql`, `
+      )})
+    )`);
   }
 
   if (tag) {
