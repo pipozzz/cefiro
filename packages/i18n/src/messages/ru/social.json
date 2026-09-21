@@ -118,7 +118,7 @@
     "notFoundTitle": "Recipe not found",
     "notFoundMessage": "This recipe is private or does not exist.",
     "prep": "Prep",
-    "cook": "Cook",
+    "cook": "Готовить",
     "total": "Total",
     "servings": "Servings",
     "calories": "Calories",
@@ -133,7 +133,12 @@
     "print": "Печать",
     "share": "Поделиться",
     "linkCopied": "Ссылка скопирована",
-    "shareFailed": "Не удалось скопировать ссылку"
+    "shareFailed": "Не удалось скопировать ссылку",
+    "cookStep": "Шаг {current} из {total}",
+    "cookClose": "Закрыть",
+    "cookPrev": "Назад",
+    "cookNext": "Далее",
+    "cookDone": "Готово"
   },
   "feed": {
     "title": "Your feed",

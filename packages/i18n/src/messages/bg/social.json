@@ -118,7 +118,7 @@
     "notFoundTitle": "Recipe not found",
     "notFoundMessage": "This recipe is private or does not exist.",
     "prep": "Prep",
-    "cook": "Cook",
+    "cook": "Готви",
     "total": "Total",
     "servings": "Servings",
     "calories": "Calories",
@@ -133,7 +133,12 @@
     "print": "Печат",
     "share": "Сподели",
     "linkCopied": "Връзката е копирана",
-    "shareFailed": "Връзката не можа да се копира"
+    "shareFailed": "Връзката не можа да се копира",
+    "cookStep": "Стъпка {current} от {total}",
+    "cookClose": "Затвори",
+    "cookPrev": "Назад",
+    "cookNext": "Напред",
+    "cookDone": "Готово"
   },
   "feed": {
     "title": "Your feed",

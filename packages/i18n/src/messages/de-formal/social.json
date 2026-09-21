@@ -118,7 +118,7 @@
     "notFoundTitle": "Recipe not found",
     "notFoundMessage": "This recipe is private or does not exist.",
     "prep": "Prep",
-    "cook": "Cook",
+    "cook": "Kochen",
     "total": "Total",
     "servings": "Servings",
     "calories": "Calories",
@@ -133,7 +133,12 @@
     "print": "Drucken",
     "share": "Teilen",
     "linkCopied": "Link kopiert",
-    "shareFailed": "Link konnte nicht kopiert werden"
+    "shareFailed": "Link konnte nicht kopiert werden",
+    "cookStep": "Schritt {current} von {total}",
+    "cookClose": "Schließen",
+    "cookPrev": "Zurück",
+    "cookNext": "Weiter",
+    "cookDone": "Fertig"
   },
   "feed": {
     "title": "Your feed",

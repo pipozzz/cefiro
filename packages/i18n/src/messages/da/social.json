@@ -118,7 +118,7 @@
     "notFoundTitle": "Recipe not found",
     "notFoundMessage": "This recipe is private or does not exist.",
     "prep": "Prep",
-    "cook": "Cook",
+    "cook": "Lav mad",
     "total": "Total",
     "servings": "Servings",
     "calories": "Calories",
@@ -133,7 +133,12 @@
     "print": "Udskriv",
     "share": "Del",
     "linkCopied": "Link kopieret",
-    "shareFailed": "Kunne ikke kopiere linket"
+    "shareFailed": "Kunne ikke kopiere linket",
+    "cookStep": "Trin {current} af {total}",
+    "cookClose": "Luk",
+    "cookPrev": "Tilbage",
+    "cookNext": "Næste",
+    "cookDone": "Færdig"
   },
   "feed": {
     "title": "Your feed",

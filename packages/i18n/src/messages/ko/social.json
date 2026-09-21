@@ -118,7 +118,7 @@
     "notFoundTitle": "Recipe not found",
     "notFoundMessage": "This recipe is private or does not exist.",
     "prep": "Prep",
-    "cook": "Cook",
+    "cook": "요리하기",
     "total": "Total",
     "servings": "Servings",
     "calories": "Calories",
@@ -133,7 +133,12 @@
     "print": "인쇄",
     "share": "공유",
     "linkCopied": "링크 복사됨",
-    "shareFailed": "링크를 복사하지 못했습니다"
+    "shareFailed": "링크를 복사하지 못했습니다",
+    "cookStep": "{total}단계 중 {current}단계",
+    "cookClose": "닫기",
+    "cookPrev": "이전",
+    "cookNext": "다음",
+    "cookDone": "완료"
   },
   "feed": {
     "title": "Your feed",

@@ -13,6 +13,7 @@ import RecipeSkeleton from "@/components/skeleton/recipe-skeleton";
 import { CommentsSection } from "@/components/social/comments-section";
 import { LikeButton } from "@/components/social/like-button";
 import { PrintRecipeButton } from "@/components/social/print-recipe-button";
+import { PublicCookMode } from "@/components/social/public-cook-mode";
 import { RecipeRating } from "@/components/social/recipe-rating";
 import { SaveRecipeButton } from "@/components/social/save-recipe-button";
 import { ShareRecipeButton } from "@/components/social/share-recipe-button";
@@ -206,6 +207,12 @@ function PublicRecipeBody({ slug, data }: { slug: string; data: PublicRecipeData
       )}
 
       <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4 print:hidden">
+        <PublicCookMode
+          recipeId={recipeId}
+          recipeName={recipe.name}
+          steps={recipe.steps}
+          systemUsed={recipe.systemUsed}
+        />
         <LikeButton initialCount={favoriteCount} recipeId={recipeId} slug={slug} />
         <SaveRecipeButton recipeId={recipeId} slug={slug} />
         <ShareRecipeButton slug={slug} title={recipe.name} />
