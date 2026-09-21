@@ -34,7 +34,11 @@
     "readyInAny": "Alle",
     "readyInUnder": "≤{minutes} min",
     "hideAllergens": "Skjul mine allergener",
-    "recipeOfTheDay": "Dagens opskrift"
+    "recipeOfTheDay": "Dagens opskrift",
+    "modeByIngredient": "Efter ingrediens",
+    "ingredientPlaceholder": "Tilføj en ingrediens…",
+    "ingredientHint": "Tilføj hvad du har — vi finder opskrifter du kan lave.",
+    "noIngredientResults": "Ingen offentlige opskrifter bruger de ingredienser endnu."
   },
   "categories": {
     "Breakfast": "Breakfast",

@@ -34,7 +34,11 @@
     "readyInAny": "Peu importe",
     "readyInUnder": "≤{minutes} min",
     "hideAllergens": "Masquer mes allergènes",
-    "recipeOfTheDay": "Recette du jour"
+    "recipeOfTheDay": "Recette du jour",
+    "modeByIngredient": "Par ingrédient",
+    "ingredientPlaceholder": "Ajouter un ingrédient…",
+    "ingredientHint": "Ajoutez ce que vous avez — on trouve des recettes réalisables.",
+    "noIngredientResults": "Aucune recette publique n'utilise ces ingrédients pour l'instant."
   },
   "categories": {
     "Breakfast": "Breakfast",
