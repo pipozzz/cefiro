@@ -23,6 +23,7 @@ import {
   listDiscoverRecipes,
   listFeedRecipes,
   searchPublicRecipes,
+  searchPublicRecipesByIngredients,
   unfollowUser,
 } from "@norish/db/repositories/follows";
 import {
@@ -98,6 +99,7 @@ import {
   RateRecipeInputSchema,
   ReportCommentInputSchema,
   SaveRecipeInputSchema,
+  SearchByIngredientsInputSchema,
   SearchInputSchema,
   SetCookbookDescriptionInputSchema,
   SetCookbookVisibilityInputSchema,
@@ -440,6 +442,16 @@ const search = publicProcedure.input(SearchInputSchema).query(async ({ input }) 
     profiles: profileRows.map(toProfileCard),
   };
 });
+
+// "Cook with what you have": public recipes ranked by how many of the given
+// ingredients they use.
+const searchByIngredients = publicProcedure
+  .input(SearchByIngredientsInputSchema)
+  .query(async ({ input }) => {
+    const rows = await searchPublicRecipesByIngredients(input.ingredients, input.limit);
+
+    return { recipes: await toFeedCardsWithRatings(rows) };
+  });
 
 const suggestedCooks = authedProcedure
   .input(SuggestedCooksInputSchema)
@@ -1079,6 +1091,7 @@ export const socialProcedures = router({
   feed,
   discover,
   search,
+  searchByIngredients,
   suggestedCooks,
   discoverCooks,
   discoverCookbooks,
