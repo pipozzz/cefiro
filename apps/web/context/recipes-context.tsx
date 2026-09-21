@@ -85,7 +85,9 @@ const sharedRecipesContext = createRecipesContext({
     const router = useRouter();
 
     return {
-      toHome: () => router.push("/"),
+      // The recipe library lives at /library now (root redirects to /discover),
+      // so "go home" after create/import/delete returns to the library.
+      toHome: () => router.push("/library"),
       toRecipe: (id: string) => router.push(`/recipes/${id}`),
     };
   },
