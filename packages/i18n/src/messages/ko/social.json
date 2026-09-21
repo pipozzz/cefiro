@@ -22,7 +22,9 @@
     "signIn": "Sign in",
     "openApp": "Open app",
     "modeCookbooks": "Cookbooks",
-    "noCookbooks": "No public cookbooks yet."
+    "noCookbooks": "No public cookbooks yet.",
+    "sectionYourRecipes": "내 레시피",
+    "sectionCommunityRecipes": "커뮤니티"
   },
   "categories": {
     "Breakfast": "Breakfast",

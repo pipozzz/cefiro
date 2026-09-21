@@ -22,7 +22,9 @@
     "signIn": "Sign in",
     "openApp": "Open app",
     "modeCookbooks": "Cookbooks",
-    "noCookbooks": "No public cookbooks yet."
+    "noCookbooks": "No public cookbooks yet.",
+    "sectionYourRecipes": "Your recipes",
+    "sectionCommunityRecipes": "From the community"
   },
   "categories": {
     "Breakfast": "Breakfast",

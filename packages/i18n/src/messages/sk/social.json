@@ -22,7 +22,9 @@
     "signIn": "Prihlásiť sa",
     "openApp": "Otvoriť appku",
     "modeCookbooks": "Kuchárky",
-    "noCookbooks": "Zatiaľ tu nie sú žiadne verejné kuchárky."
+    "noCookbooks": "Zatiaľ tu nie sú žiadne verejné kuchárky.",
+    "sectionYourRecipes": "Tvoje recepty",
+    "sectionCommunityRecipes": "Od komunity"
   },
   "categories": {
     "Breakfast": "Raňajky",
