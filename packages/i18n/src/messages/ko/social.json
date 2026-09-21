@@ -130,7 +130,10 @@
     "carbs": "Carbs",
     "fat": "Fat",
     "source": "Source:",
-    "metaDescription": "A recipe shared on Cefiro."
+    "metaDescription": "A recipe shared on Cefiro.",
+    "share": "공유",
+    "linkCopied": "링크 복사됨",
+    "shareFailed": "링크를 복사하지 못했습니다"
   },
   "feed": {
     "title": "Your feed",
