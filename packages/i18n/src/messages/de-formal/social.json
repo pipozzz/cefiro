@@ -130,7 +130,10 @@
     "carbs": "Carbs",
     "fat": "Fat",
     "source": "Source:",
-    "metaDescription": "A recipe shared on Cefiro."
+    "metaDescription": "A recipe shared on Cefiro.",
+    "share": "Teilen",
+    "linkCopied": "Link kopiert",
+    "shareFailed": "Link konnte nicht kopiert werden"
   },
   "feed": {
     "title": "Your feed",

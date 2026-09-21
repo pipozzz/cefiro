@@ -130,7 +130,10 @@
     "carbs": "Sacharidy",
     "fat": "Tuky",
     "source": "Zdroj:",
-    "metaDescription": "Recept zdieľaný na Cefiro."
+    "metaDescription": "Recept zdieľaný na Cefiro.",
+    "share": "Zdieľať",
+    "linkCopied": "Odkaz skopírovaný",
+    "shareFailed": "Odkaz sa nepodarilo skopírovať"
   },
   "feed": {
     "title": "Tvoj feed",

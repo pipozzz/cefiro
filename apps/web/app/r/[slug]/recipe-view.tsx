@@ -14,6 +14,7 @@ import { CommentsSection } from "@/components/social/comments-section";
 import { LikeButton } from "@/components/social/like-button";
 import { RecipeRating } from "@/components/social/recipe-rating";
 import { SaveRecipeButton } from "@/components/social/save-recipe-button";
+import { ShareRecipeButton } from "@/components/social/share-recipe-button";
 import { usePublicRecipeConfigQuery } from "@/hooks/recipes/use-public-recipe-config-query";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -200,6 +201,7 @@ function PublicRecipeBody({ slug, data }: { slug: string; data: PublicRecipeData
       <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4">
         <LikeButton initialCount={favoriteCount} recipeId={recipeId} slug={slug} />
         <SaveRecipeButton recipeId={recipeId} slug={slug} />
+        <ShareRecipeButton slug={slug} title={recipe.name} />
       </div>
 
       <div className="mt-4">
