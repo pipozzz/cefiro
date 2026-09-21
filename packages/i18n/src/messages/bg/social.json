@@ -149,7 +149,8 @@
     "cookClose": "Затвори",
     "cookPrev": "Назад",
     "cookNext": "Напред",
-    "cookDone": "Готово"
+    "cookDone": "Готово",
+    "moreLikeThis": "Подобни рецепти"
   },
   "feed": {
     "title": "Your feed",

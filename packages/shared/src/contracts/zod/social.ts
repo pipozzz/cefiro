@@ -178,6 +178,12 @@ export const SurpriseRecipesInputSchema = z.object({
   limit: z.number().int().min(1).max(24).default(9),
 });
 
+/** "More like this": public recipes sharing tags with the given recipe. */
+export const RelatedRecipesInputSchema = z.object({
+  recipeId: z.uuid(),
+  limit: z.number().int().min(1).max(24).default(6),
+});
+
 export const SuggestedCooksInputSchema = z.object({
   limit: z.number().int().min(1).max(24).default(6),
 });

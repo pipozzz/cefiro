@@ -149,7 +149,8 @@
     "cookClose": "닫기",
     "cookPrev": "이전",
     "cookNext": "다음",
-    "cookDone": "완료"
+    "cookDone": "완료",
+    "moreLikeThis": "비슷한 레시피"
   },
   "feed": {
     "title": "Your feed",

@@ -253,6 +253,39 @@ export async function listTrendingTopics(
   return rows.map((row) => ({ name: row.name, recipeCount: Number(row.recipeCount) }));
 }
 
+/**
+ * "More like this": other PUBLIC recipes that share the most tags with the
+ * given recipe, ranked by shared-tag count then favourites then recency. The
+ * recipe itself is excluded, and only recipes sharing ≥1 tag are returned (so
+ * an untagged recipe yields nothing rather than a random list).
+ */
+export async function listRelatedPublicRecipes(
+  recipeId: string,
+  limit: number
+): Promise<FeedRecipeRow[]> {
+  const sharedTagCount = sql<number>`(
+    SELECT count(*)::int FROM ${recipeTags} rt
+    WHERE rt.recipe_id = ${recipes.id}
+    AND rt.tag_id IN (
+      SELECT tag_id FROM ${recipeTags} WHERE recipe_id = ${recipeId}::uuid
+    )
+  )`;
+
+  return db
+    .select({ ...RECIPE_CARD_COLUMNS, favoriteCount: favoriteCountSql })
+    .from(recipes)
+    .leftJoin(userProfiles, eq(userProfiles.userId, recipes.userId))
+    .where(
+      and(
+        eq(recipes.visibility, "public"),
+        sql`${recipes.id} <> ${recipeId}::uuid`,
+        sql`${sharedTagCount} > 0`
+      )
+    )
+    .orderBy(desc(sharedTagCount), desc(favoriteCountSql), desc(recipes.publishedAt))
+    .limit(limit);
+}
+
 /** Escape LIKE/ILIKE wildcards so user input is matched literally. */
 function escapeLike(value: string): string {
   return value.replace(/[\\%_]/g, (ch) => `\\${ch}`);
