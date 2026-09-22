@@ -38,7 +38,13 @@
     "modeByIngredient": "Według składników",
     "ingredientPlaceholder": "Dodaj składnik…",
     "ingredientHint": "Dodaj co masz — znajdziemy przepisy, które zrobisz.",
-    "noIngredientResults": "Brak publicznych przepisów z tymi składnikami."
+    "noIngredientResults": "Brak publicznych przepisów z tymi składnikami.",
+    "fridgeHave": "Masz {have}/{total}",
+    "fridgeMissing": "brakuje",
+    "fridgeHaveAll": "Masz wszystko",
+    "addMissing": "Dodaj brakujące",
+    "missingAdded": "Dodano {count} do listy",
+    "missingAddedShort": "Dodano"
   },
   "categories": {
     "Breakfast": "Breakfast",

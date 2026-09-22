@@ -38,7 +38,13 @@
     "modeByIngredient": "재료별",
     "ingredientPlaceholder": "재료 추가…",
     "ingredientHint": "가진 재료를 추가하면 만들 수 있는 레시피를 찾아드려요.",
-    "noIngredientResults": "아직 해당 재료를 사용하는 공개 레시피가 없습니다."
+    "noIngredientResults": "아직 해당 재료를 사용하는 공개 레시피가 없습니다.",
+    "fridgeHave": "{have}/{total} 보유",
+    "fridgeMissing": "부족",
+    "fridgeHaveAll": "모두 있어요",
+    "addMissing": "부족한 재료 담기",
+    "missingAdded": "{count}개를 목록에 추가함",
+    "missingAddedShort": "추가됨"
   },
   "categories": {
     "Breakfast": "Breakfast",

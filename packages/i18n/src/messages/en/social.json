@@ -38,7 +38,13 @@
     "modeByIngredient": "By ingredient",
     "ingredientPlaceholder": "Add an ingredient…",
     "ingredientHint": "Add what you have — we'll find recipes you can make.",
-    "noIngredientResults": "No public recipes use those ingredients yet."
+    "noIngredientResults": "No public recipes use those ingredients yet.",
+    "fridgeHave": "Have {have}/{total}",
+    "fridgeMissing": "missing",
+    "fridgeHaveAll": "You have everything",
+    "addMissing": "Add missing to list",
+    "missingAdded": "Added {count} to your list",
+    "missingAddedShort": "Added"
   },
   "categories": {
     "Breakfast": "Breakfast",

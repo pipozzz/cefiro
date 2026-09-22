@@ -20,6 +20,7 @@ import {
   followUser,
   getFollowCounts,
   getRandomPublicRecipes,
+  getRecipeIngredientNamesByRecipeIds,
   getRecipeOfTheDay,
   isFollowing,
   listDiscoverRecipes,
@@ -469,8 +470,32 @@ const searchByIngredients = publicProcedure
   .input(SearchByIngredientsInputSchema)
   .query(async ({ input }) => {
     const rows = await searchPublicRecipesByIngredients(input.ingredients, input.limit);
+    const cards = await toFeedCardsWithRatings(rows);
+    const namesByRecipe = await getRecipeIngredientNamesByRecipeIds(rows.map((row) => row.id));
 
-    return { recipes: await toFeedCardsWithRatings(rows) };
+    const terms = input.ingredients.map((term) => term.trim().toLowerCase()).filter(Boolean);
+
+    // For each recipe, split its ingredients into what the reader already has
+    // (an ingredient whose name overlaps one of the entered terms) and what is
+    // still missing — so the UI can offer to add the gap to the shopping list.
+    const recipes = rows.map((row, index) => {
+      const names = namesByRecipe.get(row.id) ?? [];
+      const missing = names.filter((name) => {
+        const lower = name.toLowerCase();
+
+        return !terms.some((term) => lower.includes(term) || term.includes(lower));
+      });
+
+      return {
+        ...cards[index],
+        recipeId: row.id,
+        have: names.length - missing.length,
+        total: names.length,
+        missing,
+      };
+    });
+
+    return { recipes };
   });
 
 // Trending discovery topics: the most-used tags across public recipes, for the

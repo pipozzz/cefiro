@@ -38,7 +38,13 @@
     "modeByIngredient": "По съставки",
     "ingredientPlaceholder": "Добави съставка…",
     "ingredientHint": "Добавете каквото имате — ще намерим рецепти.",
-    "noIngredientResults": "Все още няма публични рецепти с тези съставки."
+    "noIngredientResults": "Все още няма публични рецепти с тези съставки.",
+    "fridgeHave": "Имаш {have}/{total}",
+    "fridgeMissing": "липсва",
+    "fridgeHaveAll": "Имаш всичко",
+    "addMissing": "Добави липсващото",
+    "missingAdded": "Добавени {count} в списъка",
+    "missingAddedShort": "Добавено"
   },
   "categories": {
     "Breakfast": "Breakfast",

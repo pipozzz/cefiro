@@ -38,7 +38,13 @@
     "modeByIngredient": "Op ingrediënt",
     "ingredientPlaceholder": "Voeg een ingrediënt toe…",
     "ingredientHint": "Voeg toe wat je hebt — wij vinden recepten die je kunt maken.",
-    "noIngredientResults": "Nog geen openbare recepten met die ingrediënten."
+    "noIngredientResults": "Nog geen openbare recepten met die ingrediënten.",
+    "fridgeHave": "Hebt {have}/{total}",
+    "fridgeMissing": "mist",
+    "fridgeHaveAll": "Je hebt alles",
+    "addMissing": "Ontbrekende toevoegen",
+    "missingAdded": "{count} toegevoegd aan lijst",
+    "missingAddedShort": "Toegevoegd"
   },
   "categories": {
     "Breakfast": "Breakfast",
