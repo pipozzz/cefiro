@@ -44,7 +44,11 @@
     "fridgeHaveAll": "Имаш всичко",
     "addMissing": "Добави липсващото",
     "missingAdded": "Добавени {count} в списъка",
-    "missingAddedShort": "Добавено"
+    "missingAddedShort": "Добавено",
+    "fridgeMenuTitle": "Сгответвайте няколко ястия",
+    "fridgeMenuSubtitle": "Рецепти, които почти имате — и един общ списък за пазаруване.",
+    "fridgeMenuShopAll": "Купи всичко липсващо ({count})",
+    "fridgeMenuAllStocked": "Имате всичко необходимо 🎉"
   },
   "categories": {
     "Breakfast": "Breakfast",
