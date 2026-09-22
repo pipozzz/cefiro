@@ -509,18 +509,46 @@ async function syncPrompts(): Promise<void> {
 }
 
 /**
- * Sync timer keywords from default config file
- * Updates DB if file changes and user hasn't overridden
+ * Add every word in `additions` that `base` does not already contain
+ * (case-insensitively, trimmed) to a copy of `base`, preserving base's order
+ * and appending the new words after it. Returns the merged list and whether
+ * anything was added.
+ */
+function unionKeywords(base: string[], additions: string[]): { merged: string[]; added: boolean } {
+  const seen = new Set(base.map((w) => w.trim().toLowerCase()));
+  const merged = [...base];
+  let added = false;
+
+  for (const word of additions) {
+    const key = word.trim().toLowerCase();
+
+    if (key.length === 0 || seen.has(key)) {
+      continue;
+    }
+
+    seen.add(key);
+    merged.push(word);
+    added = true;
+  }
+
+  return { merged, added };
+}
+
+/**
+ * Sync timer keywords from the default config file.
+ *
+ * A row the administrator has not edited is replaced wholesale when the shipped
+ * file changes (as before). A row the administrator HAS edited is left in their
+ * control — but the shipped keyword vocabulary is still *backfilled* into it:
+ * any default word the stored arrays are missing (e.g. the Slovak set added in a
+ * later release) is appended, without ever removing or reordering the words the
+ * administrator chose. Timer keywords are an additive, localisation-driven
+ * vocabulary, so a server that recognises "10 min" should recognise "10 minút"
+ * after an upgrade without the administrator having to re-add every locale by
+ * hand (#116 shipped the words; existing servers had already frozen the row).
  */
 async function syncTimerKeywords(): Promise<void> {
   const existing = await getConfig<TimerKeywordsConfig>(ServerConfigKeys.TIMER_KEYWORDS);
-
-  // If user has overridden, don't touch it
-  if (existing?.isOverridden) {
-    serverLogger.debug("Timer keywords are overridden by admin, skipping file sync");
-
-    return;
-  }
 
   const fileDefaults = { ...defaultTimerKeywords, isOverridden: false };
 
@@ -528,6 +556,34 @@ async function syncTimerKeywords(): Promise<void> {
   if (!existing) {
     await setConfig(ServerConfigKeys.TIMER_KEYWORDS, fileDefaults, null, false);
     serverLogger.info("Seeded timer keywords from default config file");
+
+    return;
+  }
+
+  // An admin-edited row keeps its own words and its overridden flag, but still
+  // gains any shipped default words it is missing.
+  if (existing.isOverridden) {
+    const hours = unionKeywords(existing.hours, fileDefaults.hours);
+    const minutes = unionKeywords(existing.minutes, fileDefaults.minutes);
+    const seconds = unionKeywords(existing.seconds, fileDefaults.seconds);
+
+    if (hours.added || minutes.added || seconds.added) {
+      await setConfig(
+        ServerConfigKeys.TIMER_KEYWORDS,
+        {
+          enabled: existing.enabled,
+          hours: hours.merged,
+          minutes: minutes.merged,
+          seconds: seconds.merged,
+          isOverridden: true,
+        },
+        null,
+        false
+      );
+      serverLogger.info("Backfilled missing default timer keywords into admin-edited config");
+    } else {
+      serverLogger.debug("Timer keywords are overridden by admin, no default words to backfill");
+    }
 
     return;
   }
