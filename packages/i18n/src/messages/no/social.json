@@ -44,7 +44,11 @@
     "fridgeHaveAll": "Du har alt",
     "addMissing": "Legg til det som mangler",
     "missingAdded": "La til {count} i listen",
-    "missingAddedShort": "Lagt til"
+    "missingAddedShort": "Lagt til",
+    "fridgeMenuTitle": "Lag flere retter",
+    "fridgeMenuSubtitle": "Oppskrifter du nesten har — og én felles handleliste.",
+    "fridgeMenuShopAll": "Kjøp alt som mangler ({count})",
+    "fridgeMenuAllStocked": "Du har alt du trenger 🎉"
   },
   "categories": {
     "Breakfast": "Breakfast",

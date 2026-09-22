@@ -44,7 +44,11 @@
     "fridgeHaveAll": "Masz wszystko",
     "addMissing": "Dodaj brakujące",
     "missingAdded": "Dodano {count} do listy",
-    "missingAddedShort": "Dodano"
+    "missingAddedShort": "Dodano",
+    "fridgeMenuTitle": "Ugotuj kilka dań",
+    "fridgeMenuSubtitle": "Przepisy, które prawie masz — i jedna wspólna lista zakupów.",
+    "fridgeMenuShopAll": "Kup wszystko, czego brakuje ({count})",
+    "fridgeMenuAllStocked": "Masz wszystko, czego potrzebujesz 🎉"
   },
   "categories": {
     "Breakfast": "Breakfast",

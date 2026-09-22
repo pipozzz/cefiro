@@ -44,7 +44,11 @@
     "fridgeHaveAll": "Máš všetko",
     "addMissing": "Chýbajúce do nákupu",
     "missingAdded": "Pridané do nákupu ({count})",
-    "missingAddedShort": "Pridané"
+    "missingAddedShort": "Pridané",
+    "fridgeMenuTitle": "Navar viac jedál naraz",
+    "fridgeMenuSubtitle": "Recepty, ktoré takmer máš — a jeden spoločný nákup.",
+    "fridgeMenuShopAll": "Kúpiť všetko chýbajúce ({count})",
+    "fridgeMenuAllStocked": "Máš všetko, čo treba 🎉"
   },
   "categories": {
     "Breakfast": "Raňajky",

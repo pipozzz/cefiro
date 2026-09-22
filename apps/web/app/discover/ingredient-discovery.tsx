@@ -14,6 +14,8 @@ import type { RouterOutputs } from "@norish/trpc/client";
 import { useSession } from "@norish/shared/lib/auth/client";
 import { createClientId } from "@norish/shared/lib/operation-helpers";
 
+import { FridgeMenu } from "./fridge-menu";
+
 type FridgeRecipe = RouterOutputs["social"]["searchByIngredients"]["recipes"][number];
 
 /**
@@ -111,17 +113,16 @@ export function IngredientDiscovery() {
             {t("noIngredientResults")}
           </p>
         ) : (
-          <div
-            className={`grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 ${
-              isFetching ? "opacity-60 transition-opacity" : "transition-opacity"
-            }`}
-          >
-            {recipes.map((recipe) => (
-              <div key={recipe.slug} className="flex flex-col gap-2">
-                <SocialRecipeCard recipe={recipe} />
-                <FridgeFooter canShop={canShop} recipe={recipe} />
-              </div>
-            ))}
+          <div className={isFetching ? "opacity-60 transition-opacity" : "transition-opacity"}>
+            <FridgeMenu canShop={canShop} recipes={recipes} />
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+              {recipes.map((recipe) => (
+                <div key={recipe.slug} className="flex flex-col gap-2">
+                  <SocialRecipeCard recipe={recipe} />
+                  <FridgeFooter canShop={canShop} recipe={recipe} />
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>

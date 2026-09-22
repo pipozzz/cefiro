@@ -44,7 +44,11 @@
     "fridgeHaveAll": "Je hebt alles",
     "addMissing": "Ontbrekende toevoegen",
     "missingAdded": "{count} toegevoegd aan lijst",
-    "missingAddedShort": "Toegevoegd"
+    "missingAddedShort": "Toegevoegd",
+    "fridgeMenuTitle": "Kook meerdere gerechten",
+    "fridgeMenuSubtitle": "Recepten die je bijna hebt — en één gecombineerde boodschappenlijst.",
+    "fridgeMenuShopAll": "Alles kopen wat ontbreekt ({count})",
+    "fridgeMenuAllStocked": "Je hebt alles wat je nodig hebt 🎉"
   },
   "categories": {
     "Breakfast": "Breakfast",
