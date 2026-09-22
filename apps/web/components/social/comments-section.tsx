@@ -9,6 +9,8 @@ import { Button, toast } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
+import { useSession } from "@norish/shared/lib/auth/client";
+
 type CommentsTranslator = ReturnType<typeof useTranslations<"social.comments">>;
 
 function timeAgo(date: Date, t: CommentsTranslator): string {
@@ -53,8 +55,13 @@ export function CommentsSection({
   const t = useTranslations("social.comments");
   const [body, setBody] = useState("");
 
+  // getMyProfile is authed-only; a signed-out reader can still view comments,
+  // so gate it on the session to avoid a pointless 401 on every public recipe.
+  const { data: session } = useSession();
+
   const profileQuery = useQuery({
     ...trpc.social.getMyProfile.queryOptions(),
+    enabled: !!session?.user,
     retry: false,
   });
 

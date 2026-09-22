@@ -7,6 +7,8 @@ import { showSafeErrorToast } from "@/lib/ui/safe-error-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
+import { useSession } from "@norish/shared/lib/auth/client";
+
 import { StarsDisplay } from "./stars-display";
 
 export function RecipeRating({
@@ -29,8 +31,13 @@ export function RecipeRating({
   const [count, setCount] = useState(initialCount);
   const [hover, setHover] = useState(0);
 
+  // getMyRecipeRating is authed-only; gating on the session keeps it from
+  // firing (and 401-ing) for signed-out readers of a public recipe.
+  const { data: session } = useSession();
+
   const myRatingQuery = useQuery({
     ...trpc.social.getMyRecipeRating.queryOptions({ recipeId }),
+    enabled: !!session?.user,
     retry: false,
   });
 
