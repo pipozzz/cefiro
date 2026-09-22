@@ -146,7 +146,7 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
         <MagnifyingGlassIcon className="text-default-400 pointer-events-none absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2" />
         <input
           aria-label={t("searchAria")}
-          className="bg-content2 text-foreground placeholder:text-default-400 focus:bg-content1 focus:ring-primary w-full rounded-full py-3 pr-11 pl-12 ring-1 ring-transparent transition outline-none"
+          className="bg-content2 text-foreground placeholder:text-default-400 focus:bg-content1 focus:ring-primary w-full rounded-full py-3 pr-11 pl-12 ring-1 ring-transparent transition outline-none [&::-webkit-search-cancel-button]:appearance-none"
           placeholder={t("searchPlaceholder")}
           type="search"
           value={q}
