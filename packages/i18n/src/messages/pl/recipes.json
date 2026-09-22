@@ -336,7 +336,8 @@
     "swipeBackToSteps": "Przesuń w prawo, aby wrócić do kroków",
     "readyAt": "Gotowe około {time}",
     "timers": "Minutniki",
-    "nextStep": "Następny krok"
+    "nextStep": "Następny krok",
+    "voiceControl": "Sterowanie głosem"
   },
   "enrichment": {
     "failed": "Wzbogacanie nie powiodło się",

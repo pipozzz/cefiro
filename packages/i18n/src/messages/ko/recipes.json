@@ -336,7 +336,8 @@
     "swipeBackToSteps": "오른쪽으로 스와이프하여 단계 보기",
     "readyAt": "{time}쯤 완성",
     "timers": "타이머",
-    "nextStep": "다음 단계"
+    "nextStep": "다음 단계",
+    "voiceControl": "음성 제어"
   },
   "enrichment": {
     "failed": "보강에 실패했습니다",

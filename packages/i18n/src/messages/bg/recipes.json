@@ -336,7 +336,8 @@
     "swipeBackToSteps": "Плъзни надясно за стъпките",
     "readyAt": "Готово около {time}",
     "timers": "Таймери",
-    "nextStep": "Следваща стъпка"
+    "nextStep": "Следваща стъпка",
+    "voiceControl": "Гласово управление"
   },
   "enrichment": {
     "failed": "Обогатяването е неуспешно",

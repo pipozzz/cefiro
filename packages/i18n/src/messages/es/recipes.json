@@ -336,7 +336,8 @@
     "swipeBackToSteps": "Desliza a la derecha para pasos",
     "readyAt": "Listo hacia las {time}",
     "timers": "Temporizadores",
-    "nextStep": "Siguiente paso"
+    "nextStep": "Siguiente paso",
+    "voiceControl": "Control por voz"
   },
   "enrichment": {
     "failed": "El enriquecimiento falló",

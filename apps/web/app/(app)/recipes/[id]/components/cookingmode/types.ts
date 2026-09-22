@@ -38,6 +38,12 @@ export type CookingModeDialogProps = {
    */
   readyAt: Date | null;
   areTimersOpen: boolean;
+  /** Hands-free voice control: whether the browser supports it, whether the
+   * cook has turned it on, and whether it is actively listening right now. */
+  voiceSupported: boolean;
+  voiceEnabled: boolean;
+  voiceListening: boolean;
+  onToggleVoice: () => void;
   onClose: () => void;
   onPointerDown: (event: PointerEvent) => void;
   onPointerUp: (event: PointerEvent) => void;

@@ -336,7 +336,8 @@
     "swipeBackToSteps": "Nach rechts wischen für Schritte",
     "readyAt": "Fertig gegen {time}",
     "timers": "Timer",
-    "nextStep": "Nächster Schritt"
+    "nextStep": "Nächster Schritt",
+    "voiceControl": "Sprachsteuerung"
   },
   "enrichment": {
     "failed": "Anreicherung fehlgeschlagen",
