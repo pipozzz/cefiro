@@ -11,7 +11,12 @@
     "groupIngredients": "Grupper ingredienser",
     "fromPlan": "Fra plan",
     "generatedFromPlan": "La til {count} varer fra {recipes} oppskrifter",
-    "noPlanThisWeek": "Ingen oppskrifter planlagt denne uken"
+    "noPlanThisWeek": "Ingen oppskrifter planlagt denne uken",
+    "shareList": "Del",
+    "shareTitle": "Handleliste",
+    "shareOther": "Annet",
+    "shareCopied": "Liste kopiert",
+    "shareFailed": "Kunne ikke dele listen"
   },
   "empty": {
     "title": "Handlelisten din venter",

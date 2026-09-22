@@ -11,7 +11,12 @@
     "groupIngredients": "Группировать ингредиенты",
     "fromPlan": "Из плана",
     "generatedFromPlan": "Добавлено {count} позиций из {recipes} рецептов",
-    "noPlanThisWeek": "На этой неделе нет запланированных рецептов"
+    "noPlanThisWeek": "На этой неделе нет запланированных рецептов",
+    "shareList": "Поделиться",
+    "shareTitle": "Список покупок",
+    "shareOther": "Другое",
+    "shareCopied": "Список скопирован",
+    "shareFailed": "Не удалось поделиться списком"
   },
   "empty": {
     "title": "Ваш список покупок ждёт",

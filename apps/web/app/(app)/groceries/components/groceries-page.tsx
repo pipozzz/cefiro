@@ -23,6 +23,7 @@ import { useGroceriesContext, useGroceriesUiContext } from "../context";
 import { useStoresContext } from "../stores-context";
 import AddGroceryButton from "./add-grocery-button";
 import GenerateFromPlanButton from "./generate-from-plan-button";
+import ShareGroceriesButton from "./share-groceries-button";
 
 export function GroceriesPage() {
   const {
@@ -142,6 +143,8 @@ export function GroceriesPage() {
           <div className="flex items-center gap-2">
             {/* Turn this week's meal plan into a shopping list */}
             <GenerateFromPlanButton />
+            {/* Send the list to whoever is doing the shopping */}
+            <ShareGroceriesButton groceries={groceries} stores={stores} />
             {/* Desktop add button: Full text with icon */}
             <Button
               className="hidden rounded-full font-medium md:flex"

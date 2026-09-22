@@ -11,7 +11,12 @@
     "groupIngredients": "Raggruppa ingredienti",
     "fromPlan": "Dal piano",
     "generatedFromPlan": "Aggiunti {count} articoli da {recipes} ricette",
-    "noPlanThisWeek": "Nessuna ricetta pianificata questa settimana"
+    "noPlanThisWeek": "Nessuna ricetta pianificata questa settimana",
+    "shareList": "Condividi",
+    "shareTitle": "Lista della spesa",
+    "shareOther": "Altro",
+    "shareCopied": "Lista copiata",
+    "shareFailed": "Impossibile condividere la lista"
   },
   "empty": {
     "title": "La tua lista della spesa ti aspetta",

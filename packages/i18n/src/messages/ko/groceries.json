@@ -11,7 +11,12 @@
     "groupIngredients": "재료 묶기",
     "fromPlan": "플랜에서",
     "generatedFromPlan": "레시피 {recipes}개에서 {count}개 항목 추가됨",
-    "noPlanThisWeek": "이번 주에 계획된 레시피가 없어요"
+    "noPlanThisWeek": "이번 주에 계획된 레시피가 없어요",
+    "shareList": "공유",
+    "shareTitle": "장보기 목록",
+    "shareOther": "기타",
+    "shareCopied": "목록이 복사됨",
+    "shareFailed": "목록을 공유할 수 없습니다"
   },
   "empty": {
     "title": "아직 장보기 목록이 비어 있어요",
