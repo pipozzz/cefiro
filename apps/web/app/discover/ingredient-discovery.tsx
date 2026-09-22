@@ -12,6 +12,7 @@ import { useTranslations } from "next-intl";
 
 import type { RouterOutputs } from "@norish/trpc/client";
 import { useSession } from "@norish/shared/lib/auth/client";
+import { createClientId } from "@norish/shared/lib/operation-helpers";
 
 type FridgeRecipe = RouterOutputs["social"]["searchByIngredients"]["recipes"][number];
 
@@ -181,7 +182,7 @@ function FridgeFooter({ recipe, canShop }: { recipe: FridgeRecipe; canShop: bool
           onPress={() =>
             addMutation.mutate(
               recipe.missing.map((name) => ({
-                id: crypto.randomUUID(),
+                id: createClientId(),
                 name,
                 amount: null,
                 unit: null,
