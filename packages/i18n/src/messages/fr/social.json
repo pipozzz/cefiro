@@ -161,7 +161,8 @@
     "cookPrev": "Précédent",
     "cookNext": "Suivant",
     "cookDone": "Terminé",
-    "moreLikeThis": "Dans le même esprit"
+    "moreLikeThis": "Dans le même esprit",
+    "cookReadyAt": "Prêt vers {time}"
   },
   "feed": {
     "title": "Your feed",

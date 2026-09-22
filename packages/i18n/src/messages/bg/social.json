@@ -161,7 +161,8 @@
     "cookPrev": "Назад",
     "cookNext": "Напред",
     "cookDone": "Готово",
-    "moreLikeThis": "Подобни рецепти"
+    "moreLikeThis": "Подобни рецепти",
+    "cookReadyAt": "Готово около {time}"
   },
   "feed": {
     "title": "Your feed",

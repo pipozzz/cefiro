@@ -161,7 +161,8 @@
     "cookPrev": "Tilbage",
     "cookNext": "Næste",
     "cookDone": "Færdig",
-    "moreLikeThis": "Flere som denne"
+    "moreLikeThis": "Flere som denne",
+    "cookReadyAt": "Klar omkring {time}"
   },
   "feed": {
     "title": "Your feed",

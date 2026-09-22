@@ -2,14 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { PublicSlugSmartInstruction } from "@/components/recipe/public-slug-smart-instruction";
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  FireIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
-import { Button } from "@heroui/react";
-import { useTranslations } from "next-intl";
+import { ChevronDownIcon, ChevronUpIcon, FireIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Button, Meter } from "@heroui/react";
+import { useLocale, useTranslations } from "next-intl";
 
 type CookStep = {
   step: string;
@@ -22,25 +17,34 @@ type CookStep = {
  * A full-screen, one-step-at-a-time cooking view for the public recipe page.
  *
  * Deliberately self-contained: unlike the in-app CookingMode it depends on no
- * authenticated context (recipe/permissions/hidden-items providers). It reuses
- * the public, timer-aware step renderer (PublicSlugSmartInstruction) so the
- * "boil 10 min" chips work here too — the recipe view mounts the TimerTicker
- * that drives them — and keeps the screen awake while cooking.
+ * authenticated context (recipe/permissions/hidden-items providers). It mirrors
+ * that in-app cook mode's chrome as closely as it can without those providers —
+ * a name header, an accent progress meter, a "ready around" projection, and the
+ * same bottom-bar navigation — so cooking a recipe feels the same whether it was
+ * opened from the library or from discovery. It reuses the public, timer-aware
+ * step renderer (PublicSlugSmartInstruction) so the "boil 10 min" chips work
+ * here too, and keeps the screen awake while cooking.
  */
 export function PublicCookMode({
   recipeId,
   recipeName,
   steps,
   systemUsed,
+  totalMinutes,
 }: {
   recipeId: string;
   recipeName: string;
   steps: CookStep[];
   systemUsed: string;
+  totalMinutes?: number | null;
 }) {
   const t = useTranslations("social.recipe");
+  const locale = useLocale();
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
+  // Fixed when the session begins: now + the recipe's total time. A projection,
+  // never a promise — and absent for a recipe with no total time.
+  const [readyAt, setReadyAt] = useState<Date | null>(null);
 
   // Only the steps written in the recipe's own measurement system, in order.
   const cookSteps = useMemo(
@@ -93,8 +97,9 @@ export function PublicCookMode({
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
-      else if (e.key === "ArrowRight") setIndex((v) => Math.min(cookSteps.length - 1, v + 1));
-      else if (e.key === "ArrowLeft") setIndex((v) => Math.max(0, v - 1));
+      else if (e.key === "ArrowRight" || e.key === "ArrowDown")
+        setIndex((v) => Math.min(cookSteps.length - 1, v + 1));
+      else if (e.key === "ArrowLeft" || e.key === "ArrowUp") setIndex((v) => Math.max(0, v - 1));
     };
 
     window.addEventListener("keydown", onKey);
@@ -108,6 +113,16 @@ export function PublicCookMode({
 
   const current = cookSteps[index];
   const isLast = index === cookSteps.length - 1;
+  const progress = ((index + 1) / cookSteps.length) * 100;
+  const stepCounter = t("cookStep", { current: index + 1, total: cookSteps.length });
+
+  const startCooking = () => {
+    setIndex(0);
+    setReadyAt(
+      totalMinutes && totalMinutes > 0 ? new Date(Date.now() + totalMinutes * 60_000) : null
+    );
+    setOpen(true);
+  };
 
   return (
     <>
@@ -115,10 +130,7 @@ export function PublicCookMode({
         className="bg-accent text-accent-foreground inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition hover:opacity-90"
         style={{ background: "var(--accent, #336640)", color: "#fff" }}
         type="button"
-        onClick={() => {
-          setIndex(0);
-          setOpen(true);
-        }}
+        onClick={startCooking}
       >
         <FireIcon className="h-5 w-5" />
         <span>{t("cook")}</span>
@@ -130,19 +142,14 @@ export function PublicCookMode({
           className="bg-background fixed inset-0 z-[1100] flex flex-col"
           role="dialog"
         >
-          <div className="border-default-100 flex items-center gap-3 border-b px-4 py-3">
-            <span className="text-default-500 shrink-0 text-sm tabular-nums">
-              {t("cookStep", { current: index + 1, total: cookSteps.length })}
-            </span>
-            <div className="bg-content2 h-1.5 flex-1 overflow-hidden rounded-full">
-              <div
-                className="bg-primary h-full rounded-full transition-all"
-                style={{ width: `${((index + 1) / cookSteps.length) * 100}%` }}
-              />
-            </div>
+          {/* Header: recipe name + close */}
+          <div className="border-border flex items-center gap-3 border-b px-4 py-3 md:px-6">
+            <h2 className="text-foreground min-w-0 flex-1 truncate text-base font-semibold">
+              {recipeName}
+            </h2>
             <button
               aria-label={t("cookClose")}
-              className="text-default-500 hover:text-foreground shrink-0 rounded-full p-1"
+              className="text-muted hover:text-foreground shrink-0 rounded-full p-1"
               type="button"
               onClick={() => setOpen(false)}
             >
@@ -177,25 +184,50 @@ export function PublicCookMode({
             ) : null}
           </div>
 
-          <div className="border-default-100 flex items-center justify-between gap-3 border-t px-4 py-3">
-            <Button
-              isDisabled={index === 0}
-              variant="tertiary"
-              onPress={() => setIndex((v) => Math.max(0, v - 1))}
-            >
-              <ChevronLeftIcon className="h-4 w-4" />
-              {t("cookPrev")}
-            </Button>
-            {isLast ? (
-              <Button variant="primary" onPress={() => setOpen(false)}>
-                {t("cookDone")}
+          {/* Bottom bar mirrors the in-app cook mode: meter, ready-at + counter,
+              then back / next. */}
+          <div className="border-border shrink-0 border-t px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] md:px-6 md:pt-4 md:pb-4">
+            <Meter aria-label={stepCounter} className="w-full" color="accent" value={progress}>
+              <Meter.Track>
+                <Meter.Fill />
+              </Meter.Track>
+            </Meter>
+
+            <div className="mt-2 flex items-center justify-between gap-3 text-sm">
+              <span className="text-muted truncate">
+                {readyAt
+                  ? t("cookReadyAt", {
+                      time: readyAt.toLocaleTimeString(locale, {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      }),
+                    })
+                  : ""}
+              </span>
+              <span className="text-muted shrink-0 font-medium tabular-nums">{stepCounter}</span>
+            </div>
+
+            <div className="mt-3 flex items-center justify-between gap-2">
+              <Button
+                isIconOnly
+                aria-label={t("cookPrev")}
+                className="size-10 min-w-10 rounded-full"
+                isDisabled={index === 0}
+                variant="secondary"
+                onPress={() => setIndex((v) => Math.max(0, v - 1))}
+              >
+                <ChevronUpIcon className="size-5" />
               </Button>
-            ) : (
-              <Button variant="primary" onPress={() => setIndex((v) => v + 1)}>
-                {t("cookNext")}
-                <ChevronRightIcon className="h-4 w-4" />
+
+              <Button
+                className="shrink-0 rounded-full"
+                variant="primary"
+                onPress={() => (isLast ? setOpen(false) : setIndex((v) => v + 1))}
+              >
+                <span>{isLast ? t("cookDone") : t("cookNext")}</span>
+                <ChevronDownIcon className="size-5" />
               </Button>
-            )}
+            </div>
           </div>
         </div>
       ) : null}
