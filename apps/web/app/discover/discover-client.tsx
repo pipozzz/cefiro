@@ -10,8 +10,8 @@ import { SocialProfileGrid } from "@/components/social/social-profile-card";
 import { SocialRecipeGrid } from "@/components/social/social-recipe-card";
 import { SuggestedCooks } from "@/components/social/suggested-cooks";
 import { useRecipesContext } from "@/context/recipes-context";
-import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Button, Spinner } from "@heroui/react";
+import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/16/solid";
+import { Button, Input, Spinner } from "@heroui/react";
 import { keepPreviousData, useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
@@ -135,31 +135,38 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
     }`;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 pb-24 md:px-6">
+    <div className="mx-auto w-full max-w-7xl px-4 pb-24 md:px-6">
       <header className="mb-6">
         <h1 className="text-foreground text-3xl font-bold">{t("title")}</h1>
         <p className="text-default-500">{t("subtitle")}</p>
       </header>
 
-      {/* Search */}
-      <div className="relative mb-6">
-        <MagnifyingGlassIcon className="text-default-400 pointer-events-none absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2" />
-        <input
+      {/* Search — same field styling as the Library search input */}
+      <div className="relative mb-6 w-full">
+        <MagnifyingGlassIcon className="text-muted pointer-events-none absolute top-1/2 left-4 z-10 h-5 w-5 -translate-y-1/2" />
+        <Input
+          fullWidth
           aria-label={t("searchAria")}
-          className="bg-content2 text-foreground placeholder:text-default-400 focus:bg-content1 focus:ring-primary w-full rounded-full py-3 pr-11 pl-12 ring-1 ring-transparent transition outline-none [&::-webkit-search-cancel-button]:appearance-none"
+          className="bg-field shadow-field focus-visible:border-accent/60 focus-visible:ring-accent/20 h-12 rounded-full border border-transparent text-[15px] transition-colors outline-none focus-visible:ring-2"
           placeholder={t("searchPlaceholder")}
-          type="search"
+          style={{
+            fontSize: "16px",
+            paddingLeft: "2.75rem",
+            paddingRight: q.length > 0 ? "2.75rem" : "1rem",
+          }}
           value={q}
+          variant="primary"
           onChange={(e) => setQ(e.target.value)}
         />
         {q ? (
           <button
             aria-label={t("clearSearch")}
-            className="text-default-400 hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 rounded-full p-1"
+            className="text-muted hover:bg-surface-secondary hover:text-foreground absolute top-1/2 right-2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full transition-colors"
             type="button"
             onClick={() => setQ("")}
+            onMouseDown={(e) => e.preventDefault()}
           >
-            <XMarkIcon className="h-5 w-5" />
+            <XMarkIcon className="h-4 w-4" />
           </button>
         ) : null}
       </div>
@@ -413,20 +420,32 @@ function SearchResults({
   term: string;
 }) {
   const t = useTranslations("social.discover");
+  const trpc = useTRPC();
 
   const profiles = query.data?.profiles ?? [];
   const recipes = query.data?.recipes ?? [];
 
-  // A signed-in reader searches one box across both their own library and the
-  // community. Their own matches load independently, so the community results
-  // never wait on them.
-  const own = isAuthed ? <YourRecipesResults term={term} /> : null;
+  // The signed-in reader searches one box across both their own library and the
+  // community. The library query lives here (it needs no recipes context) so
+  // this component knows whether there are any own matches — which the empty
+  // state below depends on. Anonymous readers skip it entirely.
+  const ownQuery = useQuery({
+    ...trpc.library.list.queryOptions({ search: term, limit: 12, type: "recipes" }),
+    enabled: isAuthed,
+    retry: false,
+  });
+  const ownRecipes = (ownQuery.data?.items ?? []).flatMap((item) =>
+    item.kind === "recipe" ? [item.recipe] : []
+  );
 
-  const communityEmpty = !query.isLoading && profiles.length === 0 && recipes.length === 0;
+  const loading = query.isLoading || (isAuthed && ownQuery.isLoading);
+  // Nothing anywhere — the honest empty state, for members and visitors alike.
+  const nothingFound =
+    !loading && profiles.length === 0 && recipes.length === 0 && ownRecipes.length === 0;
 
   return (
     <div className="space-y-10">
-      {own}
+      {isAuthed && ownRecipes.length > 0 ? <YourRecipesResults recipes={ownRecipes} /> : null}
 
       {query.isLoading ? (
         <div className="flex min-h-[30vh] items-center justify-center">
@@ -449,49 +468,32 @@ function SearchResults({
               <SocialRecipeGrid recipes={recipes} />
             </section>
           ) : null}
-
-          {/* Only claim "no results" once the community search is done; the
-              user's own matches (if any) render above regardless. */}
-          {communityEmpty && !isAuthed ? (
-            <p className="bg-content2 text-default-500 rounded-2xl p-10 text-center">
-              {t("noResults", { term })}
-            </p>
-          ) : null}
         </>
       )}
+
+      {nothingFound ? (
+        <p className="bg-content2 text-default-500 rounded-2xl p-10 text-center">
+          {t("noResults", { term })}
+        </p>
+      ) : null}
     </div>
   );
 }
 
 /**
  * A signed-in reader's own recipes that match the discovery search. Rendered
- * only when authenticated (so it runs under the app shell's providers), it
+ * only when authenticated (so it runs under the app shell's providers) and only
+ * when there are matches — the parent owns the query and the empty state. It
  * reuses the library card and its favourite/delete wiring, and links to the
  * private `/recipes/[id]` view rather than the public `/r/[slug]` one.
  */
-function YourRecipesResults({ term }: { term: string }) {
-  const trpc = useTRPC();
+function YourRecipesResults({
+  recipes,
+}: {
+  recipes: React.ComponentProps<typeof RecipeCard>["recipe"][];
+}) {
   const t = useTranslations("social.discover");
   const { isFavorite, toggleFavorite, deleteRecipe, allergies } = useRecipesContext();
-
-  const { data, isLoading } = useQuery({
-    ...trpc.library.list.queryOptions({ search: term, limit: 12, type: "recipes" }),
-    retry: false,
-  });
-
-  // Hide the section entirely while loading or when the reader has no match, so
-  // it never pushes the community results down with an empty header.
-  if (isLoading) {
-    return null;
-  }
-
-  const recipes = (data?.items ?? []).flatMap((item) =>
-    item.kind === "recipe" ? [item.recipe] : []
-  );
-
-  if (recipes.length === 0) {
-    return null;
-  }
 
   return (
     <section>
