@@ -8,7 +8,10 @@
     "viewMode": "Изглед",
     "manageStores": "Управление на магазини",
     "storeViewOptions": "Опции за изглед по магазин",
-    "groupIngredients": "Групиране на съставките"
+    "groupIngredients": "Групиране на съставките",
+    "fromPlan": "От плана",
+    "generatedFromPlan": "Добавени {count} продукта от {recipes} рецепти",
+    "noPlanThisWeek": "Няма планирани рецепти тази седмица"
   },
   "empty": {
     "title": "Списъкът с продукти те очаква",

@@ -8,7 +8,10 @@
     "viewMode": "Режим отображения",
     "manageStores": "Управление магазинами",
     "storeViewOptions": "Настройки отображения магазинов",
-    "groupIngredients": "Группировать ингредиенты"
+    "groupIngredients": "Группировать ингредиенты",
+    "fromPlan": "Из плана",
+    "generatedFromPlan": "Добавлено {count} позиций из {recipes} рецептов",
+    "noPlanThisWeek": "На этой неделе нет запланированных рецептов"
   },
   "empty": {
     "title": "Ваш список покупок ждёт",

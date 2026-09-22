@@ -8,7 +8,10 @@
     "viewMode": "Režim zobrazenia",
     "manageStores": "Spravovať obchody",
     "storeViewOptions": "Možnosti zobrazenia obchodu",
-    "groupIngredients": "Zoskupiť ingrediencie"
+    "groupIngredients": "Zoskupiť ingrediencie",
+    "fromPlan": "Z plánu",
+    "generatedFromPlan": "Pridané {count} položiek z {recipes} receptov",
+    "noPlanThisWeek": "Tento týždeň nemáš naplánované recepty"
   },
   "empty": {
     "title": "Váš nákupný zoznam čaká",

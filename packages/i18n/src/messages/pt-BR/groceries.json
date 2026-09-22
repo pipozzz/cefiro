@@ -8,7 +8,10 @@
     "viewMode": "Modo de visualização",
     "manageStores": "Gerenciar lojas",
     "storeViewOptions": "Opções de visualização por loja",
-    "groupIngredients": "Agrupar ingredientes"
+    "groupIngredients": "Agrupar ingredientes",
+    "fromPlan": "Do plano",
+    "generatedFromPlan": "{count} itens adicionados de {recipes} receitas",
+    "noPlanThisWeek": "Nenhuma receita planejada esta semana"
   },
   "empty": {
     "title": "Sua lista de compras espera por você",

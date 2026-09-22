@@ -77,6 +77,16 @@ export const GroceryCreateSchema = z.object({
   storeId: z.uuid().nullable().optional(),
 });
 
+/**
+ * "Generate shopping list from the meal plan": aggregate the ingredients of
+ * every recipe planned in the [from, to] date window into groceries. Dates are
+ * plain YYYY-MM-DD (matching planned_items.date).
+ */
+export const GenerateGroceriesFromPlanInputSchema = z.object({
+  from: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid from date"),
+  to: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid to date"),
+});
+
 // tRPC input schemas
 export const GroceryUpdateInputSchema = z.object({
   purchaseAmount: PurchaseAmountSchema,

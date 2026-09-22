@@ -8,7 +8,10 @@
     "viewMode": "View Mode",
     "manageStores": "Manage Stores",
     "storeViewOptions": "Store View Options",
-    "groupIngredients": "Group ingredients"
+    "groupIngredients": "Group ingredients",
+    "fromPlan": "From plan",
+    "generatedFromPlan": "Added {count} items from {recipes} planned recipes",
+    "noPlanThisWeek": "No recipes planned this week"
   },
   "empty": {
     "title": "Your grocery list awaits",

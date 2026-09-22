@@ -17,6 +17,8 @@ import {
   reorderGroceriesInStore,
   updateGroceries,
 } from "@norish/db";
+import { listPlannedItemsByUserAndDateRange } from "@norish/db/repositories/planned-items";
+import { getRecipeFull } from "@norish/db/repositories/recipes";
 import {
   getStoreOwnerId,
   normalizeIngredientName,
@@ -27,6 +29,7 @@ import { trpcLogger as log } from "@norish/shared-server/logger";
 import {
   AssignGroceryToStoreInputSchema,
   DeleteDoneGroceriesInputSchema,
+  GenerateGroceriesFromPlanInputSchema,
   MarkAllDoneGroceriesInputSchema,
   ReorderGroceriesInStoreInputSchema,
 } from "@norish/shared/contracts/zod";
@@ -72,6 +75,87 @@ const create = authedProcedure
       });
       throw err;
     }
+  });
+
+// "Generate shopping list from the meal plan": sum the ingredients of every
+// recipe planned in the [from, to] window (a recipe planned twice counts twice)
+// and add them to the list. createGroceriesData then merges by name with what
+// is already on the list, so re-running it tops up rather than duplicates.
+const generateFromPlan = authedProcedure
+  .input(GenerateGroceriesFromPlanInputSchema)
+  .mutation(async ({ ctx, input }) => {
+    const planned = await listPlannedItemsByUserAndDateRange(ctx.userIds, input.from, input.to);
+
+    const recipeCounts = new Map<string, number>();
+
+    for (const item of planned) {
+      if (item.itemType === "recipe" && item.recipeId) {
+        recipeCounts.set(item.recipeId, (recipeCounts.get(item.recipeId) ?? 0) + 1);
+      }
+    }
+
+    if (recipeCounts.size === 0) {
+      return { added: 0, recipeCount: 0 };
+    }
+
+    // Aggregate ingredients across the planned recipes, keyed by name + unit so
+    // "200 g múka" from two recipes becomes one 400 g line, while a different
+    // unit stays its own line. Unquantified items (e.g. "soľ") stay amountless.
+    const aggregated = new Map<
+      string,
+      { name: string; unit: string | null; amount: number | null }
+    >();
+
+    for (const [recipeId, count] of recipeCounts) {
+      const full = await getRecipeFull(recipeId);
+
+      if (!full) {
+        continue;
+      }
+
+      const ingredients = (full.recipeIngredients ?? []).filter(
+        (ri) => ri.systemUsed === full.systemUsed
+      );
+
+      for (const ri of ingredients) {
+        const name = (ri.ingredientName ?? "").trim();
+
+        if (!name || name.startsWith("#")) {
+          continue;
+        }
+
+        const unit = ri.unit?.trim() || null;
+        const key = `${name.toLowerCase()}|${(unit ?? "").toLowerCase()}`;
+        const addAmount = typeof ri.amount === "number" ? ri.amount * count : null;
+        const existing = aggregated.get(key);
+
+        if (!existing) {
+          aggregated.set(key, { name, unit, amount: addAmount });
+        } else if (addAmount !== null) {
+          existing.amount = (existing.amount ?? 0) + addAmount;
+        }
+      }
+    }
+
+    const items = Array.from(aggregated.values()).map((entry) => ({
+      id: crypto.randomUUID(),
+      name: entry.name,
+      unit: entry.unit,
+      amount: entry.amount,
+      purchaseAmount: null,
+      isDone: false,
+      recipeIngredientId: null,
+      recurringGroceryId: null,
+      storeId: null,
+    }));
+
+    if (items.length === 0) {
+      return { added: 0, recipeCount: recipeCounts.size };
+    }
+
+    await createGroceriesData(ctx, items);
+
+    return { added: items.length, recipeCount: recipeCounts.size };
   });
 
 const update = authedProcedure.input(GroceryUpdateInputSchema).mutation(({ ctx, input }) => {
@@ -624,6 +708,7 @@ const deleteDone = authedProcedure
 export const groceriesProcedures = router({
   list,
   create,
+  generateFromPlan,
   update,
   toggle,
   delete: deleteGroceries,

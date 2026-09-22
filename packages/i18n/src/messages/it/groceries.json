@@ -8,7 +8,10 @@
     "viewMode": "Modalità di visualizzazione",
     "manageStores": "Gestisci negozi",
     "storeViewOptions": "Opzioni vista negozio",
-    "groupIngredients": "Raggruppa ingredienti"
+    "groupIngredients": "Raggruppa ingredienti",
+    "fromPlan": "Dal piano",
+    "generatedFromPlan": "Aggiunti {count} articoli da {recipes} ricette",
+    "noPlanThisWeek": "Nessuna ricetta pianificata questa settimana"
   },
   "empty": {
     "title": "La tua lista della spesa ti aspetta",
