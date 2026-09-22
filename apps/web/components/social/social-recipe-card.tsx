@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { HeartIcon } from "@heroicons/react/24/solid";
-
-import { StarsDisplay } from "./stars-display";
+import RecipeMetadata, { photoChipClassName } from "@/components/dashboard/recipe-metadata";
+import { HeartIcon } from "@heroicons/react/20/solid";
+import { Chip } from "@heroui/react";
 
 export type SocialRecipeCardData = {
   slug: string | null;
@@ -21,6 +21,13 @@ export type SocialRecipeCardData = {
   } | null;
 };
 
+/**
+ * A public recipe tile for discovery/feed/profile. Deliberately mirrors the
+ * Library dashboard card (same 340px frame, 236px photo with overlaid metadata
+ * chips, and a title/description block) so signed-out discovery reads with the
+ * same polish as a reader's own library — it just links to the public
+ * `/r/[slug]` view and carries the author instead of favourite/edit actions.
+ */
 export function SocialRecipeCard({ recipe }: { recipe: SocialRecipeCardData }) {
   if (!recipe.slug) {
     return null;
@@ -28,77 +35,83 @@ export function SocialRecipeCard({ recipe }: { recipe: SocialRecipeCardData }) {
 
   const authorName =
     recipe.author?.displayName ?? (recipe.author ? `@${recipe.author.handle}` : null);
+  const timeLabel = recipe.totalMinutes ? `${recipe.totalMinutes} min` : null;
 
   return (
-    <div className="group bg-content1 ring-default-100 flex flex-col overflow-hidden rounded-2xl shadow-sm ring-1 transition hover:-translate-y-0.5 hover:shadow-md">
-      <Link
-        href={`/r/${recipe.slug}`}
-        className="bg-content2 relative block aspect-[4/3] w-full overflow-hidden"
-      >
+    <Link
+      className="group border-border bg-surface shadow-surface relative flex h-[340px] w-full flex-col overflow-hidden rounded-3xl border no-underline transition hover:shadow-md"
+      href={`/r/${recipe.slug}`}
+    >
+      {/* Photo (236px) with overlaid metadata — same treatment as Library */}
+      <div className="bg-surface-secondary relative h-[236px] w-full shrink-0 overflow-hidden">
         {recipe.image ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={recipe.image}
             alt={recipe.name}
-            className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
+            src={recipe.image}
           />
         ) : (
           <div className="h-full w-full" style={{ background: recipe.dishColor ?? undefined }} />
         )}
-        {recipe.totalMinutes ? (
-          <span className="absolute top-2 right-2 rounded-full bg-black/70 px-2 py-0.5 text-xs font-medium text-white">
-            {recipe.totalMinutes} min
-          </span>
-        ) : null}
+
+        <RecipeMetadata averageRating={recipe.rating?.average ?? null} timeLabel={timeLabel} />
+
+        {/* Community favourite count — top-left, where Library shows the heart */}
         {typeof recipe.favoriteCount === "number" && recipe.favoriteCount > 0 ? (
-          <span className="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full bg-black/70 px-2 py-0.5 text-xs font-medium text-white">
-            <HeartIcon className="h-3 w-3 text-red-400" />
-            {recipe.favoriteCount}
-          </span>
-        ) : null}
-      </Link>
-
-      <div className="flex flex-1 flex-col p-4">
-        <Link href={`/r/${recipe.slug}`}>
-          <h3 className="text-foreground group-hover:text-primary line-clamp-2 font-semibold">
-            {recipe.name}
-          </h3>
-        </Link>
-        {recipe.description ? (
-          <p className="text-default-500 mt-1 line-clamp-2 text-sm">{recipe.description}</p>
-        ) : null}
-
-        {recipe.rating && recipe.rating.average && recipe.rating.count > 0 ? (
-          <div className="mt-2 flex items-center gap-1.5">
-            <StarsDisplay value={recipe.rating.average} size={13} />
-            <span className="text-default-500 text-xs">
-              {recipe.rating.average.toFixed(1)} ({recipe.rating.count})
-            </span>
+          <div className="absolute top-2 left-2 z-20">
+            <Chip className={photoChipClassName} size="sm" variant="soft">
+              <HeartIcon className="text-danger h-4 w-4" />
+              <Chip.Label>{recipe.favoriteCount}</Chip.Label>
+            </Chip>
           </div>
         ) : null}
 
+        {/* Author — bottom-left over the photo, so the tile frame stays identical
+            to Library while still crediting the cook */}
         {recipe.author && authorName ? (
-          <Link
-            href={`/u/${recipe.author.handle}`}
-            className="text-default-500 hover:text-foreground mt-3 inline-flex items-center gap-2 text-sm"
-          >
-            {recipe.author.avatarUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={recipe.author.avatarUrl}
-                alt=""
-                className="h-5 w-5 rounded-full object-cover"
-              />
-            ) : (
-              <span className="bg-primary text-primary-foreground flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-semibold">
-                {authorName.charAt(0).toUpperCase()}
-              </span>
-            )}
-            <span className="truncate">{authorName}</span>
-          </Link>
+          <div className="absolute bottom-2 left-2 z-20">
+            <span
+              className={`${photoChipClassName} inline-flex max-w-[12rem] items-center gap-1 py-0.5`}
+            >
+              {recipe.author.avatarUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  alt=""
+                  className="h-4 w-4 rounded-full object-cover"
+                  src={recipe.author.avatarUrl}
+                />
+              ) : (
+                <span className="bg-primary text-primary-foreground flex h-4 w-4 items-center justify-center rounded-full text-[9px] font-semibold">
+                  {authorName.charAt(0).toUpperCase()}
+                </span>
+              )}
+              <span className="truncate">{authorName}</span>
+            </span>
+          </div>
         ) : null}
       </div>
-    </div>
+
+      {/* Title + description (104px) */}
+      <div className="flex flex-1 flex-col overflow-hidden px-4 pt-3 pb-3">
+        <h3 className="text-foreground truncate text-base font-semibold group-hover:underline">
+          {recipe.name}
+        </h3>
+        {recipe.description ? (
+          <p
+            className="text-muted mt-1 text-sm"
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            }}
+          >
+            {recipe.description}
+          </p>
+        ) : null}
+      </div>
+    </Link>
   );
 }
 
