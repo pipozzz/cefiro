@@ -22,6 +22,13 @@ vi.mock("@/app/(app)/recipes/[id]/components/wake-lock-toggle", () => ({
   ),
 }));
 
+// The kitchen-timer launcher owns its own popover/store behaviour (covered by
+// its own component); here it stands in as an inert marker so this bar's
+// navigation and timer-affordance assertions stay focused.
+vi.mock("@/components/timer/quick-timer", () => ({
+  QuickTimer: () => <div data-testid="quick-timer" />,
+}));
+
 vi.mock("@heroui/react", () => ({
   Button: ({
     children,

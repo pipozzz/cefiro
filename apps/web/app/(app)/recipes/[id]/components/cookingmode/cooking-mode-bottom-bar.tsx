@@ -1,6 +1,7 @@
 "use client";
 
 import WakeLockToggle from "@/app/(app)/recipes/[id]/components/wake-lock-toggle";
+import { QuickTimer } from "@/components/timer/quick-timer";
 import { useTimersEnabledQuery } from "@/hooks/config";
 import { useTimerStore } from "@/stores/timers";
 import {
@@ -10,6 +11,7 @@ import {
   ClockIcon,
   ListBulletIcon,
   MicrophoneIcon,
+  PlusIcon,
 } from "@heroicons/react/20/solid";
 import { Button, Meter } from "@heroui/react";
 import { useLocale, useTranslations } from "next-intl";
@@ -131,6 +133,22 @@ export function CookingModeBottomBar({
               <ClockIcon className="size-5" />
             </Button>
           )}
+
+          {/* Set an ad-hoc kitchen timer mid-recipe (rest the dough, boil an
+              egg) — the one thing the disabled "view timers" button above
+              cannot do when no step timer is running. Opens upward, above the
+              fullscreen cook dialog. Self-hides when timers are disabled. */}
+          <QuickTimer
+            className="size-10 min-w-10"
+            icon={
+              <span className="relative inline-flex">
+                <ClockIcon className="size-5" />
+                <PlusIcon className="bg-secondary text-secondary-foreground absolute -top-1.5 -right-1.5 size-3 rounded-full" />
+              </span>
+            }
+            placement="top"
+            variant="secondary"
+          />
 
           {voiceSupported && (
             <Button

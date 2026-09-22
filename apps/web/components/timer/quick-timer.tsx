@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useState } from "react";
 import { useTimersEnabledQuery } from "@/hooks/config";
 import { useTimerStore } from "@/stores/timers";
@@ -20,7 +21,21 @@ const MAX_MINUTES = 600;
  * floating dock, rings with the same sound, and raises the same notification as
  * every other timer; only its origin differs.
  */
-export function QuickTimer({ className, size = "sm" }: { className?: string; size?: "sm" | "md" }) {
+export function QuickTimer({
+  className,
+  size = "sm",
+  variant = "tertiary",
+  icon,
+  placement = "bottom",
+}: {
+  className?: string;
+  size?: "sm" | "md";
+  variant?: "tertiary" | "secondary";
+  /** Trigger glyph; defaults to a clock. Cook mode passes its own so the
+   * "start a timer" button reads distinctly from the "view timers" one. */
+  icon?: ReactNode;
+  placement?: "bottom" | "top";
+}) {
   const t = useTranslations("common.timer");
   const { timersEnabled } = useTimersEnabledQuery();
   const addStandaloneTimer = useTimerStore((state) => state.addStandaloneTimer);
@@ -52,12 +67,13 @@ export function QuickTimer({ className, size = "sm" }: { className?: string; siz
           aria-label={t("quickAria")}
           className={`rounded-full ${className ?? ""}`}
           size={size}
-          variant="tertiary"
+          variant={variant}
         >
-          <ClockIcon className="h-5 w-5" />
+          {icon ?? <ClockIcon className="h-5 w-5" />}
         </Button>
       </Popover.Trigger>
-      <Popover.Content className="w-64" placement="bottom">
+      {/* z above the fullscreen cook-mode dialog (z-[1100]) so it is usable there. */}
+      <Popover.Content className="z-[1200] w-64" placement={placement}>
         <Popover.Arrow />
         <Popover.Dialog>
           <div className="p-1">
