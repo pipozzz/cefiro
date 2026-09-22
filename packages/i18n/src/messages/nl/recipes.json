@@ -336,7 +336,8 @@
     "swipeBackToSteps": "Veeg rechts voor stappen",
     "readyAt": "Rond {time} klaar",
     "timers": "Timers",
-    "nextStep": "Volgende stap"
+    "nextStep": "Volgende stap",
+    "voiceControl": "Spraakbesturing"
   },
   "enrichment": {
     "failed": "Verrijking mislukt",

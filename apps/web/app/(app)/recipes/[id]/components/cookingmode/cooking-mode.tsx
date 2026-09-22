@@ -6,6 +6,7 @@ import { useWakeLockContext } from "@/app/(app)/recipes/[id]/components/wake-loc
 import { TimerDock } from "@/components/timer-dock";
 import { useRecipePageColor } from "@/context/recipe-page-color-context";
 import { useFloatingDock } from "@/hooks/use-floating-dock";
+import { useVoiceCommands } from "@/hooks/use-voice-commands";
 import { dishTintStyle } from "@/lib/dish-tint";
 import { FireIcon } from "@heroicons/react/20/solid";
 import { Button, Modal } from "@heroui/react";
@@ -71,6 +72,7 @@ export default function CookingMode({
   const [activeView, setActiveView] = useState<CookingModeView>("steps");
   const [activeStep, setActiveStep] = useState(0);
   const [areTimersOpen, setAreTimersOpen] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(false);
   // Ready At is fixed when the Cooking Session begins, not on page load: it
   // is the moment the cook started plus the recipe's total time.
   const [readyAt, setReadyAt] = useState<Date | null>(null);
@@ -84,6 +86,25 @@ export default function CookingMode({
   const displayIngredients =
     adjustedIngredients?.length > 0 ? adjustedIngredients : recipe.recipeIngredients;
   const currentStep = clampStep(activeStep, steps.length);
+
+  // Hands-free step control while cooking: "ďalší/next" advances, "späť/back"
+  // goes back. Only active while the dialog is open and the cook enabled it.
+  const voice = useVoiceCommands({
+    enabled: voiceEnabled && isOpen,
+    commands: useMemo(
+      () => [
+        {
+          phrases: ["ďalší", "dalsi", "ďalej", "dalej", "next"],
+          action: () => setActiveStep((step) => clampStep(step + 1, steps.length)),
+        },
+        {
+          phrases: ["späť", "spat", "predchádzajúci", "predchadzajuci", "back", "previous"],
+          action: () => setActiveStep((step) => clampStep(step - 1, steps.length)),
+        },
+      ],
+      [steps.length]
+    ),
+  });
 
   useEffect(() => {
     if (activeStep !== currentStep) {
@@ -212,6 +233,10 @@ export default function CookingMode({
     activeStep: currentStep,
     activeView,
     areTimersOpen,
+    voiceSupported: voice.supported,
+    voiceEnabled,
+    voiceListening: voice.listening,
+    onToggleVoice: () => setVoiceEnabled((on) => !on),
     displayIngredients,
     readyAt,
     recipe: {

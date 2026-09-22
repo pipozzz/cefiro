@@ -336,7 +336,8 @@
     "swipeBackToSteps": "Swipe right for steps",
     "readyAt": "Ready around {time}",
     "timers": "Timers",
-    "nextStep": "Next step"
+    "nextStep": "Next step",
+    "voiceControl": "Voice control"
   },
   "enrichment": {
     "failed": "Enrichment failed",

@@ -9,6 +9,7 @@ import {
   ChevronUpIcon,
   ClockIcon,
   ListBulletIcon,
+  MicrophoneIcon,
 } from "@heroicons/react/20/solid";
 import { Button, Meter } from "@heroui/react";
 import { useLocale, useTranslations } from "next-intl";
@@ -23,6 +24,10 @@ type CookingModeBottomBarProps = Pick<
   | "areTimersOpen"
   | "readyAt"
   | "steps"
+  | "voiceSupported"
+  | "voiceEnabled"
+  | "voiceListening"
+  | "onToggleVoice"
   | "onStepChange"
   | "onTimersOpenChange"
   | "onViewChange"
@@ -48,6 +53,10 @@ export function CookingModeBottomBar({
   areTimersOpen,
   readyAt,
   steps,
+  voiceSupported,
+  voiceEnabled,
+  voiceListening,
+  onToggleVoice,
   onStepChange,
   onTimersOpenChange,
   onViewChange,
@@ -120,6 +129,19 @@ export function CookingModeBottomBar({
               onPress={() => onTimersOpenChange(!areTimersOpen)}
             >
               <ClockIcon className="size-5" />
+            </Button>
+          )}
+
+          {voiceSupported && (
+            <Button
+              isIconOnly
+              aria-label={tCookMode("voiceControl")}
+              aria-pressed={voiceEnabled}
+              className={`size-10 min-w-10 rounded-full ${voiceListening ? "motion-safe:animate-pulse" : ""}`}
+              variant={voiceEnabled ? "primary" : "secondary"}
+              onPress={onToggleVoice}
+            >
+              <MicrophoneIcon className="size-5" />
             </Button>
           )}
 

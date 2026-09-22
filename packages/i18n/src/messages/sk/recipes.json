@@ -336,7 +336,8 @@
     "swipeBackToSteps": "Potiahni doprava pre kroky",
     "readyAt": "Hotové okolo {time}",
     "timers": "Časovače",
-    "nextStep": "Ďalší krok"
+    "nextStep": "Ďalší krok",
+    "voiceControl": "Hlasové ovládanie"
   },
   "enrichment": {
     "failed": "Obohatenie zlyhalo",

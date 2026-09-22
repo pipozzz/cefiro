@@ -336,7 +336,8 @@
     "swipeBackToSteps": "Swipe til højre for trin",
     "readyAt": "Klar omkring {time}",
     "timers": "Timere",
-    "nextStep": "Næste trin"
+    "nextStep": "Næste trin",
+    "voiceControl": "Stemmestyring"
   },
   "enrichment": {
     "failed": "Berigelse mislykkedes",
