@@ -236,7 +236,12 @@
     "dismissCompleted": "Dismiss completed timer",
     "pause": "Pause timer",
     "start": "Start timer",
-    "dismiss": "Dismiss timer"
+    "dismiss": "Dismiss timer",
+    "quickTitle": "Timer de cozinha",
+    "quickAria": "Timer de cozinha",
+    "quickStart": "Iniciar",
+    "quickCustom": "Minutos",
+    "quickMinutesHint": "minutos"
   },
   "offlineStatus": {
     "title": "Connection & offline",

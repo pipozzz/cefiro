@@ -236,7 +236,12 @@
     "dismissCompleted": "Zrušiť dokončený časovač",
     "pause": "Pozastaviť časovač",
     "start": "Spustiť časovač",
-    "dismiss": "Zrušiť časovač"
+    "dismiss": "Zrušiť časovač",
+    "quickTitle": "Minútka",
+    "quickAria": "Minútka",
+    "quickStart": "Spustiť",
+    "quickCustom": "Minúty",
+    "quickMinutesHint": "minút"
   },
   "offlineStatus": {
     "title": "Pripojenie a offline",

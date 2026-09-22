@@ -236,7 +236,12 @@
     "dismissCompleted": "Dismiss completed timer",
     "pause": "Pause timer",
     "start": "Start timer",
-    "dismiss": "Dismiss timer"
+    "dismiss": "Dismiss timer",
+    "quickTitle": "주방 타이머",
+    "quickAria": "주방 타이머",
+    "quickStart": "시작",
+    "quickCustom": "분",
+    "quickMinutesHint": "분"
   },
   "offlineStatus": {
     "title": "Connection & offline",

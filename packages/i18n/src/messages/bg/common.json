@@ -236,7 +236,12 @@
     "dismissCompleted": "Dismiss completed timer",
     "pause": "Pause timer",
     "start": "Start timer",
-    "dismiss": "Dismiss timer"
+    "dismiss": "Dismiss timer",
+    "quickTitle": "Кухненски таймер",
+    "quickAria": "Кухненски таймер",
+    "quickStart": "Старт",
+    "quickCustom": "Минути",
+    "quickMinutesHint": "минути"
   },
   "offlineStatus": {
     "title": "Връзка и офлайн режим",

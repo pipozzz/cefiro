@@ -5,6 +5,7 @@ import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import NavbarUserMenu from "@/components/navbar/navbar-user-menu";
 import { NotificationBell } from "@/components/navbar/notification-bell";
+import { QuickTimer } from "@/components/timer/quick-timer";
 import { useAutoHide } from "@/hooks/auto-hide";
 import {
   BookOpenIcon,
@@ -157,6 +158,14 @@ export const MobileNav = () => {
                 </NextLink>
               </li>
             </ul>
+          </div>
+
+          {/* Minútka — the kitchen timer, its own disc so it stays one tap
+              away without crowding the five-item nav pill. */}
+          <div
+            className={`flex shrink-0 items-center justify-center ${cssFloatingDockEndCap} ${barSurfaceClassName}`}
+          >
+            <QuickTimer />
           </div>
 
           {/* User menu - its own circle beside the bar, and the disc the
