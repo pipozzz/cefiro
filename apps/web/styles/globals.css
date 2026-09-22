@@ -10,6 +10,16 @@
 @custom-variant light (&:is(:root, .light *, [data-theme="light"] *));
 @custom-variant dark (&:is(.dark *, [data-theme="dark"] *));
 
+@layer base {
+  /* Always reserve the scrollbar gutter so page width does not jump when
+     content grows past / shrinks below the viewport (e.g. filtering discovery
+     down to few results). Prevents the "page suddenly gets wider/narrower"
+     shift across the whole app. */
+  html {
+    scrollbar-gutter: stable;
+  }
+}
+
 @layer theme {
   :root {
     /* A Store's colour, read by the dot and the checkboxes under its section
