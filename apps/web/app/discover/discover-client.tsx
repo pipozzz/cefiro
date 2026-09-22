@@ -12,7 +12,7 @@ import { SuggestedCooks } from "@/components/social/suggested-cooks";
 import { useRecipesContext } from "@/context/recipes-context";
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Button, Spinner } from "@heroui/react";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import { DietaryFilterToggle } from "./dietary-filter-toggle";
@@ -88,6 +88,11 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
       { getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined }
     ),
     enabled: !isSearching && mode === "recipes",
+    // Changing sort/category/tag/time makes a new query key; without this the
+    // grid would blank to a spinner on every filter tap (a flicker, and the
+    // page width jumps as the scrollbar comes and goes). Keep the previous
+    // results on screen while the next set loads.
+    placeholderData: keepPreviousData,
     retry: false,
   });
 
@@ -116,6 +121,7 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
   const searchQuery = useQuery({
     ...trpc.social.search.queryOptions({ q: searchTerm, limit: 24 }),
     enabled: isSearching,
+    placeholderData: keepPreviousData,
     retry: false,
   });
 
