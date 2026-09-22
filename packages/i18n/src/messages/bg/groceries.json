@@ -11,7 +11,12 @@
     "groupIngredients": "Групиране на съставките",
     "fromPlan": "От плана",
     "generatedFromPlan": "Добавени {count} продукта от {recipes} рецепти",
-    "noPlanThisWeek": "Няма планирани рецепти тази седмица"
+    "noPlanThisWeek": "Няма планирани рецепти тази седмица",
+    "shareList": "Споделяне",
+    "shareTitle": "Списък за пазаруване",
+    "shareOther": "Други",
+    "shareCopied": "Списъкът е копиран",
+    "shareFailed": "Списъкът не можа да бъде споделен"
   },
   "empty": {
     "title": "Списъкът с продукти те очаква",

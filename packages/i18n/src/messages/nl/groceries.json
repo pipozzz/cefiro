@@ -11,7 +11,12 @@
     "groupIngredients": "Groepeer ingrediënten",
     "fromPlan": "Uit plan",
     "generatedFromPlan": "{count} items toegevoegd uit {recipes} recepten",
-    "noPlanThisWeek": "Deze week geen recepten gepland"
+    "noPlanThisWeek": "Deze week geen recepten gepland",
+    "shareList": "Delen",
+    "shareTitle": "Boodschappenlijst",
+    "shareOther": "Overig",
+    "shareCopied": "Lijst gekopieerd",
+    "shareFailed": "Kon de lijst niet delen"
   },
   "empty": {
     "title": "Je boodschappenlijst wacht op je",

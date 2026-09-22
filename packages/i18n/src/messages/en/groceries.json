@@ -11,7 +11,12 @@
     "groupIngredients": "Group ingredients",
     "fromPlan": "From plan",
     "generatedFromPlan": "Added {count} items from {recipes} planned recipes",
-    "noPlanThisWeek": "No recipes planned this week"
+    "noPlanThisWeek": "No recipes planned this week",
+    "shareList": "Share",
+    "shareTitle": "Shopping list",
+    "shareOther": "Other",
+    "shareCopied": "List copied",
+    "shareFailed": "Couldn't share the list"
   },
   "empty": {
     "title": "Your grocery list awaits",

@@ -11,7 +11,12 @@
     "groupIngredients": "Zoskupiť ingrediencie",
     "fromPlan": "Z plánu",
     "generatedFromPlan": "Pridané {count} položiek z {recipes} receptov",
-    "noPlanThisWeek": "Tento týždeň nemáš naplánované recepty"
+    "noPlanThisWeek": "Tento týždeň nemáš naplánované recepty",
+    "shareList": "Zdieľať",
+    "shareTitle": "Nákupný zoznam",
+    "shareOther": "Ostatné",
+    "shareCopied": "Zoznam skopírovaný",
+    "shareFailed": "Zoznam sa nepodarilo zdieľať"
   },
   "empty": {
     "title": "Váš nákupný zoznam čaká",
