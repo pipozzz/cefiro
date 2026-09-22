@@ -8,7 +8,10 @@
     "viewMode": "Visningsmodus",
     "manageStores": "Administrer butikker",
     "storeViewOptions": "Butikkvisningsinnstillinger",
-    "groupIngredients": "Grupper ingredienser"
+    "groupIngredients": "Grupper ingredienser",
+    "fromPlan": "Fra plan",
+    "generatedFromPlan": "La til {count} varer fra {recipes} oppskrifter",
+    "noPlanThisWeek": "Ingen oppskrifter planlagt denne uken"
   },
   "empty": {
     "title": "Handlelisten din venter",

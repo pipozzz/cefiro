@@ -8,7 +8,10 @@
     "viewMode": "Weergave",
     "manageStores": "Winkels beheren",
     "storeViewOptions": "Winkelweergave opties",
-    "groupIngredients": "Groepeer ingrediënten"
+    "groupIngredients": "Groepeer ingrediënten",
+    "fromPlan": "Uit plan",
+    "generatedFromPlan": "{count} items toegevoegd uit {recipes} recepten",
+    "noPlanThisWeek": "Deze week geen recepten gepland"
   },
   "empty": {
     "title": "Je boodschappenlijst wacht op je",

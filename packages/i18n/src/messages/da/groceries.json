@@ -8,7 +8,10 @@
     "viewMode": "Visningstilstand",
     "manageStores": "Administrer butikker",
     "storeViewOptions": "Butikvisningsindstillinger",
-    "groupIngredients": "Gruppér ingredienser"
+    "groupIngredients": "Gruppér ingredienser",
+    "fromPlan": "Fra plan",
+    "generatedFromPlan": "Tilføjede {count} varer fra {recipes} opskrifter",
+    "noPlanThisWeek": "Ingen opskrifter planlagt i denne uge"
   },
   "empty": {
     "title": "Din indkøbsliste venter",

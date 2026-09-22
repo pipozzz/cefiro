@@ -22,6 +22,7 @@ import { cssFloatingDockContentClearance } from "@norish/web/config/css-tokens";
 import { useGroceriesContext, useGroceriesUiContext } from "../context";
 import { useStoresContext } from "../stores-context";
 import AddGroceryButton from "./add-grocery-button";
+import GenerateFromPlanButton from "./generate-from-plan-button";
 
 export function GroceriesPage() {
   const {
@@ -139,6 +140,8 @@ export function GroceriesPage() {
         <div className="mb-6 flex min-h-10 shrink-0 items-center justify-between">
           <h1 className="text-2xl font-bold">{t("title")}</h1>
           <div className="flex items-center gap-2">
+            {/* Turn this week's meal plan into a shopping list */}
+            <GenerateFromPlanButton />
             {/* Desktop add button: Full text with icon */}
             <Button
               className="hidden rounded-full font-medium md:flex"

@@ -8,7 +8,10 @@
     "viewMode": "Ansicht",
     "manageStores": "Geschäfte verwalten",
     "storeViewOptions": "Optionen Geschäftsansicht",
-    "groupIngredients": "Zutaten gruppieren"
+    "groupIngredients": "Zutaten gruppieren",
+    "fromPlan": "Aus Plan",
+    "generatedFromPlan": "{count} Artikel aus {recipes} Rezepten hinzugefügt",
+    "noPlanThisWeek": "Diese Woche sind keine Rezepte geplant"
   },
   "empty": {
     "title": "Ihre Einkaufsliste wartet",
