@@ -1,4 +1,4 @@
-import { and, desc, eq, lt, lte, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, lt, lte, sql } from "drizzle-orm";
 
 import { db } from "@norish/db/drizzle";
 
@@ -301,6 +301,47 @@ export async function listRelatedPublicRecipes(
     )
     .orderBy(desc(sharedTagCount), desc(favoriteCountSql), desc(recipes.publishedAt))
     .limit(limit);
+}
+
+/**
+ * Distinct ingredient names for each of the given recipes, keyed by recipeId.
+ * Names are deduped case-insensitively (a recipe stored in two measurement
+ * systems repeats the same ingredient name). Used to work out, for a
+ * cook-with-what-you-have search, which of a recipe's ingredients the reader is
+ * still missing.
+ */
+export async function getRecipeIngredientNamesByRecipeIds(
+  recipeIds: string[]
+): Promise<Map<string, string[]>> {
+  const result = new Map<string, string[]>();
+
+  if (recipeIds.length === 0) {
+    return result;
+  }
+
+  const rows = await db
+    .select({ recipeId: recipeIngredients.recipeId, name: ingredients.name })
+    .from(recipeIngredients)
+    .innerJoin(ingredients, eq(ingredients.id, recipeIngredients.ingredientId))
+    .where(inArray(recipeIngredients.recipeId, recipeIds));
+
+  for (const row of rows) {
+    const name = (row.name ?? "").trim();
+
+    if (!name) {
+      continue;
+    }
+
+    const list = result.get(row.recipeId) ?? [];
+
+    if (!list.some((existing) => existing.toLowerCase() === name.toLowerCase())) {
+      list.push(name);
+    }
+
+    result.set(row.recipeId, list);
+  }
+
+  return result;
 }
 
 /** Escape LIKE/ILIKE wildcards so user input is matched literally. */

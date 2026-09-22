@@ -38,7 +38,13 @@
     "modeByIngredient": "По ингредиентам",
     "ingredientPlaceholder": "Добавьте ингредиент…",
     "ingredientHint": "Добавьте, что у вас есть — найдём подходящие рецепты.",
-    "noIngredientResults": "Пока нет публичных рецептов с этими ингредиентами."
+    "noIngredientResults": "Пока нет публичных рецептов с этими ингредиентами.",
+    "fridgeHave": "Есть {have}/{total}",
+    "fridgeMissing": "не хватает",
+    "fridgeHaveAll": "У вас есть всё",
+    "addMissing": "Добавить недостающее",
+    "missingAdded": "Добавлено {count} в список",
+    "missingAddedShort": "Добавлено"
   },
   "categories": {
     "Breakfast": "Breakfast",

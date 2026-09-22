@@ -38,7 +38,13 @@
     "modeByIngredient": "Podľa surovín",
     "ingredientPlaceholder": "Pridaj surovinu…",
     "ingredientHint": "Pridaj čo máš — nájdeme recepty, ktoré z toho spravíš.",
-    "noIngredientResults": "Zatiaľ žiadne verejné recepty s týmito surovinami."
+    "noIngredientResults": "Zatiaľ žiadne verejné recepty s týmito surovinami.",
+    "fridgeHave": "Máš {have}/{total}",
+    "fridgeMissing": "chýba",
+    "fridgeHaveAll": "Máš všetko",
+    "addMissing": "Chýbajúce do nákupu",
+    "missingAdded": "Pridané do nákupu ({count})",
+    "missingAddedShort": "Pridané"
   },
   "categories": {
     "Breakfast": "Raňajky",

@@ -3,20 +3,29 @@
 import type { KeyboardEvent } from "react";
 import { useState } from "react";
 import { useTRPC } from "@/app/providers/trpc-provider";
-import { SocialRecipeGrid } from "@/components/social/social-recipe-card";
+import { SocialRecipeCard } from "@/components/social/social-recipe-card";
+import { CheckCircleIcon } from "@heroicons/react/16/solid";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { Spinner } from "@heroui/react";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { Button, Spinner, toast } from "@heroui/react";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
+
+import type { RouterOutputs } from "@norish/trpc/client";
+import { useSession } from "@norish/shared/lib/auth/client";
+
+type FridgeRecipe = RouterOutputs["social"]["searchByIngredients"]["recipes"][number];
 
 /**
  * "Cook with what you have": the reader lists ingredients they have on hand and
- * gets public recipes ranked by how many of them each uses (social.searchByIngredients).
- * A distinctive, signed-out-friendly way into discovery.
+ * gets public recipes ranked by how many of them each uses. Each result shows
+ * what is still missing and — for a signed-in reader — adds the gap to the
+ * shopping list in one tap, closing the fridge → shop → cook loop.
  */
 export function IngredientDiscovery() {
   const trpc = useTRPC();
   const t = useTranslations("social.discover");
+  const { data: session } = useSession();
+  const canShop = !!session?.user;
   const [input, setInput] = useState("");
   const [chips, setChips] = useState<string[]>([]);
 
@@ -101,11 +110,91 @@ export function IngredientDiscovery() {
             {t("noIngredientResults")}
           </p>
         ) : (
-          <div className={isFetching ? "opacity-60 transition-opacity" : "transition-opacity"}>
-            <SocialRecipeGrid recipes={recipes} />
+          <div
+            className={`grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 ${
+              isFetching ? "opacity-60 transition-opacity" : "transition-opacity"
+            }`}
+          >
+            {recipes.map((recipe) => (
+              <div key={recipe.slug} className="flex flex-col gap-2">
+                <SocialRecipeCard recipe={recipe} />
+                <FridgeFooter canShop={canShop} recipe={recipe} />
+              </div>
+            ))}
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+/** Per-result "have / missing" line, plus an add-the-gap-to-groceries button
+ * for signed-in readers. Its own component so each card owns its mutation. */
+function FridgeFooter({ recipe, canShop }: { recipe: FridgeRecipe; canShop: boolean }) {
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+  const t = useTranslations("social.discover");
+  const [added, setAdded] = useState(false);
+
+  const addMutation = useMutation(
+    trpc.groceries.create.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: trpc.groceries.list.queryKey() });
+        setAdded(true);
+        toast(t("missingAdded", { count: recipe.missing.length }));
+      },
+    })
+  );
+
+  if (recipe.total === 0) {
+    return null;
+  }
+
+  if (recipe.missing.length === 0) {
+    return (
+      <p className="text-success inline-flex items-center gap-1 px-1 text-xs font-medium">
+        <CheckCircleIcon className="h-4 w-4" />
+        {t("fridgeHaveAll")}
+      </p>
+    );
+  }
+
+  const shown = recipe.missing.slice(0, 4).join(", ");
+  const more = recipe.missing.length > 4 ? "…" : "";
+
+  return (
+    <div className="flex flex-col gap-1 px-1">
+      <p className="text-default-500 text-xs">
+        <span className="text-default-600 font-medium">
+          {t("fridgeHave", { have: recipe.have, total: recipe.total })}
+        </span>{" "}
+        · {t("fridgeMissing")}: {shown}
+        {more}
+      </p>
+      {canShop ? (
+        <Button
+          className="self-start rounded-full text-xs"
+          isDisabled={added}
+          isPending={addMutation.isPending}
+          size="sm"
+          variant="tertiary"
+          onPress={() =>
+            addMutation.mutate(
+              recipe.missing.map((name) => ({
+                id: crypto.randomUUID(),
+                name,
+                amount: null,
+                unit: null,
+                purchaseAmount: null,
+                isDone: false,
+                recipeIngredientId: null,
+              }))
+            )
+          }
+        >
+          {added ? t("missingAddedShort") : t("addMissing")}
+        </Button>
+      ) : null}
     </div>
   );
 }

@@ -38,7 +38,13 @@
     "modeByIngredient": "Etter ingrediens",
     "ingredientPlaceholder": "Legg til en ingrediens…",
     "ingredientHint": "Legg til det du har — vi finner oppskrifter du kan lage.",
-    "noIngredientResults": "Ingen offentlige oppskrifter bruker disse ingrediensene ennå."
+    "noIngredientResults": "Ingen offentlige oppskrifter bruker disse ingrediensene ennå.",
+    "fridgeHave": "Har {have}/{total}",
+    "fridgeMissing": "mangler",
+    "fridgeHaveAll": "Du har alt",
+    "addMissing": "Legg til det som mangler",
+    "missingAdded": "La til {count} i listen",
+    "missingAddedShort": "Lagt til"
   },
   "categories": {
     "Breakfast": "Breakfast",

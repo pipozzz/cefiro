@@ -38,7 +38,13 @@
     "modeByIngredient": "Par ingrédient",
     "ingredientPlaceholder": "Ajouter un ingrédient…",
     "ingredientHint": "Ajoutez ce que vous avez — on trouve des recettes réalisables.",
-    "noIngredientResults": "Aucune recette publique n'utilise ces ingrédients pour l'instant."
+    "noIngredientResults": "Aucune recette publique n'utilise ces ingrédients pour l'instant.",
+    "fridgeHave": "{have}/{total} en stock",
+    "fridgeMissing": "manque",
+    "fridgeHaveAll": "Vous avez tout",
+    "addMissing": "Ajouter le manquant",
+    "missingAdded": "{count} ajoutés à la liste",
+    "missingAddedShort": "Ajouté"
   },
   "categories": {
     "Breakfast": "Breakfast",
