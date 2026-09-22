@@ -161,7 +161,8 @@
     "cookPrev": "이전",
     "cookNext": "다음",
     "cookDone": "완료",
-    "moreLikeThis": "비슷한 레시피"
+    "moreLikeThis": "비슷한 레시피",
+    "cookReadyAt": "{time}쯤 완성"
   },
   "feed": {
     "title": "Your feed",

@@ -161,7 +161,8 @@
     "cookPrev": "Terug",
     "cookNext": "Volgende",
     "cookDone": "Klaar",
-    "moreLikeThis": "Meer zoals dit"
+    "moreLikeThis": "Meer zoals dit",
+    "cookReadyAt": "Klaar rond {time}"
   },
   "feed": {
     "title": "Your feed",

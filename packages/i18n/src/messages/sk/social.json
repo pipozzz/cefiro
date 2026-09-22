@@ -161,7 +161,8 @@
     "cookPrev": "Späť",
     "cookNext": "Ďalej",
     "cookDone": "Hotovo",
-    "moreLikeThis": "Podobné recepty"
+    "moreLikeThis": "Podobné recepty",
+    "cookReadyAt": "Hotové okolo {time}"
   },
   "feed": {
     "title": "Tvoj feed",

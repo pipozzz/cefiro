@@ -161,7 +161,8 @@
     "cookPrev": "Zurück",
     "cookNext": "Weiter",
     "cookDone": "Fertig",
-    "moreLikeThis": "Ähnliche Rezepte"
+    "moreLikeThis": "Ähnliche Rezepte",
+    "cookReadyAt": "Fertig gegen {time}"
   },
   "feed": {
     "title": "Your feed",
