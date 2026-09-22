@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 import { createClientLogger } from "@norish/shared/lib/logger";
+import { createClientId } from "@norish/shared/lib/operation-helpers";
 
 const logger = createClientLogger("timers");
 
@@ -45,8 +46,8 @@ function showTimerNotification(timer: { label: string; recipeName?: string }) {
 export type TimerStatus = "running" | "paused" | "completed";
 
 export type Timer = {
-  id: string; // Composite ID: recipeId-stepIndex-occurrenceIndex
-  recipeId: string;
+  id: string; // Composite ID: recipeId-stepIndex-occurrenceIndex, or a client id for a standalone timer
+  recipeId?: string; // Absent for a standalone kitchen timer ("Minútka") not tied to a recipe
   recipeName?: string; // Recipe name for display when multiple recipes
   label: string; // "Top with cilantro..." truncated
   originalDurationMs: number;
@@ -66,6 +67,13 @@ interface TimerState {
     durationMs: number,
     recipeName?: string
   ) => void;
+  /**
+   * Start a standalone kitchen timer ("Minútka") not tied to any recipe.
+   * Unlike {@link addTimer} it begins counting down immediately — a kitchen
+   * timer the cook reached for is meant to run, not wait to be started.
+   * Returns the new timer's id.
+   */
+  addStandaloneTimer: (label: string, durationMs: number) => string;
   removeTimer: (id: string) => void;
   clearAll: () => void;
   startTimer: (id: string) => void;
@@ -102,6 +110,27 @@ export const useTimerStore = create<TimerState>()(
             },
           ],
         }));
+      },
+
+      addStandaloneTimer: (label, durationMs) => {
+        const id = createClientId();
+
+        set((state) => ({
+          timers: [
+            ...state.timers,
+            {
+              id,
+              label,
+              originalDurationMs: durationMs,
+              remainingMs: durationMs,
+              // A kitchen timer runs the moment it is set.
+              status: "running",
+              lastTickAt: Date.now(),
+            },
+          ],
+        }));
+
+        return id;
       },
 
       removeTimer: (id) => {

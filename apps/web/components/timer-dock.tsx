@@ -34,6 +34,7 @@ export function TimerTicker() {
 
   // Check if there are any running timers
   const hasRunningTimers = timers.some((t) => t.status === "running");
+
   useEffect(() => {
     // Only start interval if there are running timers
     if (!hasRunningTimers) {
@@ -42,8 +43,10 @@ export function TimerTicker() {
     const interval = setInterval(() => {
       tick();
     }, 1000);
+
     return () => clearInterval(interval);
   }, [tick, hasRunningTimers]);
+
   return null;
 }
 export function TimerDock({
@@ -105,6 +108,7 @@ export function TimerDock({
   });
   const hasCompletedTimers = completedTimers.length > 0;
   const [isPlaying, setIsPlaying] = useState(false);
+
   useEffect(() => {
     if (hasCompletedTimers) {
       if (!isPlaying) {
@@ -139,6 +143,7 @@ export function TimerDock({
   const sortedTimers = [...dockedTimers].sort((a, b) => {
     if (a.status === "completed" && b.status !== "completed") return -1;
     if (b.status === "completed" && a.status !== "completed") return 1;
+
     return a.remainingMs - b.remainingMs;
   });
   const topTimer = sortedTimers[0];
@@ -290,6 +295,7 @@ export function TimerDock({
 // Helper for smart increment
 function getSmartIncrement(originalDurationMs: number): number {
   const minutes = originalDurationMs / 1000 / 60;
+
   if (minutes < 5) return 10 * 1000; // 10s
   if (minutes < 20) return 60 * 1000; // 1m
 
@@ -313,34 +319,46 @@ function TimerRow({
   const isCompleted = timer.status === "completed";
   const isRunning = timer.status === "running";
   const smartIncrement = getSmartIncrement(timer.originalDurationMs);
+  // A standalone kitchen timer has no recipe to open, so its info is inert.
+  const recipeId = timer.recipeId;
   const handleTimerClick = () => {
-    router.push(`/recipes/${timer.recipeId}`);
+    if (recipeId) {
+      router.push(`/recipes/${recipeId}`);
+    }
   };
+  const timerInfo = (
+    <>
+      <h4
+        className={`mb-1 truncate text-sm font-medium ${isCompleted ? "text-danger" : "text-foreground"}`}
+      >
+        {timer.label}
+      </h4>
+      {timer.recipeName && <p className="text-muted mb-1.5 truncate text-xs">{timer.recipeName}</p>}
+      <div
+        className={`font-mono text-xl font-semibold ${isCompleted ? "text-danger" : "text-foreground"}`}
+      >
+        {formatTimerMs(timer.remainingMs)}
+      </div>
+    </>
+  );
+
   return (
     <div
       className={`flex items-center gap-4 p-4 ${!isLast ? "border-border border-b" : ""} hover:bg-surface-secondary/50 transition-colors`}
     >
-      {/* Timer Info - Clickable */}
-      <button
-        aria-label={`Go to recipe for ${timer.label}`}
-        className="min-w-0 flex-1 cursor-pointer text-left transition-opacity hover:opacity-80"
-        type="button"
-        onClick={handleTimerClick}
-      >
-        <h4
-          className={`mb-1 truncate text-sm font-medium ${isCompleted ? "text-danger" : "text-foreground"}`}
+      {/* Timer Info - clickable only when it belongs to a recipe */}
+      {recipeId ? (
+        <button
+          aria-label={`Go to recipe for ${timer.label}`}
+          className="min-w-0 flex-1 cursor-pointer text-left transition-opacity hover:opacity-80"
+          type="button"
+          onClick={handleTimerClick}
         >
-          {timer.label}
-        </h4>
-        {timer.recipeName && (
-          <p className="text-muted mb-1.5 truncate text-xs">{timer.recipeName}</p>
-        )}
-        <div
-          className={`font-mono text-xl font-semibold ${isCompleted ? "text-danger" : "text-foreground"}`}
-        >
-          {formatTimerMs(timer.remainingMs)}
-        </div>
-      </button>
+          {timerInfo}
+        </button>
+      ) : (
+        <div className="min-w-0 flex-1 text-left">{timerInfo}</div>
+      )}
 
       {/* Controls */}
       <div className="flex shrink-0 items-center gap-2">
@@ -350,8 +368,8 @@ function TimerRow({
             aria-label={`Decrease time by ${formatTimerMs(smartIncrement)}`}
             size="sm"
             title={`-${formatTimerMs(smartIncrement)}`}
-            onPress={() => adjustTimer(timer.id, -smartIncrement)}
             variant="tertiary"
+            onPress={() => adjustTimer(timer.id, -smartIncrement)}
           >
             <MinusIcon className="h-4 w-4" />
           </Button>
@@ -361,8 +379,8 @@ function TimerRow({
             aria-label={`Increase time by ${formatTimerMs(smartIncrement)}`}
             size="sm"
             title={`+${formatTimerMs(smartIncrement)}`}
-            onPress={() => adjustTimer(timer.id, smartIncrement)}
             variant="tertiary"
+            onPress={() => adjustTimer(timer.id, smartIncrement)}
           >
             <PlusIcon className="h-4 w-4" />
           </Button>
@@ -373,10 +391,10 @@ function TimerRow({
         {isCompleted ? (
           <Button
             aria-label={t("timer.dismissCompleted")}
-            size="sm"
-            onPress={() => removeTimer(timer.id)}
-            variant="danger-soft"
             className="min-w-16"
+            size="sm"
+            variant="danger-soft"
+            onPress={() => removeTimer(timer.id)}
           >
             {t("timer.done_action")}
           </Button>
@@ -386,8 +404,8 @@ function TimerRow({
               isIconOnly
               aria-label={isRunning ? t("timer.pause") : t("timer.start")}
               size="sm"
-              onPress={() => (isRunning ? pauseTimer(timer.id) : startTimer(timer.id))}
               variant="tertiary"
+              onPress={() => (isRunning ? pauseTimer(timer.id) : startTimer(timer.id))}
             >
               {isRunning ? <PauseIcon className="h-4 w-4" /> : <PlayIcon className="h-4 w-4" />}
             </Button>
@@ -396,8 +414,8 @@ function TimerRow({
               isIconOnly
               aria-label={t("timer.dismiss")}
               size="sm"
-              onPress={() => removeTimer(timer.id)}
               variant="danger-soft"
+              onPress={() => removeTimer(timer.id)}
             >
               <XMarkIcon className="h-4 w-4" />
             </Button>

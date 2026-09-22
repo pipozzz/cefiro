@@ -6,6 +6,7 @@ import { BrandLogo } from "@/components/brand/brand-logo";
 import MobileNav from "@/components/navbar/mobile-nav";
 import NavbarUserMenu from "@/components/navbar/navbar-user-menu";
 import { NotificationBell } from "@/components/navbar/notification-bell";
+import { QuickTimer } from "@/components/timer/quick-timer";
 import { useAutoHide } from "@/hooks/auto-hide";
 import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
@@ -99,6 +100,7 @@ export const Navbar = () => {
 
           {/* Right */}
           <div className="flex items-center justify-end gap-1">
+            <QuickTimer />
             <NotificationBell />
             <NavbarUserMenu />
           </div>
