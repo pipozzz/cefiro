@@ -154,6 +154,15 @@ const ServerConfigSchema = z.object({
     .pipe(z.boolean())
     .default(false),
 
+  // Cold-start only: when true, a curated set of public demo recipes is seeded
+  // under the server owner's account at startup (idempotent). Off by default —
+  // never seeds in normal operation or CI. Turn on for one boot, then off.
+  SEED_DEMO_RECIPES: z
+    .string()
+    .transform((val) => val === "true" || val === "1")
+    .pipe(z.boolean())
+    .default(false),
+
   AI_ENABLED: z
     .string()
     .transform((val) => val === "true" || val === "1")
