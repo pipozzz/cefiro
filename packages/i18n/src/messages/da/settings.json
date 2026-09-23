@@ -995,7 +995,8 @@
     "usage": {
       "title": "AI-handlinger denne måned",
       "remaining": "{count} tilbage denne måned",
-      "atLimit": "Du har brugt alle dine AI-handlinger denne måned."
+      "atLimit": "Du har brugt alle dine AI-handlinger denne måned.",
+      "upgradeCta": "Få mere med Plus"
     }
   }
 }

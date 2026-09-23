@@ -995,7 +995,8 @@
     "usage": {
       "title": "Akcje AI w tym miesiącu",
       "remaining": "Pozostało {count} w tym miesiącu",
-      "atLimit": "Wykorzystałeś wszystkie akcje AI w tym miesiącu."
+      "atLimit": "Wykorzystałeś wszystkie akcje AI w tym miesiącu.",
+      "upgradeCta": "Więcej dzięki Plus"
     }
   }
 }

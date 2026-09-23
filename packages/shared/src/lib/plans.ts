@@ -51,7 +51,11 @@ export const PLANS: Record<PlanId, Plan> = {
       aiImageGeneration: false,
       caldavSync: false,
       maxHouseholdMembers: 2,
-      aiCreditsPerMonth: 15,
+      // Generous on purpose: imports (URL/paste/photo) spend a credit, and a new
+      // cook needs to bring a real starter library in before the app is useful —
+      // that imported content is also what feeds public discovery and search.
+      // Still metered so a heavy user can't run up an unbounded provider bill.
+      aiCreditsPerMonth: 40,
     },
   },
   plus: {
