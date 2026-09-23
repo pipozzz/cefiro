@@ -8,8 +8,6 @@ services:
     restart: always
     ports:
       - "3000:3000"
-    volumes:
-      - norish_data:/app/uploads
     environment:
       AUTH_URL: $AUTH_URL
       DATABASE_URL: $DATABASE_URL
@@ -17,9 +15,11 @@ services:
       OBSCURA_ENDPOINT: ws://obscura:9222
       UPLOADS_DIR: /app/uploads
       REDIS_URL: $REDIS_URL
-      # Media storage. Default: filesystem on the norish_data volume. To use
-      # S3 / Cloudflare R2, set STORAGE_DRIVER=s3 and the S3_* values in the
-      # environment (host / nomploy); unset falls back to the filesystem.
+      # Media storage. This deploy stores images/videos in S3 / Cloudflare R2
+      # (STORAGE_DRIVER=s3 + the S3_* values below, set in the environment), so
+      # no persistent volume is mounted. /app/uploads is only ephemeral scratch
+      # (e.g. video-import temp). If you switch back to STORAGE_DRIVER=fs,
+      # re-add a volume on /app/uploads or media won't survive a redeploy.
       STORAGE_DRIVER: ${STORAGE_DRIVER:-fs}
       S3_ENDPOINT: ${S3_ENDPOINT:-}
       S3_REGION: ${S3_REGION:-auto}
@@ -41,8 +41,6 @@ services:
   worker:
     image: ghcr.io/pipozzz/cefiro:latest
     restart: always
-    volumes:
-      - norish_data:/app/uploads
     environment:
       AUTH_URL: $AUTH_URL
       DATABASE_URL: $DATABASE_URL
@@ -68,5 +66,3 @@ services:
   obscura:
     image: norishapp/obscura:0.2.0-norish.1
     restart: unless-stopped
-volumes:
-  norish_data:
