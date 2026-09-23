@@ -49,6 +49,12 @@ vi.mock("@/components/Panel/consumers", () => ({
   MiniCookbooks: () => null,
 }));
 
+// Owns a tRPC query for its provenance; inert here so the pages render without
+// a TRPCProvider.
+vi.mock("@/app/(app)/recipes/[id]/components/saved-from-credit", () => ({
+  SavedFromCredit: () => null,
+}));
+
 vi.mock("@/hooks/cookbooks", () => ({
   useRecipeCookbooksQuery: () => ({ cookbooks: [], isLoading: false }),
 }));

@@ -76,7 +76,9 @@
     "alreadySaved": "Already in your recipes",
     "openCopy": "Open your copy",
     "errorTitle": "Save failed",
-    "view": "Bekijken"
+    "view": "Bekijken",
+    "savedFromAuthor": "Opgeslagen van {author}",
+    "savedFromRecipe": "Opgeslagen van een openbaar recept"
   },
   "rating": {
     "noRating": "No ratings yet",

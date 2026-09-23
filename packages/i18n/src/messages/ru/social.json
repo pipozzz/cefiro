@@ -76,7 +76,9 @@
     "alreadySaved": "Already in your recipes",
     "openCopy": "Open your copy",
     "errorTitle": "Save failed",
-    "view": "Открыть"
+    "view": "Открыть",
+    "savedFromAuthor": "Сохранено от {author}",
+    "savedFromRecipe": "Сохранено из публичного рецепта"
   },
   "rating": {
     "noRating": "No ratings yet",
