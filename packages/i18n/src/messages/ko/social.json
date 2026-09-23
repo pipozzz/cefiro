@@ -205,7 +205,10 @@
     "followSubtitle": "Their latest recipes will fill your feed.",
     "done": "Done",
     "skip": "Skip for now",
-    "couldNotSave": "Could not save your profile"
+    "couldNotSave": "Could not save your profile",
+    "recipeTitle": "첫 레시피를 추가하세요",
+    "recipeSubtitle": "공개하면 검색과 탐색에서 사람들이 찾을 수 있어요.",
+    "recipeCta": "레시피 만들기"
   },
   "notifications": {
     "title": "Notifications",

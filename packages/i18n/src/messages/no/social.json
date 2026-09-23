@@ -205,7 +205,10 @@
     "followSubtitle": "Their latest recipes will fill your feed.",
     "done": "Done",
     "skip": "Skip for now",
-    "couldNotSave": "Could not save your profile"
+    "couldNotSave": "Could not save your profile",
+    "recipeTitle": "Legg til din første oppskrift",
+    "recipeSubtitle": "Gjør den offentlig så folk finner den i søk og utforsking.",
+    "recipeCta": "Lag en oppskrift"
   },
   "notifications": {
     "title": "Notifications",

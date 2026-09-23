@@ -205,7 +205,10 @@
     "followSubtitle": "Their latest recipes will fill your feed.",
     "done": "Done",
     "skip": "Skip for now",
-    "couldNotSave": "Could not save your profile"
+    "couldNotSave": "Could not save your profile",
+    "recipeTitle": "Добавете първата си рецепта",
+    "recipeSubtitle": "Направете я публична и хората ще я откриват при търсене.",
+    "recipeCta": "Създай рецепта"
   },
   "notifications": {
     "title": "Notifications",

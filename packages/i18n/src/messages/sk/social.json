@@ -205,7 +205,10 @@
     "followSubtitle": "Ich najnovšie recepty ti naplnia feed.",
     "done": "Hotovo",
     "skip": "Preskočiť nateraz",
-    "couldNotSave": "Nepodarilo sa uložiť profil"
+    "couldNotSave": "Nepodarilo sa uložiť profil",
+    "recipeTitle": "Pridaj svoj prvý recept",
+    "recipeSubtitle": "Zverejni ho a nájdu ho vo vyhľadávaní a objavovaní.",
+    "recipeCta": "Vytvoriť recept"
   },
   "notifications": {
     "title": "Notifikácie",

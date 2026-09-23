@@ -205,7 +205,10 @@
     "followSubtitle": "Their latest recipes will fill your feed.",
     "done": "Done",
     "skip": "Skip for now",
-    "couldNotSave": "Could not save your profile"
+    "couldNotSave": "Could not save your profile",
+    "recipeTitle": "Füge dein erstes Rezept hinzu",
+    "recipeSubtitle": "Mach es öffentlich, damit andere es über Suche und Entdecken finden.",
+    "recipeCta": "Rezept erstellen"
   },
   "notifications": {
     "title": "Notifications",
