@@ -76,7 +76,9 @@
     "alreadySaved": "Already in your recipes",
     "openCopy": "Open your copy",
     "errorTitle": "Save failed",
-    "view": "Vis"
+    "view": "Vis",
+    "savedFromAuthor": "Lagret fra {author}",
+    "savedFromRecipe": "Lagret fra en offentlig oppskrift"
   },
   "rating": {
     "noRating": "No ratings yet",

@@ -29,6 +29,7 @@ import { useTranslations } from "next-intl";
 
 import StarRating from "@norish/ui/star-rating";
 
+import { SavedFromCredit } from "./components/saved-from-credit";
 import ServingsControl from "./components/servings-control";
 import { useRecipeContextRequired } from "./context";
 
@@ -77,6 +78,7 @@ export default function RecipePageDesktop() {
                 allergySet={allergySet}
                 recipe={recipe}
               />
+              <SavedFromCredit recipeId={recipe.id} />
               <div className="pt-2">
                 <CookingMode fullWidth />
               </div>

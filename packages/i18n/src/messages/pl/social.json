@@ -76,7 +76,9 @@
     "alreadySaved": "Already in your recipes",
     "openCopy": "Open your copy",
     "errorTitle": "Save failed",
-    "view": "Zobacz"
+    "view": "Zobacz",
+    "savedFromAuthor": "Zapisano od {author}",
+    "savedFromRecipe": "Zapisano z publicznego przepisu"
   },
   "rating": {
     "noRating": "No ratings yet",

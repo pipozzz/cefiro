@@ -32,6 +32,7 @@ import { useTranslations } from "next-intl";
 import StarRating from "@norish/ui/star-rating";
 import { cssFloatingDockContentClearance } from "@norish/web/config/css-tokens";
 
+import { SavedFromCredit } from "./components/saved-from-credit";
 import { useRecipeContextRequired } from "./context";
 
 /**
@@ -143,6 +144,8 @@ export default function RecipePageMobile() {
           recipe={{ ...recipe, servings: currentServings ?? recipe.servings }}
           showCalories={showNutrition}
         />
+
+        <SavedFromCredit recipeId={recipe.id} />
 
         <Card className="rounded-2xl">
           <Card.Content className="space-y-4 p-5">

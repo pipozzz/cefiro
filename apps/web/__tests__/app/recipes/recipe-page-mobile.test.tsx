@@ -120,6 +120,11 @@ vi.mock("@/app/(app)/recipes/[id]/components/servings-control", () => ({
 vi.mock("@/app/(app)/recipes/[id]/components/steps-list", () => ({
   default: () => <div data-testid="steps-list" />,
 }));
+// Owns a tRPC query for its provenance; inert here so the page renders without
+// a TRPCProvider (its own behaviour is covered by the db-level attribution tests).
+vi.mock("@/app/(app)/recipes/[id]/components/saved-from-credit", () => ({
+  SavedFromCredit: () => null,
+}));
 vi.mock("@/components/Panel/consumers", () => ({
   MiniCookbooks: () => null,
 }));

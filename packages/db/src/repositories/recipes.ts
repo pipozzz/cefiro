@@ -41,6 +41,7 @@ import {
   stepImages,
   steps as stepsTable,
   tags,
+  userProfiles,
 } from "../schema";
 import {
   FullRecipeInsertSchema,
@@ -1065,6 +1066,65 @@ export async function createSavedForkGuarded(
 
     return { recipeId: created.recipeId, status: "created" as const };
   });
+}
+
+export type SavedFromAttribution = {
+  slug: string;
+  authorHandle: string | null;
+  authorName: string | null;
+};
+
+/**
+ * Attribution for a saved copy: the recipe it was saved from, but only when
+ * that source is still publicly reachable — visible (public or unlisted) and
+ * owning a slug. Returns null when `recipeId` is not the caller's saved copy,
+ * or the source has since gone private or been deleted, so the UI never shows a
+ * dead link or points at a page that is no longer public.
+ *
+ * The author's handle and name are surfaced only when their profile is public;
+ * a private-profile author is credited generically (link to the recipe, no
+ * name), respecting their choice not to be listed.
+ */
+export async function getSavedFromAttribution(
+  recipeId: string,
+  callerUserId: string
+): Promise<SavedFromAttribution | null> {
+  const [copy] = await db
+    .select({ userId: recipes.userId, savedFromRecipeId: recipes.savedFromRecipeId })
+    .from(recipes)
+    .where(eq(recipes.id, recipeId))
+    .limit(1);
+
+  // Only the owner of the copy may read its provenance (the copy is usually
+  // private), and only a saved copy has any.
+  if (!copy || copy.userId !== callerUserId || !copy.savedFromRecipeId) {
+    return null;
+  }
+
+  const [source] = await db
+    .select({
+      visibility: recipes.visibility,
+      slug: recipes.slug,
+      authorHandle: userProfiles.handle,
+      authorName: userProfiles.displayName,
+      authorPublic: userProfiles.isPublic,
+    })
+    .from(recipes)
+    .leftJoin(userProfiles, eq(userProfiles.userId, recipes.userId))
+    .where(eq(recipes.id, copy.savedFromRecipeId))
+    .limit(1);
+
+  if (!source || source.visibility === "private" || !source.slug) {
+    return null;
+  }
+
+  const profilePublic = source.authorPublic === true;
+
+  return {
+    slug: source.slug,
+    authorHandle: profilePublic ? source.authorHandle : null,
+    authorName: profilePublic ? source.authorName : null,
+  };
 }
 
 export async function setActiveSystemForRecipe(

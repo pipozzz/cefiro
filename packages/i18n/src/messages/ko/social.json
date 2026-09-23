@@ -76,7 +76,9 @@
     "alreadySaved": "Already in your recipes",
     "openCopy": "Open your copy",
     "errorTitle": "Save failed",
-    "view": "보기"
+    "view": "보기",
+    "savedFromAuthor": "{author}님의 레시피에서 저장됨",
+    "savedFromRecipe": "공개 레시피에서 저장됨"
   },
   "rating": {
     "noRating": "No ratings yet",

@@ -76,7 +76,9 @@
     "alreadySaved": "Už máte vo svojich receptoch",
     "openCopy": "Otvoriť moju kópiu",
     "errorTitle": "Uloženie zlyhalo",
-    "view": "Zobraziť"
+    "view": "Zobraziť",
+    "savedFromAuthor": "Uložené z receptu od {author}",
+    "savedFromRecipe": "Uložené z verejného receptu"
   },
   "rating": {
     "noRating": "Zatiaľ bez hodnotenia",

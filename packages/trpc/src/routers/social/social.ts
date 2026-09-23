@@ -64,6 +64,7 @@ import {
   getRecipeFull,
   getRecipeSourceRoot,
   getSavedForkForUser,
+  getSavedFromAttribution,
 } from "@norish/db/repositories/recipes";
 import { getUserAllergies } from "@norish/db/repositories/user-allergies";
 import {
@@ -1143,6 +1144,16 @@ const getSaveState = publicProcedure
     }
   );
 
+/**
+ * Where a saved copy was saved from, for the "Saved from …" credit on the
+ * recipe page. Returns null unless the caller owns the copy and the source is
+ * still publicly reachable — so the credit disappears cleanly if the original
+ * goes private or is deleted, and never leaks a private recipe's provenance.
+ */
+const getSavedFrom = authedProcedure
+  .input(SaveRecipeInputSchema)
+  .query(async ({ ctx, input }) => getSavedFromAttribution(input.recipeId, ctx.user.id));
+
 const uploadProfileAvatar = authedProcedure
   .use(rateLimit({ name: "social.uploadProfileAvatar", limit: 10, windowSec: 60 }))
   .input(formDataInputSchema)
@@ -1219,4 +1230,5 @@ export const socialProcedures = router({
   setRecipeRating,
   saveRecipe,
   getSaveState,
+  getSavedFrom,
 });
