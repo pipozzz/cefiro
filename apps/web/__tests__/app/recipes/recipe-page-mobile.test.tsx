@@ -125,6 +125,9 @@ vi.mock("@/app/(app)/recipes/[id]/components/steps-list", () => ({
 vi.mock("@/app/(app)/recipes/[id]/components/saved-from-credit", () => ({
   SavedFromCredit: () => null,
 }));
+vi.mock("@/app/(app)/recipes/[id]/components/publish-nudge", () => ({
+  PublishNudge: () => null,
+}));
 vi.mock("@/components/Panel/consumers", () => ({
   MiniCookbooks: () => null,
 }));

@@ -261,6 +261,13 @@
     "copied": "Copied",
     "open": "Open",
     "linkCopied": "Link copied",
-    "couldNotSave": "Could not update sharing"
+    "couldNotSave": "Could not update sharing",
+    "publishNudgeTitle": "Del denne oppskriften",
+    "publishNudgeBody": "Gjør den offentlig så andre finner den i søk og utforsking.",
+    "publishNudgePublish": "Gjør offentlig",
+    "publishNudgeUnlisted": "Bare med lenke",
+    "publishNudgeDismiss": "Ikke nå",
+    "publishNudgeDonePublic": "Publisert — nå i utforsking 🎉",
+    "publishNudgeDoneUnlisted": "Ferdig — kan deles via lenke"
   }
 }
