@@ -96,6 +96,7 @@ export default withSerwist(
     async headers() {
       return [
         {
+          // Safe-everywhere headers, including on the framable embed route.
           source: "/(.*)",
           headers: [
             {
@@ -103,12 +104,22 @@ export default withSerwist(
               value: "nosniff",
             },
             {
-              key: "X-Frame-Options",
-              value: "DENY",
-            },
-            {
               key: "Referrer-Policy",
               value: "strict-origin-when-cross-origin",
+            },
+          ],
+        },
+        {
+          // Clickjacking protection for every route EXCEPT the recipe embed
+          // (`/r/<slug>/embed`), which is intentionally framable so oEmbed `rich`
+          // consumers can iframe it. That route is a read-only, auth-free card
+          // with no actions, and it sends its own `frame-ancestors *` CSP; every
+          // other path keeps `DENY`. See app/r/[slug]/embed/route.ts.
+          source: "/((?!r/[^/]+/embed$).*)",
+          headers: [
+            {
+              key: "X-Frame-Options",
+              value: "DENY",
             },
           ],
         },

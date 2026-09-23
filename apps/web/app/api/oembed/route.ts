@@ -28,13 +28,13 @@ function recipeSlugFromUrl(raw: string): string | null {
 /**
  * oEmbed provider endpoint (https://oembed.com) for public recipe links.
  *
- * Given `?url=<...>/r/<slug>` it returns a `link`-type oEmbed document — title,
- * author, provider and a thumbnail — so consumers that speak oEmbed (Ghost,
- * WordPress, …) can render a rich card from a recipe link. Discovery `<link>`
- * tags on the recipe page point here. Only public/unlisted recipes resolve;
- * anything else is a 404. A `rich` (iframe) card would need the site-wide
- * X-Frame-Options to be relaxed for an embed route, so it is intentionally left
- * for later.
+ * Given `?url=<...>/r/<slug>` it returns a `rich`-type oEmbed document — an
+ * `<iframe>` pointing at the scoped, framable `/r/<slug>/embed` card — plus the
+ * title, author, provider and thumbnail, so consumers that speak oEmbed (Ghost,
+ * WordPress, …) can render an interactive card from a recipe link. Discovery
+ * `<link>` tags on the recipe page point here. Only public/unlisted recipes
+ * resolve; anything else is a 404. Consumers that prefer a plain card can ignore
+ * the `html` and use the metadata alone.
  */
 export async function GET(req: Request): Promise<Response> {
   const requestUrl = new URL(req.url);
@@ -82,9 +82,22 @@ export async function GET(req: Request): Promise<Response> {
       : `${origin}${recipe.recipe.image}`
     : null;
 
+  // The rich card's iframe. Sized for a compact recipe card; the embed document
+  // is responsive and stacks below ~420px. `title` gives assistive tech a label.
+  const embedUrl = `${origin}/r/${slug}/embed`;
+  const width = 640;
+  const height = 180;
+  const html =
+    `<iframe src="${embedUrl}" width="${width}" height="${height}" ` +
+    `title="${recipe.recipe.name.replace(/"/g, "&quot;")}" frameborder="0" ` +
+    `scrolling="no" style="border:0;max-width:100%;" loading="lazy"></iframe>`;
+
   const body = {
     version: "1.0",
-    type: "link",
+    type: "rich",
+    html,
+    width,
+    height,
     title: recipe.recipe.name,
     author_name: authorName,
     author_url: authorUrl,
