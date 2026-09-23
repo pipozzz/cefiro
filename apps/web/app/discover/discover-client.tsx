@@ -180,7 +180,7 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
       ) : (
         <>
           {/* Recipes / Cooks toggle */}
-          <div className="mb-6 flex gap-2">
+          <div className="mb-6 flex flex-wrap gap-2">
             <button
               className={pill(mode === "recipes")}
               type="button"
@@ -280,7 +280,7 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
               {!category && !tag && !maxMinutes ? <RecipeOfTheDay /> : null}
 
               {/* Sort */}
-              <div className="mb-3 flex gap-2">
+              <div className="mb-3 flex flex-wrap gap-2">
                 <button
                   className={pill(sort === "newest")}
                   type="button"
