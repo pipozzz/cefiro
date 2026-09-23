@@ -4,13 +4,13 @@ import { useCallback, useEffect, useState } from "react";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import NavbarUserMenu from "@/components/navbar/navbar-user-menu";
-import { NotificationBell } from "@/components/navbar/notification-bell";
 import { QuickTimer } from "@/components/timer/quick-timer";
 import { useAutoHide } from "@/hooks/auto-hide";
 import {
   BookOpenIcon,
   CalendarDaysIcon,
   ClipboardDocumentListIcon,
+  Cog6ToothIcon,
   GlobeAltIcon,
   NewspaperIcon,
 } from "@heroicons/react/20/solid";
@@ -42,6 +42,7 @@ const barSurfaceClassName =
 
 export const MobileNav = () => {
   const tNav = useTranslations("navbar.nav");
+  const tMenu = useTranslations("navbar.userMenu");
   const pathname = usePathname();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
@@ -138,7 +139,18 @@ export const MobileNav = () => {
               })}
 
               <li>
-                <NotificationBell variant="mobile" />
+                <NextLink
+                  aria-label={tMenu("settings.title")}
+                  className={`flex items-center justify-center rounded-full p-2 transition-colors ${
+                    pathname?.startsWith("/settings")
+                      ? "bg-accent-soft text-accent"
+                      : "text-chrome-muted hover:text-chrome-foreground hover:bg-chrome-hover"
+                  }`}
+                  href="/settings?tab=user"
+                  title={tMenu("settings.title")}
+                >
+                  <Cog6ToothIcon className="h-5 w-5" />
+                </NextLink>
               </li>
             </ul>
           </div>

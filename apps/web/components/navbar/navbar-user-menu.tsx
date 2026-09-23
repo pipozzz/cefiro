@@ -3,6 +3,7 @@
 import React, { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useConnectivity } from "@/app/providers/connectivity-provider";
+import { NotificationsMenuItemContent } from "@/components/navbar/notifications-menu-item-content";
 import { OfflineStatusModal } from "@/components/navbar/offline-status/offline-status-modal";
 import { SignOutConfirmModal } from "@/components/navbar/sign-out-confirm-modal";
 import ImportRecipeModal from "@/components/shared/import-recipe-modal";
@@ -41,6 +42,7 @@ export default function NavbarUserMenu({
   size = "md",
 }: NavbarUserMenuProps) {
   const t = useTranslations("navbar.userMenu");
+  const tNav = useTranslations("navbar.nav");
   const tc = useTranslations("common.connection");
   const { user, signOut } = useUserContext();
   const { isOffline } = useConnectivity();
@@ -140,6 +142,24 @@ export default function NavbarUserMenu({
             </div>
           </div>
           <Dropdown.Menu aria-label={t("menu")} className="w-full">
+            {/* Notifications live here only in the mobile bar (size "sm"); the
+                desktop bar has its own standalone bell, so it is omitted there
+                to avoid a duplicate entry. */}
+            {size === "sm" ? (
+              <Dropdown.Item
+                key="notifications"
+                className={`py-3 ${cssButtonPill}`}
+                id="notifications"
+                textValue={tNav("notifications")}
+                onPress={() => {
+                  handleOpenChange(false);
+                  router.push("/notifications");
+                }}
+              >
+                <NotificationsMenuItemContent />
+              </Dropdown.Item>
+            ) : null}
+
             <Dropdown.Item
               key="language"
               className={`py-3 ${cssButtonPill}`}
