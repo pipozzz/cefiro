@@ -60,10 +60,10 @@ import {
   reportComment,
 } from "@norish/db/repositories/recipe-comments";
 import {
-  createRecipeWithRefs,
+  createSavedForkGuarded,
   getRecipeFull,
+  getRecipeSourceRoot,
   getSavedForkForUser,
-  setRecipeSavedFrom,
 } from "@norish/db/repositories/recipes";
 import { getUserAllergies } from "@norish/db/repositories/user-allergies";
 import {
@@ -434,6 +434,7 @@ const discover = publicProcedure.input(DiscoverInputSchema).query(async ({ ctx, 
 
   if (input.hideMyAllergens && ctx.user) {
     const { allergies } = await getUserAllergies(ctx.user.id);
+
     excludeAllergenTags = allergies;
   }
 
@@ -970,9 +971,21 @@ const saveRecipe = authedProcedure
       return { recipeId: input.recipeId, status: "own" };
     }
 
-    // Idempotent by source: if you have already saved this recipe, reopen that
+    // Attribute to (and dedupe against) the ORIGINAL recipe, not an intermediate
+    // fork — saving someone's fork of a recipe you already saved should reopen
+    // your copy, and forks of forks should all trace to the one root.
+    const source = await getRecipeSourceRoot(input.recipeId);
+    const rootId = source?.rootId ?? input.recipeId;
+
+    // The root may be your own recipe reached via someone else's fork — you
+    // already have it.
+    if (source?.rootUserId && source.rootUserId === ctx.user.id) {
+      return { recipeId: rootId, status: "own" };
+    }
+
+    // Idempotent by root: if you have already saved this recipe, reopen that
     // copy instead of piling up duplicates every time the button is pressed.
-    const existingFork = await getSavedForkForUser(ctx.user.id, input.recipeId);
+    const existingFork = await getSavedForkForUser(ctx.user.id, rootId);
 
     if (existingFork) {
       return { recipeId: existingFork.recipeId, status: "existing" };
@@ -1051,18 +1064,19 @@ const saveRecipe = authedProcedure
       videos: [],
     };
 
-    const created = await createRecipeWithRefs(newId, ctx.user.id, dto);
+    // Create the fork under an advisory lock keyed on (user, root): two racing
+    // saves can both reach here past the check above, so the guard collapses
+    // them — the loser gets the winner's copy back as "existing" (its own
+    // already-copied images are simply left unreferenced).
+    const created = await createSavedForkGuarded(newId, ctx.user.id, rootId, dto);
 
     if (!created) {
       throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to save recipe" });
     }
 
-    // Record provenance so a later save reopens this copy (dedupe above) and the
-    // fork can be attributed to the original.
-    await setRecipeSavedFrom(created.recipeId, input.recipeId);
-
-    // Tell the original author their recipe was saved.
-    if (ref.userId) {
+    // Only a genuinely new fork notifies the author; losing the race does not.
+    if (created.status === "created" && ref.userId) {
+      // Tell the author of the recipe that was actually opened and saved.
       await createNotification({
         userId: ref.userId,
         actorId: ctx.user.id,
@@ -1072,11 +1086,17 @@ const saveRecipe = authedProcedure
     }
 
     log.info(
-      { userId: ctx.user.id, sourceRecipeId: input.recipeId, newRecipeId: created.recipeId },
+      {
+        userId: ctx.user.id,
+        sourceRecipeId: input.recipeId,
+        rootRecipeId: rootId,
+        newRecipeId: created.recipeId,
+        status: created.status,
+      },
       "Saved (forked) recipe"
     );
 
-    return { recipeId: created.recipeId, status: "created" };
+    return { recipeId: created.recipeId, status: created.status };
   });
 
 /**
@@ -1108,7 +1128,16 @@ const getSaveState = publicProcedure
         return { isOwn: true, savedRecipeId: null, isAuthenticated: true };
       }
 
-      const existingFork = await getSavedForkForUser(ctx.user.id, input.recipeId);
+      // Resolve to the root so the button matches saveRecipe: a fork of your own
+      // recipe is "own", and a recipe you saved under any fork reopens your copy.
+      const source = await getRecipeSourceRoot(input.recipeId);
+      const rootId = source?.rootId ?? input.recipeId;
+
+      if (source?.rootUserId && source.rootUserId === ctx.user.id) {
+        return { isOwn: true, savedRecipeId: null, isAuthenticated: true };
+      }
+
+      const existingFork = await getSavedForkForUser(ctx.user.id, rootId);
 
       return { isOwn: false, savedRecipeId: existingFork?.recipeId ?? null, isAuthenticated: true };
     }
