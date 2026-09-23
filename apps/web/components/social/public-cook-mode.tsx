@@ -1,8 +1,12 @@
 "use client";
 
+import type { CookingModeRecipe } from "@/app/(app)/recipes/[id]/components/cookingmode/types";
 import { useEffect, useMemo, useState } from "react";
+import { CookingModeHeader } from "@/app/(app)/recipes/[id]/components/cookingmode/cooking-mode-header";
+import { resolveCookingModeSteps } from "@/app/(app)/recipes/[id]/components/cookingmode/cooking-mode-steps";
+import { CookingStepView } from "@/app/(app)/recipes/[id]/components/cookingmode/cooking-step-view";
 import { PublicSlugSmartInstruction } from "@/components/recipe/public-slug-smart-instruction";
-import { ChevronDownIcon, ChevronUpIcon, FireIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { ChevronDownIcon, ChevronUpIcon, FireIcon } from "@heroicons/react/24/outline";
 import { Button, Meter } from "@heroui/react";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -14,16 +18,19 @@ type CookStep = {
 };
 
 /**
- * A full-screen, one-step-at-a-time cooking view for the public recipe page.
+ * The public recipe page's cook mode.
  *
- * Deliberately self-contained: unlike the in-app CookingMode it depends on no
- * authenticated context (recipe/permissions/hidden-items providers). It mirrors
- * that in-app cook mode's chrome as closely as it can without those providers —
- * a name header, an accent progress meter, a "ready around" projection, and the
- * same bottom-bar navigation — so cooking a recipe feels the same whether it was
- * opened from the library or from discovery. It reuses the public, timer-aware
- * step renderer (PublicSlugSmartInstruction) so the "boil 10 min" chips work
- * here too, and keeps the screen awake while cooking.
+ * It renders the *same* header and step view the in-app cooking mode uses
+ * (`CookingModeHeader`, `CookingStepView`), so a recipe opened from discovery
+ * cooks and looks exactly like one opened from the library — the big centred
+ * step, the peeks of the steps either side, the page-turn animation, the step
+ * images. The only difference is the step renderer injected into the view: the
+ * slug-scoped, auth-free `PublicSlugSmartInstruction`, so timer chips still work
+ * without touching any authenticated hook or private context.
+ *
+ * The in-app bottom bar's utilities (timers dock, voice, wake toggle) depend on
+ * authenticated providers, so this keeps its own lean bar — progress, a "ready
+ * around" projection, and back / next — and holds the screen awake itself.
  */
 export function PublicCookMode({
   recipeId,
@@ -46,13 +53,36 @@ export function PublicCookMode({
   // never a promise — and absent for a recipe with no total time.
   const [readyAt, setReadyAt] = useState<Date | null>(null);
 
-  // Only the steps written in the recipe's own measurement system, in order.
+  // The same resolution the in-app cook mode uses: only the steps written in
+  // this recipe's measurement system, headings folded in, images ordered.
   const cookSteps = useMemo(
     () =>
-      steps
-        .filter((s) => s.systemUsed === systemUsed && s.step.trim().length > 0)
-        .sort((a, b) => a.order - b.order),
+      resolveCookingModeSteps(
+        steps.map((s) => ({
+          step: s.step,
+          systemUsed: s.systemUsed,
+          order: s.order,
+          images: (s.images ?? [])
+            .filter((img): img is { image: string; order: number } => !!img.image)
+            .map((img) => ({ image: img.image, order: img.order })),
+          stepIngredients: [],
+        })),
+        systemUsed
+      ),
     [steps, systemUsed]
+  );
+
+  const recipe: CookingModeRecipe = useMemo(
+    () => ({
+      id: recipeId,
+      name: recipeName,
+      image: null,
+      categories: [],
+      totalMinutes: totalMinutes ?? null,
+      servings: null,
+      systemUsed,
+    }),
+    [recipeId, recipeName, totalMinutes, systemUsed]
   );
 
   // Keep the screen on while cooking; re-acquire it if the tab was hidden.
@@ -111,7 +141,6 @@ export function PublicCookMode({
     return null;
   }
 
-  const current = cookSteps[index];
   const isLast = index === cookSteps.length - 1;
   const progress = ((index + 1) / cookSteps.length) * 100;
   const stepCounter = t("cookStep", { current: index + 1, total: cookSteps.length });
@@ -142,50 +171,20 @@ export function PublicCookMode({
           className="bg-background fixed inset-0 z-[1100] flex flex-col"
           role="dialog"
         >
-          {/* Header: recipe name + close */}
-          <div className="border-border flex items-center gap-3 border-b px-4 py-3 md:px-6">
-            <h2 className="text-foreground min-w-0 flex-1 truncate text-base font-semibold">
-              {recipeName}
-            </h2>
-            <button
-              aria-label={t("cookClose")}
-              className="text-muted hover:text-foreground shrink-0 rounded-full p-1"
-              type="button"
-              onClick={() => setOpen(false)}
-            >
-              <XMarkIcon className="h-6 w-6" />
-            </button>
+          <CookingModeHeader recipe={recipe} onClose={() => setOpen(false)} />
+
+          <div className="min-h-0 flex-1 overflow-hidden">
+            <CookingStepView
+              InstructionComponent={PublicSlugSmartInstruction}
+              activeStep={index}
+              displayIngredients={[]}
+              recipe={recipe}
+              steps={cookSteps}
+            />
           </div>
 
-          <div className="flex-1 overflow-y-auto px-6 py-10">
-            <div className="text-foreground mx-auto max-w-2xl text-xl leading-relaxed md:text-2xl">
-              <PublicSlugSmartInstruction
-                recipeId={recipeId}
-                recipeName={recipeName}
-                stepIndex={index}
-                text={current.step}
-              />
-            </div>
-
-            {current.images && current.images.length > 0 ? (
-              <div className="mx-auto mt-6 flex max-w-2xl flex-wrap gap-3">
-                {current.images.map((img, j) =>
-                  img.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      key={j}
-                      alt=""
-                      className="h-40 w-40 rounded-2xl object-cover"
-                      src={img.image}
-                    />
-                  ) : null
-                )}
-              </div>
-            ) : null}
-          </div>
-
-          {/* Bottom bar mirrors the in-app cook mode: meter, ready-at + counter,
-              then back / next. */}
+          {/* Bottom bar mirrors the in-app cook mode's layout: meter, ready-at +
+              counter, then back / next. */}
           <div className="border-border shrink-0 border-t px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] md:px-6 md:pt-4 md:pb-4">
             <Meter aria-label={stepCounter} className="w-full" color="accent" value={progress}>
               <Meter.Track>

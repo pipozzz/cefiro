@@ -1,5 +1,6 @@
 "use client";
 
+import type { ComponentType } from "react";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { SmartInstruction } from "@/components/recipe/smart-instruction";
 import { StepIngredientsRow } from "@/components/recipes/step-ingredients-row";
@@ -12,11 +13,25 @@ import type { ResolvedCookingModeStep } from "./cooking-mode-steps";
 import type { CookingModeDialogProps } from "./types";
 import { StepImages } from "./step-images";
 
+/**
+ * The renderer for a step's prose. Defaults to the in-app {@link SmartInstruction}
+ * (timer chips + step-ingredient mentions from authenticated config); the public
+ * recipe page injects its slug-scoped, auth-free equivalent so discovery's cook
+ * mode is the same view as the library's without reaching for private hooks.
+ */
+export type StepInstructionComponent = ComponentType<{
+  text: string;
+  recipeId: string;
+  recipeName?: string;
+  stepIndex: number;
+}>;
+
 type CookingStepViewProps = Pick<
   CookingModeDialogProps,
   "activeStep" | "displayIngredients" | "recipe"
 > & {
   steps: ResolvedCookingModeStep[];
+  InstructionComponent?: StepInstructionComponent;
 };
 
 /**
@@ -95,6 +110,7 @@ type StepPageProps = Pick<CookingStepViewProps, "displayIngredients" | "recipe">
   next?: ResolvedCookingModeStep;
   previous?: ResolvedCookingModeStep;
   step: ResolvedCookingModeStep;
+  InstructionComponent: StepInstructionComponent;
 };
 
 /**
@@ -103,7 +119,15 @@ type StepPageProps = Pick<CookingStepViewProps, "displayIngredients" | "recipe">
  * and a long step's scroll position all belong to the page, so a page
  * mid-exit keeps its own layout and a fresh page always starts at the top.
  */
-function StepPage({ direction, displayIngredients, next, previous, recipe, step }: StepPageProps) {
+function StepPage({
+  direction,
+  displayIngredients,
+  next,
+  previous,
+  recipe,
+  step,
+  InstructionComponent,
+}: StepPageProps) {
   const prefersReducedMotion = useReducedMotion();
   const pageRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -182,7 +206,7 @@ function StepPage({ direction, displayIngredients, next, previous, recipe, step 
           ) : null}
 
           <div className="text-foreground min-w-0 text-2xl leading-relaxed font-medium md:text-3xl md:leading-relaxed">
-            <SmartInstruction
+            <InstructionComponent
               recipeId={recipe.id}
               recipeName={recipe.name}
               stepIndex={step.originalIndex}
@@ -239,6 +263,7 @@ export function CookingStepView({
   displayIngredients,
   recipe,
   steps,
+  InstructionComponent = SmartInstruction,
 }: CookingStepViewProps) {
   const tCookMode = useTranslations("recipes.cookMode");
   // Which way this turn travels, decided during render so it is settled
@@ -275,6 +300,7 @@ export function CookingStepView({
       <AnimatePresence custom={directionRef.current} initial={false}>
         <StepPage
           key={activeStep}
+          InstructionComponent={InstructionComponent}
           direction={directionRef.current}
           displayIngredients={displayIngredients}
           next={next}
