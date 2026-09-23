@@ -269,5 +269,20 @@
     "publishNudgeDismiss": "Teraz nie",
     "publishNudgeDonePublic": "Zverejnené — už je v objavovaní 🎉",
     "publishNudgeDoneUnlisted": "Hotovo — zdieľateľné cez odkaz"
+  },
+  "sharing": {
+    "manage": "Spravovať zdieľanie",
+    "title": "Spravovať zdieľanie",
+    "subtitle": "Zverejni viac receptov naraz — nech ich ostatní nájdu vo vyhľadávaní.",
+    "backToLibrary": "Späť do knižnice",
+    "empty": "Nič tu nie je.",
+    "selectAll": "Vybrať všetko",
+    "selected": "{count} vybraných",
+    "makePublic": "Zverejniť",
+    "makeUnlisted": "Len cez odkaz",
+    "makePrivate": "Skryť",
+    "clear": "Zrušiť výber",
+    "filterAll": "Všetky",
+    "done": "Upravené: {count}"
   }
 }

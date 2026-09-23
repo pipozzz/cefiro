@@ -269,5 +269,20 @@
     "publishNudgeDismiss": "Niet nu",
     "publishNudgeDonePublic": "Gepubliceerd — nu in ontdekken 🎉",
     "publishNudgeDoneUnlisted": "Klaar — deelbaar via link"
+  },
+  "sharing": {
+    "manage": "Delen beheren",
+    "title": "Delen beheren",
+    "subtitle": "Deel meerdere recepten tegelijk zodat anderen ze via zoeken vinden.",
+    "backToLibrary": "Terug naar bibliotheek",
+    "empty": "Niets hier.",
+    "selectAll": "Alles selecteren",
+    "selected": "{count} geselecteerd",
+    "makePublic": "Openbaar maken",
+    "makeUnlisted": "Alleen via link",
+    "makePrivate": "Privé maken",
+    "clear": "Wissen",
+    "filterAll": "Alle",
+    "done": "{count} bijgewerkt"
   }
 }

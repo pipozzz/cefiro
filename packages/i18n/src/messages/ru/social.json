@@ -269,5 +269,20 @@
     "publishNudgeDismiss": "Не сейчас",
     "publishNudgeDonePublic": "Опубликовано — теперь в подборках 🎉",
     "publishNudgeDoneUnlisted": "Готово — можно поделиться по ссылке"
+  },
+  "sharing": {
+    "manage": "Управление доступом",
+    "title": "Управление доступом",
+    "subtitle": "Опубликуйте несколько рецептов сразу, чтобы их находили в поиске.",
+    "backToLibrary": "Назад в библиотеку",
+    "empty": "Здесь пусто.",
+    "selectAll": "Выбрать все",
+    "selected": "Выбрано: {count}",
+    "makePublic": "Опубликовать",
+    "makeUnlisted": "Только по ссылке",
+    "makePrivate": "Сделать приватными",
+    "clear": "Сбросить",
+    "filterAll": "Все",
+    "done": "Обновлено: {count}"
   }
 }

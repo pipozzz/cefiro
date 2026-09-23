@@ -269,5 +269,20 @@
     "publishNudgeDismiss": "Nie teraz",
     "publishNudgeDonePublic": "Opublikowano — już w odkrywaniu 🎉",
     "publishNudgeDoneUnlisted": "Gotowe — można udostępnić linkiem"
+  },
+  "sharing": {
+    "manage": "Zarządzaj udostępnianiem",
+    "title": "Zarządzaj udostępnianiem",
+    "subtitle": "Udostępnij kilka przepisów naraz, aby inni znaleźli je w wyszukiwaniu.",
+    "backToLibrary": "Powrót do biblioteki",
+    "empty": "Nic tu nie ma.",
+    "selectAll": "Zaznacz wszystko",
+    "selected": "Wybrano: {count}",
+    "makePublic": "Upublicznij",
+    "makeUnlisted": "Tylko z linkiem",
+    "makePrivate": "Ustaw prywatne",
+    "clear": "Wyczyść",
+    "filterAll": "Wszystkie",
+    "done": "Zaktualizowano: {count}"
   }
 }
