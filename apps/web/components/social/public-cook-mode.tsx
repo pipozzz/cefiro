@@ -174,7 +174,7 @@ export function PublicCookMode({
       {open ? (
         <div
           aria-modal="true"
-          className="bg-background/75 fixed inset-0 z-[1100] flex backdrop-blur-sm md:items-center md:justify-center md:p-8"
+          className="bg-background/75 fixed inset-0 z-[1100] flex md:items-center md:justify-center md:p-8"
           role="dialog"
         >
           {/* Match the in-app cook mode: a centred card on desktop, fullscreen
