@@ -284,5 +284,13 @@
     "clear": "Ryd",
     "filterAll": "Alle",
     "done": "Opdateret {count}"
+  },
+  "categoryPage": {
+    "heading": "{category}-opskrifter",
+    "subtitle": "Find og gem offentlige {category}-opskrifter.",
+    "empty": "Endnu ingen offentlige opskrifter i denne kategori.",
+    "browseAll": "Se alle opskrifter",
+    "indexTitle": "Opskriftskategorier",
+    "indexSubtitle": "Gennemse offentlige opskrifter efter kategori."
   }
 }

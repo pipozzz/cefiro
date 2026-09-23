@@ -284,5 +284,13 @@
     "clear": "Clear",
     "filterAll": "All",
     "done": "Updated {count}"
+  },
+  "categoryPage": {
+    "heading": "{category} recipes",
+    "subtitle": "Discover and save public {category} recipes.",
+    "empty": "No public recipes in this category yet.",
+    "browseAll": "Browse all recipes",
+    "indexTitle": "Recipe categories",
+    "indexSubtitle": "Browse public recipes by category."
   }
 }

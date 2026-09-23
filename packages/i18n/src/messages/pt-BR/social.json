@@ -284,5 +284,13 @@
     "clear": "Limpar",
     "filterAll": "Todas",
     "done": "Atualizadas: {count}"
+  },
+  "categoryPage": {
+    "heading": "Receitas: {category}",
+    "subtitle": "Descubra e salve receitas públicas: {category}.",
+    "empty": "Ainda não há receitas públicas nesta categoria.",
+    "browseAll": "Ver todas as receitas",
+    "indexTitle": "Categorias de receitas",
+    "indexSubtitle": "Explore receitas públicas por categoria."
   }
 }

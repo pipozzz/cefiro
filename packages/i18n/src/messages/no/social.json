@@ -284,5 +284,13 @@
     "clear": "Fjern",
     "filterAll": "Alle",
     "done": "Oppdatert {count}"
+  },
+  "categoryPage": {
+    "heading": "{category}-oppskrifter",
+    "subtitle": "Oppdag og lagre offentlige {category}-oppskrifter.",
+    "empty": "Ingen offentlige oppskrifter i denne kategorien ennå.",
+    "browseAll": "Se alle oppskrifter",
+    "indexTitle": "Oppskriftskategorier",
+    "indexSubtitle": "Bla gjennom offentlige oppskrifter etter kategori."
   }
 }
