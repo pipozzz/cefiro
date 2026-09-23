@@ -11,7 +11,6 @@ import {
   BookOpenIcon,
   CalendarDaysIcon,
   ClipboardDocumentListIcon,
-  Cog6ToothIcon,
   GlobeAltIcon,
   NewspaperIcon,
 } from "@heroicons/react/20/solid";
@@ -43,7 +42,6 @@ const barSurfaceClassName =
 
 export const MobileNav = () => {
   const tNav = useTranslations("navbar.nav");
-  const tMenu = useTranslations("navbar.userMenu");
   const pathname = usePathname();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
@@ -88,7 +86,7 @@ export const MobileNav = () => {
           it reads the same scale, so the pair stays aligned at either size. */}
       <motion.div
         animate={{ scale: isVisible ? 1 : MOBILE_NAV_SHRUNKEN_SCALE }}
-        className="fixed inset-x-0 z-[60] px-4 md:hidden"
+        className="fixed inset-x-0 z-[60] px-3 md:hidden"
         initial={false}
         style={{
           bottom: "max(calc(env(safe-area-inset-bottom) - 0.2rem), 1rem)",
@@ -96,9 +94,9 @@ export const MobileNav = () => {
         }}
         transition={{ duration: 0.25, ease: "easeInOut" }}
       >
-        <div className="flex items-center justify-center gap-3">
+        <div className="flex items-center justify-center gap-2">
           {/* Nav items - icon height, full width */}
-          <div className={`flex h-12 flex-1 items-center px-3 ${barSurfaceClassName}`}>
+          <div className={`flex h-12 flex-1 items-center px-2 ${barSurfaceClassName}`}>
             <ul className="flex w-full items-center justify-around">
               {siteConfig.navItems.map((item) => {
                 const isActive =
@@ -119,7 +117,7 @@ export const MobileNav = () => {
                   <li key={item.href}>
                     <NextLink
                       aria-label={label}
-                      className={`flex items-center justify-center rounded-full p-2.5 transition-colors ${
+                      className={`flex items-center justify-center rounded-full p-2 transition-colors ${
                         isActive
                           ? "bg-accent-soft text-accent"
                           : "text-chrome-muted hover:text-chrome-foreground hover:bg-chrome-hover"
@@ -141,21 +139,6 @@ export const MobileNav = () => {
 
               <li>
                 <NotificationBell variant="mobile" />
-              </li>
-
-              <li>
-                <NextLink
-                  aria-label={tMenu("settings.title")}
-                  className={`flex items-center justify-center rounded-full p-2.5 transition-colors ${
-                    pathname?.startsWith("/settings")
-                      ? "bg-accent-soft text-accent"
-                      : "text-chrome-muted hover:text-chrome-foreground hover:bg-chrome-hover"
-                  }`}
-                  href="/settings?tab=user"
-                  title={tMenu("settings.title")}
-                >
-                  <Cog6ToothIcon className="h-5 w-5" />
-                </NextLink>
               </li>
             </ul>
           </div>
