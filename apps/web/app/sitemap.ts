@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { headers } from "next/headers";
+import { ALL_CATEGORY_SLUGS } from "@/lib/recipe-categories";
 
 import { listPublicCookbookSlugs } from "@norish/db/repositories/public-cookbooks";
 import {
@@ -33,6 +34,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     { url: `${base}/discover`, changeFrequency: "daily", priority: 0.8 },
+    // Category hubs: a small set of evergreen landing pages for long-tail search.
+    { url: `${base}/discover/category`, changeFrequency: "weekly", priority: 0.6 },
+    ...ALL_CATEGORY_SLUGS.map((slug) => ({
+      url: `${base}/discover/category/${slug}`,
+      changeFrequency: "daily" as const,
+      priority: 0.6,
+    })),
     ...recipes.map((r) => ({
       url: `${base}/r/${r.slug}`,
       lastModified: r.updatedAt,

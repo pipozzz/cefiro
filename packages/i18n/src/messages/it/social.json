@@ -284,5 +284,13 @@
     "clear": "Deseleziona",
     "filterAll": "Tutte",
     "done": "Aggiornate: {count}"
+  },
+  "categoryPage": {
+    "heading": "Ricette: {category}",
+    "subtitle": "Scopri e salva ricette pubbliche: {category}.",
+    "empty": "Ancora nessuna ricetta pubblica in questa categoria.",
+    "browseAll": "Sfoglia tutte le ricette",
+    "indexTitle": "Categorie di ricette",
+    "indexSubtitle": "Sfoglia le ricette pubbliche per categoria."
   }
 }

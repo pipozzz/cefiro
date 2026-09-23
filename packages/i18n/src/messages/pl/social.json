@@ -284,5 +284,13 @@
     "clear": "Wyczyść",
     "filterAll": "Wszystkie",
     "done": "Zaktualizowano: {count}"
+  },
+  "categoryPage": {
+    "heading": "Przepisy: {category}",
+    "subtitle": "Odkrywaj i zapisuj publiczne przepisy: {category}.",
+    "empty": "Brak publicznych przepisów w tej kategorii.",
+    "browseAll": "Przeglądaj wszystkie przepisy",
+    "indexTitle": "Kategorie przepisów",
+    "indexSubtitle": "Przeglądaj publiczne przepisy według kategorii."
   }
 }

@@ -284,5 +284,13 @@
     "clear": "Auswahl aufheben",
     "filterAll": "Alle",
     "done": "{count} aktualisiert"
+  },
+  "categoryPage": {
+    "heading": "{category}-Rezepte",
+    "subtitle": "Entdecken und speichern Sie öffentliche {category}-Rezepte.",
+    "empty": "Noch keine öffentlichen Rezepte in dieser Kategorie.",
+    "browseAll": "Alle Rezepte durchsuchen",
+    "indexTitle": "Rezeptkategorien",
+    "indexSubtitle": "Öffentliche Rezepte nach Kategorie durchsuchen."
   }
 }

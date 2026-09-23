@@ -284,5 +284,13 @@
     "clear": "Wissen",
     "filterAll": "Alle",
     "done": "{count} bijgewerkt"
+  },
+  "categoryPage": {
+    "heading": "{category}-recepten",
+    "subtitle": "Ontdek en bewaar openbare {category}-recepten.",
+    "empty": "Nog geen openbare recepten in deze categorie.",
+    "browseAll": "Alle recepten bekijken",
+    "indexTitle": "Receptcategorieën",
+    "indexSubtitle": "Blader door openbare recepten per categorie."
   }
 }

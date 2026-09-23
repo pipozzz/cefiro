@@ -180,12 +180,13 @@ function PublicRecipeBody({ slug, data }: { slug: string; data: PublicRecipeData
       {(recipe.categories.length > 0 || recipe.tags.length > 0) && (
         <div className="mt-4 flex flex-wrap gap-2">
           {recipe.categories.map((cat) => (
-            <span
+            <Link
               key={`cat-${cat}`}
-              className="bg-primary/15 text-primary rounded-full px-3 py-1 text-xs font-medium"
+              className="bg-primary/15 text-primary hover:bg-primary/25 rounded-full px-3 py-1 text-xs font-medium transition"
+              href={`/discover/category/${cat.toLowerCase()}`}
             >
               {tCat(cat)}
-            </span>
+            </Link>
           ))}
           {recipe.tags.map((tag) => (
             <Link

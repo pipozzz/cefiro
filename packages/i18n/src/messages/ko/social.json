@@ -284,5 +284,13 @@
     "clear": "선택 해제",
     "filterAll": "전체",
     "done": "{count}개 업데이트됨"
+  },
+  "categoryPage": {
+    "heading": "{category} 레시피",
+    "subtitle": "공개된 {category} 레시피를 찾아 저장하세요.",
+    "empty": "아직 이 카테고리에 공개된 레시피가 없습니다.",
+    "browseAll": "모든 레시피 보기",
+    "indexTitle": "레시피 카테고리",
+    "indexSubtitle": "카테고리별로 공개 레시피를 둘러보세요."
   }
 }

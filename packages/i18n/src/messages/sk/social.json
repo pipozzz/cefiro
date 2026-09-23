@@ -284,5 +284,13 @@
     "clear": "Zrušiť výber",
     "filterAll": "Všetky",
     "done": "Upravené: {count}"
+  },
+  "categoryPage": {
+    "heading": "Recepty: {category}",
+    "subtitle": "Objav a ulož verejné recepty v kategórii {category}.",
+    "empty": "V tejto kategórii zatiaľ nie sú žiadne verejné recepty.",
+    "browseAll": "Objavovať všetky recepty",
+    "indexTitle": "Kategórie receptov",
+    "indexSubtitle": "Prezeraj verejné recepty podľa kategórie."
   }
 }
