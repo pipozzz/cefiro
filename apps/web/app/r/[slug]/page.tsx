@@ -106,7 +106,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
-    alternates: url ? { canonical: url } : undefined,
+    alternates: url
+      ? {
+          canonical: url,
+          // oEmbed discovery: lets consumers (Ghost, WordPress, …) turn a recipe
+          // link into a rich card via /api/oembed.
+          types: {
+            "application/json+oembed": `${origin}/api/oembed?url=${encodeURIComponent(url)}&format=json`,
+          },
+        }
+      : undefined,
     // Unlisted recipes are reachable by link but must not be indexed.
     robots: ref.visibility === "public" ? undefined : { index: false, follow: true },
     openGraph: {
@@ -235,6 +244,7 @@ export default async function PublicRecipePage({ params }: Props) {
       data.author ? { handle: data.author.handle, displayName: data.author.displayName } : null,
       data.rating
     );
+
     // Escape `<` so user content (e.g. a recipe name containing "</script>")
     // can never break out of the JSON-LD script tag.
     jsonLd = JSON.stringify(ld).replace(/</g, "\\u003c");
@@ -249,7 +259,7 @@ export default async function PublicRecipePage({ params }: Props) {
           dangerouslySetInnerHTML={{ __html: jsonLd }}
         />
       ) : null}
-      <PublicRecipeView slug={slug} initialData={initialRecipe ?? undefined} />
+      <PublicRecipeView initialData={initialRecipe ?? undefined} slug={slug} />
     </>
   );
 }
