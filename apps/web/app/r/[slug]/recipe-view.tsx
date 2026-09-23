@@ -211,6 +211,8 @@ function PublicRecipeBody({ slug, data }: { slug: string; data: PublicRecipeData
 
       <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4 print:hidden">
         <PublicCookMode
+          categories={recipe.categories}
+          image={recipe.image}
           recipeId={recipeId}
           recipeName={recipe.name}
           steps={recipe.steps}

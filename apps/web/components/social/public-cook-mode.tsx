@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { CookingModeHeader } from "@/app/(app)/recipes/[id]/components/cookingmode/cooking-mode-header";
 import { resolveCookingModeSteps } from "@/app/(app)/recipes/[id]/components/cookingmode/cooking-mode-steps";
 import { CookingStepView } from "@/app/(app)/recipes/[id]/components/cookingmode/cooking-step-view";
+import { useIsDesktopCookingMode } from "@/app/(app)/recipes/[id]/components/cookingmode/use-is-desktop-cooking-mode";
 import { PublicSlugSmartInstruction } from "@/components/recipe/public-slug-smart-instruction";
 import { ChevronDownIcon, ChevronUpIcon, FireIcon } from "@heroicons/react/24/outline";
 import { Button, Meter } from "@heroui/react";
@@ -35,18 +36,23 @@ type CookStep = {
 export function PublicCookMode({
   recipeId,
   recipeName,
+  image,
+  categories,
   steps,
   systemUsed,
   totalMinutes,
 }: {
   recipeId: string;
   recipeName: string;
+  image?: string | null;
+  categories?: string[];
   steps: CookStep[];
   systemUsed: string;
   totalMinutes?: number | null;
 }) {
   const t = useTranslations("social.recipe");
   const locale = useLocale();
+  const isDesktop = useIsDesktopCookingMode();
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
   // Fixed when the session begins: now + the recipe's total time. A projection,
@@ -76,13 +82,13 @@ export function PublicCookMode({
     () => ({
       id: recipeId,
       name: recipeName,
-      image: null,
-      categories: [],
+      image: image ?? null,
+      categories: categories ?? [],
       totalMinutes: totalMinutes ?? null,
       servings: null,
       systemUsed,
     }),
-    [recipeId, recipeName, totalMinutes, systemUsed]
+    [recipeId, recipeName, image, categories, totalMinutes, systemUsed]
   );
 
   // Keep the screen on while cooking; re-acquire it if the tab was hidden.
@@ -168,64 +174,74 @@ export function PublicCookMode({
       {open ? (
         <div
           aria-modal="true"
-          className="bg-background fixed inset-0 z-[1100] flex flex-col"
+          className="bg-background/75 fixed inset-0 z-[1100] flex md:items-center md:justify-center md:p-8"
           role="dialog"
         >
-          <CookingModeHeader recipe={recipe} onClose={() => setOpen(false)} />
+          {/* Match the in-app cook mode: a centred card on desktop, fullscreen
+              on phones. */}
+          <div
+            className={
+              isDesktop
+                ? "bg-surface shadow-overlay flex h-[min(92dvh,900px)] w-[min(1180px,calc(100vw-4rem))] flex-col overflow-hidden rounded-3xl"
+                : "bg-background flex h-[100dvh] w-[100dvw] flex-col overflow-hidden"
+            }
+          >
+            <CookingModeHeader recipe={recipe} onClose={() => setOpen(false)} />
 
-          <div className="min-h-0 flex-1 overflow-hidden">
-            <CookingStepView
-              InstructionComponent={PublicSlugSmartInstruction}
-              activeStep={index}
-              displayIngredients={[]}
-              recipe={recipe}
-              steps={cookSteps}
-            />
-          </div>
-
-          {/* Bottom bar mirrors the in-app cook mode's layout: meter, ready-at +
-              counter, then back / next. */}
-          <div className="border-border shrink-0 border-t px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] md:px-6 md:pt-4 md:pb-4">
-            <Meter aria-label={stepCounter} className="w-full" color="accent" value={progress}>
-              <Meter.Track>
-                <Meter.Fill />
-              </Meter.Track>
-            </Meter>
-
-            <div className="mt-2 flex items-center justify-between gap-3 text-sm">
-              <span className="text-muted truncate">
-                {readyAt
-                  ? t("cookReadyAt", {
-                      time: readyAt.toLocaleTimeString(locale, {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      }),
-                    })
-                  : ""}
-              </span>
-              <span className="text-muted shrink-0 font-medium tabular-nums">{stepCounter}</span>
+            <div className="min-h-0 flex-1 overflow-hidden">
+              <CookingStepView
+                InstructionComponent={PublicSlugSmartInstruction}
+                activeStep={index}
+                displayIngredients={[]}
+                recipe={recipe}
+                steps={cookSteps}
+              />
             </div>
 
-            <div className="mt-3 flex items-center justify-between gap-2">
-              <Button
-                isIconOnly
-                aria-label={t("cookPrev")}
-                className="size-10 min-w-10 rounded-full"
-                isDisabled={index === 0}
-                variant="secondary"
-                onPress={() => setIndex((v) => Math.max(0, v - 1))}
-              >
-                <ChevronUpIcon className="size-5" />
-              </Button>
+            {/* Bottom bar mirrors the in-app cook mode's layout: meter, ready-at +
+              counter, then back / next. */}
+            <div className="border-border shrink-0 border-t px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] md:px-6 md:pt-4 md:pb-4">
+              <Meter aria-label={stepCounter} className="w-full" color="accent" value={progress}>
+                <Meter.Track>
+                  <Meter.Fill />
+                </Meter.Track>
+              </Meter>
 
-              <Button
-                className="shrink-0 rounded-full"
-                variant="primary"
-                onPress={() => (isLast ? setOpen(false) : setIndex((v) => v + 1))}
-              >
-                <span>{isLast ? t("cookDone") : t("cookNext")}</span>
-                <ChevronDownIcon className="size-5" />
-              </Button>
+              <div className="mt-2 flex items-center justify-between gap-3 text-sm">
+                <span className="text-muted truncate">
+                  {readyAt
+                    ? t("cookReadyAt", {
+                        time: readyAt.toLocaleTimeString(locale, {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        }),
+                      })
+                    : ""}
+                </span>
+                <span className="text-muted shrink-0 font-medium tabular-nums">{stepCounter}</span>
+              </div>
+
+              <div className="mt-3 flex items-center justify-between gap-2">
+                <Button
+                  isIconOnly
+                  aria-label={t("cookPrev")}
+                  className="size-10 min-w-10 rounded-full"
+                  isDisabled={index === 0}
+                  variant="secondary"
+                  onPress={() => setIndex((v) => Math.max(0, v - 1))}
+                >
+                  <ChevronUpIcon className="size-5" />
+                </Button>
+
+                <Button
+                  className="shrink-0 rounded-full"
+                  variant="primary"
+                  onPress={() => (isLast ? setOpen(false) : setIndex((v) => v + 1))}
+                >
+                  <span>{isLast ? t("cookDone") : t("cookNext")}</span>
+                  <ChevronDownIcon className="size-5" />
+                </Button>
+              </div>
             </div>
           </div>
         </div>
