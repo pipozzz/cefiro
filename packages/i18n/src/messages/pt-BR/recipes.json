@@ -223,7 +223,9 @@
     "clickToUpload": "Clique para enviar ou arraste e solte",
     "pasteToUpload": "para colar",
     "imageFormats": "PNG, JPG, WEBP até 5 MB",
-    "discardChangesConfirm": "Você tem alterações não salvas. Deseja descartá-las e sair desta página?"
+    "discardChangesConfirm": "Você tem alterações não salvas. Deseja descartá-las e sair desta página?",
+    "visibilityLabel": "Visibilidade",
+    "visibilityHelp": "Quem pode ver esta receita?"
   },
   "gallery": {
     "addImage": "Adicionar imagem",

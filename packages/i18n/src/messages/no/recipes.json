@@ -223,7 +223,9 @@
     "clickToUpload": "Klikk for å laste opp eller dra og slipp",
     "pasteToUpload": "for å lime inn",
     "imageFormats": "PNG, JPG, WEBP opp til 5 MB",
-    "discardChangesConfirm": "Du har ulagrede endringer. Vil du forkaste dem og forlate siden?"
+    "discardChangesConfirm": "Du har ulagrede endringer. Vil du forkaste dem og forlate siden?",
+    "visibilityLabel": "Synlighet",
+    "visibilityHelp": "Hvem kan se denne oppskriften?"
   },
   "gallery": {
     "addImage": "Legg til bilde",

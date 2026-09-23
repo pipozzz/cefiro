@@ -23,6 +23,7 @@ import {
   RecipeUpdateInputSchema,
   searchRecipesByName,
   setActiveSystemForRecipe,
+  setRecipeVisibility,
   updateRecipeCategories,
   updateRecipeWithRefs,
 } from "@norish/db";
@@ -219,6 +220,15 @@ export const createRecipeProcedure = authedProcedure
         }
 
         const createdId = created.recipeId;
+
+        // Honour a visibility chosen at creation. createRecipeWithRefs always
+        // stores a recipe private; a non-private choice is applied here (same
+        // request, after the row exists) so slug + publishedAt are generated the
+        // one proven way, rather than trusting a client-sent slug.
+        if (input.visibility && input.visibility !== "private") {
+          await setRecipeVisibility(ctx.user.id, createdId, input.visibility);
+        }
+
         const dashboardDto = await dashboardRecipe(createdId);
 
         if (dashboardDto) {
