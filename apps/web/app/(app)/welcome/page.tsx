@@ -23,7 +23,7 @@ export default function WelcomePage() {
 
   const profileQuery = useQuery({ ...trpc.social.getMyProfile.queryOptions(), retry: false });
 
-  const [step, setStep] = useState<"profile" | "cooks">("profile");
+  const [step, setStep] = useState<"profile" | "cooks" | "recipe">("profile");
   const [handle, setHandle] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
@@ -90,9 +90,9 @@ export default function WelcomePage() {
 
           <div className="mt-8 flex flex-col gap-5">
             <AvatarUpload
+              name={displayName || handle}
               value={avatarUrl.trim() || null}
               onChange={setAvatarUrl}
-              name={displayName || handle}
             />
 
             <div>
@@ -102,11 +102,11 @@ export default function WelcomePage() {
               <div className="flex items-center gap-2">
                 <span className="text-default-500">@</span>
                 <Input
-                  value={handle}
-                  onChange={(e) => setHandle(e.target.value)}
-                  placeholder={t("handlePlaceholder")}
                   autoCapitalize="none"
                   autoCorrect="off"
+                  placeholder={t("handlePlaceholder")}
+                  value={handle}
+                  onChange={(e) => setHandle(e.target.value)}
                 />
               </div>
               <div className="mt-1 min-h-5 text-xs">
@@ -127,9 +127,9 @@ export default function WelcomePage() {
                 {t("displayNameLabel")}
               </label>
               <Input
+                placeholder={t("displayNamePlaceholder")}
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                placeholder={t("displayNamePlaceholder")}
               />
             </div>
 
@@ -138,12 +138,12 @@ export default function WelcomePage() {
                 {t("bioLabel")}
               </label>
               <textarea
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
-                rows={3}
+                className="border-default-200 bg-content1 text-foreground focus:border-primary w-full rounded-xl border px-3 py-2 text-sm outline-none"
                 maxLength={500}
                 placeholder={t("bioPlaceholder")}
-                className="border-default-200 bg-content1 text-foreground focus:border-primary w-full rounded-xl border px-3 py-2 text-sm outline-none"
+                rows={3}
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
               />
             </div>
 
@@ -152,9 +152,9 @@ export default function WelcomePage() {
                 {t("skip")}
               </Button>
               <Button
-                variant="primary"
                 isDisabled={!handleValid || handleTaken || upsert.isPending}
                 isPending={upsert.isPending}
+                variant="primary"
                 onPress={() =>
                   upsert.mutate({
                     handle: normalizedHandle,
@@ -170,7 +170,7 @@ export default function WelcomePage() {
             </div>
           </div>
         </>
-      ) : (
+      ) : step === "cooks" ? (
         <>
           <h1 className="text-foreground text-2xl font-bold md:text-3xl">{t("followTitle")}</h1>
           <p className="text-default-500 mt-2">{t("followSubtitle")}</p>
@@ -179,8 +179,25 @@ export default function WelcomePage() {
             <SuggestedCooks limit={9} />
           </div>
 
-          <div className="mt-8 flex justify-end">
-            <Button variant="primary" onPress={() => router.push(next)}>
+          <div className="mt-8 flex items-center justify-between">
+            <Button as="a" href={next} variant="tertiary">
+              {t("skip")}
+            </Button>
+            <Button variant="primary" onPress={() => setStep("recipe")}>
+              {t("continue")}
+            </Button>
+          </div>
+        </>
+      ) : (
+        <>
+          <h1 className="text-foreground text-2xl font-bold md:text-3xl">{t("recipeTitle")}</h1>
+          <p className="text-default-500 mt-2">{t("recipeSubtitle")}</p>
+
+          <div className="mt-8 flex flex-col gap-3">
+            <Button variant="primary" onPress={() => router.push("/recipes/new")}>
+              {t("recipeCta")}
+            </Button>
+            <Button as="a" href={next} variant="tertiary">
               {t("done")}
             </Button>
           </div>
