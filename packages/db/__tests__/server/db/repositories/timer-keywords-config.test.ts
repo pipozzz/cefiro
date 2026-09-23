@@ -131,8 +131,8 @@ describe("Timer Keywords Configuration - Seeding & Override Behavior", () => {
     });
   });
 
-  describe("3. User Override Prevents Automatic Updates", () => {
-    it("should NOT update keywords when user has overridden (isOverridden=true)", async () => {
+  describe("3. User Override Keeps Custom Keywords While Backfilling Defaults", () => {
+    it("keeps the admin's keywords and adds any missing shipped defaults", async () => {
       // User customizes keywords
       const userCustomConfig: TimerKeywordsConfig = {
         enabled: true,
@@ -150,17 +150,20 @@ describe("Timer Keywords Configuration - Seeding & Override Behavior", () => {
       expect(result?.minutes).toEqual(["dakika"]);
       expect(result?.isOverridden).toBe(true);
 
-      // Attempt to seed (should skip because isOverridden=true)
+      // Seeding backfills the shipped default vocabulary into the edited row.
       await seedDefaultTimerKeywords();
 
-      // Verify user config is UNCHANGED
       result = await getConfig<TimerKeywordsConfig>(ServerConfigKeys.TIMER_KEYWORDS);
-      expect(result?.minutes).toEqual(["dakika"]);
+      // The admin's own words survive, in front, and the row stays overridden.
+      expect(result?.minutes?.[0]).toBe("dakika");
       expect(result?.isOverridden).toBe(true);
-      expect(result?.minutes).not.toContain("minute"); // Defaults not applied
+      // ...but the shipped defaults are now present too, so "10 minute(s)" works.
+      expect(result?.minutes).toContain("minute");
+      expect(result?.hours).toContain("saat");
+      expect(result?.hours).toContain("hour");
     });
 
-    it("should preserve custom keywords even with multiple seed attempts", async () => {
+    it("backfills idempotently — repeat seeds add no duplicates", async () => {
       const customConfig: TimerKeywordsConfig = {
         enabled: true,
         hours: ["custom_h"],
@@ -176,13 +179,17 @@ describe("Timer Keywords Configuration - Seeding & Override Behavior", () => {
       await seedDefaultTimerKeywords();
       await seedDefaultTimerKeywords();
 
-      // Verify still custom
       const result = await getConfig<TimerKeywordsConfig>(ServerConfigKeys.TIMER_KEYWORDS);
 
-      expect(result?.hours).toEqual(["custom_h"]);
-      expect(result?.minutes).toEqual(["custom_m"]);
-      expect(result?.seconds).toEqual(["custom_s"]);
+      // Custom words are preserved (still there, still first) and stay overridden.
+      expect(result?.hours).toContain("custom_h");
+      expect(result?.minutes).toContain("custom_m");
+      expect(result?.seconds).toContain("custom_s");
       expect(result?.isOverridden).toBe(true);
+      // Defaults were backfilled once, not once per attempt: no duplicates.
+      expect(result?.hours.length).toBe(new Set(result?.hours).size);
+      expect(result?.minutes.length).toBe(new Set(result?.minutes).size);
+      expect(result?.seconds.length).toBe(new Set(result?.seconds).size);
     });
   });
 
