@@ -497,6 +497,16 @@ export async function getUserRoleFlags(
   return user ?? null;
 }
 
+/** The id of the server owner, or null when none exists yet. */
+export async function getServerOwnerId(): Promise<string | null> {
+  const owner = await db.query.users.findFirst({
+    where: eq(users.isServerOwner, true),
+    columns: { id: true },
+  });
+
+  return owner?.id ?? null;
+}
+
 export async function isUserServerAdmin(userId: string): Promise<boolean> {
   const roles = await getUserRoleFlags(userId);
 

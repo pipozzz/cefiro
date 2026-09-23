@@ -8,6 +8,7 @@ import { migrateGalleryImages } from "@norish/api/startup/migrate-gallery-images
 import { runMigrations } from "@norish/api/startup/migrations";
 import { registerApiHandlersForQueue } from "@norish/api/startup/register-queue-api-handlers";
 import { seedServerConfig } from "@norish/api/startup/seed-config";
+import { seedDemoRecipes } from "@norish/api/startup/seed-demo-recipes";
 import { registerShutdownHandlers } from "@norish/api/startup/shutdown";
 import { initializeVideoProcessing } from "@norish/api/startup/video-processing";
 import { initializeServerConfig, SERVER_CONFIG } from "@norish/config/env-config-server";
@@ -61,6 +62,11 @@ async function main() {
     log.info("-".repeat(50));
 
     await seedServerConfig();
+    log.info("-".repeat(50));
+
+    // Cold-start only (SEED_DEMO_RECIPES): a curated set of public recipes so a
+    // fresh instance has something for discovery and search. No-op otherwise.
+    await seedDemoRecipes();
     log.info("-".repeat(50));
 
     await migrateGalleryImages();
