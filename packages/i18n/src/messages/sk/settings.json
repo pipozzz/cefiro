@@ -995,7 +995,8 @@
     "usage": {
       "title": "AI akcie tento mesiac",
       "remaining": "Zostáva {count} tento mesiac",
-      "atLimit": "Vyčerpal si všetky AI akcie tento mesiac."
+      "atLimit": "Vyčerpal si všetky AI akcie tento mesiac.",
+      "upgradeCta": "Získať viac s Plus"
     }
   }
 }

@@ -995,7 +995,8 @@
     "usage": {
       "title": "Actions IA ce mois-ci",
       "remaining": "{count} restantes ce mois-ci",
-      "atLimit": "Vous avez utilisé toutes vos actions IA ce mois-ci."
+      "atLimit": "Vous avez utilisé toutes vos actions IA ce mois-ci.",
+      "upgradeCta": "Obtenez plus avec Plus"
     }
   }
 }

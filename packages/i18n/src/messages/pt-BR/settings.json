@@ -995,7 +995,8 @@
     "usage": {
       "title": "Ações de IA neste mês",
       "remaining": "Restam {count} neste mês",
-      "atLimit": "Você usou todas as suas ações de IA neste mês."
+      "atLimit": "Você usou todas as suas ações de IA neste mês.",
+      "upgradeCta": "Tenha mais com o Plus"
     }
   }
 }

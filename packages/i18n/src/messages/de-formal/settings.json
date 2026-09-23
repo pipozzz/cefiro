@@ -995,7 +995,8 @@
     "usage": {
       "title": "KI-Aktionen diesen Monat",
       "remaining": "Noch {count} diesen Monat",
-      "atLimit": "Sie haben diesen Monat alle KI-Aktionen aufgebraucht."
+      "atLimit": "Sie haben diesen Monat alle KI-Aktionen aufgebraucht.",
+      "upgradeCta": "Mehr mit Plus"
     }
   }
 }
