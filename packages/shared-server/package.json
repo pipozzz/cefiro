@@ -16,6 +16,7 @@
     "./billing/stripe": "./src/billing/stripe.ts",
     "./billing/webhook": "./src/billing/webhook.ts",
     "./email/templates/household-invite": "./src/email/templates/household-invite.ts",
+    "./email/templates/instance-invite": "./src/email/templates/instance-invite.ts",
     "./media/avatar-cleanup": "./src/media/avatar-cleanup.ts",
     "./media/dish-color": "./src/media/dish-color.ts",
     "./media/generated-image": "./src/media/generated-image.ts",

@@ -933,6 +933,25 @@
       "empty": "Nog geen keukens.",
       "duplicate": "Er bestaat al een keuken met die naam.",
       "saveFailed": "Kon die keuken niet opslaan."
+    },
+    "instanceInvites": {
+      "title": "Invite people",
+      "description": "Invite someone to create an account on this instance, even while public sign-up is off. They register as a normal user with their own account.",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "person@example.com",
+      "sendButton": "Send invite",
+      "emailedNote": "Invite created and emailed.",
+      "notEmailedNote": "Invite created. Copy the link below to share it.",
+      "linkCreated": "Invite link",
+      "copyLink": "Copy",
+      "copied": "Link copied",
+      "pendingTitle": "Pending invites",
+      "noPending": "No pending invites.",
+      "expiresOn": "Expires {date}",
+      "revoke": "Revoke",
+      "revoked": "Invite revoked",
+      "createError": "Could not create the invite.",
+      "revokeError": "Could not revoke the invite."
     }
   },
   "archiveExport": {

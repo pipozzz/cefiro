@@ -456,6 +456,13 @@
       "when": 1789748746272,
       "tag": "0064_ai_usage",
       "breakpoints": true
+    },
+    {
+      "idx": 65,
+      "version": "7",
+      "when": 1790184844249,
+      "tag": "0065_jittery_naoko",
+      "breakpoints": true
     }
   ]
 }

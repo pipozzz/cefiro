@@ -1,6 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 
 import { getHouseholdInviteByToken } from "@norish/db/repositories/household-invites";
+import { getInstanceInviteByToken } from "@norish/db/repositories/instance-invites";
 
 /**
  * A request-scoped household invite token, set while a sign-up request that
@@ -32,6 +33,10 @@ export function currentInviteToken(): string | undefined {
  * **unexpired**, and addressed to **exactly this email** (case-insensitive), so
  * a leaked link cannot be redeemed by a different address. Returns false when no
  * invite token is in request scope (the normal, locked path).
+ *
+ * The token may be either a household invite (join a specific household) or an
+ * instance invite (register a fresh account on this server). A random token
+ * matches at most one of the two tables, so both are checked.
  */
 export async function inviteAllowsRegistration(email: string | null | undefined): Promise<boolean> {
   const token = currentInviteToken();
@@ -40,12 +45,26 @@ export async function inviteAllowsRegistration(email: string | null | undefined)
     return false;
   }
 
-  const invite = await getHouseholdInviteByToken(token);
+  const now = Date.now();
+  const wanted = email.toLowerCase();
+
+  const householdInvite = await getHouseholdInviteByToken(token);
+
+  if (
+    householdInvite &&
+    householdInvite.status === "pending" &&
+    householdInvite.expiresAt.getTime() > now &&
+    householdInvite.email.toLowerCase() === wanted
+  ) {
+    return true;
+  }
+
+  const instanceInvite = await getInstanceInviteByToken(token);
 
   return (
-    !!invite &&
-    invite.status === "pending" &&
-    invite.expiresAt.getTime() > Date.now() &&
-    invite.email.toLowerCase() === email.toLowerCase()
+    !!instanceInvite &&
+    instanceInvite.status === "pending" &&
+    instanceInvite.expiresAt.getTime() > now &&
+    instanceInvite.email.toLowerCase() === wanted
   );
 }

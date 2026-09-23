@@ -1,4 +1,5 @@
 import { router } from "../../trpc";
+import { instanceInvitesAdminProcedures } from "../instance-invites";
 import { aiConfigProcedures } from "./ai-config";
 import { authProvidersProcedures } from "./auth-providers";
 import { adminConfigProcedures } from "./config";
@@ -41,6 +42,9 @@ export const adminRouter = router({
 
   // User management (list, grant/revoke admin, delete)
   users: usersProcedures,
+
+  // Instance invites (invite people to register when signup is locked)
+  instanceInvites: instanceInvitesAdminProcedures,
 
   // System (scheduler, restart, restore)
   ...systemProcedures._def.procedures,

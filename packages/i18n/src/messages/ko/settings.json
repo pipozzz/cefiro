@@ -933,6 +933,25 @@
       "empty": "아직 요리가 없습니다.",
       "duplicate": "같은 이름의 요리가 이미 있습니다.",
       "saveFailed": "해당 요리를 저장할 수 없습니다."
+    },
+    "instanceInvites": {
+      "title": "Invite people",
+      "description": "Invite someone to create an account on this instance, even while public sign-up is off. They register as a normal user with their own account.",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "person@example.com",
+      "sendButton": "Send invite",
+      "emailedNote": "Invite created and emailed.",
+      "notEmailedNote": "Invite created. Copy the link below to share it.",
+      "linkCreated": "Invite link",
+      "copyLink": "Copy",
+      "copied": "Link copied",
+      "pendingTitle": "Pending invites",
+      "noPending": "No pending invites.",
+      "expiresOn": "Expires {date}",
+      "revoke": "Revoke",
+      "revoked": "Invite revoked",
+      "createError": "Could not create the invite.",
+      "revokeError": "Could not revoke the invite."
     }
   },
   "archiveExport": {

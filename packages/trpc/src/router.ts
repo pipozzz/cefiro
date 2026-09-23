@@ -8,6 +8,7 @@ import { cookbooksRouter } from "./routers/cookbooks";
 import { favoritesRouter } from "./routers/favorites";
 import { groceriesRouter } from "./routers/groceries";
 import { householdsAppRouter } from "./routers/households";
+import { instanceInvitesRouter } from "./routers/instance-invites";
 import { libraryRouter } from "./routers/library";
 import { permissionsRouter } from "./routers/permissions";
 import { ratingsRouter } from "./routers/ratings";
@@ -28,6 +29,7 @@ export const appRouter = router({
   admin: adminRouter,
   billing: billingRouter,
   households: householdsAppRouter,
+  instanceInvites: instanceInvitesRouter,
   user: userRouter,
   caldav: caldavRouter,
   caldavSubscriptions: caldavSubscriptions,
