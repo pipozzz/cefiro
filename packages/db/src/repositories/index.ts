@@ -7,6 +7,7 @@ export * from "@norish/db/repositories/stores";
 export * from "@norish/db/repositories/store-products";
 export * from "@norish/db/repositories/aisles";
 export * from "@norish/db/repositories/household-invites";
+export * from "@norish/db/repositories/instance-invites";
 export * from "@norish/db/repositories/households";
 export * from "@norish/db/repositories/subscriptions";
 export * from "@norish/db/repositories/ingredients";

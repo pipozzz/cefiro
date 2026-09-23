@@ -20,6 +20,10 @@ export function isPublicSocialPath(pathname: string): boolean {
     pathname.startsWith("/public-avatars/") ||
     pathname === "/discover" ||
     pathname.startsWith("/discover/") ||
+    // Instance invites let an admin-invited person register while public
+    // signup is locked; the invitee is signed-out, so this must be reachable
+    // without the auth proxy bouncing them to a (locked) login.
+    pathname.startsWith("/instance-invite/") ||
     pathname === "/sitemap.xml" ||
     pathname === "/robots.txt"
   );

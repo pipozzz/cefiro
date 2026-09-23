@@ -14,6 +14,7 @@ export * from "./step-ingredients";
 export * from "./recipe-images";
 export * from "./recipe-videos";
 export * from "./household-invites";
+export * from "./instance-invites";
 export * from "./households";
 export * from "./subscriptions";
 export * from "./ai-usage";

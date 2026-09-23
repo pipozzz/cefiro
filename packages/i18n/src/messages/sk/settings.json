@@ -933,6 +933,25 @@
       "empty": "Zatiaľ žiadne kuchyne.",
       "duplicate": "Kuchyňa s takým názvom už existuje.",
       "saveFailed": "Túto kuchyňu sa nepodarilo uložiť."
+    },
+    "instanceInvites": {
+      "title": "Pozvať ľudí",
+      "description": "Pozvite niekoho, aby si vytvoril účet na tejto inštancii, aj keď je verejná registrácia vypnutá. Zaregistruje sa ako bežný používateľ s vlastným účtom.",
+      "emailLabel": "E-mailová adresa",
+      "emailPlaceholder": "niekto@example.com",
+      "sendButton": "Poslať pozvánku",
+      "emailedNote": "Pozvánka vytvorená a odoslaná e-mailom.",
+      "notEmailedNote": "Pozvánka vytvorená. Skopírujte odkaz nižšie a zdieľajte ho.",
+      "linkCreated": "Odkaz na pozvánku",
+      "copyLink": "Kopírovať",
+      "copied": "Odkaz skopírovaný",
+      "pendingTitle": "Čakajúce pozvánky",
+      "noPending": "Žiadne čakajúce pozvánky.",
+      "expiresOn": "Platí do {date}",
+      "revoke": "Zrušiť",
+      "revoked": "Pozvánka zrušená",
+      "createError": "Pozvánku sa nepodarilo vytvoriť.",
+      "revokeError": "Pozvánku sa nepodarilo zrušiť."
     }
   },
   "archiveExport": {
