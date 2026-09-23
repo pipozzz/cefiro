@@ -21,7 +21,7 @@ import {
   DEFAULT_RECIPE_PERMISSION_POLICY,
   ServerConfigKeys,
 } from "@norish/config/zod/server-config";
-import { db } from "@norish/db/drizzle";
+import { db, withTransaction } from "@norish/db/drizzle";
 import { dbLogger } from "@norish/db/logger";
 import { stripHtmlTags } from "@norish/shared/lib/helpers";
 import { normalizeOriginCountry } from "@norish/shared/lib/recipe-enrichment";
@@ -975,6 +975,96 @@ export async function setRecipeSavedFrom(recipeId: string, sourceRecipeId: strin
     .update(recipes)
     .set({ savedFromRecipeId: sourceRecipeId })
     .where(eq(recipes.id, recipeId));
+}
+
+/**
+ * Resolve a recipe to its ultimate origin. If the recipe is itself a saved fork
+ * (`savedFromRecipeId` set), that origin is the root; otherwise the recipe is
+ * its own root. Saving a fork therefore attributes to — and dedupes against —
+ * the original recipe rather than an intermediate fork, so a chain of saves
+ * does not spawn a chain of near-identical public copies.
+ *
+ * A single hop suffices: because every fork is stored already dereferenced to
+ * its root, a fork's `savedFromRecipeId` is always the root, never a mid-chain
+ * fork.
+ */
+export async function getRecipeSourceRoot(
+  recipeId: string
+): Promise<{ rootId: string; rootUserId: string | null } | null> {
+  const [row] = await db
+    .select({
+      id: recipes.id,
+      userId: recipes.userId,
+      savedFromRecipeId: recipes.savedFromRecipeId,
+    })
+    .from(recipes)
+    .where(eq(recipes.id, recipeId))
+    .limit(1);
+
+  if (!row) {
+    return null;
+  }
+
+  if (!row.savedFromRecipeId) {
+    return { rootId: row.id, rootUserId: row.userId };
+  }
+
+  const [root] = await db
+    .select({ id: recipes.id, userId: recipes.userId })
+    .from(recipes)
+    .where(eq(recipes.id, row.savedFromRecipeId))
+    .limit(1);
+
+  // The root may have been deleted; fall back to the stored id so dedupe still
+  // keys on a stable value even without a live root row.
+  return root
+    ? { rootId: root.id, rootUserId: root.userId }
+    : { rootId: row.savedFromRecipeId, rootUserId: null };
+}
+
+/**
+ * Create a saved fork of `rootId` for `userId`, guaranteeing at most one fork
+ * per (user, root) even under concurrent saves.
+ *
+ * Two fast double-clicks or two devices can both pass an app-level "already
+ * saved?" check before either has written its fork, leaving duplicates. A
+ * transaction-scoped advisory lock keyed on (user, root) serialises those
+ * racers: the first creates the fork and commits (releasing the lock); the
+ * second then acquires the lock, sees the committed fork, and returns it
+ * instead of creating a second. Chosen over a unique index so no migration can
+ * fail on a pre-existing duplicate at deploy time.
+ *
+ * The lock only serialises the check-and-create; the row writes run on their
+ * own connections, which is fine because the winner's fork is committed before
+ * its lock is released. Returns `null` only when the underlying create fails.
+ */
+export async function createSavedForkGuarded(
+  newRecipeId: string,
+  userId: string,
+  rootId: string,
+  input: FullRecipeInsertDTO
+): Promise<{ recipeId: string; status: "created" | "existing" } | null> {
+  return await withTransaction(async (tx) => {
+    // Serialise concurrent saves of the same recipe by the same user. Released
+    // automatically when this transaction ends.
+    await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${`${userId}:${rootId}`})::bigint)`);
+
+    const existing = await getSavedForkForUser(userId, rootId);
+
+    if (existing) {
+      return { recipeId: existing.recipeId, status: "existing" as const };
+    }
+
+    const created = await createRecipeWithRefs(newRecipeId, userId, input);
+
+    if (!created) {
+      return null;
+    }
+
+    await setRecipeSavedFrom(created.recipeId, rootId);
+
+    return { recipeId: created.recipeId, status: "created" as const };
+  });
 }
 
 export async function setActiveSystemForRecipe(

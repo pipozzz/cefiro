@@ -9,6 +9,8 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
 import {
   createRecipeWithRefs,
+  createSavedForkGuarded,
+  getRecipeSourceRoot,
   getSavedForkForUser,
   setRecipeSavedFrom,
 } from "@norish/db/repositories/recipes";
@@ -90,5 +92,63 @@ describe("saved-fork provenance", () => {
 
     // A different source the saver never forked resolves to nothing.
     expect(await getSavedForkForUser(saver.id, unrelated)).toBeNull();
+  });
+});
+
+describe("getRecipeSourceRoot", () => {
+  it("reports a plain recipe as its own root", async () => {
+    const author = await createTestUser();
+    const recipe = await makeRecipe(author.id, "Držková");
+
+    expect(await getRecipeSourceRoot(recipe)).toEqual({
+      rootId: recipe,
+      rootUserId: author.id,
+    });
+  });
+
+  it("resolves a fork to the original recipe and its author", async () => {
+    const author = await createTestUser();
+    const saver = await createTestUser();
+
+    const root = await makeRecipe(author.id, "Fazuľová polievka");
+    const fork = await makeRecipe(saver.id, "Fazuľová polievka");
+    await setRecipeSavedFrom(fork, root);
+
+    // A fork points back at the root's id and the root's owner, not itself.
+    expect(await getRecipeSourceRoot(fork)).toEqual({
+      rootId: root,
+      rootUserId: author.id,
+    });
+  });
+
+  it("returns null for a recipe that does not exist", async () => {
+    expect(await getRecipeSourceRoot(crypto.randomUUID())).toBeNull();
+  });
+});
+
+describe("createSavedForkGuarded", () => {
+  it("stamps a new fork with the root and dedupes a repeat save", async () => {
+    const author = await createTestUser();
+    const saver = await createTestUser();
+
+    const root = await makeRecipe(author.id, "Šúľance");
+
+    const firstId = crypto.randomUUID();
+    const first = await createSavedForkGuarded(firstId, saver.id, root, {
+      ...BASE_RECIPE,
+      name: "Šúľance",
+    });
+
+    expect(first).toEqual({ recipeId: firstId, status: "created" });
+    // The new copy is stamped so it dedupes on the root.
+    expect((await getSavedForkForUser(saver.id, root))?.recipeId).toBe(firstId);
+
+    // A second save of the same root returns the first copy instead of a new one.
+    const second = await createSavedForkGuarded(crypto.randomUUID(), saver.id, root, {
+      ...BASE_RECIPE,
+      name: "Šúľance",
+    });
+
+    expect(second).toEqual({ recipeId: firstId, status: "existing" });
   });
 });
