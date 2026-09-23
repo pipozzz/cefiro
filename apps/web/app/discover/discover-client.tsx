@@ -127,11 +127,15 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
 
   const recipes = browse.data?.pages.flatMap((page) => page.recipes) ?? [];
 
+  // Active uses the brand accent (a solid green fill + white text), not the
+  // theme's pale `primary`, so the selected chip is unmistakable; inactive is a
+  // bordered light pill so unselected chips still read as chips rather than
+  // plain text. The accent is referenced by CSS var so it always renders.
   const pill = (active: boolean) =>
-    `rounded-full px-4 py-1.5 text-sm font-medium transition ${
+    `rounded-full border px-4 py-1.5 text-sm font-medium transition ${
       active
-        ? "bg-primary text-primary-foreground"
-        : "bg-content2 text-default-600 hover:bg-content3"
+        ? "border-transparent bg-[var(--accent)] text-white shadow-sm"
+        : "border-border bg-content2 text-default-600 hover:bg-content3"
     }`;
 
   return (
