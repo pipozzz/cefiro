@@ -269,5 +269,20 @@
     "publishNudgeDismiss": "Jetzt nicht",
     "publishNudgeDonePublic": "Veröffentlicht — jetzt im Entdecken 🎉",
     "publishNudgeDoneUnlisted": "Fertig — per Link teilbar"
+  },
+  "sharing": {
+    "manage": "Freigabe verwalten",
+    "title": "Freigabe verwalten",
+    "subtitle": "Teile mehrere Rezepte auf einmal, damit andere sie über die Suche finden.",
+    "backToLibrary": "Zurück zur Bibliothek",
+    "empty": "Nichts hier.",
+    "selectAll": "Alle auswählen",
+    "selected": "{count} ausgewählt",
+    "makePublic": "Veröffentlichen",
+    "makeUnlisted": "Nur per Link",
+    "makePrivate": "Privat machen",
+    "clear": "Auswahl aufheben",
+    "filterAll": "Alle",
+    "done": "{count} aktualisiert"
   }
 }

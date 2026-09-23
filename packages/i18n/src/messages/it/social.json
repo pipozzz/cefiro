@@ -269,5 +269,20 @@
     "publishNudgeDismiss": "Non ora",
     "publishNudgeDonePublic": "Pubblicata — ora nella scoperta 🎉",
     "publishNudgeDoneUnlisted": "Fatto — condivisibile tramite link"
+  },
+  "sharing": {
+    "manage": "Gestisci condivisione",
+    "title": "Gestisci condivisione",
+    "subtitle": "Condividi più ricette in una volta così altri le trovano nella ricerca.",
+    "backToLibrary": "Torna alla libreria",
+    "empty": "Niente qui.",
+    "selectAll": "Seleziona tutto",
+    "selected": "{count} selezionate",
+    "makePublic": "Rendi pubbliche",
+    "makeUnlisted": "Solo con link",
+    "makePrivate": "Rendi private",
+    "clear": "Deseleziona",
+    "filterAll": "Tutte",
+    "done": "Aggiornate: {count}"
   }
 }

@@ -81,6 +81,11 @@ export const SetRecipeVisibilityInputSchema = z.object({
   visibility: RecipeVisibilitySchema,
 });
 
+export const SetRecipeVisibilityBulkInputSchema = z.object({
+  recipeIds: z.array(z.uuid()).min(1).max(200),
+  visibility: RecipeVisibilitySchema,
+});
+
 export const GetPublicRecipeBySlugInputSchema = z.object({
   slug: z
     .string()

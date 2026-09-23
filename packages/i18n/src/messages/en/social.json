@@ -269,5 +269,20 @@
     "publishNudgeDismiss": "Not now",
     "publishNudgeDonePublic": "Published — now in discovery 🎉",
     "publishNudgeDoneUnlisted": "Done — shareable via link"
+  },
+  "sharing": {
+    "manage": "Manage sharing",
+    "title": "Manage sharing",
+    "subtitle": "Share several recipes at once so others can find them in search.",
+    "backToLibrary": "Back to library",
+    "empty": "Nothing here.",
+    "selectAll": "Select all",
+    "selected": "{count} selected",
+    "makePublic": "Make public",
+    "makeUnlisted": "Link only",
+    "makePrivate": "Make private",
+    "clear": "Clear",
+    "filterAll": "All",
+    "done": "Updated {count}"
   }
 }

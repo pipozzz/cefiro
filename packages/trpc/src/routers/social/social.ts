@@ -65,6 +65,7 @@ import {
   getRecipeSourceRoot,
   getSavedForkForUser,
   getSavedFromAttribution,
+  listOwnRecipesForSharing,
 } from "@norish/db/repositories/recipes";
 import { getUserAllergies } from "@norish/db/repositories/user-allergies";
 import {
@@ -111,6 +112,7 @@ import {
   SearchInputSchema,
   SetCookbookDescriptionInputSchema,
   SetCookbookVisibilityInputSchema,
+  SetRecipeVisibilityBulkInputSchema,
   SetRecipeVisibilityInputSchema,
   SuggestedCooksInputSchema,
   SurpriseRecipesInputSchema,
@@ -346,6 +348,39 @@ const setVisibility = authedProcedure
     );
 
     return result;
+  });
+
+/** The caller's recipes for the bulk sharing manager. */
+const myRecipesForSharing = authedProcedure.query(async ({ ctx }) =>
+  listOwnRecipesForSharing(ctx.user.id)
+);
+
+/**
+ * Set visibility on many of the caller's recipes at once — the bulk sharing
+ * manager's action, so an owner can make a whole library public in one go.
+ * Reuses the single-recipe path per id (ownership check + slug generation +
+ * publishedAt), and silently skips ids that are not the caller's.
+ */
+const setVisibilityBulk = authedProcedure
+  .use(rateLimit({ name: "social.setVisibilityBulk", limit: 20, windowSec: 60 }))
+  .input(SetRecipeVisibilityBulkInputSchema)
+  .mutation(async ({ ctx, input }): Promise<{ updated: number }> => {
+    let updated = 0;
+
+    for (const recipeId of input.recipeIds) {
+      const result = await setRecipeVisibility(ctx.user.id, recipeId, input.visibility);
+
+      if (result) {
+        updated += 1;
+      }
+    }
+
+    log.info(
+      { userId: ctx.user.id, count: input.recipeIds.length, updated, visibility: input.visibility },
+      "Bulk set recipe visibility"
+    );
+
+    return { updated };
   });
 
 // --- Public reads (unauthenticated) -------------------------------------
@@ -1195,6 +1230,8 @@ export const socialProcedures = router({
   uploadProfileAvatar,
   getPublishState,
   setVisibility,
+  setVisibilityBulk,
+  myRecipesForSharing,
   getProfile,
   listProfileRecipes,
   getPublicRecipe,

@@ -269,5 +269,20 @@
     "publishNudgeDismiss": "Ikke nå",
     "publishNudgeDonePublic": "Publisert — nå i utforsking 🎉",
     "publishNudgeDoneUnlisted": "Ferdig — kan deles via lenke"
+  },
+  "sharing": {
+    "manage": "Administrer deling",
+    "title": "Administrer deling",
+    "subtitle": "Del flere oppskrifter samtidig så andre finner dem i søk.",
+    "backToLibrary": "Tilbake til bibliotek",
+    "empty": "Ingenting her.",
+    "selectAll": "Velg alle",
+    "selected": "{count} valgt",
+    "makePublic": "Gjør offentlig",
+    "makeUnlisted": "Bare med lenke",
+    "makePrivate": "Gjør private",
+    "clear": "Fjern",
+    "filterAll": "Alle",
+    "done": "Oppdatert {count}"
   }
 }

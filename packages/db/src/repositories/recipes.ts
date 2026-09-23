@@ -970,6 +970,29 @@ export async function getSavedForkForUser(
   return row ?? null;
 }
 
+/**
+ * The caller's own recipes with just what the sharing manager needs — id, name,
+ * current visibility and slug — newest-edited first. Used to let an owner set
+ * visibility on many recipes at once (growth: more public recipes for search).
+ */
+export async function listOwnRecipesForSharing(
+  userId: string
+): Promise<
+  { id: string; name: string; visibility: "private" | "unlisted" | "public"; slug: string | null }[]
+> {
+  return await db
+    .select({
+      id: recipes.id,
+      name: recipes.name,
+      visibility: recipes.visibility,
+      slug: recipes.slug,
+    })
+    .from(recipes)
+    .where(eq(recipes.userId, userId))
+    .orderBy(desc(recipes.updatedAt))
+    .limit(1000);
+}
+
 /** Record that `recipeId` was created by saving (forking) `sourceRecipeId`. */
 export async function setRecipeSavedFrom(recipeId: string, sourceRecipeId: string): Promise<void> {
   await db

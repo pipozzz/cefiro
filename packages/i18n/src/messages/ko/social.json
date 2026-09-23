@@ -269,5 +269,20 @@
     "publishNudgeDismiss": "나중에",
     "publishNudgeDonePublic": "공개됨 — 이제 탐색에 표시돼요 🎉",
     "publishNudgeDoneUnlisted": "완료 — 링크로 공유 가능"
+  },
+  "sharing": {
+    "manage": "공유 관리",
+    "title": "공유 관리",
+    "subtitle": "여러 레시피를 한 번에 공개해 검색에서 찾을 수 있게 하세요.",
+    "backToLibrary": "라이브러리로 돌아가기",
+    "empty": "내용이 없습니다.",
+    "selectAll": "모두 선택",
+    "selected": "{count}개 선택됨",
+    "makePublic": "공개하기",
+    "makeUnlisted": "링크로만",
+    "makePrivate": "비공개로",
+    "clear": "선택 해제",
+    "filterAll": "전체",
+    "done": "{count}개 업데이트됨"
   }
 }

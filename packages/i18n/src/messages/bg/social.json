@@ -269,5 +269,20 @@
     "publishNudgeDismiss": "Не сега",
     "publishNudgeDonePublic": "Публикувано — вече е в откриване 🎉",
     "publishNudgeDoneUnlisted": "Готово — може да се сподели с връзка"
+  },
+  "sharing": {
+    "manage": "Управление на споделянето",
+    "title": "Управление на споделянето",
+    "subtitle": "Споделете няколко рецепти наведнъж, за да ги откриват други при търсене.",
+    "backToLibrary": "Обратно към библиотеката",
+    "empty": "Няма нищо тук.",
+    "selectAll": "Избери всички",
+    "selected": "{count} избрани",
+    "makePublic": "Публикувай",
+    "makeUnlisted": "Само с връзка",
+    "makePrivate": "Направи частни",
+    "clear": "Изчисти",
+    "filterAll": "Всички",
+    "done": "Обновени: {count}"
   }
 }

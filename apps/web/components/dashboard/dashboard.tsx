@@ -6,6 +6,7 @@ import FloatingRecipeChip from "@/components/dashboard/floating-recipe-chip";
 import LibraryHeading from "@/components/dashboard/library-heading";
 import LibraryTypeChips from "@/components/dashboard/library-type-chips";
 import LibraryView from "@/components/dashboard/library-view";
+import ManageSharingLink from "@/components/dashboard/manage-sharing-link";
 import RecipeViewModeToggle from "@/components/dashboard/recipe-view-mode-toggle";
 import SearchInput from "@/components/dashboard/search-input";
 import TodaysMeals from "@/components/dashboard/today/todays-meals";
@@ -33,6 +34,7 @@ function RecipeLibrary() {
             <LibraryHeading id={LIBRARY_HEADING_ID} />
             <div className="flex items-center gap-2">
               <RecipeViewModeToggle />
+              <ManageSharingLink />
               <CreateRecipeButton />
             </div>
           </div>
