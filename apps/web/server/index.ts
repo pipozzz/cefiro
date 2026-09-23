@@ -46,6 +46,11 @@ async function main() {
   log.info(`  Database: ${redactUrl(config.DATABASE_URL)}`);
   log.info(`  Auth URL: ${config.AUTH_URL}`);
   log.info(`  Upload dir: ${config.UPLOADS_DIR}`);
+  log.info(
+    config.STORAGE_DRIVER === "s3"
+      ? `  Media storage: s3 (bucket ${config.S3_BUCKET ?? "?"} @ ${config.S3_ENDPOINT ?? "?"})`
+      : `  Media storage: filesystem (${config.UPLOADS_DIR})`
+  );
   log.info("-".repeat(50));
 
   // Both roles read/write media (the web serves it and writes avatars; the
