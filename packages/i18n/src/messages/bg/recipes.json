@@ -223,7 +223,9 @@
     "clickToUpload": "Щракни, за да качиш, или плъзни и пусни",
     "pasteToUpload": "за поставяне",
     "imageFormats": "PNG, JPG, WEBP до 5MB",
-    "discardChangesConfirm": "Имаш незапазени промени. Да се отхвърлят ли и да напуснеш страницата?"
+    "discardChangesConfirm": "Имаш незапазени промени. Да се отхвърлят ли и да напуснеш страницата?",
+    "visibilityLabel": "Видимост",
+    "visibilityHelp": "Кой може да види тази рецепта?"
   },
   "gallery": {
     "addImage": "Добави изображение",

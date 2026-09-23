@@ -223,7 +223,9 @@
     "clickToUpload": "Clicca per caricare o trascina e rilascia",
     "pasteToUpload": "per incollare",
     "imageFormats": "PNG, JPG, WEBP fino a 5MB",
-    "discardChangesConfirm": "Hai modifiche non salvate. Scartarle e lasciare questa pagina?"
+    "discardChangesConfirm": "Hai modifiche non salvate. Scartarle e lasciare questa pagina?",
+    "visibilityLabel": "Visibilità",
+    "visibilityHelp": "Chi può vedere questa ricetta?"
   },
   "gallery": {
     "addImage": "Aggiungi immagine",

@@ -223,7 +223,9 @@
     "clickToUpload": "Klik for at uploade eller træk og slip",
     "pasteToUpload": "for at indsætte",
     "imageFormats": "PNG, JPG, WEBP op til 5 MB",
-    "discardChangesConfirm": "Du har ændringer, der ikke er gemt. Vil du kassere dem og forlade siden?"
+    "discardChangesConfirm": "Du har ændringer, der ikke er gemt. Vil du kassere dem og forlade siden?",
+    "visibilityLabel": "Synlighed",
+    "visibilityHelp": "Hvem kan se denne opskrift?"
   },
   "gallery": {
     "addImage": "Tilføj billede",

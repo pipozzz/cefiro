@@ -223,7 +223,9 @@
     "clickToUpload": "Нажмите, чтобы загрузить, или перетащите файл",
     "pasteToUpload": "для вставки",
     "imageFormats": "PNG, JPG, WEBP до 5 МБ",
-    "discardChangesConfirm": "У вас есть несохранённые изменения. Отменить их и покинуть эту страницу?"
+    "discardChangesConfirm": "У вас есть несохранённые изменения. Отменить их и покинуть эту страницу?",
+    "visibilityLabel": "Видимость",
+    "visibilityHelp": "Кто может видеть этот рецепт?"
   },
   "gallery": {
     "addImage": "Добавить изображение",

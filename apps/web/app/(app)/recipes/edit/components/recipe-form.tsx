@@ -18,10 +18,16 @@ import { useRecipesContext } from "@/context/recipes-context";
 import { useUnitsQuery } from "@/hooks/config";
 import { useRecipeId } from "@/hooks/recipes";
 import { useUnsavedNavigationGuard } from "@/hooks/use-unsaved-navigation-guard";
+import { GlobeAltIcon, LinkIcon, LockClosedIcon } from "@heroicons/react/16/solid";
 import { Button, Chip, FieldError, Input, Label, TextField } from "@heroui/react";
 import { useLocale, useTranslations } from "next-intl";
 
-import type { FullRecipeDTO, MeasurementSystem, RecipeCategory } from "@norish/shared/contracts";
+import type {
+  FullRecipeDTO,
+  MeasurementSystem,
+  RecipeCategory,
+  RecipeVisibility,
+} from "@norish/shared/contracts";
 import { inferSystemUsedFromParsed } from "@norish/shared/lib/determine-recipe-system";
 import { parseIngredientWithDefaults } from "@norish/shared/lib/helpers";
 import { createClientLogger } from "@norish/shared/lib/logger";
@@ -33,6 +39,13 @@ import { useRecipeFormDirtyState } from "./use-recipe-form-dirty-state";
 
 const log = createClientLogger("RecipeForm");
 const ALL_CATEGORIES: RecipeCategory[] = ["Breakfast", "Lunch", "Dinner", "Snack"];
+
+const VISIBILITY_OPTIONS: { value: RecipeVisibility; Icon: typeof LockClosedIcon }[] = [
+  { value: "private", Icon: LockClosedIcon },
+  { value: "unlisted", Icon: LinkIcon },
+  { value: "public", Icon: GlobeAltIcon },
+];
+
 export interface RecipeFormProps {
   mode: "create" | "edit";
   initialData?: FullRecipeDTO;
@@ -47,6 +60,7 @@ export default function RecipeForm({ mode, initialData }: RecipeFormProps) {
   const t = useTranslations("recipes.form");
   const tValidation = useTranslations("recipes.validation");
   const tCommon = useTranslations("common.actions");
+  const tShare = useTranslations("social.recipeShare");
 
   // Use hook for ID reservation
   const {
@@ -68,6 +82,9 @@ export default function RecipeForm({ mode, initialData }: RecipeFormProps) {
   );
   const [tags, setTags] = useState<string[]>(initialData?.tags?.map((t) => t.name) ?? []);
   const [categories, setCategories] = useState<RecipeCategory[]>(initialData?.categories ?? []);
+  // Visibility chosen at creation. Edit mode manages visibility on the recipe
+  // page (publish control), so this drives the create flow only.
+  const [visibility, setVisibility] = useState<RecipeVisibility>("private");
   const [ingredients, setIngredients] = useState<ParsedIngredient[]>([]);
   const [steps, setSteps] = useState<Step[]>([]);
   const [systemUsed, setSystemUsed] = useState<MeasurementSystem>(
@@ -240,6 +257,7 @@ export default function RecipeForm({ mode, initialData }: RecipeFormProps) {
       order: ing.order,
       systemUsed: ing.systemUsed,
     }));
+
     setIngredients(initIngredients);
 
     // Filter steps by the recipe's measurement system
@@ -252,6 +270,7 @@ export default function RecipeForm({ mode, initialData }: RecipeFormProps) {
       images: s.images || [],
       stepIngredients: s.stepIngredients || [],
     }));
+
     setSteps(initSteps);
     initializedRecipeIdRef.current = initialData.id;
   }, [initialData, isLoadingUnits, locale, mode, units]);
@@ -296,6 +315,7 @@ export default function RecipeForm({ mode, initialData }: RecipeFormProps) {
   }, []);
   const validate = useCallback((): boolean => {
     const newErrors: Record<string, string> = {};
+
     if (!name.trim()) {
       newErrors.name = tValidation("nameRequired");
     }
@@ -309,6 +329,7 @@ export default function RecipeForm({ mode, initialData }: RecipeFormProps) {
       newErrors.servings = tValidation("servingsMin");
     }
     setErrors(newErrors);
+
     return Object.keys(newErrors).length === 0;
   }, [name, ingredients, steps, servings, tValidation]);
   const handleSubmit = useCallback(async () => {
@@ -383,12 +404,14 @@ export default function RecipeForm({ mode, initialData }: RecipeFormProps) {
         // Videos array field
         videos,
       };
+
       if (mode === "create") {
         try {
           allowNavigation();
           await createRecipe({
             ...recipeData,
             id: recipeId!,
+            visibility,
           });
         } catch (err) {
           disallowNavigation();
@@ -428,6 +451,7 @@ export default function RecipeForm({ mode, initialData }: RecipeFormProps) {
     systemUsed,
     tags,
     categories,
+    visibility,
     ingredients,
     steps,
     mode,
@@ -457,6 +481,7 @@ export default function RecipeForm({ mode, initialData }: RecipeFormProps) {
   if (isLoadingRecipeId) {
     return <EditRecipeSkeleton />;
   }
+
   return (
     <div className="mx-auto w-full max-w-3xl overflow-hidden px-4 py-6 md:py-8">
       {/* Header */}
@@ -600,11 +625,12 @@ export default function RecipeForm({ mode, initialData }: RecipeFormProps) {
               <div className="flex flex-wrap gap-2">
                 {ALL_CATEGORIES.map((category) => {
                   const active = categories.includes(category);
+
                   return (
                     <Chip
                       key={category}
-                      as="button"
                       aria-pressed={active}
+                      as="button"
                       className="chip--on-ground h-8 cursor-pointer rounded-full px-3 text-sm"
                       color={active ? "accent" : "default"}
                       type="button"
@@ -617,6 +643,40 @@ export default function RecipeForm({ mode, initialData }: RecipeFormProps) {
                 })}
               </div>
             </div>
+            {/* Visibility — create only; edit changes it from the recipe page. */}
+            {mode === "create" ? (
+              <div>
+                <p className="text-muted mb-3 text-base">{t("visibilityHelp")}</p>
+                <div
+                  aria-label={t("visibilityLabel")}
+                  className="border-default-200 bg-content2 flex w-full max-w-md gap-1 rounded-full border p-1"
+                  role="radiogroup"
+                >
+                  {VISIBILITY_OPTIONS.map(({ value, Icon }) => {
+                    const active = visibility === value;
+
+                    return (
+                      <button
+                        key={value}
+                        aria-checked={active}
+                        className={`flex flex-1 items-center justify-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition ${
+                          active
+                            ? "bg-primary text-primary-foreground shadow-sm"
+                            : "text-default-600 hover:text-foreground"
+                        }`}
+                        role="radio"
+                        type="button"
+                        onClick={() => setVisibility(value)}
+                      >
+                        <Icon className="h-4 w-4 shrink-0" />
+                        <span className="truncate">{tShare(value)}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="text-muted mt-2 text-sm">{tShare(`${visibility}Hint`)}</p>
+              </div>
+            ) : null}
           </div>
         </section>
 
@@ -784,21 +844,21 @@ export default function RecipeForm({ mode, initialData }: RecipeFormProps) {
         {/* Submit */}
         <div className="flex justify-end gap-3 border-t pt-6">
           <Button
+            className="min-w-24"
             isDisabled={isSubmitting}
             size="lg"
-            onPress={handleCancel}
             variant="tertiary"
-            className="min-w-24"
+            onPress={handleCancel}
           >
             {tCommon("cancel")}
           </Button>
           <Button
-            isDisabled={isSubmitting}
-            size="lg"
-            onPress={handleSubmit}
-            variant="primary"
-            isPending={isSubmitting}
             className="min-w-24"
+            isDisabled={isSubmitting}
+            isPending={isSubmitting}
+            size="lg"
+            variant="primary"
+            onPress={handleSubmit}
           >
             {mode === "create" ? t("createRecipe") : t("saveChanges")}
           </Button>

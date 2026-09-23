@@ -223,7 +223,9 @@
     "clickToUpload": "Zum Hochladen klicken oder Drag & Drop",
     "pasteToUpload": "zum Einfügen",
     "imageFormats": "PNG, JPG, WEBP bis zu 5MB",
-    "discardChangesConfirm": "Du hast ungespeicherte Änderungen. Verwerfen und diese Seite verlassen?"
+    "discardChangesConfirm": "Du hast ungespeicherte Änderungen. Verwerfen und diese Seite verlassen?",
+    "visibilityLabel": "Sichtbarkeit",
+    "visibilityHelp": "Wer kann dieses Rezept sehen?"
   },
   "gallery": {
     "addImage": "Bild hinzufügen",

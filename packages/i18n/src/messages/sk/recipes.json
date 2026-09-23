@@ -223,7 +223,9 @@
     "clickToUpload": "Klikni na nahranie alebo pretiahni súbor",
     "pasteToUpload": "na vloženie",
     "imageFormats": "PNG, JPG, WEBP do 5 MB",
-    "discardChangesConfirm": "Máš neuložené zmeny. Zahodiť ich a opustiť túto stránku?"
+    "discardChangesConfirm": "Máš neuložené zmeny. Zahodiť ich a opustiť túto stránku?",
+    "visibilityLabel": "Viditeľnosť",
+    "visibilityHelp": "Kto uvidí tento recept?"
   },
   "gallery": {
     "addImage": "Pridať obrázok",
