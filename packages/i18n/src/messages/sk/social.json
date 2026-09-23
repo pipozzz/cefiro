@@ -261,6 +261,13 @@
     "copied": "Skopírované",
     "open": "Otvoriť",
     "linkCopied": "Odkaz skopírovaný",
-    "couldNotSave": "Nepodarilo sa upraviť zdieľanie"
+    "couldNotSave": "Nepodarilo sa upraviť zdieľanie",
+    "publishNudgeTitle": "Zdieľaj tento recept",
+    "publishNudgeBody": "Zverejni ho, nech ho ostatní nájdu vo vyhľadávaní a objavovaní.",
+    "publishNudgePublish": "Zverejniť",
+    "publishNudgeUnlisted": "Len cez odkaz",
+    "publishNudgeDismiss": "Teraz nie",
+    "publishNudgeDonePublic": "Zverejnené — už je v objavovaní 🎉",
+    "publishNudgeDoneUnlisted": "Hotovo — zdieľateľné cez odkaz"
   }
 }

@@ -261,6 +261,13 @@
     "copied": "Copied",
     "open": "Open",
     "linkCopied": "Link copied",
-    "couldNotSave": "Could not update sharing"
+    "couldNotSave": "Could not update sharing",
+    "publishNudgeTitle": "Споделете тази рецепта",
+    "publishNudgeBody": "Направете я публична, за да я откриват други при търсене.",
+    "publishNudgePublish": "Публикувай",
+    "publishNudgeUnlisted": "Само с връзка",
+    "publishNudgeDismiss": "Не сега",
+    "publishNudgeDonePublic": "Публикувано — вече е в откриване 🎉",
+    "publishNudgeDoneUnlisted": "Готово — може да се сподели с връзка"
   }
 }

@@ -54,6 +54,9 @@ vi.mock("@/components/Panel/consumers", () => ({
 vi.mock("@/app/(app)/recipes/[id]/components/saved-from-credit", () => ({
   SavedFromCredit: () => null,
 }));
+vi.mock("@/app/(app)/recipes/[id]/components/publish-nudge", () => ({
+  PublishNudge: () => null,
+}));
 
 vi.mock("@/hooks/cookbooks", () => ({
   useRecipeCookbooksQuery: () => ({ cookbooks: [], isLoading: false }),

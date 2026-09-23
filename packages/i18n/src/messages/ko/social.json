@@ -261,6 +261,13 @@
     "copied": "Copied",
     "open": "Open",
     "linkCopied": "Link copied",
-    "couldNotSave": "Could not update sharing"
+    "couldNotSave": "Could not update sharing",
+    "publishNudgeTitle": "이 레시피 공유하기",
+    "publishNudgeBody": "공개로 설정하면 다른 사람들이 검색과 탐색에서 찾을 수 있어요.",
+    "publishNudgePublish": "공개하기",
+    "publishNudgeUnlisted": "링크로만",
+    "publishNudgeDismiss": "나중에",
+    "publishNudgeDonePublic": "공개됨 — 이제 탐색에 표시돼요 🎉",
+    "publishNudgeDoneUnlisted": "완료 — 링크로 공유 가능"
   }
 }

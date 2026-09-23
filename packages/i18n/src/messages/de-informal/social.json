@@ -261,6 +261,13 @@
     "copied": "Copied",
     "open": "Open",
     "linkCopied": "Link copied",
-    "couldNotSave": "Could not update sharing"
+    "couldNotSave": "Could not update sharing",
+    "publishNudgeTitle": "Dieses Rezept teilen",
+    "publishNudgeBody": "Mach es öffentlich, damit andere es über Suche und Entdecken finden.",
+    "publishNudgePublish": "Veröffentlichen",
+    "publishNudgeUnlisted": "Nur per Link",
+    "publishNudgeDismiss": "Jetzt nicht",
+    "publishNudgeDonePublic": "Veröffentlicht — jetzt im Entdecken 🎉",
+    "publishNudgeDoneUnlisted": "Fertig — per Link teilbar"
   }
 }
