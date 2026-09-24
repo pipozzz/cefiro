@@ -1,7 +1,9 @@
 import type { RecipePageColorMode } from "@/lib/recipe-page-color";
 import type { TodaySectionVisibility } from "@/lib/todays-meals-visibility";
+import Link from "next/link";
 import { AuthProviders } from "@/app/providers/auth-providers";
 import { OfflineCacheController } from "@/app/providers/offline-cache-controller";
+import { BrandLogo } from "@/components/brand/brand-logo";
 import { Navbar } from "@/components/navbar/navbar";
 import { TimerDock } from "@/components/timer-dock";
 import { AmountDisplayProvider } from "@/context/amount-display-context";
@@ -79,6 +81,17 @@ export function AppShell({
                                   className={`container mx-auto flex max-w-7xl flex-1 flex-col ${APP_MAIN_HORIZONTAL_PADDING_CLASS} ${APP_MAIN_BOTTOM_PADDING_CLASS}`}
                                   style={{ paddingTop: "calc(1.5rem + env(safe-area-inset-top))" }}
                                 >
+                                  {/* Mobile brand. The desktop navbar carries the logo but is
+                                      hidden on phones, and the bottom dock has no wordmark — so
+                                      without this the brand disappears on mobile. Shown only below
+                                      md (desktop has the navbar); links home like the navbar brand. */}
+                                  <Link
+                                    aria-label="Naša Kuchyňa"
+                                    className="mb-4 flex md:hidden"
+                                    href="/"
+                                  >
+                                    <BrandLogo height={26} width={104} />
+                                  </Link>
                                   {children}
                                 </main>
                               </div>
