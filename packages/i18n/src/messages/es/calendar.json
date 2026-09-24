@@ -55,5 +55,11 @@
     "failedToLoadRecipes": "Error al cargar las recetas.",
     "chooseSlot": "Choose slot",
     "chooseSlotForNote": "Choose slot for note"
+  },
+  "print": {
+    "label": "Print:",
+    "week": "Week",
+    "month": "Month",
+    "title": "Meal plan"
   }
 }

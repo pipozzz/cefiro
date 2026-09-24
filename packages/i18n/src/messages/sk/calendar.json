@@ -55,5 +55,11 @@
     "failedToLoadRecipes": "Nepodarilo sa načítať recepty.",
     "chooseSlot": "Vybrať slot",
     "chooseSlotForNote": "Vybrať slot pre poznámku"
+  },
+  "print": {
+    "label": "Vytlačiť:",
+    "week": "Týždeň",
+    "month": "Mesiac",
+    "title": "Plán jedál"
   }
 }

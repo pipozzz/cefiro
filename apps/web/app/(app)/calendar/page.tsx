@@ -2,14 +2,19 @@
 
 import type { PlannedItemDisplay } from "@/components/calendar/mobile/types";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { CalendarPrintView } from "@/components/calendar/calendar-print-view";
 import { DesktopTimeline } from "@/components/calendar/desktop";
 import { MobileTimeline } from "@/components/calendar/mobile";
 import { EditNotePanel } from "@/components/Panel/consumers/edit-note-panel";
 import { EditPlannedRecipePanel } from "@/components/Panel/consumers/edit-planned-recipe-panel";
 import MiniRecipes from "@/components/Panel/consumers/mini-recipes";
+import { PrinterIcon } from "@heroicons/react/24/outline";
+import { Button } from "@heroui/react";
+import { useTranslations } from "next-intl";
 import { useWindowSize } from "usehooks-ts";
 
 import type { Slot } from "@norish/shared/contracts";
+import { endOfMonth, getWeekEnd, getWeekStart, startOfMonth } from "@norish/shared/lib/helpers";
 
 import { CalendarContextProvider } from "./context";
 
@@ -19,6 +24,24 @@ function CalendarPageContent() {
   const [selectedSlot, setSelectedSlot] = useState<Slot | undefined>(undefined);
   const pendingMiniRecipesScrollYRef = useRef<number | null>(null);
   const restoreMiniRecipesScrollTimerRef = useRef<number | null>(null);
+
+  const tPrint = useTranslations("calendar.print");
+
+  // Printable meal-plan range (null while not printing). Rendered by a hidden,
+  // non-virtualized print view that opens the print dialog and resets on close.
+  const [printRange, setPrintRange] = useState<{ start: Date; end: Date } | null>(null);
+
+  const printWeek = useCallback(() => {
+    const now = new Date();
+
+    setPrintRange({ start: getWeekStart(now), end: getWeekEnd(now) });
+  }, []);
+
+  const printMonth = useCallback(() => {
+    const now = new Date();
+
+    setPrintRange({ start: startOfMonth(now), end: endOfMonth(now) });
+  }, []);
 
   // Note editing state
   const [editingNote, setEditingNote] = useState<PlannedItemDisplay | null>(null);
@@ -110,11 +133,30 @@ function CalendarPageContent() {
 
   return (
     <>
+      <div className="flex items-center justify-end gap-2 px-4 pt-4 print:hidden">
+        <span className="text-default-500 text-sm">{tPrint("label")}</span>
+        <Button size="sm" variant="secondary" onPress={printWeek}>
+          <PrinterIcon className="h-4 w-4" />
+          {tPrint("week")}
+        </Button>
+        <Button size="sm" variant="secondary" onPress={printMonth}>
+          {tPrint("month")}
+        </Button>
+      </div>
+
       <TimelineComponent
         onAddItem={handleAddItem}
         onNoteClick={handleNoteClick}
         onRecipeClick={handleRecipeClick}
       />
+
+      {printRange ? (
+        <CalendarPrintView
+          end={printRange.end}
+          start={printRange.start}
+          onAfterPrint={() => setPrintRange(null)}
+        />
+      ) : null}
 
       {/* Mini recipes panel for adding items */}
       <MiniRecipes
