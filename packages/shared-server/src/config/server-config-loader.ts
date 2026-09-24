@@ -12,6 +12,7 @@
 // Import defaults for fallback when DB has no value
 import type {
   AIConfig,
+  AnalyticsConfig,
   AutomaticEnrichmentConfig,
   ContentIndicatorsConfig,
   CuisineStrategy,
@@ -67,6 +68,16 @@ export async function isRegistrationEnabled(): Promise<boolean> {
   const value = await getConfig<boolean>(ServerConfigKeys.REGISTRATION_ENABLED);
 
   return value ?? true;
+}
+
+/**
+ * Admin-set analytics (Plausible) config, or an empty object when unset. The
+ * caller decides how to fall back to env.
+ */
+export async function getAnalyticsConfig(): Promise<AnalyticsConfig> {
+  const value = await getConfig<AnalyticsConfig>(ServerConfigKeys.ANALYTICS_CONFIG);
+
+  return value ?? {};
 }
 
 /**
