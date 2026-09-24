@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 
 import { Suspense } from "react";
+import { Analytics } from "@/components/analytics";
 import RegisterServiceWorker from "@/components/register-service-worker";
 import { TopProgressBar } from "@/components/top-progress-bar";
 import { NextIntlClientProvider } from "next-intl";
@@ -20,6 +21,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html suppressHydrationWarning lang={locale}>
       <head>
         <meta content="yes" name="apple-mobile-web-app-capable" />
+        <Analytics />
       </head>
       <body className="bg-background text-foreground min-h-dvh font-sans antialiased">
         <Suspense fallback={null}>
