@@ -127,7 +127,8 @@
       "label": "URL da receita",
       "placeholder": "https://example.com/your-recipe",
       "failed": "Falha ao importar receita",
-      "failedWithAI": "Falha ao importar receita com IA"
+      "failedWithAI": "Falha ao importar receita com IA",
+      "importing": "Importing recipe…"
     },
     "paste": {
       "title": "Importar por colagem",

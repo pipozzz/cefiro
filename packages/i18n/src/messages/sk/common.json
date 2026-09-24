@@ -127,7 +127,8 @@
       "label": "URL adresa receptu",
       "placeholder": "https://example.com/vas-recept",
       "failed": "Nepodarilo sa importovať recept",
-      "failedWithAI": "Nepodarilo sa importovať recept pomocou AI"
+      "failedWithAI": "Nepodarilo sa importovať recept pomocou AI",
+      "importing": "Načítavam recept…"
     },
     "paste": {
       "title": "Importovať vložením",
