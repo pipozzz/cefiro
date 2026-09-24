@@ -20,8 +20,14 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title,
     description,
-    openGraph: { type: "website", title, description, siteName: "Naša Kuchyňa" },
-    twitter: { card: "summary", title, description },
+    openGraph: {
+      type: "website",
+      title,
+      description,
+      siteName: "Naša Kuchyňa",
+      images: [{ url: "/og-default.png", width: 1200, height: 630, alt: "Naša Kuchyňa" }],
+    },
+    twitter: { card: "summary_large_image", title, description, images: ["/og-default.png"] },
   };
 }
 
