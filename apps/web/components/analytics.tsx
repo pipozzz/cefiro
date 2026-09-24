@@ -20,7 +20,20 @@ export function Analytics() {
     return null;
   }
 
-  // A plain deferred script tag, per Plausible's install docs. Emitted into the
-  // server-rendered HTML so it loads without blocking.
-  return <script defer data-domain={domain} src={src} />;
+  // The full Plausible snippet: the deferred loader plus the `window.plausible`
+  // queue shim, so custom events (`plausible('Signup')`, tagged events, etc.)
+  // work even before the script has loaded. Emitted into the server-rendered
+  // HTML so it loads without blocking.
+  return (
+    <>
+      <script defer data-domain={domain} src={src} />
+      <script
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{
+          __html:
+            "window.plausible=window.plausible||function(){(window.plausible.q=window.plausible.q||[]).push(arguments)}",
+        }}
+      />
+    </>
+  );
 }
