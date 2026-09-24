@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "profile",
       title,
       description,
-      siteName: "Cefiro",
+      siteName: "Naša Kuchyňa",
       url,
       images: image ? [{ url: image, alt: displayName }] : undefined,
     },

@@ -28,12 +28,12 @@ export function buildHouseholdInviteEmail(params: HouseholdInviteEmailParams): {
   const url = escapeHtml(params.acceptUrl);
 
   const lead = inviter
-    ? `${inviter} invited you to join their household <strong>${household}</strong> on Cefiro.`
-    : `You've been invited to join the household <strong>${household}</strong> on Cefiro.`;
+    ? `${inviter} invited you to join their household <strong>${household}</strong> on Naša Kuchyňa.`
+    : `You've been invited to join the household <strong>${household}</strong> on Naša Kuchyňa.`;
 
   const subject = inviter
-    ? `${params.inviterName} invited you to ${params.householdName} on Cefiro`
-    : `You're invited to ${params.householdName} on Cefiro`;
+    ? `${params.inviterName} invited you to ${params.householdName} on Naša Kuchyňa`
+    : `You're invited to ${params.householdName} on Naša Kuchyňa`;
 
   const html = `<!doctype html>
 <html>

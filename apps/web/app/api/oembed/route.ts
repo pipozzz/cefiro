@@ -101,7 +101,7 @@ export async function GET(req: Request): Promise<Response> {
     title: recipe.recipe.name,
     author_name: authorName,
     author_url: authorUrl,
-    provider_name: "Cefiro",
+    provider_name: "Naša Kuchyňa",
     provider_url: origin,
     thumbnail_url: photo ?? `${origin}/r/${slug}/og`,
     // Only the branded fallback card has known dimensions.

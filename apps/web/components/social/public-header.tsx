@@ -19,7 +19,11 @@ export async function PublicHeader() {
 
   return (
     <header className="flex items-center justify-between px-4 py-4 md:px-6 print:hidden">
-      <Link aria-label="Cefiro" className="flex items-center" href={isAuthed ? "/" : "/discover"}>
+      <Link
+        aria-label="Naša Kuchyňa"
+        className="flex items-center"
+        href={isAuthed ? "/" : "/discover"}
+      >
         <BrandLogo priority height={28} width={112} />
       </Link>
       {isAuthed ? (

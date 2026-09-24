@@ -135,14 +135,14 @@ function cardHtml(data: NonNullable<EmbedData>, slug: string, origin: string): s
   const authorBlock = authorName ? `<span class="author">${esc(authorName)}</span>` : "";
 
   // A single link wrapping the whole card. `target="_blank"` opens the full
-  // recipe on Cefiro in a new tab; `rel="noopener noreferrer"` severs the
+  // recipe on Naša Kuchyňa in a new tab; `rel="noopener noreferrer"` severs the
   // opener so the framed document can never reach the parent page.
   return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>${esc(recipe.name)} — Cefiro</title>
+<title>${esc(recipe.name)} — Naša Kuchyňa</title>
 <style>
   :root { color-scheme: light dark; }
   * { box-sizing: border-box; }
@@ -199,7 +199,7 @@ function cardHtml(data: NonNullable<EmbedData>, slug: string, origin: string): s
       <div class="meta">${meta}</div>
       <div class="footer">
         <span class="cta">View recipe →</span>
-        <span class="brand">Cefiro</span>
+        <span class="brand">Naša Kuchyňa</span>
       </div>
     </div>
   </a>
@@ -213,7 +213,7 @@ function notFoundHtml(): string {
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Recipe not found — Cefiro</title>
+<title>Recipe not found — Naša Kuchyňa</title>
 <style>
   :root { color-scheme: light dark; }
   body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;

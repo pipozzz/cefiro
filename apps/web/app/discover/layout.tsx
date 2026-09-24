@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title,
     description,
-    openGraph: { type: "website", title, description, siteName: "Cefiro" },
+    openGraph: { type: "website", title, description, siteName: "Naša Kuchyňa" },
     twitter: { card: "summary", title, description },
   };
 }

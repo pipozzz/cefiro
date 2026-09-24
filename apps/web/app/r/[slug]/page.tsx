@@ -122,7 +122,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "article",
       title,
       description,
-      siteName: "Cefiro",
+      siteName: "Naša Kuchyňa",
       url,
       // The branded fallback card is rendered by `/r/[slug]/og` at a fixed
       // 1200×630 PNG, so we can declare its exact dimensions. Real photos have

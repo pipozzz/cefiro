@@ -19,7 +19,7 @@ import { publicProcedure, router } from "../trpc";
 
 // The instance's public name, used in invite copy. Hardcoded to match the
 // household-invite email; a future rebrand updates both in one place.
-const APP_NAME = "Cefiro";
+const APP_NAME = "Naša Kuchyňa";
 
 /** Absolute URL of the public instance-invite page for a token (signed-out). */
 function instanceInviteUrl(token: string): string {

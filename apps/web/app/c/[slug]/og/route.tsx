@@ -25,7 +25,7 @@ type Props = { params: Promise<{ slug: string }> };
 
 /**
  * Branded 1200×630 share card for a public cookbook: title, description, its
- * recipe count and owner, and the Cefiro wordmark. Mirrors the recipe card.
+ * recipe count and owner, and the Naša Kuchyňa wordmark. Mirrors the recipe card.
  */
 export async function GET(_req: Request, { params }: Props) {
   const { slug } = await params;
@@ -74,7 +74,7 @@ export async function GET(_req: Request, { params }: Props) {
             letterSpacing: -0.5,
           }}
         >
-          Cefiro
+          Naša Kuchyňa
         </div>
         <div style={{ display: "flex", fontSize: 30, opacity: 0.85 }}>📚 Cookbook</div>
       </div>
@@ -141,7 +141,7 @@ function BrandFallback() {
         fontFamily: "sans-serif",
       }}
     >
-      Cefiro
+      Naša Kuchyňa
     </div>
   );
 }
