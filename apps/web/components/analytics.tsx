@@ -1,19 +1,26 @@
+import { getAnalyticsConfig } from "@norish/shared-server/config/server-config-loader";
+
 /**
- * Plausible analytics — a privacy-friendly, cookieless tracker (no GDPR consent
- * banner needed). Rendered only when `PLAUSIBLE_DOMAIN` is set, so it is off by
- * default and turns on per-deploy via env. Read at request time (this is a
- * server component under the dynamic root layout), so a runtime env value is
- * picked up without a rebuild.
+ * Plausible analytics — privacy-friendly and cookieless (no GDPR consent banner
+ * needed). Configured from the admin settings (DB), with env as a fallback, so
+ * an admin can turn it on / point it at a self-hosted instance from the UI
+ * without a redeploy. Off entirely until a domain is set.
  *
- * Env:
- *   PLAUSIBLE_DOMAIN  the site's `data-domain` (e.g. "nasakuchyna.sk"). Required.
- *   PLAUSIBLE_SRC     script URL; defaults to Plausible Cloud. Set this to your
- *                     own instance's script for self-hosted Plausible.
+ * Resolution (first non-empty wins):
+ *   domain — admin `analytics_config.plausibleDomain`  →  env PLAUSIBLE_DOMAIN
+ *   src    — admin `analytics_config.plausibleSrc`     →  env PLAUSIBLE_SRC
+ *            →  Plausible Cloud
+ *
+ * Rendered from the dynamic root layout, so the DB value is read per request
+ * (no rebuild needed). A read failure degrades to env / off, never a crash.
  */
-export function Analytics() {
+export async function Analytics() {
+  const config = await getAnalyticsConfig().catch(() => ({}));
+
   /* eslint-disable no-restricted-properties */
-  const domain = process.env.PLAUSIBLE_DOMAIN;
-  const src = process.env.PLAUSIBLE_SRC ?? "https://plausible.io/js/script.js";
+  const domain = config.plausibleDomain?.trim() || process.env.PLAUSIBLE_DOMAIN;
+  const src =
+    config.plausibleSrc?.trim() || process.env.PLAUSIBLE_SRC || "https://plausible.io/js/script.js";
   /* eslint-enable no-restricted-properties */
 
   if (!domain) {

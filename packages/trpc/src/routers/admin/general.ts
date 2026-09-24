@@ -1,7 +1,11 @@
 import { z } from "zod";
 
-import type { I18nLocaleConfig } from "@norish/config/zod/server-config";
-import { I18nLocaleConfigSchema, ServerConfigKeys } from "@norish/config/zod/server-config";
+import type { AnalyticsConfig, I18nLocaleConfig } from "@norish/config/zod/server-config";
+import {
+  AnalyticsConfigSchema,
+  I18nLocaleConfigSchema,
+  ServerConfigKeys,
+} from "@norish/config/zod/server-config";
 import { configExists, getConfig, setConfig } from "@norish/db/repositories/server-config";
 import { trpcLogger as log } from "@norish/shared-server/logger";
 
@@ -135,8 +139,45 @@ const updateLocaleConfig = adminProcedure
     return { success: true };
   });
 
+/**
+ * Read the analytics (Plausible) config for the admin form. Empty strings when
+ * unset, so the inputs render controlled.
+ */
+const getAnalytics = adminProcedure.query(async () => {
+  const config = await getConfig<AnalyticsConfig>(ServerConfigKeys.ANALYTICS_CONFIG);
+
+  return {
+    plausibleDomain: config?.plausibleDomain ?? "",
+    plausibleSrc: config?.plausibleSrc ?? "",
+  };
+});
+
+/**
+ * Update the analytics (Plausible) config. Blank fields are stored as unset, so
+ * clearing the domain turns analytics off (env fallback still applies).
+ */
+const updateAnalytics = adminProcedure
+  .input(AnalyticsConfigSchema)
+  .mutation(async ({ ctx, input }) => {
+    log.info({ userId: ctx.user.id }, "Updating analytics config");
+
+    await setConfig(
+      ServerConfigKeys.ANALYTICS_CONFIG,
+      {
+        plausibleDomain: input.plausibleDomain?.trim() || undefined,
+        plausibleSrc: input.plausibleSrc?.trim() || undefined,
+      },
+      ctx.user.id,
+      false
+    );
+
+    return { success: true };
+  });
+
 export const generalProcedures = router({
   updateRegistration,
   updatePasswordAuth,
   updateLocaleConfig,
+  getAnalytics,
+  updateAnalytics,
 });

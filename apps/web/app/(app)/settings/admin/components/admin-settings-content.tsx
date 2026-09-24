@@ -4,6 +4,7 @@ import SettingsSkeleton from "@/components/skeleton/settings-skeleton";
 
 import { AdminSettingsProvider, useAdminSettingsContext } from "../context";
 import AIProcessingCard from "./ai-processing-card";
+import AnalyticsCard from "./analytics-card";
 import { AuthProvidersCard } from "./auth-providers";
 import ContentDetectionCard from "./content-detection-card";
 import GeneralCard from "./general-card";
@@ -32,6 +33,7 @@ function AdminSettingsContent() {
       <ContentDetectionCard />
       <AIProcessingCard />
       <JobQueueCard />
+      <AnalyticsCard />
       <SystemCard />
     </div>
   );
