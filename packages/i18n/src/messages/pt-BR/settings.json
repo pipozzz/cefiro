@@ -634,7 +634,14 @@
         "queued": "{queued, plural, =0 {Nenhuma execução na fila} one {# execução na fila} other {# execuções na fila}} para {recipes, plural, one {# receita} other {# receitas}}",
         "aiDisabled": "A IA está desabilitada neste servidor. Habilite a IA primeiro.",
         "error": "Falha ao iniciar o enriquecimento em massa",
-        "imageCount": "{count, plural, =0 {Nenhuma imagem será gerada.} one {# imagem será gerada.} other {# imagens serão geradas.}}"
+        "imageCount": "{count, plural, =0 {Nenhuma imagem será gerada.} one {# imagem será gerada.} other {# imagens serão geradas.}}",
+        "embed": {
+          "button": "Embed all public recipes",
+          "description": "Queue a discovery embedding for every public recipe on this server. New and edited public recipes embed automatically; this covers the ones that already existed.",
+          "queued": "{queued, plural, =0 {No recipes queued} one {# recipe queued} other {# recipes queued}} for embedding",
+          "notConfigured": "Embeddings are not configured. Set VOYAGE_API_KEY first.",
+          "error": "Failed to start embedding backfill"
+        }
       }
     },
     "aiConfig": {
@@ -867,7 +874,8 @@
         "ingredient-linking": "Vinculação de ingredientes",
         "caldav-sync": "CalDAV sync",
         "scheduled-tasks": "Scheduled tasks",
-        "image-generation": "Geração de imagens"
+        "image-generation": "Geração de imagens",
+        "recipe-embedding": "Embeddings de receitas"
       },
       "summary": {
         "failed": "{count} failed"

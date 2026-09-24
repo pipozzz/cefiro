@@ -44,6 +44,24 @@ export default function BulkEnrichmentForm() {
       },
     })
   );
+  const embedAllMutation = useMutation(
+    trpc.admin.embedAllPublicRecipes.mutationOptions({
+      onError: (error) => {
+        if (error instanceof TRPCClientError && error.data?.code === "PRECONDITION_FAILED") {
+          toast(t("embed.notConfigured"), { variant: "warning" });
+
+          return;
+        }
+        showSafeErrorToast({
+          title: t("embed.error"),
+          description: tErrors("technicalDetails"),
+          color: "danger",
+          error,
+          context: "admin-ai:embed-all",
+        });
+      },
+    })
+  );
   const openConfirm = () => {
     setReplaceExisting(false);
     setIsConfirmOpen(true);
@@ -68,6 +86,23 @@ export default function BulkEnrichmentForm() {
         <Button isPending={enrichAllMutation.isPending} variant="tertiary" onPress={openConfirm}>
           {t("button")}
         </Button>
+      </div>
+      <div className="border-default/60 flex flex-col gap-2 border-t pt-4">
+        <p className="text-muted text-sm">{t("embed.description")}</p>
+        <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2">
+          {embedAllMutation.isSuccess && (
+            <span className="text-success text-sm">
+              {t("embed.queued", { queued: embedAllMutation.data.queued })}
+            </span>
+          )}
+          <Button
+            isPending={embedAllMutation.isPending}
+            variant="tertiary"
+            onPress={() => embedAllMutation.mutate()}
+          >
+            {t("embed.button")}
+          </Button>
+        </div>
       </div>
       <BulkEnrichmentConfirmationModal
         imageCounts={imageCountQuery.data}

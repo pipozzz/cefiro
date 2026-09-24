@@ -17,7 +17,8 @@ import {
 } from "@norish/config/zod/server-config";
 import { getImageGenerationSweepCounts } from "@norish/db/repositories/recipes";
 import { getConfig, setConfig } from "@norish/db/repositories/server-config";
-import { enrollEnrichmentForAllRecipes } from "@norish/queue";
+import { enrollEmbeddingForAllPublicRecipes, enrollEnrichmentForAllRecipes } from "@norish/queue";
+import { isEmbeddingConfigured } from "@norish/shared-server/ai/embeddings/voyage";
 import {
   listModels,
   listTranscriptionModels,
@@ -310,6 +311,31 @@ const enrichAllRecipes = adminProcedure
   });
 
 /**
+ * Enqueue a discovery embedding for every public recipe already on the server
+ * (Phase B1b backfill). New publishes and edits embed automatically; this is
+ * the one-shot for the catalogue that existed before embeddings were turned on.
+ *
+ * Gated on the Voyage key rather than the general AI switch: embeddings are a
+ * separate provider, and without the key every job would no-op.
+ */
+const embedAllPublicRecipes = adminProcedure.mutation(async ({ ctx }) => {
+  log.info({ userId: ctx.user.id }, "Recipe embedding backfill requested");
+
+  if (!isEmbeddingConfigured()) {
+    throw new TRPCError({
+      code: "PRECONDITION_FAILED",
+      message: "Embeddings are not configured. Set VOYAGE_API_KEY before running a backfill.",
+    });
+  }
+
+  const result = await enrollEmbeddingForAllPublicRecipes();
+
+  log.info(result, "Recipe embedding backfill jobs queued");
+
+  return result;
+});
+
+/**
  * How many images an Enrich All Recipes sweep would generate, for the
  * confirmation to name before it starts (ADR-0025) — the one kind whose cost
  * is per recipe and lands on a bill. A per-request read, never stored.
@@ -343,5 +369,6 @@ export const aiConfigProcedures = router({
   listAvailableModels,
   listAvailableTranscriptionModels,
   enrichAllRecipes,
+  embedAllPublicRecipes,
   imageGenerationSweepCount,
 });

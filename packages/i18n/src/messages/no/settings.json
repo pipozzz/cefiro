@@ -634,7 +634,14 @@
         "queued": "{queued, plural, =0 {Ingen kjøringer i kø} one {# kjøring i kø} other {# kjøringer i kø}} for {recipes, plural, one {# oppskrift} other {# oppskrifter}}",
         "aiDisabled": "AI er deaktivert på denne serveren. Aktiver AI først.",
         "error": "Kunne ikke starte masseberikelse",
-        "imageCount": "{count, plural, =0 {Ingen bilder blir generert.} one {# bilde blir generert.} other {# bilder blir generert.}}"
+        "imageCount": "{count, plural, =0 {Ingen bilder blir generert.} one {# bilde blir generert.} other {# bilder blir generert.}}",
+        "embed": {
+          "button": "Embed all public recipes",
+          "description": "Queue a discovery embedding for every public recipe on this server. New and edited public recipes embed automatically; this covers the ones that already existed.",
+          "queued": "{queued, plural, =0 {No recipes queued} one {# recipe queued} other {# recipes queued}} for embedding",
+          "notConfigured": "Embeddings are not configured. Set VOYAGE_API_KEY first.",
+          "error": "Failed to start embedding backfill"
+        }
       }
     },
     "aiConfig": {
@@ -867,7 +874,8 @@
         "ingredient-linking": "Ingredienskobling",
         "caldav-sync": "CalDAV sync",
         "scheduled-tasks": "Scheduled tasks",
-        "image-generation": "Bildegenerering"
+        "image-generation": "Bildegenerering",
+        "recipe-embedding": "Oppskrift-embeddings"
       },
       "summary": {
         "failed": "{count} failed"

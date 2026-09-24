@@ -634,7 +634,14 @@
         "queued": "{queued, plural, =0 {Žiadne behy zaradené} one {# beh zaradený} few {# behy zaradené} other {# behov zaradených}} pre {recipes, plural, one {# recept} few {# recepty} other {# receptov}}",
         "aiDisabled": "AI je na tomto serveri zakázaná. Najprv povoľte AI.",
         "error": "Hromadné obohatenie sa nepodarilo spustiť",
-        "imageCount": "{count, plural, =0 {Prehľadávanie nevygeneruje žiadne obrázky.} one {Prehľadávanie vygeneruje # obrázok.} few {Prehľadávanie vygeneruje # obrázky.} other {Prehľadávanie vygeneruje # obrázkov.}}"
+        "imageCount": "{count, plural, =0 {Prehľadávanie nevygeneruje žiadne obrázky.} one {Prehľadávanie vygeneruje # obrázok.} few {Prehľadávanie vygeneruje # obrázky.} other {Prehľadávanie vygeneruje # obrázkov.}}",
+        "embed": {
+          "button": "Vektorizovať všetky verejné recepty",
+          "description": "Zaradí do fronty vektor pre objavovanie pre každý verejný recept na tomto serveri. Nové a upravené verejné recepty sa vektorizujú automaticky; toto pokryje tie, ktoré už existovali.",
+          "queued": "{queued, plural, =0 {Do fronty nezaradený žiadny recept} one {Do fronty zaradený # recept} few {Do fronty zaradené # recepty} other {Do fronty zaradených # receptov}} na vektorizáciu",
+          "notConfigured": "Vektory nie sú nakonfigurované. Najprv nastavte VOYAGE_API_KEY.",
+          "error": "Nepodarilo sa spustiť dopĺňanie vektorov"
+        }
       }
     },
     "aiConfig": {
@@ -867,7 +874,8 @@
         "ingredient-linking": "Prepojenie surovín",
         "caldav-sync": "Synchronizácia CalDAV",
         "scheduled-tasks": "Naplánované úlohy",
-        "image-generation": "Generovanie obrázkov"
+        "image-generation": "Generovanie obrázkov",
+        "recipe-embedding": "Vektory receptov"
       },
       "summary": {
         "failed": "{count} zlyhalo"

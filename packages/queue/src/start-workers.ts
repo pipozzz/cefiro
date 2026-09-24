@@ -16,6 +16,7 @@ import { startIngredientLinkingWorker } from "@norish/queue/ingredient-linking/w
 import { stopAllLazyWorkers } from "@norish/queue/lazy-worker-manager";
 import { startNutritionEstimationWorker } from "@norish/queue/nutrition-estimation/worker";
 import { startPasteImportWorker } from "@norish/queue/paste-import/worker";
+import { startRecipeEmbeddingWorker } from "@norish/queue/recipe-embedding/worker";
 import { startRecipeImportWorker } from "@norish/queue/recipe-import/worker";
 import { startRecipeProvenanceWorker } from "@norish/queue/recipe-provenance/worker";
 import { closeBullConnection } from "@norish/queue/redis/bullmq";
@@ -61,6 +62,7 @@ export async function startWorkers(): Promise<void> {
     startIngredientLinkingWorker(),
     startImageGenerationWorker(),
     startCaldavSyncWorker(),
+    startRecipeEmbeddingWorker(),
   ]);
 
   // Scheduled tasks (always-running for cron jobs)

@@ -66,6 +66,8 @@ export const JOB_PIPELINES: Record<QueueName, string[]> = {
   [QUEUE_NAMES.CALDAV_SYNC]: [],
   [QUEUE_NAMES.SCHEDULED_TASKS]: ["running"],
   [QUEUE_NAMES.STORE_LOOKUP]: ["searching", "reading-product", "saving"],
+  // Reconciles from the recipe's live state in one pass; no fixed step sequence.
+  [QUEUE_NAMES.RECIPE_EMBEDDING]: [],
 };
 
 /**
