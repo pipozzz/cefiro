@@ -20,6 +20,7 @@ import {
 import {
   followUser,
   getFollowCounts,
+  getPublicRecipesByIds,
   getRandomPublicRecipes,
   getRecipeIngredientNamesByRecipeIds,
   getRecipeOfTheDay,
@@ -61,6 +62,7 @@ import {
   listCommentsForRecipe,
   reportComment,
 } from "@norish/db/repositories/recipe-comments";
+import { findSimilarPublicRecipes } from "@norish/db/repositories/recipe-embeddings";
 import {
   createSavedForkGuarded,
   getRecipeFull,
@@ -69,6 +71,7 @@ import {
   getSavedFromAttribution,
   listOwnRecipesForSharing,
 } from "@norish/db/repositories/recipes";
+import { getThemeById, listThemes } from "@norish/db/repositories/themes";
 import { getUserAllergies } from "@norish/db/repositories/user-allergies";
 import {
   getProfileByHandle,
@@ -549,21 +552,67 @@ const trendingTopics = publicProcedure.input(TrendingTopicsInputSchema).query(as
   return { topics: await listTrendingTopics(input.limit) };
 });
 
-// Discover themes: top public tags with a count and a representative photo,
-// for the discovery landing's theme tiles. The sample image is rewritten to
-// the public slug-scoped media URL so anonymous visitors can load it.
+// Discover themes for the discovery landing's theme tiles.
+//
+// Semantic clusters (Phase B) when the clustering job has built any: each tile
+// carries a `themeId` and clicking it runs a vector-similarity search
+// (`themeRecipes`) — surfacing recipes near the cluster even when they share no
+// tags. Until then it falls back to the tag-based strip (Phase A): those tiles
+// carry `tag` instead, and clicking drives the existing tag filter. The sample
+// image is rewritten to the public slug-scoped media URL for anonymous visitors.
 const discoverThemes = publicProcedure
   .input(z.object({ limit: z.number().int().min(1).max(20).default(8) }))
   .query(async ({ input }) => {
+    const semantic = await listThemes(input.limit);
+
+    if (semantic.length > 0) {
+      return {
+        themes: semantic.map((theme) => ({
+          themeId: theme.id,
+          tag: null as string | null,
+          name: theme.name,
+          recipeCount: theme.recipeCount,
+          image: theme.slug ? toSlugMediaUrl(theme.image, theme.slug) : null,
+        })),
+      };
+    }
+
     const rows = await listDiscoverThemes(input.limit);
 
     return {
       themes: rows.map((row) => ({
+        themeId: null as string | null,
+        tag: row.name,
         name: row.name,
         recipeCount: row.recipeCount,
         image: row.slug ? toSlugMediaUrl(row.image, row.slug) : null,
       })),
     };
+  });
+
+// The recipes of one semantic theme: public recipes nearest the cluster's
+// centroid, most similar first. This is the vector-search payoff — a theme
+// finds recipes by meaning, not by a shared tag. Empty (not an error) when the
+// theme is gone or embeddings are unavailable, so the tile degrades quietly.
+const themeRecipes = publicProcedure
+  .input(z.object({ themeId: z.uuid(), limit: z.number().int().min(1).max(48).default(24) }))
+  .query(async ({ input }) => {
+    const theme = await getThemeById(input.themeId);
+
+    if (!theme) {
+      return { name: null as string | null, recipes: [] };
+    }
+
+    const similar = await findSimilarPublicRecipes(theme.centroid, input.limit);
+    const rows = await getPublicRecipesByIds(similar.map((row) => row.recipeId));
+
+    // `getPublicRecipesByIds` returns storage order; restore similarity order.
+    const byId = new Map(rows.map((row) => [row.id, row]));
+    const ordered = similar
+      .map((row) => byId.get(row.recipeId))
+      .filter((row): row is (typeof rows)[number] => Boolean(row));
+
+    return { name: theme.name, recipes: await toFeedCardsWithRatings(ordered) };
   });
 
 // "Recipe of the day": one public recipe, deterministic per calendar day.
@@ -1269,6 +1318,7 @@ export const socialProcedures = router({
   searchByIngredients,
   trendingTopics,
   discoverThemes,
+  themeRecipes,
   surpriseRecipes,
   relatedRecipes,
   recipeOfTheDay,

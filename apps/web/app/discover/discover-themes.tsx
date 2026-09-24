@@ -6,13 +6,13 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 /**
- * A strip of dynamic "food themes" at the top of discovery. Phase A derives them
- * from the public-recipe corpus — the most-used tags (`social.trendingTopics`),
- * plus a handy "quick" filter — so the strip changes as the catalogue grows,
- * with no curation. Selecting a theme drives the existing discover filters.
+ * A strip of dynamic "food themes" at the top of discovery.
  *
- * (Phase B will swap the source for semantic vector clusters — see the
- * discover-themes plan — behind this same UI/props.)
+ * Two sources, same strip (`social.discoverThemes` decides which):
+ * - Semantic clusters (Phase B): each tile carries a `themeId`; selecting it
+ *   runs a vector-similarity search via `onSelectTheme`.
+ * - Tag fallback (Phase A) before any clusters exist: each tile carries a `tag`;
+ *   selecting it drives the existing tag filter via `onSelectTag`.
  */
 
 // Emoji picked from a keyword in the tag, so tiles read at a glance. Matches
@@ -74,9 +74,11 @@ const tileClass = "w-[150px] shrink-0 overflow-hidden rounded-2xl text-left tran
 
 export function DiscoverThemes({
   onSelectTag,
+  onSelectTheme,
   onQuick,
 }: {
   onSelectTag: (tag: string) => void;
+  onSelectTheme: (theme: { id: string; name: string }) => void;
   onQuick: () => void;
 }) {
   const trpc = useTRPC();
@@ -115,10 +117,14 @@ export function DiscoverThemes({
 
         {themes.map((theme) => (
           <button
-            key={theme.name}
+            key={theme.themeId ?? theme.tag ?? theme.name}
             className={`${tileClass} bg-content2 hover:bg-content3`}
             type="button"
-            onClick={() => onSelectTag(theme.name)}
+            onClick={() =>
+              theme.themeId
+                ? onSelectTheme({ id: theme.themeId, name: theme.name })
+                : onSelectTag(theme.tag ?? theme.name)
+            }
           >
             <div className="bg-content3 relative h-[84px] w-full">
               {theme.image ? (
@@ -137,7 +143,7 @@ export function DiscoverThemes({
             </div>
             <div className="p-2.5">
               <span className="text-foreground block truncate text-sm font-medium">
-                #{theme.name}
+                {theme.themeId ? theme.name : `#${theme.name}`}
               </span>
               <span className="text-default-500 text-xs">
                 {t("themeCount", { count: theme.recipeCount })}
