@@ -28,6 +28,17 @@ type Mode = "recipes" | "following" | "byIngredient" | "surprise" | "cooks" | "c
 const CATEGORIES: Category[] = ["Breakfast", "Lunch", "Dinner", "Snack"];
 const TIME_OPTIONS = [15, 30, 60] as const;
 
+// Active uses the brand accent (a solid green fill + white text), not the
+// theme's pale `primary`, so the selected chip is unmistakable; inactive is a
+// bordered light pill so unselected chips still read as chips rather than plain
+// text. The accent is referenced by CSS var so it always renders.
+const pillClass = (active: boolean) =>
+  `rounded-full border px-4 py-1.5 text-sm font-medium transition ${
+    active
+      ? "border-transparent bg-[var(--accent)] text-white shadow-sm"
+      : "border-border bg-content2 text-default-600 hover:bg-content3"
+  }`;
+
 export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
   const trpc = useTRPC();
   const searchParams = useSearchParams();
@@ -41,6 +52,9 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
   const [maxMinutes, setMaxMinutes] = useState<number | null>(null);
   const [hideMyAllergens, setHideMyAllergens] = useState(false);
   const [tag, setTag] = useState<string | null>(() => searchParams.get("tag"));
+  // A selected semantic theme (Phase B): its own vector-search results view,
+  // exclusive with the tag/category/time filters.
+  const [theme, setTheme] = useState<{ id: string; name: string } | null>(null);
 
   const [q, setQ] = useState(() => searchParams.get("q") ?? "");
   const [debouncedQ, setDebouncedQ] = useState(q);
@@ -152,16 +166,7 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
 
   const recipes = browse.data?.pages.flatMap((page) => page.recipes) ?? [];
 
-  // Active uses the brand accent (a solid green fill + white text), not the
-  // theme's pale `primary`, so the selected chip is unmistakable; inactive is a
-  // bordered light pill so unselected chips still read as chips rather than
-  // plain text. The accent is referenced by CSS var so it always renders.
-  const pill = (active: boolean) =>
-    `rounded-full border px-4 py-1.5 text-sm font-medium transition ${
-      active
-        ? "border-transparent bg-[var(--accent)] text-white shadow-sm"
-        : "border-border bg-content2 text-default-600 hover:bg-content3"
-    }`;
+  const pill = pillClass;
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 pb-24 md:px-6">
@@ -345,13 +350,20 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
                 ) : null}
               </>
             )
+          ) : theme ? (
+            <ThemeResults theme={theme} onClear={() => setTheme(null)} />
           ) : (
             <>
               {/* Dynamic food themes, the top-of-discovery entry point. Shown
-                  only on the default landing (no active filter). Selecting a
-                  theme drives the existing tag / time filters. */}
+                  only on the default landing (no active filter). A semantic
+                  theme opens its own vector-search results; a tag theme drives
+                  the existing tag / time filters. */}
               {!category && !tag && !maxMinutes ? (
-                <DiscoverThemes onQuick={() => setMaxMinutes(30)} onSelectTag={setTag} />
+                <DiscoverThemes
+                  onQuick={() => setMaxMinutes(30)}
+                  onSelectTag={setTag}
+                  onSelectTheme={setTheme}
+                />
               ) : null}
 
               {/* Recipe of the day: a curated daily hero, shown only on the
@@ -479,6 +491,53 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
             </>
           )}
         </>
+      )}
+    </div>
+  );
+}
+
+/**
+ * A semantic theme's results: public recipes nearest the cluster's centroid,
+ * most similar first (`social.themeRecipes`). This is the Phase B payoff —
+ * recipes surfaced by meaning, not by a shared tag — so it deliberately shows
+ * the community recipe grid without the tag/time/category filters, plus a way
+ * back to the landing.
+ */
+function ThemeResults({
+  theme,
+  onClear,
+}: {
+  theme: { id: string; name: string };
+  onClear: () => void;
+}) {
+  const t = useTranslations("social.discover");
+  const trpc = useTRPC();
+
+  const query = useQuery({
+    ...trpc.social.themeRecipes.queryOptions({ themeId: theme.id, limit: 24 }),
+    placeholderData: keepPreviousData,
+    retry: false,
+  });
+
+  const recipes = query.data?.recipes ?? [];
+
+  return (
+    <div>
+      <div className="mb-6 flex flex-wrap items-center gap-3">
+        <button className={pillClass(false)} type="button" onClick={onClear}>
+          ← {t("themeBack")}
+        </button>
+        <h2 className="text-foreground text-lg font-semibold">{theme.name}</h2>
+      </div>
+
+      {query.isLoading ? (
+        <div className="flex min-h-[30vh] items-center justify-center">
+          <Spinner />
+        </div>
+      ) : recipes.length === 0 ? (
+        <p className="bg-content2 text-default-500 rounded-2xl p-10 text-center">{t("empty")}</p>
+      ) : (
+        <SocialRecipeGrid recipes={recipes} />
       )}
     </div>
   );

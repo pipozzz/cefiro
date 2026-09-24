@@ -491,6 +491,22 @@ export async function getRandomPublicRecipes(limit: number): Promise<FeedRecipeR
     .limit(limit);
 }
 
+/**
+ * Public recipe cards for a set of ids, as feed rows. Order is NOT preserved —
+ * a `WHERE id IN (…)` returns rows in storage order — so a caller that needs a
+ * specific order (e.g. semantic-similarity ranking) reorders by id itself.
+ * Non-public or missing ids are silently dropped.
+ */
+export async function getPublicRecipesByIds(ids: string[]): Promise<FeedRecipeRow[]> {
+  if (ids.length === 0) return [];
+
+  return db
+    .select({ ...RECIPE_CARD_COLUMNS, favoriteCount: favoriteCountSql })
+    .from(recipes)
+    .leftJoin(userProfiles, eq(userProfiles.userId, recipes.userId))
+    .where(and(eq(recipes.visibility, "public"), inArray(recipes.id, ids)));
+}
+
 function paginateByPublishedAt(
   rows: FeedRecipeRow[],
   limit: number

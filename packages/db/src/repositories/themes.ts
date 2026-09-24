@@ -47,6 +47,13 @@ export async function listThemes(limit: number): Promise<ThemeRow[]> {
   return db.select().from(themes).orderBy(themes.rank).limit(limit);
 }
 
+/** One theme by id — its centroid drives the similarity search behind a tile. */
+export async function getThemeById(id: string): Promise<ThemeRow | null> {
+  const [row] = await db.select().from(themes).where(eq(themes.id, id)).limit(1);
+
+  return row ?? null;
+}
+
 /** Names of the given recipes, keyed by id — for building a cluster's titles. */
 export async function getRecipeNamesByIds(ids: string[]): Promise<Map<string, string>> {
   if (ids.length === 0) return new Map();

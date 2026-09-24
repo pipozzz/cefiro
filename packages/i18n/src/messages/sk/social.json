@@ -52,6 +52,7 @@
     "themesHeading": "Objavuj témy",
     "themeQuick": "Rýchle · do 30 min",
     "themeCount": "{count, plural, one {# recept} few {# recepty} other {# receptov}}",
+    "themeBack": "Späť na objavovanie",
     "modeFollowing": "Sledované"
   },
   "categories": {

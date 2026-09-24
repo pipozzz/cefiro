@@ -52,6 +52,7 @@
     "themesHeading": "Explore themes",
     "themeQuick": "Quick · under 30 min",
     "themeCount": "{count, plural, one {# recipe} other {# recipes}}",
+    "themeBack": "Обратно към откриване",
     "modeFollowing": "Following"
   },
   "categories": {
