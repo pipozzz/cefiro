@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import type { FeedRecipeRow } from "@norish/db/repositories/follows";
 import type {
@@ -24,6 +25,7 @@ import {
   getRecipeOfTheDay,
   isFollowing,
   listDiscoverRecipes,
+  listDiscoverThemes,
   listFeedRecipes,
   listRelatedPublicRecipes,
   listTrendingTopics,
@@ -540,6 +542,23 @@ const searchByIngredients = publicProcedure
 const trendingTopics = publicProcedure.input(TrendingTopicsInputSchema).query(async ({ input }) => {
   return { topics: await listTrendingTopics(input.limit) };
 });
+
+// Discover themes: top public tags with a count and a representative photo,
+// for the discovery landing's theme tiles. The sample image is rewritten to
+// the public slug-scoped media URL so anonymous visitors can load it.
+const discoverThemes = publicProcedure
+  .input(z.object({ limit: z.number().int().min(1).max(20).default(8) }))
+  .query(async ({ input }) => {
+    const rows = await listDiscoverThemes(input.limit);
+
+    return {
+      themes: rows.map((row) => ({
+        name: row.name,
+        recipeCount: row.recipeCount,
+        image: row.slug ? toSlugMediaUrl(row.image, row.slug) : null,
+      })),
+    };
+  });
 
 // "Recipe of the day": one public recipe, deterministic per calendar day.
 const recipeOfTheDay = publicProcedure.query(async () => {
@@ -1243,6 +1262,7 @@ export const socialProcedures = router({
   search,
   searchByIngredients,
   trendingTopics,
+  discoverThemes,
   surpriseRecipes,
   relatedRecipes,
   recipeOfTheDay,

@@ -70,7 +70,7 @@ function emojiForTag(name: string): string {
   return "🍽️";
 }
 
-const tileClass = "flex w-[132px] shrink-0 flex-col gap-1 rounded-2xl p-3 text-left transition";
+const tileClass = "w-[150px] shrink-0 overflow-hidden rounded-2xl text-left transition";
 
 export function DiscoverThemes({
   onSelectTag,
@@ -83,14 +83,14 @@ export function DiscoverThemes({
   const t = useTranslations("social.discover");
 
   const { data } = useQuery({
-    ...trpc.social.trendingTopics.queryOptions({ limit: 8 }),
+    ...trpc.social.discoverThemes.queryOptions({ limit: 8 }),
     staleTime: 5 * 60_000,
   });
 
-  const topics = data?.topics ?? [];
+  const themes = data?.themes ?? [];
 
   // Nothing to explore yet (empty catalogue): render no strip at all.
-  if (topics.length === 0) {
+  if (themes.length === 0) {
     return null;
   }
 
@@ -99,26 +99,50 @@ export function DiscoverThemes({
       <h2 className="text-foreground mb-3 text-sm font-semibold">{t("themesHeading")}</h2>
       <div className="-mx-1 flex gap-3 overflow-x-auto px-1 pb-1">
         <button
-          className={`bg-accent-soft text-accent hover:opacity-90 ${tileClass}`}
+          className={`${tileClass} bg-accent-soft hover:opacity-90`}
           type="button"
           onClick={onQuick}
         >
-          <ClockIcon className="h-6 w-6" />
-          <span className="truncate text-sm font-semibold">{t("themeQuick")}</span>
+          <div className="text-accent flex h-[84px] w-full items-center justify-center">
+            <ClockIcon className="h-9 w-9" />
+          </div>
+          <div className="p-2.5">
+            <span className="text-accent block truncate text-sm font-semibold">
+              {t("themeQuick")}
+            </span>
+          </div>
         </button>
 
-        {topics.map((topic) => (
+        {themes.map((theme) => (
           <button
-            key={topic.name}
-            className={`bg-content2 text-foreground hover:bg-content3 ${tileClass}`}
+            key={theme.name}
+            className={`${tileClass} bg-content2 hover:bg-content3`}
             type="button"
-            onClick={() => onSelectTag(topic.name)}
+            onClick={() => onSelectTag(theme.name)}
           >
-            <span className="text-2xl leading-none">{emojiForTag(topic.name)}</span>
-            <span className="truncate text-sm font-medium">#{topic.name}</span>
-            <span className="text-default-500 text-xs">
-              {t("themeCount", { count: topic.recipeCount })}
-            </span>
+            <div className="bg-content3 relative h-[84px] w-full">
+              {theme.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  alt=""
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                  src={theme.image}
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-3xl">
+                  {emojiForTag(theme.name)}
+                </div>
+              )}
+            </div>
+            <div className="p-2.5">
+              <span className="text-foreground block truncate text-sm font-medium">
+                #{theme.name}
+              </span>
+              <span className="text-default-500 text-xs">
+                {t("themeCount", { count: theme.recipeCount })}
+              </span>
+            </div>
           </button>
         ))}
       </div>
