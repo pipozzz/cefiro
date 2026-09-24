@@ -1,7 +1,9 @@
 services:
-  # PostgreSQL Database
+  # PostgreSQL Database — pgvector image so the `vector` extension (semantic
+  # discovery themes, Phase B) is available. Production Postgres is host-managed;
+  # it must likewise run a pgvector-capable image (e.g. pgvector/pgvector:pg18).
   db:
-    image: postgres:17-alpine
+    image: pgvector/pgvector:pg17
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres

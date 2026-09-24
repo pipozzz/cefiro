@@ -35,6 +35,7 @@
     "./archive/parser-helpers": "./src/archive/parser-helpers.ts",
     "./caldav/client": "./src/caldav/client.ts",
     "./caldav/sync": "./src/caldav/sync.ts",
+    "./ai/embeddings/*": "./src/ai/embeddings/*.ts",
     "./ai/enrichment/*": "./src/ai/enrichment/*.ts",
     "./ai/prompts/loader": "./src/ai/prompts/loader.ts",
     "./ai/prompts/overrides": "./src/ai/prompts/overrides.ts",
