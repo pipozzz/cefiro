@@ -43,7 +43,7 @@
       "outputs": []
     },
     "lint": {
-      "dependsOn": ["^lint"],
+      "dependsOn": [],
       "outputs": []
     },
     "typecheck": {
