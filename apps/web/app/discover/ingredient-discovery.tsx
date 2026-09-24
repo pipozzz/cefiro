@@ -4,7 +4,7 @@ import type { KeyboardEvent } from "react";
 import { useState } from "react";
 import { useTRPC } from "@/app/providers/trpc-provider";
 import { SocialRecipeCard } from "@/components/social/social-recipe-card";
-import { CheckCircleIcon } from "@heroicons/react/16/solid";
+import { CheckCircleIcon, MagnifyingGlassIcon } from "@heroicons/react/16/solid";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Button, Spinner, toast } from "@heroui/react";
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -74,7 +74,8 @@ export function IngredientDiscovery() {
 
   return (
     <div>
-      <label className="bg-content2 focus-within:bg-content1 focus-within:ring-primary flex flex-wrap items-center gap-2 rounded-2xl p-3 ring-1 ring-transparent transition">
+      <label className="bg-field shadow-field focus-within:border-accent/60 focus-within:ring-accent/20 flex flex-wrap items-center gap-2 rounded-3xl border border-transparent px-4 py-2.5 transition-colors focus-within:ring-2">
+        <MagnifyingGlassIcon className="text-muted h-5 w-5 shrink-0" />
         {chips.map((chip) => (
           <span
             key={chip}
@@ -93,7 +94,7 @@ export function IngredientDiscovery() {
         ))}
         <input
           aria-label={t("ingredientPlaceholder")}
-          className="text-foreground placeholder:text-default-400 min-w-[8rem] flex-1 bg-transparent py-1 outline-none"
+          className="text-foreground placeholder:text-muted min-w-[8rem] flex-1 bg-transparent py-1 text-[15px] outline-none"
           placeholder={chips.length === 0 ? t("ingredientPlaceholder") : ""}
           value={input}
           onBlur={() => addChip(input)}
