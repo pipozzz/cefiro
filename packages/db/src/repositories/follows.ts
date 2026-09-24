@@ -1,4 +1,4 @@
-import { and, desc, eq, inArray, lt, lte, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, isNotNull, lt, lte, sql } from "drizzle-orm";
 
 import { db } from "@norish/db/drizzle";
 
@@ -251,6 +251,65 @@ export async function listTrendingTopics(
     .limit(limit);
 
   return rows.map((row) => ({ name: row.name, recipeCount: Number(row.recipeCount) }));
+}
+
+/**
+ * Discover themes: the top public tags with a count, each carrying one
+ * representative recipe (newest public one with a photo) so the discover
+ * theme tiles can show a real image. `slug` + `image` are owner-scoped; the
+ * caller rewrites `image` to the public slug-scoped media URL.
+ */
+export async function listDiscoverThemes(
+  limit: number
+): Promise<{ name: string; recipeCount: number; slug: string | null; image: string | null }[]> {
+  const recipeCount = sql<number>`count(distinct ${recipeTags.recipeId})`;
+
+  const topRows = await db
+    .select({ name: tags.name, recipeCount })
+    .from(recipeTags)
+    .innerJoin(tags, eq(tags.id, recipeTags.tagId))
+    .innerJoin(recipes, eq(recipes.id, recipeTags.recipeId))
+    .where(eq(recipes.visibility, "public"))
+    .groupBy(tags.name)
+    .orderBy(desc(recipeCount), tags.name)
+    .limit(limit);
+
+  const names = topRows.map((row) => row.name);
+  const sampleByTag = new Map<string, { slug: string | null; image: string | null }>();
+
+  if (names.length > 0) {
+    // One representative recipe per tag: DISTINCT ON (tag) with the tag as the
+    // first ORDER BY key (Postgres requirement), then newest first.
+    const samples = await db
+      .selectDistinctOn([tags.name], {
+        name: tags.name,
+        slug: recipes.slug,
+        image: recipes.image,
+      })
+      .from(recipeTags)
+      .innerJoin(tags, eq(tags.id, recipeTags.tagId))
+      .innerJoin(recipes, eq(recipes.id, recipeTags.recipeId))
+      .where(
+        and(
+          eq(recipes.visibility, "public"),
+          inArray(tags.name, names),
+          isNotNull(recipes.image),
+          isNotNull(recipes.slug)
+        )
+      )
+      .orderBy(tags.name, desc(recipes.createdAt));
+
+    for (const sample of samples) {
+      sampleByTag.set(sample.name, { slug: sample.slug, image: sample.image });
+    }
+  }
+
+  return topRows.map((row) => ({
+    name: row.name,
+    recipeCount: Number(row.recipeCount),
+    slug: sampleByTag.get(row.name)?.slug ?? null,
+    image: sampleByTag.get(row.name)?.image ?? null,
+  }));
 }
 
 /**
