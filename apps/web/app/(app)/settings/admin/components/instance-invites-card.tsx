@@ -108,9 +108,9 @@ export default function InstanceInvitesCard() {
           >
             <Label>{t("emailLabel")}</Label>
             <InputGroup fullWidth>
-              <InputGroup.Addon>
-                <EnvelopeIcon className="h-4 w-4" />
-              </InputGroup.Addon>
+              <InputGroup.Prefix>
+                <EnvelopeIcon className="text-muted h-4 w-4" />
+              </InputGroup.Prefix>
               <InputGroup.Input autoComplete="off" placeholder={t("emailPlaceholder")} />
             </InputGroup>
           </TextField>
