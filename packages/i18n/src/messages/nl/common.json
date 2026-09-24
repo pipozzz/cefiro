@@ -127,7 +127,8 @@
       "label": "Recept URL",
       "placeholder": "https://example.com/your-recipe",
       "failed": "Importeren van recept mislukt",
-      "failedWithAI": "Importeren van recept met AI mislukt"
+      "failedWithAI": "Importeren van recept met AI mislukt",
+      "importing": "Importing recipe…"
     },
     "paste": {
       "title": "Importeren vanuit klembord",

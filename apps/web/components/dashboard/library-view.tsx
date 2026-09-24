@@ -8,8 +8,8 @@ import LibraryGrid from "@/components/dashboard/library-grid";
 import NoCookbooksText from "@/components/dashboard/no-cookbooks-text";
 import NoRecipeResults from "@/components/dashboard/no-recipe-results";
 import NoRecipesText from "@/components/dashboard/no-recipes-text";
+import PendingRecipeCard from "@/components/dashboard/pending-recipe-card";
 import RecipeCard from "@/components/dashboard/recipe-card";
-import RecipeCardSkeleton from "@/components/skeleton/recipe-card-skeleton";
 import { useRecipesContext } from "@/context/recipes-context";
 import { useRecipesFiltersContext } from "@/context/recipes-filters-context";
 import { useCookbooksMutations } from "@/hooks/cookbooks";
@@ -66,7 +66,7 @@ export default function LibraryView({ variant }: { variant: RecipeDashboardViewM
   const renderItem = useCallback(
     (item: LibraryGridItem) => {
       if (item.kind === "pending") {
-        return <RecipeCardSkeleton variant={variant} />;
+        return <PendingRecipeCard variant={variant} />;
       }
 
       if (item.kind === "cookbook") {

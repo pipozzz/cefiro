@@ -117,7 +117,8 @@
       "label": "URL рецепта",
       "placeholder": "https://example.com/your-recipe",
       "failed": "Не удалось импортировать рецепт",
-      "failedWithAI": "Не удалось импортировать рецепт с помощью ИИ"
+      "failedWithAI": "Не удалось импортировать рецепт с помощью ИИ",
+      "importing": "Importing recipe…"
     },
     "paste": {
       "title": "Импорт из текста",

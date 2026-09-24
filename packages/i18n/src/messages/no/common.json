@@ -127,7 +127,8 @@
       "label": "Oppskrift-URL",
       "placeholder": "https://eksempel.no/din-oppskrift",
       "failed": "Kunne ikke importere oppskrift",
-      "failedWithAI": "Kunne ikke importere oppskrift med AI"
+      "failedWithAI": "Kunne ikke importere oppskrift med AI",
+      "importing": "Importing recipe…"
     },
     "paste": {
       "title": "Importer fra liming",
