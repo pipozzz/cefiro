@@ -28,6 +28,9 @@ services:
       S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-}
       S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE:-true}
       S3_PREFIX: ${S3_PREFIX:-}
+      # Voyage AI embeddings for semantic discovery themes (Phase B). Optional —
+      # unset means embeddings are skipped.
+      VOYAGE_API_KEY: ${VOYAGE_API_KEY:-}
       # Serve HTTP only; background jobs run in the worker service below.
       CEFIRO_ROLE: web
     deploy:
@@ -58,6 +61,8 @@ services:
       S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-}
       S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE:-true}
       S3_PREFIX: ${S3_PREFIX:-}
+      # The worker runs the embedding + clustering jobs, so it needs the key.
+      VOYAGE_API_KEY: ${VOYAGE_API_KEY:-}
       CEFIRO_ROLE: worker
     deploy:
       resources:

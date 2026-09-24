@@ -245,6 +245,12 @@ const ServerConfigSchema = z.object({
   AI_MAX_TOKENS: z.coerce.number().default(10000),
   AI_TIMEOUT_MS: z.coerce.number().default(300000),
 
+  // Embeddings (Voyage AI) — powers semantic discovery themes. Optional: when
+  // VOYAGE_API_KEY is unset, embedding jobs no-op and semantic themes fall back.
+  VOYAGE_API_KEY: z.string().optional(),
+  VOYAGE_MODEL: z.string().default("voyage-3"),
+  VOYAGE_ENDPOINT: z.string().default("https://api.voyageai.com/v1/embeddings"),
+
   // Video Processing Configuration
   VIDEO_PARSING_ENABLED: z
     .string()

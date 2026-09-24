@@ -15,6 +15,7 @@ export * from "./recipe-images";
 export * from "./recipe-videos";
 export * from "./household-invites";
 export * from "./instance-invites";
+export * from "./recipe-embeddings";
 export * from "./households";
 export * from "./subscriptions";
 export * from "./ai-usage";
