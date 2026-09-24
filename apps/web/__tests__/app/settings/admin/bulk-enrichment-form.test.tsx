@@ -88,6 +88,7 @@ beforeEach(() => {
   mockUseTRPC.mockReturnValue({
     admin: {
       enrichAllRecipes: { mutationOptions: (options: unknown) => options },
+      embedAllPublicRecipes: { mutationOptions: (options: unknown) => options },
       imageGenerationSweepCount: { queryOptions: (_input: unknown, options: unknown) => options },
     },
   });
