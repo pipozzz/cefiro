@@ -1,15 +1,28 @@
 "use client";
 
-import type { CookingModeRecipe } from "@/app/(app)/recipes/[id]/components/cookingmode/types";
+import type {
+  CookingModeRecipe,
+  CookingModeView,
+  IngredientLike,
+} from "@/app/(app)/recipes/[id]/components/cookingmode/types";
 import { useEffect, useMemo, useState } from "react";
+import { CookingModeBottomBar } from "@/app/(app)/recipes/[id]/components/cookingmode/cooking-mode-bottom-bar";
 import { CookingModeHeader } from "@/app/(app)/recipes/[id]/components/cookingmode/cooking-mode-header";
 import { resolveCookingModeSteps } from "@/app/(app)/recipes/[id]/components/cookingmode/cooking-mode-steps";
 import { CookingStepView } from "@/app/(app)/recipes/[id]/components/cookingmode/cooking-step-view";
 import { useIsDesktopCookingMode } from "@/app/(app)/recipes/[id]/components/cookingmode/use-is-desktop-cooking-mode";
+import {
+  useWakeLockContext,
+  WakeLockProvider,
+} from "@/app/(app)/recipes/[id]/components/wake-lock-context";
 import { PublicSlugSmartInstruction } from "@/components/recipe/public-slug-smart-instruction";
-import { ChevronDownIcon, ChevronUpIcon, FireIcon } from "@heroicons/react/24/outline";
-import { Button, Meter } from "@heroui/react";
-import { useLocale, useTranslations } from "next-intl";
+import { ReadonlyIngredientsList } from "@/components/recipes/readonly-ingredients-list";
+import { TimerDock } from "@/components/timer-dock";
+import { HiddenItemsProvider } from "@/context/hidden-items-context";
+import { FireIcon } from "@heroicons/react/24/outline";
+import { useTranslations } from "next-intl";
+
+import type { UnitsMap } from "@norish/config/zod/server-config";
 
 type CookStep = {
   step: string;
@@ -21,17 +34,20 @@ type CookStep = {
 /**
  * The public recipe page's cook mode.
  *
- * It renders the *same* header and step view the in-app cooking mode uses
- * (`CookingModeHeader`, `CookingStepView`), so a recipe opened from discovery
- * cooks and looks exactly like one opened from the library — the big centred
- * step, the peeks of the steps either side, the page-turn animation, the step
- * images. The only difference is the step renderer injected into the view: the
- * slug-scoped, auth-free `PublicSlugSmartInstruction`, so timer chips still work
- * without touching any authenticated hook or private context.
+ * It renders the *same* header, step view AND bottom bar the in-app cooking
+ * mode uses, so a recipe opened from discovery cooks and looks exactly like one
+ * opened from the library — the centred step, the ingredients view, the kitchen
+ * timers (Minútka + the step-timer dock) and the wake-lock toggle. The only
+ * difference is the auth-free `PublicSlugSmartInstruction` injected into the
+ * step view, plus a readonly ingredients list (the library's ingredients view
+ * pulls authed servings/convert controls, which the public page has no
+ * providers for).
  *
- * The in-app bottom bar's utilities (timers dock, voice, wake toggle) depend on
- * authenticated providers, so this keeps its own lean bar — progress, a "ready
- * around" projection, and back / next — and holds the screen awake itself.
+ * The bottom bar's utilities need two client contexts — wake lock and the
+ * device Hidden-Items preference (behind the timer toggle) — so the dialog is
+ * wrapped in both providers here (auth-free, default-empty), scoped to cooking
+ * mode rather than the whole public page. `config.timersEnabled` is a public
+ * procedure, so the timer controls resolve for signed-out cooks too.
  */
 export function PublicCookMode({
   recipeId,
@@ -39,6 +55,8 @@ export function PublicCookMode({
   image,
   categories,
   steps,
+  ingredients,
+  units,
   systemUsed,
   totalMinutes,
 }: {
@@ -47,20 +65,14 @@ export function PublicCookMode({
   image?: string | null;
   categories?: string[];
   steps: CookStep[];
+  ingredients?: IngredientLike[];
+  units?: UnitsMap;
   systemUsed: string;
   totalMinutes?: number | null;
 }) {
   const t = useTranslations("social.recipe");
-  const locale = useLocale();
-  const isDesktop = useIsDesktopCookingMode();
   const [open, setOpen] = useState(false);
-  const [index, setIndex] = useState(0);
-  // Fixed when the session begins: now + the recipe's total time. A projection,
-  // never a promise — and absent for a recipe with no total time.
-  const [readyAt, setReadyAt] = useState<Date | null>(null);
 
-  // The same resolution the in-app cook mode uses: only the steps written in
-  // this recipe's measurement system, headings folded in, images ordered.
   const cookSteps = useMemo(
     () =>
       resolveCookingModeSteps(
@@ -91,73 +103,9 @@ export function PublicCookMode({
     [recipeId, recipeName, image, categories, totalMinutes, systemUsed]
   );
 
-  // Keep the screen on while cooking; re-acquire it if the tab was hidden.
-  useEffect(() => {
-    if (!open || typeof navigator === "undefined") {
-      return;
-    }
-
-    let lock: { release: () => Promise<void> } | null = null;
-    const request = async () => {
-      try {
-        lock = await (
-          navigator as Navigator & {
-            wakeLock?: { request: (t: "screen") => Promise<typeof lock> };
-          }
-        ).wakeLock?.request("screen");
-      } catch {
-        // Wake Lock unsupported or denied — cooking still works, screen may dim.
-      }
-    };
-
-    void request();
-    const onVisible = () => {
-      if (document.visibilityState === "visible") {
-        void request();
-      }
-    };
-
-    document.addEventListener("visibilitychange", onVisible);
-
-    return () => {
-      document.removeEventListener("visibilitychange", onVisible);
-      void lock?.release().catch(() => {});
-    };
-  }, [open]);
-
-  // Escape closes; arrow keys page through steps.
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-      else if (e.key === "ArrowRight" || e.key === "ArrowDown")
-        setIndex((v) => Math.min(cookSteps.length - 1, v + 1));
-      else if (e.key === "ArrowLeft" || e.key === "ArrowUp") setIndex((v) => Math.max(0, v - 1));
-    };
-
-    window.addEventListener("keydown", onKey);
-
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, cookSteps.length]);
-
   if (cookSteps.length === 0) {
     return null;
   }
-
-  const isLast = index === cookSteps.length - 1;
-  const progress = ((index + 1) / cookSteps.length) * 100;
-  const stepCounter = t("cookStep", { current: index + 1, total: cookSteps.length });
-
-  const startCooking = () => {
-    setIndex(0);
-    setReadyAt(
-      totalMinutes && totalMinutes > 0 ? new Date(Date.now() + totalMinutes * 60_000) : null
-    );
-    setOpen(true);
-  };
 
   return (
     <>
@@ -165,87 +113,154 @@ export function PublicCookMode({
         className="bg-accent text-accent-foreground inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition hover:opacity-90"
         style={{ background: "var(--accent, #336640)", color: "#fff" }}
         type="button"
-        onClick={startCooking}
+        onClick={() => setOpen(true)}
       >
         <FireIcon className="h-5 w-5" />
         <span>{t("cook")}</span>
       </button>
 
       {open ? (
-        <div
-          aria-modal="true"
-          className="bg-background/75 fixed inset-0 z-[1100] flex md:items-center md:justify-center md:p-8"
-          role="dialog"
-        >
-          {/* Match the in-app cook mode: a centred card on desktop, fullscreen
-              on phones. */}
-          <div
-            className={
-              isDesktop
-                ? "bg-surface shadow-overlay flex h-[min(92dvh,900px)] w-[min(1180px,calc(100vw-4rem))] flex-col overflow-hidden rounded-3xl"
-                : "bg-background flex h-[100dvh] w-[100dvw] flex-col overflow-hidden"
-            }
-          >
-            <CookingModeHeader recipe={recipe} onClose={() => setOpen(false)} />
-
-            <div className="min-h-0 flex-1 overflow-hidden">
-              <CookingStepView
-                InstructionComponent={PublicSlugSmartInstruction}
-                activeStep={index}
-                displayIngredients={[]}
-                recipe={recipe}
-                steps={cookSteps}
-              />
-            </div>
-
-            {/* Bottom bar mirrors the in-app cook mode's layout: meter, ready-at +
-              counter, then back / next. */}
-            <div className="border-border shrink-0 border-t px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] md:px-6 md:pt-4 md:pb-4">
-              <Meter aria-label={stepCounter} className="w-full" color="accent" value={progress}>
-                <Meter.Track>
-                  <Meter.Fill />
-                </Meter.Track>
-              </Meter>
-
-              <div className="mt-2 flex items-center justify-between gap-3 text-sm">
-                <span className="text-muted truncate">
-                  {readyAt
-                    ? t("cookReadyAt", {
-                        time: readyAt.toLocaleTimeString(locale, {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        }),
-                      })
-                    : ""}
-                </span>
-                <span className="text-muted shrink-0 font-medium tabular-nums">{stepCounter}</span>
-              </div>
-
-              <div className="mt-3 flex items-center justify-between gap-2">
-                <Button
-                  isIconOnly
-                  aria-label={t("cookPrev")}
-                  className="size-10 min-w-10 rounded-full"
-                  isDisabled={index === 0}
-                  variant="secondary"
-                  onPress={() => setIndex((v) => Math.max(0, v - 1))}
-                >
-                  <ChevronUpIcon className="size-5" />
-                </Button>
-
-                <Button
-                  className="shrink-0 rounded-full"
-                  variant="primary"
-                  onPress={() => (isLast ? setOpen(false) : setIndex((v) => v + 1))}
-                >
-                  <span>{isLast ? t("cookDone") : t("cookNext")}</span>
-                  <ChevronDownIcon className="size-5" />
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <WakeLockProvider>
+          <HiddenItemsProvider>
+            <PublicCookModeDialog
+              cookSteps={cookSteps}
+              ingredients={ingredients ?? []}
+              recipe={recipe}
+              systemUsed={systemUsed}
+              totalMinutes={totalMinutes ?? null}
+              units={units}
+              onClose={() => setOpen(false)}
+            />
+          </HiddenItemsProvider>
+        </WakeLockProvider>
       ) : null}
     </>
+  );
+}
+
+function PublicCookModeDialog({
+  recipe,
+  cookSteps,
+  ingredients,
+  units,
+  systemUsed,
+  totalMinutes,
+  onClose,
+}: {
+  recipe: CookingModeRecipe;
+  cookSteps: ReturnType<typeof resolveCookingModeSteps>;
+  ingredients: IngredientLike[];
+  units?: UnitsMap;
+  systemUsed: string;
+  totalMinutes: number | null;
+  onClose: () => void;
+}) {
+  const isDesktop = useIsDesktopCookingMode();
+  const { enable, disable, isActive, isSupported } = useWakeLockContext();
+
+  const [activeStep, setActiveStep] = useState(0);
+  const [activeView, setActiveView] = useState<CookingModeView>("steps");
+  const [areTimersOpen, setAreTimersOpen] = useState(false);
+  // Fixed when the session begins: now + the recipe's total time. A projection,
+  // never a promise — and absent for a recipe with no total time.
+  const [readyAt] = useState<Date | null>(() =>
+    totalMinutes && totalMinutes > 0 ? new Date(Date.now() + totalMinutes * 60_000) : null
+  );
+
+  // Hold the screen awake for the whole session; hand it back on close. The
+  // bottom bar's toggle then only ever releases it (autoEnable is off there).
+  useEffect(() => {
+    if (isSupported && !isActive) {
+      void enable();
+    }
+
+    return () => disable();
+    // Mount = cook session start, unmount = close. Intentionally once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Escape closes; arrow keys page through steps and switch views.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      } else if (e.key === "ArrowRight") {
+        setActiveView("ingredients");
+      } else if (e.key === "ArrowLeft") {
+        setActiveView("steps");
+      } else if (e.key === "ArrowDown") {
+        setActiveView("steps");
+        setActiveStep((v) => Math.min(cookSteps.length - 1, v + 1));
+      } else if (e.key === "ArrowUp") {
+        setActiveView("steps");
+        setActiveStep((v) => Math.max(0, v - 1));
+      }
+    };
+
+    window.addEventListener("keydown", onKey);
+
+    return () => window.removeEventListener("keydown", onKey);
+  }, [cookSteps.length, onClose]);
+
+  return (
+    <div
+      aria-modal="true"
+      className="bg-background/75 fixed inset-0 z-[1100] flex md:items-center md:justify-center md:p-8"
+      role="dialog"
+    >
+      {/* Match the in-app cook mode: a centred card on desktop, fullscreen on
+          phones. */}
+      <div
+        className={
+          isDesktop
+            ? "bg-surface shadow-overlay flex h-[min(92dvh,900px)] w-[min(1180px,calc(100vw-4rem))] flex-col overflow-hidden rounded-3xl"
+            : "bg-background flex h-[100dvh] w-[100dvw] flex-col overflow-hidden"
+        }
+      >
+        <CookingModeHeader recipe={recipe} onClose={onClose} />
+
+        <div className="min-h-0 flex-1 overflow-hidden">
+          {activeView === "ingredients" ? (
+            <div className="h-full overflow-y-auto px-4 py-4 md:px-6">
+              <ReadonlyIngredientsList
+                interactive
+                ingredients={ingredients}
+                systemUsed={systemUsed}
+                units={units}
+              />
+            </div>
+          ) : (
+            <CookingStepView
+              InstructionComponent={PublicSlugSmartInstruction}
+              activeStep={activeStep}
+              displayIngredients={[]}
+              recipe={recipe}
+              steps={cookSteps}
+            />
+          )}
+        </div>
+
+        <CookingModeBottomBar
+          activeStep={activeStep}
+          activeView={activeView}
+          areTimersOpen={areTimersOpen}
+          readyAt={readyAt}
+          steps={cookSteps}
+          voiceEnabled={false}
+          voiceListening={false}
+          voiceSupported={false}
+          onStepChange={setActiveStep}
+          onTimersOpenChange={setAreTimersOpen}
+          onToggleVoice={() => {}}
+          onViewChange={setActiveView}
+        />
+      </div>
+
+      <TimerDock
+        className="z-[1150]"
+        isExpanded={areTimersOpen}
+        onExpandedChange={setAreTimersOpen}
+      />
+    </div>
   );
 }

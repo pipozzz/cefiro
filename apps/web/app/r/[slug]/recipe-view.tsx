@@ -213,11 +213,13 @@ function PublicRecipeBody({ slug, data }: { slug: string; data: PublicRecipeData
         <PublicCookMode
           categories={recipe.categories}
           image={recipe.image}
+          ingredients={adjustedIngredients}
           recipeId={recipeId}
           recipeName={recipe.name}
           steps={recipe.steps}
           systemUsed={recipe.systemUsed}
           totalMinutes={recipe.totalMinutes}
+          units={units}
         />
         <LikeButton initialCount={favoriteCount} recipeId={recipeId} slug={slug} />
         <SaveRecipeButton recipeId={recipeId} slug={slug} />
