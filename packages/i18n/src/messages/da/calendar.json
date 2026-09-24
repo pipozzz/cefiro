@@ -55,5 +55,11 @@
     "failedToLoadRecipes": "Kunne ikke indlæse opskrifter.",
     "chooseSlot": "Choose slot",
     "chooseSlotForNote": "Choose slot for note"
+  },
+  "print": {
+    "label": "Print:",
+    "week": "Week",
+    "month": "Month",
+    "title": "Meal plan"
   }
 }
