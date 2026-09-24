@@ -122,7 +122,8 @@ export class ProductionStack {
 
     try {
       const [postgresResult, redisResult] = await Promise.allSettled([
-        new PostgreSqlContainer("postgres:17-alpine")
+        // pgvector image: startup migrations include `CREATE EXTENSION vector`.
+        new PostgreSqlContainer("pgvector/pgvector:pg17")
           .withDatabase(this.options.databaseName)
           .withUsername(this.options.databaseName)
           .withPassword(this.options.databaseName)

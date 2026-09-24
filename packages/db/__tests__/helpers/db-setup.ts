@@ -93,7 +93,8 @@ async function startPostgresContainer(): Promise<StartedPostgreSqlContainer> {
   dbLogger.info("Starting PostgreSQL container for tests...");
 
   try {
-    const container = await new PostgreSqlContainer("postgres:15-alpine")
+    // pgvector image: migrations now include `CREATE EXTENSION vector` (0066).
+    const container = await new PostgreSqlContainer("pgvector/pgvector:pg15")
       .withExposedPorts(5432)
       .withUsername("test")
       .withPassword("test")

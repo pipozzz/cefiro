@@ -38,9 +38,9 @@ services:
       obscura:
         condition: service_started
 
-  # PostgreSQL Database
+  # PostgreSQL Database — pgvector image (migrations include CREATE EXTENSION vector).
   db:
-    image: postgres:17-alpine
+    image: pgvector/pgvector:pg17
     container_name: norish-db-test
     restart: unless-stopped
     environment:
