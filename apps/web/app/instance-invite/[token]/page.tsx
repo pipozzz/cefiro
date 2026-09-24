@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { InstanceInviteClient } from "./instance-invite-client";
 
 export const metadata: Metadata = {
-  title: "Invitation | Cefiro",
+  title: "Invitation | Naša Kuchyňa",
   // A private, tokenized link — never index it.
   robots: { index: false, follow: false },
 };

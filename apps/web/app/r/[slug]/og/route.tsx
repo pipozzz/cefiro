@@ -33,7 +33,7 @@ type Props = { params: Promise<{ slug: string }> };
 
 /**
  * Branded 1200×630 share card for a public recipe: the dish colour as a
- * gradient ground, the recipe title, its author and rating, and the Cefiro
+ * gradient ground, the recipe title, its author and rating, and the Naša Kuchyňa
  * wordmark. Used as the Open Graph image for recipes without a photo (recipes
  * that have one keep the photo itself — see generateMetadata in ../page.tsx).
  */
@@ -89,7 +89,7 @@ export async function GET(_req: Request, { params }: Props) {
             letterSpacing: -0.5,
           }}
         >
-          Cefiro
+          Naša Kuchyňa
         </div>
       </div>
 
@@ -163,7 +163,7 @@ function BrandFallback() {
         fontFamily: "sans-serif",
       }}
     >
-      Cefiro
+      Naša Kuchyňa
     </div>
   );
 }

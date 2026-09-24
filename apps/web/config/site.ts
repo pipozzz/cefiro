@@ -1,8 +1,8 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "Cefiro",
-  description: "Any recipe, any source.",
+  name: "Naša Kuchyňa",
+  description: "Recepty, varenie a pomocník pre vašu kuchyňu.",
   navItems: [
     {
       label: "Discover",

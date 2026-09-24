@@ -8,20 +8,20 @@ type BrandLogoProps = {
 };
 
 export function BrandLogo({
-  width = 120,
-  height = 30,
+  width = 160,
+  height = 36,
   className,
   priority = false,
 }: BrandLogoProps) {
-  // The wordmark is sized by width everywhere it appears, and its intrinsic
-  // ratio (2370:639) does not match the width/height pairs callers ask for.
-  // Letting the height follow keeps the ratio honest and silences Next's
-  // "width or height modified, but not the other" warning.
+  // The logo (pot mark + wordmark) is sized by width everywhere it appears, and
+  // its intrinsic ratio (900:200 ≈ 4.5:1) does not match every width/height pair
+  // callers ask for. Letting the height follow keeps the ratio honest and
+  // silences Next's "width or height modified, but not the other" warning.
   const classes = ["h-auto", className].filter(Boolean).join(" ");
 
   return (
     <Image
-      alt="Cefiro logo"
+      alt="Naša Kuchyňa logo"
       className={classes}
       height={height}
       priority={priority}

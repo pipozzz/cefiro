@@ -26,7 +26,7 @@ type Props = { params: Promise<{ handle: string }> };
 
 /**
  * Branded 1200×630 share card for a public profile: an initial avatar, the
- * display name, @handle and bio, plus the Cefiro wordmark. Mirrors the recipe
+ * display name, @handle and bio, plus the Naša Kuchyňa wordmark. Mirrors the recipe
  * and cookbook cards.
  */
 export async function GET(_req: Request, { params }: Props) {
@@ -73,7 +73,7 @@ export async function GET(_req: Request, { params }: Props) {
             letterSpacing: -0.5,
           }}
         >
-          Cefiro
+          Naša Kuchyňa
         </div>
       </div>
 
@@ -139,7 +139,7 @@ function BrandFallback() {
         fontFamily: "sans-serif",
       }}
     >
-      Cefiro
+      Naša Kuchyňa
     </div>
   );
 }

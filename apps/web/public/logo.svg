@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="100%" height="100%" viewBox="0 0 2370 639" version="1.1" xmlns="http://www.w3.org/2000/svg" xml:space="preserve">
-  <text x="1185" y="470" text-anchor="middle"
-        font-family="Georgia, 'Times New Roman', 'Playfair Display', serif"
-        font-weight="700" font-size="470" letter-spacing="10" fill="#4e8a5f">Cefiro</text>
+<svg width="100%" height="100%" viewBox="0 0 900 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <!-- pot mark -->
+  <g transform="translate(20,20)">
+    <rect width="160" height="160" rx="38" fill="#336640"/>
+    <g fill="none" stroke="#FFFEF7" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+      <g opacity="0.9">
+        <path d="M64 66 c -6 -5 6 -10 0 -15 c -6 -5 6 -10 0 -15"/>
+        <path d="M80 64 c -7 -6 7 -12 0 -18 c -7 -6 7 -12 0 -18"/>
+        <path d="M96 66 c 6 -5 -6 -10 0 -15 c 6 -5 -6 -10 0 -15"/>
+      </g>
+      <path d="M44 74 h72"/>
+      <path d="M50 82 h60 l-6 34 a10 10 0 0 1 -10 8 H66 a10 10 0 0 1 -10 -8 Z"/>
+      <path d="M50 90 q-12 0 -12 10 M110 90 q12 0 12 10"/>
+    </g>
+    <circle cx="80" cy="66" r="4.5" fill="#FFFEF7"/>
+  </g>
+  <!-- wordmark -->
+  <text x="210" y="128" font-family="'Nunito','Segoe UI',system-ui,-apple-system,sans-serif"
+        font-weight="800" font-size="92" letter-spacing="-1" fill="#336640">Naša Kuchyňa</text>
 </svg>
