@@ -48,7 +48,10 @@
     "fridgeMenuTitle": "Lag flere retter",
     "fridgeMenuSubtitle": "Oppskrifter du nesten har — og én felles handleliste.",
     "fridgeMenuShopAll": "Kjøp alt som mangler ({count})",
-    "fridgeMenuAllStocked": "Du har alt du trenger 🎉"
+    "fridgeMenuAllStocked": "Du har alt du trenger 🎉",
+    "themesHeading": "Explore themes",
+    "themeQuick": "Quick · under 30 min",
+    "themeCount": "{count, plural, one {# recipe} other {# recipes}}"
   },
   "categories": {
     "Breakfast": "Breakfast",

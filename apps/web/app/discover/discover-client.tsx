@@ -16,10 +16,10 @@ import { keepPreviousData, useInfiniteQuery, useQuery } from "@tanstack/react-qu
 import { useTranslations } from "next-intl";
 
 import { DietaryFilterToggle } from "./dietary-filter-toggle";
+import { DiscoverThemes } from "./discover-themes";
 import { IngredientDiscovery } from "./ingredient-discovery";
 import { RecipeOfTheDay } from "./recipe-of-the-day";
 import { SurpriseDiscovery } from "./surprise-discovery";
-import { TrendingTopics } from "./trending-topics";
 
 type Sort = "newest" | "trending";
 type Category = "Breakfast" | "Lunch" | "Dinner" | "Snack";
@@ -274,6 +274,13 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
             )
           ) : (
             <>
+              {/* Dynamic food themes, the top-of-discovery entry point. Shown
+                  only on the default landing (no active filter). Selecting a
+                  theme drives the existing tag / time filters. */}
+              {!category && !tag && !maxMinutes ? (
+                <DiscoverThemes onQuick={() => setMaxMinutes(30)} onSelectTag={setTag} />
+              ) : null}
+
               {/* Recipe of the day: a curated daily hero, shown only on the
                   default landing (no active filter) so it never competes with a
                   narrowed result set. */}
@@ -345,11 +352,6 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
                   </button>
                 ))}
               </div>
-
-              {/* Trending topics: most-used public tags, as a shortcut into the
-                  tag filter. Hidden while a tag is already active so it doesn't
-                  compete with the active-tag chip below. */}
-              {tag ? null : <TrendingTopics activeTag={tag} onSelect={setTag} />}
 
               {tag ? (
                 <div className="mb-6 flex items-center gap-2">

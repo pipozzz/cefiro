@@ -48,7 +48,10 @@
     "fridgeMenuTitle": "Сгответвайте няколко ястия",
     "fridgeMenuSubtitle": "Рецепти, които почти имате — и един общ списък за пазаруване.",
     "fridgeMenuShopAll": "Купи всичко липсващо ({count})",
-    "fridgeMenuAllStocked": "Имате всичко необходимо 🎉"
+    "fridgeMenuAllStocked": "Имате всичко необходимо 🎉",
+    "themesHeading": "Explore themes",
+    "themeQuick": "Quick · under 30 min",
+    "themeCount": "{count, plural, one {# recipe} other {# recipes}}"
   },
   "categories": {
     "Breakfast": "Breakfast",

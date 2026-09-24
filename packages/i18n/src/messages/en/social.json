@@ -48,7 +48,10 @@
     "fridgeMenuTitle": "Cook several meals",
     "fridgeMenuSubtitle": "Recipes you almost have — and one combined shopping list.",
     "fridgeMenuShopAll": "Buy all missing ({count})",
-    "fridgeMenuAllStocked": "You have everything you need 🎉"
+    "fridgeMenuAllStocked": "You have everything you need 🎉",
+    "themesHeading": "Explore themes",
+    "themeQuick": "Quick · under 30 min",
+    "themeCount": "{count, plural, one {# recipe} other {# recipes}}"
   },
   "categories": {
     "Breakfast": "Breakfast",

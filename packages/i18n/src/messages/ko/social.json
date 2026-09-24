@@ -48,7 +48,10 @@
     "fridgeMenuTitle": "여러 요리 만들기",
     "fridgeMenuSubtitle": "거의 다 있는 레시피 — 그리고 하나의 통합 장보기 목록.",
     "fridgeMenuShopAll": "부족한 재료 모두 담기 ({count})",
-    "fridgeMenuAllStocked": "필요한 재료가 다 있어요 🎉"
+    "fridgeMenuAllStocked": "필요한 재료가 다 있어요 🎉",
+    "themesHeading": "Explore themes",
+    "themeQuick": "Quick · under 30 min",
+    "themeCount": "{count, plural, one {# recipe} other {# recipes}}"
   },
   "categories": {
     "Breakfast": "Breakfast",
