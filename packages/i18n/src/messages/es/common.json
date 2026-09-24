@@ -94,10 +94,10 @@
     "chooseSlot": "Elige franja"
   },
   "connection": {
-    "connecting": "Conectando con Cefiro...",
+    "connecting": "Conectando con Naša Kuchyňa...",
     "checkInternet": "Por favor, comprueba tu conexión a Internet",
     "offlineBanner": "Estás sin conexión, mostrando datos en caché",
-    "serverUnreachableBanner": "No se puede contactar con el servidor de Cefiro, mostrando datos en caché",
+    "serverUnreachableBanner": "No se puede contactar con el servidor de Naša Kuchyňa, mostrando datos en caché",
     "live": "Conectado",
     "offline": "Sin conexión",
     "openDetails": "Connection details"
@@ -251,8 +251,8 @@
       "live": "Live",
       "offline": "Offline",
       "forced": "Offline (forced)",
-      "liveDescription": "Connected to Cefiro. Changes sync as you make them.",
-      "offlineDescription": "Can't reach Cefiro. Showing cached data; changes are queued and sync when you're back.",
+      "liveDescription": "Connected to Naša Kuchyňa. Changes sync as you make them.",
+      "offlineDescription": "Can't reach Naša Kuchyňa. Showing cached data; changes are queued and sync when you're back.",
       "forcedDescription": "Offline is forced for development. The backend is reachable but every request is blocked.",
       "devBadge": "dev"
     },
@@ -300,17 +300,17 @@
     "title": "Nora también está sin conexión.",
     "body": "Esta página no está guardada para el modo sin conexión; las páginas visitadas recientemente siguen aquí.",
     "backOnlineTitle": "¡Nora encontró la conexión!",
-    "backOnlineBody": "Cefiro vuelve a estar disponible: intenta cargar esta página.",
+    "backOnlineBody": "Naša Kuchyňa vuelve a estar disponible: intenta cargar esta página.",
     "retry": "Reintentar",
-    "home": "Abrir Cefiro"
+    "home": "Abrir Naša Kuchyňa"
   },
   "queuedOffline": {
     "title": "Estás sin conexión",
-    "description": "En cola: Cefiro lo completará automáticamente cuando vuelvas a estar en línea."
+    "description": "En cola: Naša Kuchyňa lo completará automáticamente cuando vuelvas a estar en línea."
   },
   "storageUnavailable": {
     "title": "No se pudo iniciar",
-    "description": "Cefiro no pudo leer su almacenamiento seguro, por lo que no sabe a qué servidor pertenece esta aplicación. No se ha cambiado nada. Vuelve a intentarlo o reinicia la aplicación.",
+    "description": "Naša Kuchyňa no pudo leer su almacenamiento seguro, por lo que no sabe a qué servidor pertenece esta aplicación. No se ha cambiado nada. Vuelve a intentarlo o reinicia la aplicación.",
     "detailsLabel": "Detalles técnicos"
   },
   "a11y": {

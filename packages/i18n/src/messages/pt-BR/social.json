@@ -3,7 +3,7 @@
     "title": "Discover",
     "subtitle": "Explore recipes and cooks shared by the community.",
     "metaTitle": "Discover recipes",
-    "metaDescription": "Explore recipes shared by the Cefiro community.",
+    "metaDescription": "Explore recipes shared by the Naša Kuchyňa community.",
     "searchPlaceholder": "Search recipes and people…",
     "searchAria": "Search recipes and people",
     "clearSearch": "Clear search",
@@ -115,15 +115,15 @@
     "recipes": "Recipes",
     "noRecipes": "No public recipes yet.",
     "cookbooksHeading": "Cookbooks",
-    "metaDescription": "Recipes by @{handle} on Cefiro.",
-    "ogTagline": "Recipes on Cefiro"
+    "metaDescription": "Recipes by @{handle} on Naša Kuchyňa.",
+    "ogTagline": "Recipes on Naša Kuchyňa"
   },
   "cookbook": {
     "notFoundTitle": "Cookbook not found",
     "notFoundMessage": "This cookbook is private or does not exist.",
     "recipesCount": "{count, plural, one {# recipe} other {# recipes}}",
     "empty": "No public recipes in this cookbook yet.",
-    "metaDescription": "A cookbook of {count, plural, one {# recipe} other {# recipes}} shared on Cefiro."
+    "metaDescription": "A cookbook of {count, plural, one {# recipe} other {# recipes}} shared on Naša Kuchyňa."
   },
   "cookbookShare": {
     "heading": "Sharing",
@@ -157,7 +157,7 @@
     "carbs": "Carbs",
     "fat": "Fat",
     "source": "Source:",
-    "metaDescription": "A recipe shared on Cefiro.",
+    "metaDescription": "A recipe shared on Naša Kuchyňa.",
     "print": "Imprimir",
     "share": "Compartilhar",
     "linkCopied": "Link copiado",
@@ -189,7 +189,7 @@
     "subtitle": "Follow a few cooks to fill your feed."
   },
   "welcome": {
-    "title": "Welcome to Cefiro",
+    "title": "Welcome to Naša Kuchyňa",
     "subtitle": "Pick a handle so people can find you and you can share recipes.",
     "handleLabel": "Handle",
     "handlePlaceholder": "yourname",

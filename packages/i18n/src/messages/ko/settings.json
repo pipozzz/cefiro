@@ -28,7 +28,7 @@
     },
     "apiKeys": {
       "title": "API 키",
-      "description": "API 키를 사용하면 Cefiro API에 프로그래밍 방식으로 접근할 수 있습니다. 통합, 바로가기, 자동화에 사용하세요.",
+      "description": "API 키를 사용하면 Naša Kuchyňa API에 프로그래밍 방식으로 접근할 수 있습니다. 통합, 바로가기, 자동화에 사용하세요.",
       "docsLink": "API 문서 열기",
       "keyNameLabel": "키 이름(선택사항)",
       "keyNamePlaceholder": "예: iOS 단축키",
@@ -62,7 +62,7 @@
     },
     "archiveImport": {
       "title": "레시피 아카이브 가져오기",
-      "description": "Cefiro(.norishrecipes), Mela(.melarecipes), Paprika(.paprikarecipes) 또는 Mealie/Tandoor(.zip) 내보내기에서 레시피 가져오기"
+      "description": "Naša Kuchyňa(.norishrecipes), Mela(.melarecipes), Paprika(.paprikarecipes) 또는 Mealie/Tandoor(.zip) 내보내기에서 레시피 가져오기"
     },
     "archiveExport": {
       "title": "레시피 아카이브 내보내기",

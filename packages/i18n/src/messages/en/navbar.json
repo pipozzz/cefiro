@@ -51,7 +51,7 @@
     "uploading": "Uploading…",
     "uploadFile": "Upload a file",
     "dragDrop": "or drag and drop",
-    "formats": ".norishrecipes (Cefiro), .melarecipes (Mela), .paprikarecipes (Paprika), .zip (Mealie/Tandoor)",
+    "formats": ".norishrecipes (Naša Kuchyňa), .melarecipes (Mela), .paprikarecipes (Paprika), .zip (Mealie/Tandoor)",
     "dropzoneLabel": "Upload a recipe archive file",
     "uploadingFile": "Uploading file…",
     "processing": "Processing: {details}",

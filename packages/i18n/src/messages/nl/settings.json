@@ -28,7 +28,7 @@
     },
     "apiKeys": {
       "title": "API-sleutels",
-      "description": "API-sleutels bieden toegang tot de Cefiro API. Gebruik ze voor integraties, snelkoppelingen en automatisering.",
+      "description": "API-sleutels bieden toegang tot de Naša Kuchyňa API. Gebruik ze voor integraties, snelkoppelingen en automatisering.",
       "docsLink": "API-documentatie openen",
       "keyNameLabel": "Sleutelnaam (optioneel)",
       "keyNamePlaceholder": "bijv. iOS Snelkoppeling",
@@ -62,7 +62,7 @@
     },
     "archiveImport": {
       "title": "Archief importeren",
-      "description": "Importeer recepten van Cefiro (.norishrecipes), Mela (.melarecipes), Paprika (.paprikarecipes), of Mealie/Tandoor (.zip) exports"
+      "description": "Importeer recepten van Naša Kuchyňa (.norishrecipes), Mela (.melarecipes), Paprika (.paprikarecipes), of Mealie/Tandoor (.zip) exports"
     },
     "archiveExport": {
       "title": "Archief exporteren",

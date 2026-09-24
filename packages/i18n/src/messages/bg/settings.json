@@ -28,7 +28,7 @@
     },
     "apiKeys": {
       "title": "API ключове",
-      "description": "API ключовете позволяват програмен достъп до Cefiro API. Използвай ги за интеграции, преки пътища и автоматизация.",
+      "description": "API ключовете позволяват програмен достъп до Naša Kuchyňa API. Използвай ги за интеграции, преки пътища и автоматизация.",
       "docsLink": "Отвори документацията на API",
       "keyNameLabel": "Име на ключа (незадължително)",
       "keyNamePlaceholder": "напр. iOS Shortcut",
@@ -62,7 +62,7 @@
     },
     "archiveImport": {
       "title": "Импортиране на архив с рецепти",
-      "description": "Импортирай рецепти от Cefiro (.norishrecipes), Mela (.melarecipes), Paprika (.paprikarecipes) или Mealie/Tandoor (.zip) експорти"
+      "description": "Импортирай рецепти от Naša Kuchyňa (.norishrecipes), Mela (.melarecipes), Paprika (.paprikarecipes) или Mealie/Tandoor (.zip) експорти"
     },
     "archiveExport": {
       "title": "Експортиране на архив с рецепти",
