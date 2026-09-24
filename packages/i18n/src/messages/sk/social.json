@@ -48,7 +48,10 @@
     "fridgeMenuTitle": "Navar viac jedál naraz",
     "fridgeMenuSubtitle": "Recepty, ktoré takmer máš — a jeden spoločný nákup.",
     "fridgeMenuShopAll": "Kúpiť všetko chýbajúce ({count})",
-    "fridgeMenuAllStocked": "Máš všetko, čo treba 🎉"
+    "fridgeMenuAllStocked": "Máš všetko, čo treba 🎉",
+    "themesHeading": "Objavuj témy",
+    "themeQuick": "Rýchle · do 30 min",
+    "themeCount": "{count, plural, one {# recept} few {# recepty} other {# receptov}}"
   },
   "categories": {
     "Breakfast": "Raňajky",

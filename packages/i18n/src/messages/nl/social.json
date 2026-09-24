@@ -48,7 +48,10 @@
     "fridgeMenuTitle": "Kook meerdere gerechten",
     "fridgeMenuSubtitle": "Recepten die je bijna hebt — en één gecombineerde boodschappenlijst.",
     "fridgeMenuShopAll": "Alles kopen wat ontbreekt ({count})",
-    "fridgeMenuAllStocked": "Je hebt alles wat je nodig hebt 🎉"
+    "fridgeMenuAllStocked": "Je hebt alles wat je nodig hebt 🎉",
+    "themesHeading": "Explore themes",
+    "themeQuick": "Quick · under 30 min",
+    "themeCount": "{count, plural, one {# recipe} other {# recipes}}"
   },
   "categories": {
     "Breakfast": "Breakfast",
