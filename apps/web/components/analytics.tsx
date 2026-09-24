@@ -1,3 +1,5 @@
+import Script from "next/script";
+
 import { getAnalyticsConfig } from "@norish/shared-server/config/server-config-loader";
 
 /**
@@ -11,8 +13,13 @@ import { getAnalyticsConfig } from "@norish/shared-server/config/server-config-l
  *   src    — admin `analytics_config.plausibleSrc`     →  env PLAUSIBLE_SRC
  *            →  Plausible Cloud
  *
- * Rendered from the dynamic root layout, so the DB value is read per request
- * (no rebuild needed). A read failure degrades to env / off, never a crash.
+ * Uses `next/script` rather than a raw <script> tag: a bare tracker <script>
+ * rendered into the App Router <head> is re-inserted by React on hydration, so
+ * `document.currentScript` is null when it runs and Plausible never reads its
+ * `data-domain` / never initializes (it loads, but no pageviews fire).
+ * next/script injects it imperatively, so the tracker initializes correctly and
+ * auto-tracks SPA navigations. Read at request time (dynamic root layout), so a
+ * DB value is picked up without a rebuild; a read failure degrades to env / off.
  */
 export async function Analytics() {
   const config = await getAnalyticsConfig().catch(() => ({}));
@@ -27,20 +34,14 @@ export async function Analytics() {
     return null;
   }
 
-  // The full Plausible snippet: the deferred loader plus the `window.plausible`
-  // queue shim, so custom events (`plausible('Signup')`, tagged events, etc.)
-  // work even before the script has loaded. Emitted into the server-rendered
-  // HTML so it loads without blocking.
   return (
     <>
-      <script defer data-domain={domain} src={src} />
-      <script
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{
-          __html:
-            "window.plausible=window.plausible||function(){(window.plausible.q=window.plausible.q||[]).push(arguments)}",
-        }}
-      />
+      <Script defer data-domain={domain} src={src} strategy="afterInteractive" />
+      {/* The `window.plausible` queue shim, so custom events queued before the
+          tracker finishes loading are still captured. */}
+      <Script id="plausible-init" strategy="afterInteractive">
+        {`window.plausible=window.plausible||function(){(window.plausible.q=window.plausible.q||[]).push(arguments)}`}
+      </Script>
     </>
   );
 }
