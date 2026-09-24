@@ -104,10 +104,10 @@
     "chooseSlot": "Zeitfenster auswählen"
   },
   "connection": {
-    "connecting": "Verbindung zu Cefiro wird hergestellt...",
+    "connecting": "Verbindung zu Naša Kuchyňa wird hergestellt...",
     "checkInternet": "Bitte überprüfen Sie Ihre Internetverbindung",
     "offlineBanner": "Sie sind offline, zwischengespeicherte Daten werden angezeigt",
-    "serverUnreachableBanner": "Der Cefiro-Server ist nicht erreichbar, zwischengespeicherte Daten werden angezeigt",
+    "serverUnreachableBanner": "Der Naša Kuchyňa-Server ist nicht erreichbar, zwischengespeicherte Daten werden angezeigt",
     "live": "Verbunden",
     "offline": "Offline",
     "openDetails": "Connection details"
@@ -251,8 +251,8 @@
       "live": "Live",
       "offline": "Offline",
       "forced": "Offline (forced)",
-      "liveDescription": "Connected to Cefiro. Changes sync as you make them.",
-      "offlineDescription": "Can't reach Cefiro. Showing cached data; changes are queued and sync when you're back.",
+      "liveDescription": "Connected to Naša Kuchyňa. Changes sync as you make them.",
+      "offlineDescription": "Can't reach Naša Kuchyňa. Showing cached data; changes are queued and sync when you're back.",
       "forcedDescription": "Offline is forced for development. The backend is reachable but every request is blocked.",
       "devBadge": "dev"
     },
@@ -300,17 +300,17 @@
     "title": "Nora ist auch offline.",
     "body": "Diese Seite ist nicht offline gespeichert — zuletzt besuchte Seiten sind weiterhin da.",
     "backOnlineTitle": "Nora hat die Verbindung gefunden!",
-    "backOnlineBody": "Cefiro ist wieder erreichbar — versuchen Sie, diese Seite neu zu laden.",
+    "backOnlineBody": "Naša Kuchyňa ist wieder erreichbar — versuchen Sie, diese Seite neu zu laden.",
     "retry": "Erneut versuchen",
-    "home": "Cefiro öffnen"
+    "home": "Naša Kuchyňa öffnen"
   },
   "queuedOffline": {
     "title": "Sie sind offline",
-    "description": "In der Warteschlange — Cefiro schließt dies automatisch ab, sobald Sie wieder online sind."
+    "description": "In der Warteschlange — Naša Kuchyňa schließt dies automatisch ab, sobald Sie wieder online sind."
   },
   "storageUnavailable": {
     "title": "Start nicht möglich",
-    "description": "Cefiro konnte den sicheren Speicher nicht lesen und weiß daher nicht, zu welchem Server diese App gehört. Es wurde nichts geändert. Versuchen Sie es erneut oder starten Sie die App neu.",
+    "description": "Naša Kuchyňa konnte den sicheren Speicher nicht lesen und weiß daher nicht, zu welchem Server diese App gehört. Es wurde nichts geändert. Versuchen Sie es erneut oder starten Sie die App neu.",
     "detailsLabel": "Technische Details"
   },
   "a11y": {

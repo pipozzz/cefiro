@@ -28,7 +28,7 @@
     },
     "apiKeys": {
       "title": "API-nøkler",
-      "description": "API-nøkler gir programmatisk tilgang til Cefiro API. Bruk dem til integrasjoner, snarveier og automatisering.",
+      "description": "API-nøkler gir programmatisk tilgang til Naša Kuchyňa API. Bruk dem til integrasjoner, snarveier og automatisering.",
       "docsLink": "Åpne API-dokumentasjon",
       "keyNameLabel": "Nøkkelnavn (valgfritt)",
       "keyNamePlaceholder": "f.eks. iOS-snarvei",
@@ -62,7 +62,7 @@
     },
     "archiveImport": {
       "title": "Importer oppskriftarkiv",
-      "description": "Importer oppskrifter fra Cefiro (.norishrecipes), Mela (.melarecipes), Paprika (.paprikarecipes) eller Mealie/Tandoor (.zip)-eksporter"
+      "description": "Importer oppskrifter fra Naša Kuchyňa (.norishrecipes), Mela (.melarecipes), Paprika (.paprikarecipes) eller Mealie/Tandoor (.zip)-eksporter"
     },
     "archiveExport": {
       "title": "Eksporter oppskriftsarkiv",

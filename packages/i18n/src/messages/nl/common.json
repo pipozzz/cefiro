@@ -104,10 +104,10 @@
     "chooseSlot": "Kies tijdslot"
   },
   "connection": {
-    "connecting": "Verbinden met Cefiro...",
+    "connecting": "Verbinden met Naša Kuchyňa...",
     "checkInternet": "Controleer uw internetverbinding",
     "offlineBanner": "Je bent offline, opgeslagen gegevens worden getoond",
-    "serverUnreachableBanner": "Kan de Cefiro-server niet bereiken, opgeslagen gegevens worden getoond",
+    "serverUnreachableBanner": "Kan de Naša Kuchyňa-server niet bereiken, opgeslagen gegevens worden getoond",
     "live": "Verbonden",
     "offline": "Offline",
     "openDetails": "Connection details"
@@ -251,8 +251,8 @@
       "live": "Live",
       "offline": "Offline",
       "forced": "Offline (forced)",
-      "liveDescription": "Connected to Cefiro. Changes sync as you make them.",
-      "offlineDescription": "Can't reach Cefiro. Showing cached data; changes are queued and sync when you're back.",
+      "liveDescription": "Connected to Naša Kuchyňa. Changes sync as you make them.",
+      "offlineDescription": "Can't reach Naša Kuchyňa. Showing cached data; changes are queued and sync when you're back.",
       "forcedDescription": "Offline is forced for development. The backend is reachable but every request is blocked.",
       "devBadge": "dev"
     },
@@ -300,17 +300,17 @@
     "title": "Nora is ook offline.",
     "body": "Deze pagina is niet offline opgeslagen — onlangs bezochte pagina's zijn er nog wel.",
     "backOnlineTitle": "Nora heeft de verbinding gevonden!",
-    "backOnlineBody": "Cefiro is weer bereikbaar — probeer deze pagina opnieuw te laden.",
+    "backOnlineBody": "Naša Kuchyňa is weer bereikbaar — probeer deze pagina opnieuw te laden.",
     "retry": "Opnieuw proberen",
-    "home": "Cefiro openen"
+    "home": "Naša Kuchyňa openen"
   },
   "queuedOffline": {
     "title": "Je bent offline",
-    "description": "In de wachtrij gezet — Cefiro maakt dit automatisch af zodra je weer online bent."
+    "description": "In de wachtrij gezet — Naša Kuchyňa maakt dit automatisch af zodra je weer online bent."
   },
   "storageUnavailable": {
     "title": "Kan niet starten",
-    "description": "Cefiro kon de beveiligde opslag niet lezen en weet daardoor niet bij welke server deze app hoort. Er is niets gewijzigd. Probeer het opnieuw of herstart de app.",
+    "description": "Naša Kuchyňa kon de beveiligde opslag niet lezen en weet daardoor niet bij welke server deze app hoort. Er is niets gewijzigd. Probeer het opnieuw of herstart de app.",
     "detailsLabel": "Technische details"
   },
   "a11y": {

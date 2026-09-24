@@ -51,7 +51,7 @@
     "uploading": "Nahráva sa…",
     "uploadFile": "Nahrať súbor",
     "dragDrop": "alebo presuňte a pustite",
-    "formats": ".norishrecipes (Cefiro), .melarecipes (Mela), .paprikarecipes (Paprika), .zip (Mealie/Tandoor)",
+    "formats": ".norishrecipes (Naša Kuchyňa), .melarecipes (Mela), .paprikarecipes (Paprika), .zip (Mealie/Tandoor)",
     "dropzoneLabel": "Nahrajte archívny súbor s receptami",
     "uploadingFile": "Nahráva sa súbor…",
     "processing": "Spracúva sa: {details}",

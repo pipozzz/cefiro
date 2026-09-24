@@ -28,7 +28,7 @@
     },
     "apiKeys": {
       "title": "API Keys",
-      "description": "API keys allow programmatic access to the Cefiro API. Use them for integrations, shortcuts, and automation.",
+      "description": "API keys allow programmatic access to the Naša Kuchyňa API. Use them for integrations, shortcuts, and automation.",
       "docsLink": "Open API docs",
       "keyNameLabel": "Key Name (optional)",
       "keyNamePlaceholder": "e.g., iOS Shortcut",
@@ -62,7 +62,7 @@
     },
     "archiveImport": {
       "title": "Import Recipe Archive",
-      "description": "Import recipes from Cefiro (.norishrecipes), Mela (.melarecipes), Paprika (.paprikarecipes), or Mealie/Tandoor (.zip) exports"
+      "description": "Import recipes from Naša Kuchyňa (.norishrecipes), Mela (.melarecipes), Paprika (.paprikarecipes), or Mealie/Tandoor (.zip) exports"
     },
     "archiveExport": {
       "title": "Export Recipe Archive",

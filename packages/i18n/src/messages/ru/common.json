@@ -94,10 +94,10 @@
     "chooseSlot": "Выберите слот"
   },
   "connection": {
-    "connecting": "Подключение к Cefiro...",
+    "connecting": "Подключение к Naša Kuchyňa...",
     "checkInternet": "Пожалуйста, проверьте подключение к интернету",
     "offlineBanner": "Вы офлайн, показываем сохранённые данные",
-    "serverUnreachableBanner": "Не удаётся связаться с сервером Cefiro, показываем сохранённые данные",
+    "serverUnreachableBanner": "Не удаётся связаться с сервером Naša Kuchyňa, показываем сохранённые данные",
     "live": "На связи",
     "offline": "Не в сети",
     "openDetails": "Connection details"
@@ -251,8 +251,8 @@
       "live": "Live",
       "offline": "Offline",
       "forced": "Offline (forced)",
-      "liveDescription": "Connected to Cefiro. Changes sync as you make them.",
-      "offlineDescription": "Can't reach Cefiro. Showing cached data; changes are queued and sync when you're back.",
+      "liveDescription": "Connected to Naša Kuchyňa. Changes sync as you make them.",
+      "offlineDescription": "Can't reach Naša Kuchyňa. Showing cached data; changes are queued and sync when you're back.",
       "forcedDescription": "Offline is forced for development. The backend is reachable but every request is blocked.",
       "devBadge": "dev"
     },
@@ -300,17 +300,17 @@
     "title": "Нора тоже офлайн.",
     "body": "Эта страница не сохранена для офлайна — недавно открытые страницы по-прежнему здесь.",
     "backOnlineTitle": "Нора нашла соединение!",
-    "backOnlineBody": "Cefiro снова доступен — попробуйте загрузить эту страницу ещё раз.",
+    "backOnlineBody": "Naša Kuchyňa снова доступен — попробуйте загрузить эту страницу ещё раз.",
     "retry": "Повторить",
-    "home": "Открыть Cefiro"
+    "home": "Открыть Naša Kuchyňa"
   },
   "queuedOffline": {
     "title": "Вы офлайн",
-    "description": "Добавлено в очередь — Cefiro автоматически завершит это, когда вы снова будете в сети."
+    "description": "Добавлено в очередь — Naša Kuchyňa автоматически завершит это, когда вы снова будете в сети."
   },
   "storageUnavailable": {
     "title": "Не удалось запустить",
-    "description": "Cefiro не смог прочитать защищённое хранилище и не знает, к какому серверу относится это приложение. Ничего не изменено. Повторите попытку или перезапустите приложение.",
+    "description": "Naša Kuchyňa не смог прочитать защищённое хранилище и не знает, к какому серверу относится это приложение. Ничего не изменено. Повторите попытку или перезапустите приложение.",
     "detailsLabel": "Технические подробности"
   },
   "a11y": {

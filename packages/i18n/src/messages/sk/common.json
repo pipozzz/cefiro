@@ -104,10 +104,10 @@
     "chooseSlot": "Vyberte časový úsek"
   },
   "connection": {
-    "connecting": "Pripája sa k Cefiro…",
+    "connecting": "Pripája sa k aplikácii Naša Kuchyňa…",
     "checkInternet": "Skontrolujte svoje internetové pripojenie",
     "offlineBanner": "Ste offline, zobrazujú sa uložené údaje",
-    "serverUnreachableBanner": "Server Cefiro je nedostupný, zobrazujú sa uložené údaje",
+    "serverUnreachableBanner": "Server aplikácie Naša Kuchyňa je nedostupný, zobrazujú sa uložené údaje",
     "live": "Pripojené",
     "offline": "Offline",
     "openDetails": "Podrobnosti o pripojení"
@@ -251,8 +251,8 @@
       "live": "Naživo",
       "offline": "Offline",
       "forced": "Offline (vynútené)",
-      "liveDescription": "Pripojené k Cefiro. Zmeny sa synchronizujú priebežne.",
-      "offlineDescription": "Cefiro je nedostupné. Zobrazujú sa uložené údaje; zmeny sú zaradené do frontu a synchronizujú sa po obnovení pripojenia.",
+      "liveDescription": "Pripojené k aplikácii Naša Kuchyňa. Zmeny sa synchronizujú priebežne.",
+      "offlineDescription": "Naša Kuchyňa je nedostupná. Zobrazujú sa uložené údaje; zmeny sú zaradené do frontu a synchronizujú sa po obnovení pripojenia.",
       "forcedDescription": "Offline je vynútené pre vývoj. Backend je dostupný, ale každá požiadavka je blokovaná.",
       "devBadge": "dev"
     },
@@ -300,17 +300,17 @@
     "title": "Nora je tiež offline.",
     "body": "Táto stránka nie je uložená pre offline – stránky, ktoré ste nedávno navštívili, sú stále tu.",
     "backOnlineTitle": "Nora našla pripojenie!",
-    "backOnlineBody": "Cefiro je opäť dostupné – skúste načítať túto stránku.",
+    "backOnlineBody": "Naša Kuchyňa je opäť dostupná – skúste načítať túto stránku.",
     "retry": "Skúsiť znova",
-    "home": "Otvoriť Cefiro"
+    "home": "Otvoriť Našu Kuchyňu"
   },
   "queuedOffline": {
     "title": "Ste offline",
-    "description": "Zaradené – Cefiro to automaticky dokončí, keď budete opäť online."
+    "description": "Zaradené – Naša Kuchyňa to automaticky dokončí, keď budete opäť online."
   },
   "storageUnavailable": {
     "title": "Nepodarilo sa spustiť",
-    "description": "Cefiro nemohlo prečítať svoje zabezpečené úložisko, takže nedokáže určiť, ktorému serveru patrí. Nič sa nezmenilo. Skúste to znova alebo reštartujte aplikáciu.",
+    "description": "Naša Kuchyňa nemohla prečítať svoje zabezpečené úložisko, takže nedokáže určiť, ktorému serveru patrí. Nič sa nezmenilo. Skúste to znova alebo reštartujte aplikáciu.",
     "detailsLabel": "Technické podrobnosti"
   },
   "a11y": {

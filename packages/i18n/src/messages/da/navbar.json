@@ -51,7 +51,7 @@
     "uploading": "Uploader…",
     "uploadFile": "Upload en fil",
     "dragDrop": "eller træk og slip",
-    "formats": ".norishrecipes (Cefiro), .melarecipes (Mela), .paprikarecipes (Paprika), .zip (Mealie/Tandoor)",
+    "formats": ".norishrecipes (Naša Kuchyňa), .melarecipes (Mela), .paprikarecipes (Paprika), .zip (Mealie/Tandoor)",
     "dropzoneLabel": "Upload en opskriftsarkivfil",
     "uploadingFile": "Uploader fil…",
     "processing": "Behandler: {details}",

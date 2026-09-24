@@ -3,7 +3,7 @@
     "title": "Objavuj",
     "subtitle": "Objavuj recepty a kuchárov zdieľané komunitou.",
     "metaTitle": "Objavuj recepty",
-    "metaDescription": "Objavuj recepty zdieľané komunitou Cefiro.",
+    "metaDescription": "Objavuj recepty zdieľané komunitou Naša Kuchyňa.",
     "searchPlaceholder": "Hľadaj recepty a ľudí…",
     "searchAria": "Hľadať recepty a ľudí",
     "clearSearch": "Vymazať hľadanie",
@@ -115,15 +115,15 @@
     "recipes": "Recepty",
     "noRecipes": "Zatiaľ žiadne verejné recepty.",
     "cookbooksHeading": "Receptáre",
-    "metaDescription": "Recepty od @{handle} na Cefiro.",
-    "ogTagline": "Recepty na Cefiro"
+    "metaDescription": "Recepty od @{handle} na Našej Kuchyni.",
+    "ogTagline": "Recepty na Našej Kuchyni"
   },
   "cookbook": {
     "notFoundTitle": "Receptár sa nenašiel",
     "notFoundMessage": "Tento receptár je súkromný alebo neexistuje.",
     "recipesCount": "{count, plural, one {# recept} few {# recepty} other {# receptov}}",
     "empty": "V tomto receptári zatiaľ nie sú žiadne verejné recepty.",
-    "metaDescription": "Receptár s {count, plural, one {# receptom} few {# receptami} other {# receptami}} na Cefiro."
+    "metaDescription": "Receptár s {count, plural, one {# receptom} few {# receptami} other {# receptami}} na Našej Kuchyni."
   },
   "cookbookShare": {
     "heading": "Zdieľanie",
@@ -157,7 +157,7 @@
     "carbs": "Sacharidy",
     "fat": "Tuky",
     "source": "Zdroj:",
-    "metaDescription": "Recept zdieľaný na Cefiro.",
+    "metaDescription": "Recept zdieľaný na Našej Kuchyni.",
     "print": "Tlačiť",
     "share": "Zdieľať",
     "linkCopied": "Odkaz skopírovaný",
@@ -189,7 +189,7 @@
     "subtitle": "Začni sledovať pár kuchárov a naplň si feed."
   },
   "welcome": {
-    "title": "Vitaj v Cefiro",
+    "title": "Vitaj v Našej Kuchyni",
     "subtitle": "Vyber si handle, aby ťa ľudia našli a mohol si zdieľať recepty.",
     "handleLabel": "Handle",
     "handlePlaceholder": "tvojemeno",

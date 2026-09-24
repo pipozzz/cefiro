@@ -28,7 +28,7 @@
     },
     "apiKeys": {
       "title": "API kľúče",
-      "description": "API kľúče umožňujú programový prístup k Cefiro API. Použite ich na integrácie, skratky a automatizáciu.",
+      "description": "API kľúče umožňujú programový prístup k API aplikácie Naša Kuchyňa. Použite ich na integrácie, skratky a automatizáciu.",
       "docsLink": "Otvoriť dokumentáciu API",
       "keyNameLabel": "Názov kľúča (voliteľné)",
       "keyNamePlaceholder": "napr. iOS Shortcut",
@@ -62,7 +62,7 @@
     },
     "archiveImport": {
       "title": "Importovať archív receptov",
-      "description": "Importujte recepty z exportov Cefiro (.norishrecipes), Mela (.melarecipes), Paprika (.paprikarecipes) alebo Mealie/Tandoor (.zip)"
+      "description": "Importujte recepty z exportov aplikácie Naša Kuchyňa (.norishrecipes), Mela (.melarecipes), Paprika (.paprikarecipes) alebo Mealie/Tandoor (.zip)"
     },
     "archiveExport": {
       "title": "Exportovať archív receptov",
