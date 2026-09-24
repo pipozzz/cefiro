@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useTRPC } from "@/app/providers/trpc-provider";
 import { showSafeErrorToast } from "@/lib/ui/safe-error-toast";
 import { Button } from "@heroui/react";
@@ -9,6 +9,7 @@ import { useTranslations } from "next-intl";
 
 export function FollowButton({ handle }: { handle: string }) {
   const trpc = useTRPC();
+  const router = useRouter();
   const queryClient = useQueryClient();
   const t = useTranslations("social.follow");
 
@@ -64,7 +65,11 @@ export function FollowButton({ handle }: { handle: string }) {
   // the return destination. isError covers any real failure the same way.
   if (statusQuery.isError || (statusQuery.data && !statusQuery.data.isAuthenticated)) {
     return (
-      <Button as={Link} href={`/login?callbackUrl=/u/${handle}`} size="sm" variant="primary">
+      <Button
+        size="sm"
+        variant="primary"
+        onPress={() => router.push(`/login?callbackUrl=/u/${handle}`)}
+      >
         {t("follow")}
       </Button>
     );
@@ -80,7 +85,7 @@ export function FollowButton({ handle }: { handle: string }) {
 
   if (statusQuery.data.isSelf) {
     return (
-      <Button as={Link} href="/profile" size="sm" variant="tertiary">
+      <Button size="sm" variant="tertiary" onPress={() => router.push("/profile")}>
         {t("editProfile")}
       </Button>
     );
