@@ -21,7 +21,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html suppressHydrationWarning lang={locale}>
       <head>
         <meta content="yes" name="apple-mobile-web-app-capable" />
-        <Analytics />
       </head>
       <body className="bg-background text-foreground min-h-dvh font-sans antialiased">
         <Suspense fallback={null}>
@@ -33,6 +32,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </NextIntlClientProvider>
         </AppThemeProvider>
         <RegisterServiceWorker />
+        <Analytics />
       </body>
     </html>
   );
