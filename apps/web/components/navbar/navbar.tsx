@@ -22,7 +22,6 @@ const navLabelKeys: Record<
   "/library": "library",
   "/groceries": "groceries",
   "/calendar": "calendar",
-  "/feed": "feed",
   "/discover": "discover",
   "/profile": "profile",
 };

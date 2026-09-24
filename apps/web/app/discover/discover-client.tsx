@@ -23,7 +23,7 @@ import { SurpriseDiscovery } from "./surprise-discovery";
 
 type Sort = "newest" | "trending";
 type Category = "Breakfast" | "Lunch" | "Dinner" | "Snack";
-type Mode = "recipes" | "byIngredient" | "surprise" | "cooks" | "cookbooks";
+type Mode = "recipes" | "following" | "byIngredient" | "surprise" | "cooks" | "cookbooks";
 
 const CATEGORIES: Category[] = ["Breakfast", "Lunch", "Dinner", "Snack"];
 const TIME_OPTIONS = [15, 30, 60] as const;
@@ -33,6 +33,7 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
   const searchParams = useSearchParams();
   const t = useTranslations("social.discover");
   const tCat = useTranslations("social.categories");
+  const tFeed = useTranslations("social.feed");
 
   const [mode, setMode] = useState<Mode>("recipes");
   const [sort, setSort] = useState<Sort>("newest");
@@ -118,6 +119,30 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
 
   const cookbookList = cookbooks.data?.pages.flatMap((page) => page.cookbooks) ?? [];
 
+  // "Following" — the former standalone feed, now a discover tab: public
+  // recipes from people the signed-in user follows.
+  const following = useInfiniteQuery({
+    ...trpc.social.feed.infiniteQueryOptions(
+      { limit: 24 },
+      { getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined }
+    ),
+    enabled: isAuthed && !isSearching && mode === "following",
+    retry: false,
+  });
+
+  const followingRecipes = following.data?.pages.flatMap((page) => page.recipes) ?? [];
+  const followingEmpty = !following.isLoading && followingRecipes.length === 0;
+
+  // Cold-start (following nobody yet): trending public recipes so the tab still
+  // has real content rather than just a nudge — mirrors the old feed page.
+  const followingPopular = useQuery({
+    ...trpc.social.discover.queryOptions({ sort: "trending", limit: 12 }),
+    enabled: mode === "following" && followingEmpty,
+    retry: false,
+  });
+
+  const followingPopularRecipes = followingPopular.data?.recipes ?? [];
+
   const searchQuery = useQuery({
     ...trpc.social.search.queryOptions({ q: searchTerm, limit: 24 }),
     enabled: isSearching,
@@ -188,6 +213,15 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
             >
               {t("modeRecipes")}
             </button>
+            {isAuthed ? (
+              <button
+                className={pill(mode === "following")}
+                type="button"
+                onClick={() => setMode("following")}
+              >
+                {t("modeFollowing")}
+              </button>
+            ) : null}
             <button
               className={pill(mode === "byIngredient")}
               type="button"
@@ -218,7 +252,46 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
             </button>
           </div>
 
-          {mode === "byIngredient" ? (
+          {mode === "following" ? (
+            following.isLoading ? (
+              <div className="flex min-h-[30vh] items-center justify-center">
+                <Spinner />
+              </div>
+            ) : followingEmpty ? (
+              <div className="space-y-8">
+                <div className="bg-content2 rounded-2xl p-10 text-center">
+                  <p className="text-default-600">{tFeed("emptyTitle")}</p>
+                  <p className="text-default-500 mt-1 text-sm">{tFeed("emptyBody")}</p>
+                </div>
+
+                <SuggestedCooks />
+
+                {followingPopularRecipes.length > 0 ? (
+                  <section>
+                    <h2 className="text-foreground mb-4 text-lg font-semibold">
+                      {tFeed("popularTitle")}
+                    </h2>
+                    <SocialRecipeGrid recipes={followingPopularRecipes} />
+                  </section>
+                ) : null}
+              </div>
+            ) : (
+              <>
+                <SocialRecipeGrid recipes={followingRecipes} />
+                {following.hasNextPage ? (
+                  <div className="mt-8 flex justify-center">
+                    <Button
+                      isPending={following.isFetchingNextPage}
+                      variant="tertiary"
+                      onPress={() => following.fetchNextPage()}
+                    >
+                      {t("loadMore")}
+                    </Button>
+                  </div>
+                ) : null}
+              </>
+            )
+          ) : mode === "byIngredient" ? (
             <IngredientDiscovery />
           ) : mode === "surprise" ? (
             <SurpriseDiscovery />

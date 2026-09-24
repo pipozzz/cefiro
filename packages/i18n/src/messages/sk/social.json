@@ -51,7 +51,8 @@
     "fridgeMenuAllStocked": "Máš všetko, čo treba 🎉",
     "themesHeading": "Objavuj témy",
     "themeQuick": "Rýchle · do 30 min",
-    "themeCount": "{count, plural, one {# recept} few {# recepty} other {# receptov}}"
+    "themeCount": "{count, plural, one {# recept} few {# recepty} other {# receptov}}",
+    "modeFollowing": "Sledované"
   },
   "categories": {
     "Breakfast": "Raňajky",
