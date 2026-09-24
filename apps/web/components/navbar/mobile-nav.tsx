@@ -12,7 +12,6 @@ import {
   ClipboardDocumentListIcon,
   Cog6ToothIcon,
   GlobeAltIcon,
-  NewspaperIcon,
 } from "@heroicons/react/20/solid";
 import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
@@ -29,7 +28,6 @@ const navLabelKeys: Record<
   "/library": "library",
   "/groceries": "groceries",
   "/calendar": "calendar",
-  "/feed": "feed",
   "/discover": "discover",
   "/profile": "profile",
 };
@@ -107,11 +105,9 @@ export const MobileNav = () => {
                   ? GlobeAltIcon
                   : item.href.startsWith("/library")
                     ? BookOpenIcon
-                    : item.href.startsWith("/feed")
-                      ? NewspaperIcon
-                      : item.href.startsWith("/calendar")
-                        ? CalendarDaysIcon
-                        : ClipboardDocumentListIcon;
+                    : item.href.startsWith("/calendar")
+                      ? CalendarDaysIcon
+                      : ClipboardDocumentListIcon;
                 const label = navLabelKeys[item.href] ? tNav(navLabelKeys[item.href]) : item.label;
 
                 return (

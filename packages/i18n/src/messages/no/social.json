@@ -51,7 +51,8 @@
     "fridgeMenuAllStocked": "Du har alt du trenger 🎉",
     "themesHeading": "Explore themes",
     "themeQuick": "Quick · under 30 min",
-    "themeCount": "{count, plural, one {# recipe} other {# recipes}}"
+    "themeCount": "{count, plural, one {# recipe} other {# recipes}}",
+    "modeFollowing": "Following"
   },
   "categories": {
     "Breakfast": "Breakfast",

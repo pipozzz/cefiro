@@ -13,10 +13,6 @@ export const siteConfig = {
       href: "/library",
     },
     {
-      label: "Feed",
-      href: "/feed",
-    },
-    {
       label: "Groceries",
       href: "/groceries",
     },
