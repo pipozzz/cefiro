@@ -81,6 +81,29 @@ export async function findSimilarPublicRecipes(
 }
 
 /**
+ * Ids of every public recipe, batched by cursor on recipe id. Drives the
+ * embedding backfill (Phase B1b) — one page at a time so a large catalogue is
+ * never loaded whole. Ordered by id so the cursor is stable.
+ */
+export async function listPublicRecipeIds(
+  limit: number,
+  afterRecipeId?: string
+): Promise<string[]> {
+  const rows = await db
+    .select({ id: recipes.id })
+    .from(recipes)
+    .where(
+      afterRecipeId
+        ? sql`${recipes.visibility} = 'public' AND ${recipes.id} > ${afterRecipeId}`
+        : sql`${recipes.visibility} = 'public'`
+    )
+    .orderBy(recipes.id)
+    .limit(limit);
+
+  return rows.map((row) => row.id);
+}
+
+/**
  * All public-recipe embeddings, for the clustering job (Phase B2). Batched by
  * cursor on recipe id so a large catalogue can be streamed.
  */

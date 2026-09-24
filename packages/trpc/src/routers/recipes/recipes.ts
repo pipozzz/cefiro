@@ -33,6 +33,7 @@ import {
   addPasteImportJob,
   enrichRecipe,
   preparePasteImport,
+  scheduleRecipeEmbedding,
 } from "@norish/queue";
 import { announceUsableRecipe } from "@norish/queue/enrichment/announce";
 import { getRecipeEnrichmentStatus } from "@norish/queue/enrichment/status";
@@ -227,6 +228,8 @@ export const createRecipeProcedure = authedProcedure
         // one proven way, rather than trusting a client-sent slug.
         if (input.visibility && input.visibility !== "private") {
           await setRecipeVisibility(ctx.user.id, createdId, input.visibility);
+          // A recipe created public is embedded for discovery; fire-and-forget.
+          scheduleRecipeEmbedding(createdId);
         }
 
         const dashboardDto = await dashboardRecipe(createdId);
@@ -289,6 +292,13 @@ const update = authedProcedure.input(RecipeUpdateInputSchema).mutation(({ ctx, i
           "updated",
           { recipe: updatedRecipe }
         );
+
+        // A public recipe's content changed, so its discovery embedding is now
+        // stale — re-embed it (the worker skips if the text is unchanged).
+        // Private recipes have no embedding to keep in step.
+        if (updatedRecipe.visibility === "public") {
+          scheduleRecipeEmbedding(id);
+        }
       }
     })
     .catch((err) => handleRecipeError(ctx, err, "update recipe", { recipeId: id }));

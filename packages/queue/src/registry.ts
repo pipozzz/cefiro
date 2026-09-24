@@ -15,6 +15,7 @@ import type {
   CaldavSyncJobData,
   ImageImportJobData,
   PasteImportJobData,
+  RecipeEmbeddingJobData,
   RecipeEnrichmentJobData,
   RecipeImportJobData,
   StoreLookupJobData,
@@ -35,6 +36,7 @@ import { createImageImportQueue } from "./image-import/queue";
 import { createIngredientLinkingQueue } from "./ingredient-linking/queue";
 import { createNutritionEstimationQueue } from "./nutrition-estimation/queue";
 import { createPasteImportQueue } from "./paste-import/queue";
+import { createRecipeEmbeddingQueue } from "./recipe-embedding/queue";
 import { createRecipeImportQueue } from "./recipe-import/queue";
 import { createRecipeProvenanceQueue } from "./recipe-provenance/queue";
 import { createScheduledTasksQueue } from "./scheduled-tasks/queue";
@@ -72,6 +74,7 @@ interface QueueRegistry {
   caldavSync: Queue<CaldavSyncJobData>;
   scheduledTasks: Queue<ScheduledTaskJobData>;
   storeLookup: Queue<StoreLookupJobData>;
+  recipeEmbedding: Queue<RecipeEmbeddingJobData>;
 }
 
 async function loadJobRetention(): Promise<JobRetentionConfig> {
@@ -130,6 +133,7 @@ export async function initializeQueues(): Promise<QueueRegistry> {
       caldavSync: createCaldavSyncQueue(removalOptions),
       scheduledTasks: createScheduledTasksQueue(removalOptions),
       storeLookup: createStoreLookupQueue(removalOptions),
+      recipeEmbedding: createRecipeEmbeddingQueue(removalOptions),
     };
 
     globalForRegistry.queueRegistry = created;
@@ -180,6 +184,7 @@ export function getQueueByName(name: QueueName): Queue {
     [QUEUE_NAMES.CALDAV_SYNC]: getQueues().caldavSync,
     [QUEUE_NAMES.SCHEDULED_TASKS]: getQueues().scheduledTasks,
     [QUEUE_NAMES.STORE_LOOKUP]: getQueues().storeLookup,
+    [QUEUE_NAMES.RECIPE_EMBEDDING]: getQueues().recipeEmbedding,
   };
 
   return byName[name];
@@ -223,6 +228,7 @@ export async function closeAllQueues(): Promise<void> {
     registry.caldavSync.close(),
     registry.scheduledTasks.close(),
     registry.storeLookup.close(),
+    registry.recipeEmbedding.close(),
   ]);
 
   globalForRegistry.queueRegistry = null;

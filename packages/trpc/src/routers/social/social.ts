@@ -84,6 +84,7 @@ import {
   setRecipeVisibility,
   upsertProfile,
 } from "@norish/db/repositories/user-profiles";
+import { scheduleRecipeEmbedding } from "@norish/queue";
 import { trpcLogger as log } from "@norish/shared-server/logger";
 import { copyRecipeImageByUrl, saveProfileAvatarBytes } from "@norish/shared-server/media/storage";
 import { ALLOWED_IMAGE_MIME_SET } from "@norish/shared/contracts";
@@ -349,6 +350,10 @@ const setVisibility = authedProcedure
       "Set recipe visibility"
     );
 
+    // Reconcile the discovery embedding: the worker embeds it if it is now
+    // public, or drops it if it went private. Fire-and-forget.
+    scheduleRecipeEmbedding(input.recipeId);
+
     return result;
   });
 
@@ -374,6 +379,7 @@ const setVisibilityBulk = authedProcedure
 
       if (result) {
         updated += 1;
+        scheduleRecipeEmbedding(recipeId);
       }
     }
 

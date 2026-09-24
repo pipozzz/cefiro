@@ -39,6 +39,7 @@ export { createAllergyDetectionQueue } from "./allergy-detection/queue";
 export { createCaldavSyncQueue } from "./caldav-sync/queue";
 export { createScheduledTasksQueue } from "./scheduled-tasks/queue";
 export { createStoreLookupQueue } from "./store-lookup/queue";
+export { createRecipeEmbeddingQueue } from "./recipe-embedding/queue";
 
 // Producers
 export { addImportJob } from "./recipe-import/producer";
@@ -58,6 +59,9 @@ export {
 export { addCaldavSyncJob } from "./caldav-sync/producer";
 export { initializeScheduledJobs } from "./scheduled-tasks/producer";
 export { addStoreMatchJob, addStoreRefreshJob } from "./store-lookup/producer";
+export { addRecipeEmbeddingJob, scheduleRecipeEmbedding } from "./recipe-embedding/producer";
+export { enrollEmbeddingForAllPublicRecipes } from "./recipe-embedding/backfill";
+export type { EmbeddingBackfillResult } from "./recipe-embedding/backfill";
 
 // Workers
 export { startRecipeImportWorker, stopRecipeImportWorker } from "./recipe-import/worker";
@@ -87,6 +91,7 @@ export {
 export { startCaldavSyncWorker, stopCaldavSyncWorker } from "./caldav-sync/worker";
 export { startScheduledTasksWorker, stopScheduledTasksWorker } from "./scheduled-tasks/worker";
 export { startStoreLookupWorker, stopStoreLookupWorker } from "./store-lookup/worker";
+export { startRecipeEmbeddingWorker, stopRecipeEmbeddingWorker } from "./recipe-embedding/worker";
 
 // Types from @norish/shared/contracts
 export type {
@@ -100,6 +105,7 @@ export type {
   CaldavSyncJobData,
   CaldavSyncOperation,
   StoreLookupJobData,
+  RecipeEmbeddingJobData,
 } from "@norish/queue/contracts/job-types";
 
 // Types from scheduled-tasks

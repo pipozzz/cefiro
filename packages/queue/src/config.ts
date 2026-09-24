@@ -29,6 +29,7 @@ export const QUEUE_NAMES = {
   INGREDIENT_LINKING: "ingredient-linking",
   IMAGE_GENERATION: "image-generation",
   STORE_LOOKUP: "store-lookup",
+  RECIPE_EMBEDDING: "recipe-embedding",
 } as const;
 
 export type QueueName = (typeof QUEUE_NAMES)[keyof typeof QUEUE_NAMES];
@@ -71,6 +72,7 @@ export const STALLED_INTERVAL = {
   [QUEUE_NAMES.INGREDIENT_LINKING]: 60_000, // 1 min - background enhancement
   [QUEUE_NAMES.IMAGE_GENERATION]: 60_000, // 1 min - background enhancement
   [QUEUE_NAMES.STORE_LOOKUP]: 60_000, // 1 min - always-on, one visit at a time
+  [QUEUE_NAMES.RECIPE_EMBEDDING]: 60_000, // 1 min - background enhancement
 } as const;
 
 /**
@@ -96,6 +98,9 @@ export const WORKER_CONCURRENCY = {
   // good-citizen fence in front of somebody else's supermarket. Raising it,
   // or adding a second queue that races this one at the same shop, undoes it.
   [QUEUE_NAMES.STORE_LOOKUP]: 1,
+  // Voyage bills and rate-limits per call. Two at a time keeps a publish burst
+  // or a backfill moving without hammering the endpoint.
+  [QUEUE_NAMES.RECIPE_EMBEDDING]: 2,
 } as const;
 
 /**
@@ -147,6 +152,7 @@ export const HANGING_THRESHOLD_MS: Record<QueueName, number> = {
   [QUEUE_NAMES.INGREDIENT_LINKING]: 15 * 60_000,
   [QUEUE_NAMES.IMAGE_GENERATION]: 15 * 60_000,
   [QUEUE_NAMES.STORE_LOOKUP]: 10 * 60_000,
+  [QUEUE_NAMES.RECIPE_EMBEDDING]: 15 * 60_000,
 };
 
 export type QueueRemovalOptions = Pick<DefaultJobOptions, "removeOnComplete" | "removeOnFail">;
@@ -328,6 +334,19 @@ export const storeLookupJobOptions: DefaultJobOptions = {
 };
 
 export const imageGenerationJobOptions: DefaultJobOptions = {
+  attempts: 3,
+  backoff: {
+    type: "exponential",
+    delay: 2000, // 2s, 4s, 8s
+  },
+  removeOnComplete: {
+    age: 3600,
+    count: 500,
+  },
+  removeOnFail: FALLBACK_REMOVAL,
+};
+
+export const recipeEmbeddingJobOptions: DefaultJobOptions = {
   attempts: 3,
   backoff: {
     type: "exponential",

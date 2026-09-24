@@ -106,6 +106,17 @@ export interface RecipeEnrichmentJobData {
 }
 
 /**
+ * One job of the `recipeEmbedding` queue: recompute (or drop) a recipe's
+ * discovery embedding. The job carries only the recipe id — the worker reads
+ * the recipe's *current* visibility and content and reconciles from there, so
+ * the same job shape covers "went public", "public recipe edited" and "went
+ * private" without the enqueuer having to know which happened.
+ */
+export interface RecipeEmbeddingJobData {
+  recipeId: string;
+}
+
+/**
  * One job of the always-on `storeLookup` queue. A match job answers "what does
  * this grocery name mean at this shop"; a refresh job re-reads Shelf Prices
  * that have gone stale. Match jobs carry the higher priority: a user's new
