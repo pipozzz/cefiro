@@ -17,7 +17,11 @@ import {
 } from "@norish/config/zod/server-config";
 import { getImageGenerationSweepCounts } from "@norish/db/repositories/recipes";
 import { getConfig, setConfig } from "@norish/db/repositories/server-config";
-import { enrollEmbeddingForAllPublicRecipes, enrollEnrichmentForAllRecipes } from "@norish/queue";
+import {
+  enrollEmbeddingForAllPublicRecipes,
+  enrollEnrichmentForAllRecipes,
+  rebuildDiscoverThemes,
+} from "@norish/queue";
 import { isEmbeddingConfigured } from "@norish/shared-server/ai/embeddings/voyage";
 import {
   listModels,
@@ -336,6 +340,30 @@ const embedAllPublicRecipes = adminProcedure.mutation(async ({ ctx }) => {
 });
 
 /**
+ * Rebuild the discovery themes now (Phase B2), instead of waiting for the weekly
+ * scheduler. Clusters the public recipe embeddings and names each cluster, so
+ * an administrator can seed or refresh themes on demand — e.g. right after a
+ * backfill. Gated on the Voyage key, since there is nothing to cluster without
+ * embeddings.
+ */
+const rebuildThemes = adminProcedure.mutation(async ({ ctx }) => {
+  log.info({ userId: ctx.user.id }, "Discover theme rebuild requested");
+
+  if (!isEmbeddingConfigured()) {
+    throw new TRPCError({
+      code: "PRECONDITION_FAILED",
+      message: "Embeddings are not configured. Set VOYAGE_API_KEY before rebuilding themes.",
+    });
+  }
+
+  const result = await rebuildDiscoverThemes();
+
+  log.info(result, "Discover themes rebuilt");
+
+  return result;
+});
+
+/**
  * How many images an Enrich All Recipes sweep would generate, for the
  * confirmation to name before it starts (ADR-0025) — the one kind whose cost
  * is per recipe and lands on a bill. A per-request read, never stored.
@@ -370,5 +398,6 @@ export const aiConfigProcedures = router({
   listAvailableTranscriptionModels,
   enrichAllRecipes,
   embedAllPublicRecipes,
+  rebuildThemes,
   imageGenerationSweepCount,
 });

@@ -62,6 +62,24 @@ export default function BulkEnrichmentForm() {
       },
     })
   );
+  const rebuildThemesMutation = useMutation(
+    trpc.admin.rebuildThemes.mutationOptions({
+      onError: (error) => {
+        if (error instanceof TRPCClientError && error.data?.code === "PRECONDITION_FAILED") {
+          toast(t("themes.notConfigured"), { variant: "warning" });
+
+          return;
+        }
+        showSafeErrorToast({
+          title: t("themes.error"),
+          description: tErrors("technicalDetails"),
+          color: "danger",
+          error,
+          context: "admin-ai:rebuild-themes",
+        });
+      },
+    })
+  );
   const openConfirm = () => {
     setReplaceExisting(false);
     setIsConfirmOpen(true);
@@ -101,6 +119,23 @@ export default function BulkEnrichmentForm() {
             onPress={() => embedAllMutation.mutate()}
           >
             {t("embed.button")}
+          </Button>
+        </div>
+      </div>
+      <div className="border-default/60 flex flex-col gap-2 border-t pt-4">
+        <p className="text-muted text-sm">{t("themes.description")}</p>
+        <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2">
+          {rebuildThemesMutation.isSuccess && (
+            <span className="text-success text-sm">
+              {t("themes.done", { themes: rebuildThemesMutation.data.themes })}
+            </span>
+          )}
+          <Button
+            isPending={rebuildThemesMutation.isPending}
+            variant="tertiary"
+            onPress={() => rebuildThemesMutation.mutate()}
+          >
+            {t("themes.button")}
           </Button>
         </div>
       </div>

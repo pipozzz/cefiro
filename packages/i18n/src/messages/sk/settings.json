@@ -641,6 +641,13 @@
           "queued": "{queued, plural, =0 {Do fronty nezaradený žiadny recept} one {Do fronty zaradený # recept} few {Do fronty zaradené # recepty} other {Do fronty zaradených # receptov}} na vektorizáciu",
           "notConfigured": "Vektory nie sú nakonfigurované. Najprv nastavte VOYAGE_API_KEY.",
           "error": "Nepodarilo sa spustiť dopĺňanie vektorov"
+        },
+        "themes": {
+          "button": "Prebudovať témy objavovania",
+          "description": "Zoskupí verejné recepty podľa podobnosti a pomenuje každú skupinu, čím prebuduje dlaždice tém v objavovaní. Nové vektory sa každý týždeň spracujú automaticky; týmto ich naplníte alebo obnovíte hneď.",
+          "done": "{themes, plural, =0 {Nevytvorená žiadna téma} one {Vytvorená # téma} few {Vytvorené # témy} other {Vytvorených # tém}}",
+          "notConfigured": "Vektory nie sú nakonfigurované. Najprv nastavte VOYAGE_API_KEY.",
+          "error": "Nepodarilo sa prebudovať témy"
         }
       }
     },
