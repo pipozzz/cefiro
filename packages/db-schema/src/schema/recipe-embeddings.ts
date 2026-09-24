@@ -8,8 +8,9 @@ export const EMBEDDING_DIMENSIONS = 1024;
 /**
  * A pgvector `vector(N)` column. Drizzle has no native pgvector type, so this
  * custom type maps a `number[]` to/from pgvector's `"[1,2,3]"` text form.
+ * Exported so other embedding-backed tables (e.g. theme centroids) reuse it.
  */
-const vector = customType<{
+export const vector = customType<{
   data: number[];
   driverData: string;
   config: { dimensions: number };

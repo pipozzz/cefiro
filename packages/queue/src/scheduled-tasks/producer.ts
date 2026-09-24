@@ -9,13 +9,28 @@ import type { Queue } from "bullmq";
 
 import { createLogger } from "@norish/shared-server/logger";
 
-import type { ScheduledTaskJobData } from "./queue";
+import type { ScheduledTaskJobData, ScheduledTaskType } from "./queue";
 import { SCHEDULED_TASKS } from "./queue";
 
 const log = createLogger("queue:scheduled-tasks");
 
-/** Daily at midnight; every scheduled task runs on the same clock. */
+/** Daily at midnight; the default clock for a scheduled task. */
 const CRON_MIDNIGHT = "0 0 * * *";
+/** Weekly, Monday 03:00 — off the nightly cleanup rush. */
+const CRON_WEEKLY = "0 3 * * 1";
+
+/**
+ * When each task runs. Most share the nightly clock; theme clustering embeds and
+ * calls an LLM per cluster, so it runs weekly rather than every night.
+ */
+const TASK_CRON: Record<ScheduledTaskType, string> = {
+  "recurring-grocery-check": CRON_MIDNIGHT,
+  "media-cleanup": CRON_MIDNIGHT,
+  "calendar-cleanup": CRON_MIDNIGHT,
+  "groceries-cleanup": CRON_MIDNIGHT,
+  "video-temp-cleanup": CRON_MIDNIGHT,
+  "theme-clustering": CRON_WEEKLY,
+};
 
 function isKnownTask(data: ScheduledTaskJobData | undefined): boolean {
   return SCHEDULED_TASKS.some((task) => task === data?.taskType);
@@ -66,9 +81,9 @@ export async function initializeScheduledJobs(queue: Queue<ScheduledTaskJobData>
     await queue.add(
       taskType,
       { taskType },
-      { repeat: { pattern: CRON_MIDNIGHT }, jobId: taskType }
+      { repeat: { pattern: TASK_CRON[taskType] }, jobId: taskType }
     );
   }
 
-  log.info("Repeatable scheduled jobs initialized (daily at midnight)");
+  log.info("Repeatable scheduled jobs initialized");
 }

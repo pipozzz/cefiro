@@ -37,6 +37,7 @@
     "./caldav/sync": "./src/caldav/sync.ts",
     "./ai/embeddings/*": "./src/ai/embeddings/*.ts",
     "./ai/enrichment/*": "./src/ai/enrichment/*.ts",
+    "./ai/themes/*": "./src/ai/themes/*.ts",
     "./ai/prompts/loader": "./src/ai/prompts/loader.ts",
     "./ai/prompts/overrides": "./src/ai/prompts/overrides.ts",
     "./ai/providers/listing": "./src/ai/providers/listing.ts",

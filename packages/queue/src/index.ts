@@ -62,6 +62,8 @@ export { addStoreMatchJob, addStoreRefreshJob } from "./store-lookup/producer";
 export { addRecipeEmbeddingJob, scheduleRecipeEmbedding } from "./recipe-embedding/producer";
 export { enrollEmbeddingForAllPublicRecipes } from "./recipe-embedding/backfill";
 export type { EmbeddingBackfillResult } from "./recipe-embedding/backfill";
+export { rebuildDiscoverThemes } from "./scheduler/theme-clustering";
+export type { ThemeRebuildResult } from "./scheduler/theme-clustering";
 
 // Workers
 export { startRecipeImportWorker, stopRecipeImportWorker } from "./recipe-import/worker";

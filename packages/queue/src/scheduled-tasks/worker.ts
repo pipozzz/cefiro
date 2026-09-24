@@ -6,6 +6,7 @@ import { getBullClient } from "@norish/queue/redis/bullmq";
 import { cleanupOldCalendarData } from "@norish/queue/scheduler/old-calendar-cleanup";
 import { cleanupOldGroceries } from "@norish/queue/scheduler/old-groceries-cleanup";
 import { checkRecurringGroceries } from "@norish/queue/scheduler/recurring-grocery-check";
+import { rebuildDiscoverThemes } from "@norish/queue/scheduler/theme-clustering";
 import { createLogger } from "@norish/shared-server/logger";
 
 import { baseWorkerOptions, QUEUE_NAMES, STALLED_INTERVAL, WORKER_CONCURRENCY } from "../config";
@@ -18,7 +19,8 @@ type ScheduledTaskType =
   | "media-cleanup"
   | "calendar-cleanup"
   | "groceries-cleanup"
-  | "video-temp-cleanup";
+  | "video-temp-cleanup"
+  | "theme-clustering";
 
 interface ScheduledTaskJobData {
   taskType: ScheduledTaskType;
@@ -89,6 +91,13 @@ async function processScheduledTask(job: Job<ScheduledTaskJobData>): Promise<voi
     case "video-temp-cleanup": {
       await cleanupOldTempFiles();
       log.info("Video temp cleanup completed");
+      break;
+    }
+
+    case "theme-clustering": {
+      const result = await rebuildDiscoverThemes();
+
+      log.info(result, "Discover theme clustering completed");
       break;
     }
 
