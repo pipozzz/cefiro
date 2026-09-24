@@ -176,9 +176,11 @@ const uploadLimits = authedProcedure.query(() => {
 });
 
 /**
- * Check if recipe timers are enabled globally
+ * Check if recipe timers are enabled globally. Public: it is a global on/off
+ * flag (no per-user data), and public recipe cooking mode needs it so the
+ * timer controls can render for signed-out cooks too.
  */
-const timersEnabled = authedProcedure.query(async () => {
+const timersEnabled = publicProcedure.query(async () => {
   return await isTimersEnabled();
 });
 
