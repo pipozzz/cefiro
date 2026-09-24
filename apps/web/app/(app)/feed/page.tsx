@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useTRPC } from "@/app/providers/trpc-provider";
 import { SocialRecipeGrid } from "@/components/social/social-recipe-card";
 import { SuggestedCooks } from "@/components/social/suggested-cooks";
@@ -10,6 +10,7 @@ import { useTranslations } from "next-intl";
 
 export default function FeedPage() {
   const trpc = useTRPC();
+  const router = useRouter();
   const t = useTranslations("social.feed");
 
   const query = useInfiniteQuery({
@@ -49,7 +50,7 @@ export default function FeedPage() {
           <div className="bg-content2 rounded-2xl p-10 text-center">
             <p className="text-default-600">{t("emptyTitle")}</p>
             <p className="text-default-500 mt-1 text-sm">{t("emptyBody")}</p>
-            <Button as={Link} href="/discover" variant="primary" className="mt-4">
+            <Button className="mt-4" variant="primary" onPress={() => router.push("/discover")}>
               {t("discoverCta")}
             </Button>
           </div>
