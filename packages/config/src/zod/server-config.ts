@@ -22,20 +22,7 @@ export const ServerConfigKeys = {
   PROMPTS: "prompts",
   LOCALE_CONFIG: "locale_config",
   TIMER_KEYWORDS: "timer_keywords",
-  ANALYTICS_CONFIG: "analytics_config",
 } as const;
-
-// ============================================================================
-// Analytics (Plausible)
-// ============================================================================
-
-export const AnalyticsConfigSchema = z.object({
-  // Plausible `data-domain`, e.g. "nasakuchyna.sk". Empty disables analytics.
-  plausibleDomain: z.string().trim().optional(),
-  // Script URL; empty falls back to Plausible Cloud. Set for self-hosted.
-  plausibleSrc: z.string().trim().optional(),
-});
-export type AnalyticsConfig = z.infer<typeof AnalyticsConfigSchema>;
 
 export type ServerConfigKey = (typeof ServerConfigKeys)[keyof typeof ServerConfigKeys];
 
@@ -772,8 +759,6 @@ export function getSchemaForConfigKey(key: ServerConfigKey): z.ZodType {
       return I18nLocaleConfigSchema;
     case ServerConfigKeys.TIMER_KEYWORDS:
       return TimerKeywordsSchema;
-    case ServerConfigKeys.ANALYTICS_CONFIG:
-      return AnalyticsConfigSchema;
     default:
       return z.any();
   }

@@ -978,18 +978,6 @@
       "revoked": "Pozvánka zrušená",
       "createError": "Pozvánku sa nepodarilo vytvoriť.",
       "revokeError": "Pozvánku sa nepodarilo zrušiť."
-    },
-    "analytics": {
-      "title": "Analytika",
-      "description": "Súkromná, cookieless analytika Plausible. Zadaj doménu webu na zapnutie; prázdne = vypnuté.",
-      "domainLabel": "Doména Plausible",
-      "domainPlaceholder": "nasakuchyna.sk",
-      "srcLabel": "URL skriptu (voliteľné)",
-      "srcPlaceholder": "https://plausible.io/js/script.js",
-      "srcHint": "Prázdne = Plausible Cloud, alebo zadaj URL svojej self-hosted inštancie.",
-      "save": "Uložiť",
-      "saved": "Nastavenia analytiky uložené",
-      "saveError": "Nastavenia analytiky sa nepodarilo uložiť."
     }
   },
   "archiveExport": {

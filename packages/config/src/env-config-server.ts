@@ -259,6 +259,14 @@ const ServerConfigSchema = z.object({
   VAPID_PRIVATE_KEY: z.string().optional(),
   VAPID_SUBJECT: z.string().default("mailto:admin@nasakuchyna.sk"),
 
+  // Analytics (Plausible), cookieless. On when both are set. The tracker is
+  // proxied first-party via next-plausible (withPlausibleProxy), so ad-blockers
+  // can't block it. PLAUSIBLE_DOMAIN is the site's data-domain; PLAUSIBLE_SRC is
+  // the Plausible instance's per-site script URL — only its origin is used, as
+  // the proxy target (the self-hosted Plausible host).
+  PLAUSIBLE_DOMAIN: z.string().optional(),
+  PLAUSIBLE_SRC: z.string().optional(),
+
   // Video Processing Configuration
   VIDEO_PARSING_ENABLED: z
     .string()
