@@ -84,12 +84,31 @@ export function DiscoverThemes({
   const trpc = useTRPC();
   const t = useTranslations("social.discover");
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     ...trpc.social.discoverThemes.queryOptions({ limit: 8 }),
     staleTime: 5 * 60_000,
   });
 
   const themes = data?.themes ?? [];
+
+  // Reserve the strip's space while loading so the page below doesn't jump when
+  // the tiles arrive.
+  if (isLoading) {
+    return (
+      <div className="mb-6">
+        <h2 className="text-foreground mb-3 text-sm font-semibold">{t("themesHeading")}</h2>
+        <div className="-mx-1 flex gap-3 overflow-x-auto px-1 pb-1">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div
+              key={i}
+              aria-hidden
+              className={`${tileClass} bg-content2 h-[128px] animate-pulse`}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   // Nothing to explore yet (empty catalogue): render no strip at all.
   if (themes.length === 0) {

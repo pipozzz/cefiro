@@ -1,7 +1,7 @@
 {
   "discover": {
     "title": "Objavuj",
-    "subtitle": "Objavuj recepty a kuchárov zdieľané komunitou.",
+    "subtitle": "Objavuj a zdieľaj domáce recepty od komunity — filtruj podľa kategórie, času či surovín.",
     "metaTitle": "Objavuj recepty",
     "metaDescription": "Objavuj recepty zdieľané komunitou Naša Kuchyňa.",
     "searchPlaceholder": "Hľadaj recepty a ľudí…",
@@ -53,7 +53,9 @@
     "themeQuick": "Rýchle · do 30 min",
     "themeCount": "{count, plural, one {# recept} few {# recepty} other {# receptov}}",
     "themeBack": "Späť na objavovanie",
-    "modeFollowing": "Sledované"
+    "modeFollowing": "Sledované",
+    "emptyColdStart": "Nové recepty sa tu objavia, keď ich komunita zverejní — vráť sa čoskoro.",
+    "emptyFiltered": "Týmto filtrom nezodpovedá žiadny recept. Skús zrušiť filter alebo vyhľadávať."
   },
   "categories": {
     "Breakfast": "Raňajky",
