@@ -978,18 +978,6 @@
       "revoked": "Invite revoked",
       "createError": "Could not create the invite.",
       "revokeError": "Could not revoke the invite."
-    },
-    "analytics": {
-      "title": "Analytics",
-      "description": "Privacy-friendly, cookieless Plausible analytics. Set your site domain to turn it on; leave blank to disable.",
-      "domainLabel": "Plausible domain",
-      "domainPlaceholder": "nasakuchyna.sk",
-      "srcLabel": "Script URL (optional)",
-      "srcPlaceholder": "https://plausible.io/js/script.js",
-      "srcHint": "Leave blank for Plausible Cloud, or set your self-hosted script URL.",
-      "save": "Save",
-      "saved": "Analytics settings saved",
-      "saveError": "Could not save analytics settings."
     }
   },
   "archiveExport": {
