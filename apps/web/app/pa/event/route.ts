@@ -31,6 +31,36 @@ function clientIp(request: NextRequest): string {
   return "";
 }
 
+// The request headers a reverse proxy / CDN might carry the visitor IP in.
+const IP_HEADERS = [
+  "cf-connecting-ip",
+  "true-client-ip",
+  "x-real-ip",
+  "x-forwarded-for",
+  "forwarded",
+  "x-client-ip",
+  "x-cluster-client-ip",
+] as const;
+
+/**
+ * Diagnostic: `GET /pa/event?whoami=1` returns the IP-related request headers as
+ * this server actually receives them, plus the IP the proxy would resolve. It
+ * reveals only the caller's own request headers. Use it to find which header
+ * carries the real visitor IP in a given deployment, then remove it.
+ */
+export async function GET(request: NextRequest): Promise<Response> {
+  if (request.nextUrl.searchParams.get("whoami") !== "1") {
+    return new Response("", { status: 404 });
+  }
+
+  const headers = Object.fromEntries(IP_HEADERS.map((name) => [name, request.headers.get(name)]));
+
+  return Response.json(
+    { resolvedIp: clientIp(request), headers },
+    { headers: { "Cache-Control": "no-store" } }
+  );
+}
+
 export async function POST(request: NextRequest): Promise<Response> {
   const origin = plausibleOrigin();
 
