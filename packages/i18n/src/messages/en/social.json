@@ -276,7 +276,10 @@
     "publishNudgeUnlisted": "Link only",
     "publishNudgeDismiss": "Not now",
     "publishNudgeDonePublic": "Published — now in discovery 🎉",
-    "publishNudgeDoneUnlisted": "Done — shareable via link"
+    "publishNudgeDoneUnlisted": "Done — shareable via link",
+    "importedNoticeTitle": "Imported recipe",
+    "importedNoticeBody": "This recipe was imported from {source}. Publish it only if it's your own adaptation — the photos and wording may be the source's and protected by copyright.",
+    "importedConfirm": "I confirm I have the right to publish this recipe."
   },
   "sharing": {
     "manage": "Manage sharing",

@@ -276,7 +276,10 @@
     "publishNudgeUnlisted": "Kun med link",
     "publishNudgeDismiss": "Ikke nu",
     "publishNudgeDonePublic": "Offentliggjort — nu i udforskning 🎉",
-    "publishNudgeDoneUnlisted": "Færdig — kan deles via link"
+    "publishNudgeDoneUnlisted": "Færdig — kan deles via link",
+    "importedNoticeTitle": "Importeret opskrift",
+    "importedNoticeBody": "Denne opskrift blev importeret fra {source}. Udgiv den kun, hvis det er din egen bearbejdning — billeder og tekst kan tilhøre kilden og være ophavsretligt beskyttet.",
+    "importedConfirm": "Jeg bekræfter, at jeg har ret til at udgive denne opskrift."
   },
   "sharing": {
     "manage": "Administrer deling",

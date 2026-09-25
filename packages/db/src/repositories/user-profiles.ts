@@ -242,6 +242,12 @@ export interface RecipePublishState {
   visibility: RecipeVisibility;
   slug: string | null;
   publishedAt: Date | null;
+  /**
+   * The external source this recipe was imported from, if any. Drives the
+   * publish-time copyright guardrail: an imported recipe warns before it is
+   * shared, since its photos and prose may be the source's, not the user's.
+   */
+  sourceUrl: string | null;
 }
 
 /**
@@ -257,6 +263,7 @@ export async function getRecipePublishState(
       visibility: recipes.visibility,
       slug: recipes.slug,
       publishedAt: recipes.publishedAt,
+      url: recipes.url,
       userId: recipes.userId,
     })
     .from(recipes)
@@ -267,7 +274,12 @@ export async function getRecipePublishState(
     return null;
   }
 
-  return { visibility: row.visibility, slug: row.slug, publishedAt: row.publishedAt };
+  return {
+    visibility: row.visibility,
+    slug: row.slug,
+    publishedAt: row.publishedAt,
+    sourceUrl: row.url,
+  };
 }
 
 export interface PublicRecipeRef {

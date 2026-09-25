@@ -276,7 +276,10 @@
     "publishNudgeUnlisted": "Nur per Link",
     "publishNudgeDismiss": "Jetzt nicht",
     "publishNudgeDonePublic": "Veröffentlicht — jetzt im Entdecken 🎉",
-    "publishNudgeDoneUnlisted": "Fertig — per Link teilbar"
+    "publishNudgeDoneUnlisted": "Fertig — per Link teilbar",
+    "importedNoticeTitle": "Importiertes Rezept",
+    "importedNoticeBody": "Dieses Rezept wurde von {source} importiert. Veröffentliche es nur, wenn es deine eigene Bearbeitung ist — Fotos und Texte können der Quelle gehören und urheberrechtlich geschützt sein.",
+    "importedConfirm": "Ich bestätige, dass ich das Recht habe, dieses Rezept zu veröffentlichen."
   },
   "sharing": {
     "manage": "Freigabe verwalten",
