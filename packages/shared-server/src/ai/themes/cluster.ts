@@ -24,13 +24,17 @@ export interface RecipeCluster {
 }
 
 export interface ClusterOptions {
-  /** Below this many recipes there is nothing worth clustering. Default 12. */
+  /**
+   * Below this many recipes there is nothing worth clustering. Default 6 —
+   * low enough that a young instance gets themes as soon as it has a handful of
+   * public recipes, rather than staying empty until the catalogue is large.
+   */
   minItems?: number;
-  /** Fewest clusters to form. Default 4. */
+  /** Fewest clusters to form. Default 2. */
   minK?: number;
   /** Most clusters to form. Default 12. */
   maxK?: number;
-  /** Clusters smaller than this are dropped as noise. Default 3. */
+  /** Clusters smaller than this are dropped as noise. Default 2. */
   minClusterSize?: number;
   /** Lloyd iterations. Default 20. */
   iterations?: number;
@@ -135,10 +139,10 @@ export function clusterEmbeddings(
   options: ClusterOptions = {}
 ): RecipeCluster[] {
   const {
-    minItems = 12,
-    minK = 4,
+    minItems = 6,
+    minK = 2,
     maxK = 12,
-    minClusterSize = 3,
+    minClusterSize = 2,
     iterations = 20,
     seed = 1,
   } = options;

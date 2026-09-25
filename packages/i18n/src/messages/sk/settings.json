@@ -645,7 +645,7 @@
         "themes": {
           "button": "Prebudovať témy objavovania",
           "description": "Zoskupí verejné recepty podľa podobnosti a pomenuje každú skupinu, čím prebuduje dlaždice tém v objavovaní. Nové vektory sa každý týždeň spracujú automaticky; týmto ich naplníte alebo obnovíte hneď.",
-          "done": "{themes, plural, =0 {Nevytvorená žiadna téma} one {Vytvorená # téma} few {Vytvorené # témy} other {Vytvorených # tém}}",
+          "done": "{themes, plural, =0 {Nevytvorená žiadna téma} one {Vytvorená # téma} few {Vytvorené # témy} other {Vytvorených # tém}} z {recipes, plural, one {# receptu s vektorom} few {# receptov s vektormi} other {# receptov s vektormi}}",
           "notConfigured": "Vektory nie sú nakonfigurované. Najprv nastavte VOYAGE_API_KEY.",
           "error": "Nepodarilo sa prebudovať témy"
         }
