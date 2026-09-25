@@ -64,6 +64,7 @@ import {
 import { findSimilarPublicRecipes } from "@norish/db/repositories/recipe-embeddings";
 import {
   createSavedForkGuarded,
+  getImportedRecipeIds,
   getRecipeFull,
   getRecipeSourceRoot,
   getSavedForkForUser,
@@ -370,14 +371,33 @@ const myRecipesForSharing = authedProcedure.query(async ({ ctx }) =>
  * manager's action, so an owner can make a whole library public in one go.
  * Reuses the single-recipe path per id (ownership check + slug generation +
  * publishedAt), and silently skips ids that are not the caller's.
+ *
+ * Copyright guardrail: when making recipes PUBLIC, imported recipes (those with
+ * an external source) are skipped — a bulk sweep offers no per-recipe judgement,
+ * so external content is never broadcast to discovery/search this way. They are
+ * reported back as `skippedImported`. An owner who genuinely holds the rights can
+ * still publish an imported recipe one at a time through the single-recipe flow,
+ * which shows the copyright warning. Link-only and private are unaffected.
  */
 const setVisibilityBulk = authedProcedure
   .use(rateLimit({ name: "social.setVisibilityBulk", limit: 20, windowSec: 60 }))
   .input(SetRecipeVisibilityBulkInputSchema)
-  .mutation(async ({ ctx, input }): Promise<{ updated: number }> => {
+  .mutation(async ({ ctx, input }): Promise<{ updated: number; skippedImported: number }> => {
+    let ids = input.recipeIds;
+    let skippedImported = 0;
+
+    if (input.visibility === "public") {
+      const imported = await getImportedRecipeIds(ctx.user.id, ids);
+
+      if (imported.size > 0) {
+        skippedImported = imported.size;
+        ids = ids.filter((id) => !imported.has(id));
+      }
+    }
+
     let updated = 0;
 
-    for (const recipeId of input.recipeIds) {
+    for (const recipeId of ids) {
       const result = await setRecipeVisibility(ctx.user.id, recipeId, input.visibility);
 
       if (result) {
@@ -387,11 +407,17 @@ const setVisibilityBulk = authedProcedure
     }
 
     log.info(
-      { userId: ctx.user.id, count: input.recipeIds.length, updated, visibility: input.visibility },
+      {
+        userId: ctx.user.id,
+        count: input.recipeIds.length,
+        updated,
+        skippedImported,
+        visibility: input.visibility,
+      },
       "Bulk set recipe visibility"
     );
 
-    return { updated };
+    return { updated, skippedImported };
   });
 
 // --- Public reads (unauthenticated) -------------------------------------

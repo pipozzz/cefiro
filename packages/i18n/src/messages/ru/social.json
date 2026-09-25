@@ -296,7 +296,11 @@
     "makePrivate": "Сделать приватными",
     "clear": "Сбросить",
     "filterAll": "Все",
-    "done": "Обновлено: {count}"
+    "done": "Обновлено: {count}",
+    "doneWithSkipped": "Published {updated}. Skipped {skipped} imported.",
+    "importedBadge": "Imported",
+    "importedHint": "Imported recipes can’t be published, to protect copyright.",
+    "importedNote": "Imported recipes can be set to link-only or private, but not published — to protect copyright."
   },
   "categoryPage": {
     "heading": "Рецепты: {category}",
