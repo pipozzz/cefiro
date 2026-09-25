@@ -11,8 +11,10 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import {
   createRecipeWithRefs,
   getImportedRecipeIds,
+  listImportedVisibleRecipeIds,
   listOwnRecipesForSharing,
 } from "@norish/db/repositories/recipes";
+import { setRecipeVisibility } from "@norish/db/repositories/user-profiles";
 
 import { createTestUser } from "../helpers/db-test-helpers";
 import { RepositoryTestBase } from "../helpers/repository-test-base";
@@ -87,5 +89,39 @@ describe("getImportedRecipeIds", () => {
     const user = await createTestUser();
 
     expect((await getImportedRecipeIds(user.id, [])).size).toBe(0);
+  });
+});
+
+describe("listImportedVisibleRecipeIds", () => {
+  it("lists only the caller's imported recipes that are public or unlisted", async () => {
+    const user = await createTestUser();
+
+    const importedPublic = await makeRecipe(user.id, "Import public", "https://example.com/a");
+    const importedUnlisted = await makeRecipe(user.id, "Import unlisted", "https://example.com/b");
+    const importedPrivate = await makeRecipe(user.id, "Import private", "https://example.com/c");
+    const ownPublic = await makeRecipe(user.id, "Own public");
+
+    await setRecipeVisibility(user.id, importedPublic, "public");
+    await setRecipeVisibility(user.id, importedUnlisted, "unlisted");
+    // importedPrivate stays private (the default); ownPublic is authored, not imported.
+    await setRecipeVisibility(user.id, ownPublic, "public");
+
+    const ids = new Set(await listImportedVisibleRecipeIds(user.id));
+
+    expect(ids.has(importedPublic)).toBe(true);
+    expect(ids.has(importedUnlisted)).toBe(true);
+    expect(ids.has(importedPrivate)).toBe(false);
+    expect(ids.has(ownPublic)).toBe(false);
+    expect(ids.size).toBe(2);
+  });
+
+  it("does not list another user's imported public recipe", async () => {
+    const alice = await createTestUser();
+    const bob = await createTestUser();
+
+    const bobImported = await makeRecipe(bob.id, "Bob import", "https://example.com/bob2");
+    await setRecipeVisibility(bob.id, bobImported, "public");
+
+    expect(await listImportedVisibleRecipeIds(alice.id)).toEqual([]);
   });
 });

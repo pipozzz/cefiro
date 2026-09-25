@@ -300,7 +300,10 @@
     "doneWithSkipped": "Zverejnené: {updated}. Preskočené importované: {skipped}.",
     "importedBadge": "Importované",
     "importedHint": "Importované recepty nie je možné zverejniť kvôli ochrane autorských práv.",
-    "importedNote": "Importované recepty môžete nastaviť ako len cez odkaz alebo súkromné, ale nie zverejniť — kvôli ochrane autorských práv."
+    "importedNote": "Importované recepty môžete nastaviť ako len cez odkaz alebo súkromné, ale nie zverejniť — kvôli ochrane autorských práv.",
+    "unpublishImported": "Zrušiť zverejnenie importovaných ({count})",
+    "unpublishImportedConfirm": "Nastaviť {count} importovaných receptov späť na súkromné? Odstránia sa z discovery a vyhľadávania.",
+    "unpublishImportedDone": "Zrušené zverejnenie {count} importovaných receptov."
   },
   "categoryPage": {
     "heading": "Recepty: {category}",
