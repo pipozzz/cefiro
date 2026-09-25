@@ -259,6 +259,13 @@ const ServerConfigSchema = z.object({
   VAPID_PRIVATE_KEY: z.string().optional(),
   VAPID_SUBJECT: z.string().default("mailto:admin@nasakuchyna.sk"),
 
+  // Analytics (Plausible), cookieless. Server-side pageview tracking is on when
+  // both are set: the app sends pageviews to <PLAUSIBLE_SRC origin>/api/event
+  // from the edge proxy, so ad-blockers can't block it. PLAUSIBLE_SRC is the
+  // per-site script URL (its origin is the Plausible instance).
+  PLAUSIBLE_DOMAIN: z.string().optional(),
+  PLAUSIBLE_SRC: z.string().optional(),
+
   // Video Processing Configuration
   VIDEO_PARSING_ENABLED: z
     .string()

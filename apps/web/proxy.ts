@@ -1,8 +1,49 @@
-import { NextRequest, NextResponse } from "next/server";
+import { after, NextRequest, NextResponse } from "next/server";
 import { shouldBypassAuthProxy } from "@/lib/recipe-share-access";
 
 import { getVerifiedSession } from "@norish/auth/session";
 import { SERVER_CONFIG } from "@norish/config/env-config-server";
+import {
+  isServerAnalyticsConfigured,
+  trackPageview,
+} from "@norish/shared-server/analytics/plausible-server";
+
+/**
+ * Server-side Plausible pageview: fire from the proxy so there is no client
+ * script for ad-blockers to block. Only real page navigations count — a document
+ * load (sec-fetch-dest: document) or a client RSC navigation (RSC: 1) that is not
+ * a speculative prefetch — so media, RSC prefetches and sub-resources are
+ * ignored. Runs after the response (`after`) and never blocks it.
+ */
+function trackPageviewIfNavigation(request: NextRequest): void {
+  if (request.method !== "GET" || !isServerAnalyticsConfigured()) return;
+
+  const headers = request.headers;
+
+  if (headers.get("next-router-prefetch") === "1" || headers.get("purpose") === "prefetch") {
+    return;
+  }
+
+  const dest = headers.get("sec-fetch-dest");
+  const accept = headers.get("accept") ?? "";
+  const isDocument = dest === "document" || (!dest && accept.includes("text/html"));
+  const isClientNavigation = headers.get("rsc") === "1";
+
+  if (!isDocument && !isClientNavigation) return;
+
+  const origin = getPublicOrigin(request) ?? SERVER_CONFIG.AUTH_URL;
+  const url = `${origin}${request.nextUrl.pathname}${request.nextUrl.search}`;
+  const ip = (headers.get("x-forwarded-for") ?? "").split(",")[0]?.trim() || null;
+
+  after(() =>
+    trackPageview({
+      url,
+      userAgent: headers.get("user-agent"),
+      ip,
+      referer: headers.get("referer"),
+    })
+  );
+}
 
 export async function proxy(request: NextRequest) {
   // WebSocket upgrade requests should not be redirected - they'll be handled at the app level
@@ -15,12 +56,16 @@ export async function proxy(request: NextRequest) {
   }
 
   if (shouldBypassAuthProxy(request)) {
+    trackPageviewIfNavigation(request);
+
     return NextResponse.next();
   }
 
   const identity = await getVerifiedSession(request.headers);
 
   if (identity) {
+    trackPageviewIfNavigation(request);
+
     return NextResponse.next();
   }
 

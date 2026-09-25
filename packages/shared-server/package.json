@@ -44,6 +44,7 @@
     "./ai/runtime/*": "./src/ai/runtime/*.ts",
     "./push/web-push": "./src/push/web-push.ts",
     "./push/social-notify": "./src/push/social-notify.ts",
+    "./analytics/plausible-server": "./src/analytics/plausible-server.ts",
     "./video/yt-dlp-version": "./src/video/yt-dlp-version.ts",
     "./caldav/ics-helpers": "./src/caldav/ics-helpers.ts",
     "./lib/workspace-paths": "./src/lib/workspace-paths.ts",

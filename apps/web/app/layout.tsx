@@ -1,7 +1,6 @@
 import "@/styles/globals.css";
 
 import { Suspense } from "react";
-import { Analytics } from "@/components/analytics";
 import RegisterServiceWorker from "@/components/register-service-worker";
 import { TopProgressBar } from "@/components/top-progress-bar";
 import { NextIntlClientProvider } from "next-intl";
@@ -32,7 +31,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </NextIntlClientProvider>
         </AppThemeProvider>
         <RegisterServiceWorker />
-        <Analytics />
       </body>
     </html>
   );
