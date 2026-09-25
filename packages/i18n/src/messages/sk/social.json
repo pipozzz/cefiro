@@ -305,5 +305,14 @@
     "browseAll": "Objavovať všetky recepty",
     "indexTitle": "Kategórie receptov",
     "indexSubtitle": "Prezeraj verejné recepty podľa kategórie."
+  },
+  "cuisinePage": {
+    "heading": "Recepty: {cuisine}",
+    "subtitle": "Objavujte a ukladajte verejné recepty kuchyne {cuisine}.",
+    "empty": "Pre túto kuchyňu zatiaľ nie sú žiadne verejné recepty.",
+    "browseAll": "Prehliadať všetky recepty",
+    "indexTitle": "Kuchyne",
+    "indexSubtitle": "Prehliadajte verejné recepty podľa kuchyne.",
+    "recipeCount": "{count, plural, one {# recept} few {# recepty} many {# receptu} other {# receptov}}"
   }
 }
