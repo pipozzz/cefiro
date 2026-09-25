@@ -14,12 +14,14 @@ import { SERVER_CONFIG } from "@norish/config/env-config-server";
 import { ServerConfigKeys } from "@norish/config/zod/server-config";
 import { db } from "@norish/db/drizzle";
 import { setApiKeyAuthService } from "@norish/db/repositories/api-keys";
+import { recordLegalAcceptance } from "@norish/db/repositories/legal";
 import { setConfig } from "@norish/db/repositories/server-config";
 import { countUsers } from "@norish/db/repositories/users";
 import * as schema from "@norish/db/schema/auth";
 import { isRegistrationEnabled } from "@norish/shared-server/config/server-config-loader";
 import { authLogger } from "@norish/shared-server/logger";
 import { getPublisherClient } from "@norish/shared-server/redis/client";
+import { LEGAL_VERSION } from "@norish/shared/lib/legal";
 
 import {
   getPendingOIDCProfile,
@@ -341,6 +343,14 @@ function createBetterAuth() {
             return result;
           },
           after: async (user) => {
+            // Record the user's acceptance of the current legal documents. The
+            // sign-up form requires the checkbox, so every new account has
+            // accepted; recording here (rather than from the client) guarantees
+            // the consent row exists and survives a client that never calls back.
+            await recordLegalAcceptance(user.id, LEGAL_VERSION).catch((err: unknown) => {
+              authLogger.error({ err, userId: user.id }, "Failed to record legal acceptance");
+            });
+
             // If this was the first user, disable registration
             const userCount = await countUsers();
 

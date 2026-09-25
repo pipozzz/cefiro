@@ -17,6 +17,7 @@ export * from "./household-invites";
 export * from "./instance-invites";
 export * from "./recipe-embeddings";
 export * from "./themes";
+export * from "./legal-acceptances";
 export * from "./households";
 export * from "./subscriptions";
 export * from "./ai-usage";
