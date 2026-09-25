@@ -59,7 +59,11 @@ export function SharingManager() {
           queryKey: trpc.social.myRecipesForSharing.queryKey(),
         });
         setSelected(new Set());
-        toast.success(t("done", { count: data.updated }));
+        toast.success(
+          data.skippedImported > 0
+            ? t("doneWithSkipped", { updated: data.updated, skipped: data.skippedImported })
+            : t("done", { count: data.updated })
+        );
       },
       onError: (error) => showSafeErrorToast(error, tShare("couldNotSave")),
     })
@@ -115,7 +119,8 @@ export function SharingManager() {
       </div>
 
       <h1 className="text-foreground text-2xl font-bold">{t("title")}</h1>
-      <p className="text-default-500 mt-1 mb-6 text-sm">{t("subtitle")}</p>
+      <p className="text-default-500 mt-1 text-sm">{t("subtitle")}</p>
+      <p className="text-default-400 mt-1 mb-6 text-xs">{t("importedNote")}</p>
 
       {/* Filter chips */}
       <div className="mb-4 flex flex-wrap gap-2">
@@ -167,6 +172,14 @@ export function SharingManager() {
                       onChange={() => toggle(recipe.id)}
                     />
                     <span className="text-foreground min-w-0 flex-1 truncate">{recipe.name}</span>
+                    {recipe.imported ? (
+                      <span
+                        className="bg-warning/15 text-warning-700 inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium"
+                        title={t("importedHint")}
+                      >
+                        {t("importedBadge")}
+                      </span>
+                    ) : null}
                     <span
                       className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${VISIBILITY_STYLE[recipe.visibility]}`}
                     >

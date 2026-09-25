@@ -296,7 +296,11 @@
     "makePrivate": "Gør private",
     "clear": "Ryd",
     "filterAll": "Alle",
-    "done": "Opdateret {count}"
+    "done": "Opdateret {count}",
+    "doneWithSkipped": "Published {updated}. Skipped {skipped} imported.",
+    "importedBadge": "Imported",
+    "importedHint": "Imported recipes can’t be published, to protect copyright.",
+    "importedNote": "Imported recipes can be set to link-only or private, but not published — to protect copyright."
   },
   "categoryPage": {
     "heading": "{category}-opskrifter",

@@ -296,7 +296,11 @@
     "makePrivate": "Skryť",
     "clear": "Zrušiť výber",
     "filterAll": "Všetky",
-    "done": "Upravené: {count}"
+    "done": "Upravené: {count}",
+    "doneWithSkipped": "Zverejnené: {updated}. Preskočené importované: {skipped}.",
+    "importedBadge": "Importované",
+    "importedHint": "Importované recepty nie je možné zverejniť kvôli ochrane autorských práv.",
+    "importedNote": "Importované recepty môžete nastaviť ako len cez odkaz alebo súkromné, ale nie zverejniť — kvôli ochrane autorských práv."
   },
   "categoryPage": {
     "heading": "Recepty: {category}",

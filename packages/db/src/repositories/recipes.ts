@@ -1,5 +1,18 @@
 import type { AnyPgColumn } from "drizzle-orm/pg-core";
-import { and, asc, desc, eq, ilike, inArray, isNull, like, lte, or, sql } from "drizzle-orm";
+import {
+  and,
+  asc,
+  desc,
+  eq,
+  ilike,
+  inArray,
+  isNotNull,
+  isNull,
+  like,
+  lte,
+  or,
+  sql,
+} from "drizzle-orm";
 import z from "zod";
 
 import type { RecipePermissionPolicy } from "@norish/config/zod/server-config";
@@ -975,22 +988,54 @@ export async function getSavedForkForUser(
  * current visibility and slug — newest-edited first. Used to let an owner set
  * visibility on many recipes at once (growth: more public recipes for search).
  */
-export async function listOwnRecipesForSharing(
-  userId: string
-): Promise<
-  { id: string; name: string; visibility: "private" | "unlisted" | "public"; slug: string | null }[]
+export async function listOwnRecipesForSharing(userId: string): Promise<
+  {
+    id: string;
+    name: string;
+    visibility: "private" | "unlisted" | "public";
+    slug: string | null;
+    /**
+     * True when the recipe was imported from an external source (`url` set).
+     * Its photos and prose may be the source's, not the user's, so the bulk
+     * sharing manager badges it and refuses to publish it (copyright guardrail,
+     * matching the single-recipe publish warning).
+     */
+    imported: boolean;
+  }[]
 > {
-  return await db
+  const rows = await db
     .select({
       id: recipes.id,
       name: recipes.name,
       visibility: recipes.visibility,
       slug: recipes.slug,
+      url: recipes.url,
     })
     .from(recipes)
     .where(eq(recipes.userId, userId))
     .orderBy(desc(recipes.updatedAt))
     .limit(1000);
+
+  return rows.map(({ url, ...rest }) => ({ ...rest, imported: url != null }));
+}
+
+/**
+ * Of the given recipe ids, which are the caller's AND imported (have a source
+ * `url`). Used to skip imported recipes when bulk-publishing, so external
+ * content is never made public in a sweep.
+ */
+export async function getImportedRecipeIds(
+  userId: string,
+  recipeIds: string[]
+): Promise<Set<string>> {
+  if (recipeIds.length === 0) return new Set();
+
+  const rows = await db
+    .select({ id: recipes.id })
+    .from(recipes)
+    .where(and(eq(recipes.userId, userId), inArray(recipes.id, recipeIds), isNotNull(recipes.url)));
+
+  return new Set(rows.map((r) => r.id));
 }
 
 /** Record that `recipeId` was created by saving (forking) `sourceRecipeId`. */
