@@ -36,7 +36,6 @@ import {
 } from "@norish/db/repositories/follows";
 import {
   countUnreadNotifications,
-  createNotification,
   listNotifications,
   markAllNotificationsRead,
 } from "@norish/db/repositories/notifications";
@@ -90,6 +89,7 @@ import {
 import { scheduleRecipeEmbedding } from "@norish/queue";
 import { trpcLogger as log } from "@norish/shared-server/logger";
 import { copyRecipeImageByUrl, saveProfileAvatarBytes } from "@norish/shared-server/media/storage";
+import { sendSocialNotification } from "@norish/shared-server/push/social-notify";
 import { ALLOWED_IMAGE_MIME_SET } from "@norish/shared/contracts";
 import {
   AddCommentInputSchema,
@@ -431,7 +431,7 @@ const follow = authedProcedure
     }
 
     await followUser(ctx.user.id, userId);
-    await createNotification({ userId, actorId: ctx.user.id, type: "follow" });
+    await sendSocialNotification({ userId, actorId: ctx.user.id, type: "follow" });
 
     return { handle: input.handle, isFollowing: true };
   });
@@ -767,7 +767,7 @@ const toggleLike = authedProcedure
       await addFavorite(ctx.user.id, input.recipeId);
 
       if (ref.userId) {
-        await createNotification({
+        await sendSocialNotification({
           userId: ref.userId,
           actorId: ctx.user.id,
           type: "like",
@@ -841,7 +841,7 @@ const postComment = authedProcedure
     const { id } = await addComment(ctx.user.id, input.recipeId, input.body);
 
     if (ref.userId) {
-      await createNotification({
+      await sendSocialNotification({
         userId: ref.userId,
         actorId: ctx.user.id,
         type: "comment",
@@ -895,7 +895,7 @@ const reportCommentProc = authedProcedure
     const recipeRef = await getViewableRecipeRefById(ownership.recipeId);
 
     if (recipeRef?.userId) {
-      await createNotification({
+      await sendSocialNotification({
         userId: recipeRef.userId,
         actorId: ctx.user.id,
         type: "report",
@@ -1187,7 +1187,7 @@ const saveRecipe = authedProcedure
     // Only a genuinely new fork notifies the author; losing the race does not.
     if (created.status === "created" && ref.userId) {
       // Tell the author of the recipe that was actually opened and saved.
-      await createNotification({
+      await sendSocialNotification({
         userId: ref.userId,
         actorId: ctx.user.id,
         type: "save",
