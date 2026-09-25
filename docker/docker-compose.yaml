@@ -31,6 +31,15 @@ services:
       # Voyage AI embeddings for semantic discovery themes (Phase B). Optional —
       # unset means embeddings are skipped.
       VOYAGE_API_KEY: ${VOYAGE_API_KEY:-}
+      # Email (SMTP). Optional — sending is enabled only when SMTP_HOST and
+      # EMAIL_FROM are both set; otherwise the mailer is a no-op and features
+      # that would email (household + instance invites) fall back to a link.
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      EMAIL_FROM: ${EMAIL_FROM:-}
       # Serve HTTP only; background jobs run in the worker service below.
       CEFIRO_ROLE: web
     deploy:
@@ -63,6 +72,13 @@ services:
       S3_PREFIX: ${S3_PREFIX:-}
       # The worker runs the embedding + clustering jobs, so it needs the key.
       VOYAGE_API_KEY: ${VOYAGE_API_KEY:-}
+      # Same SMTP config as web, so background jobs can also send mail if needed.
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      EMAIL_FROM: ${EMAIL_FROM:-}
       CEFIRO_ROLE: worker
     deploy:
       resources:
