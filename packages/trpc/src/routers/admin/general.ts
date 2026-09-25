@@ -3,6 +3,7 @@ import { z } from "zod";
 import type { I18nLocaleConfig } from "@norish/config/zod/server-config";
 import { I18nLocaleConfigSchema, ServerConfigKeys } from "@norish/config/zod/server-config";
 import { configExists, getConfig, setConfig } from "@norish/db/repositories/server-config";
+import { isEmailConfigured, sendEmail } from "@norish/shared-server/email/mailer";
 import { trpcLogger as log } from "@norish/shared-server/logger";
 
 import { adminProcedure } from "../../middleware";
@@ -135,8 +136,40 @@ const updateLocaleConfig = adminProcedure
     return { success: true };
   });
 
+/**
+ * Send a test email to a chosen address, so an admin can confirm SMTP works
+ * without hunting through logs. Reports the outcome (delivered / not configured /
+ * error with the SMTP message) rather than throwing, so the UI can show it.
+ */
+const sendTestEmail = adminProcedure
+  .input(z.object({ to: z.string().trim().email() }))
+  .mutation(async ({ ctx, input }) => {
+    log.info({ userId: ctx.user.id }, "Sending test email");
+
+    if (!isEmailConfigured()) {
+      return { status: "not_configured" as const };
+    }
+
+    try {
+      const result = await sendEmail({
+        to: input.to,
+        subject: "Naša Kuchyňa — test email",
+        html: "<p>This is a test email from <strong>Naša Kuchyňa</strong>. If you received it, your SMTP settings are working. 🎉</p>",
+      });
+
+      return result.sent ? { status: "sent" as const } : { status: "not_configured" as const };
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+
+      log.error({ err, userId: ctx.user.id }, "Test email failed");
+
+      return { status: "error" as const, message };
+    }
+  });
+
 export const generalProcedures = router({
   updateRegistration,
   updatePasswordAuth,
   updateLocaleConfig,
+  sendTestEmail,
 });
