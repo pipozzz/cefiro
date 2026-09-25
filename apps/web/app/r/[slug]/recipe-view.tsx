@@ -297,7 +297,7 @@ function PublicRecipeBody({ slug, data }: { slug: string; data: PublicRecipeData
           <a
             className="text-primary hover:underline"
             href={recipe.url}
-            rel="noreferrer noopener"
+            rel="noreferrer noopener nofollow"
             target="_blank"
           >
             {recipe.url}

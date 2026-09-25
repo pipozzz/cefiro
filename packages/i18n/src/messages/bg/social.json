@@ -276,7 +276,10 @@
     "publishNudgeUnlisted": "Само с връзка",
     "publishNudgeDismiss": "Не сега",
     "publishNudgeDonePublic": "Публикувано — вече е в откриване 🎉",
-    "publishNudgeDoneUnlisted": "Готово — може да се сподели с връзка"
+    "publishNudgeDoneUnlisted": "Готово — може да се сподели с връзка",
+    "importedNoticeTitle": "Импортирана рецепта",
+    "importedNoticeBody": "Тази рецепта е импортирана от {source}. Публикувайте я само ако е ваша собствена адаптация — снимките и текстът може да са на източника и защитени с авторско право.",
+    "importedConfirm": "Потвърждавам, че имам право да публикувам тази рецепта."
   },
   "sharing": {
     "manage": "Управление на споделянето",

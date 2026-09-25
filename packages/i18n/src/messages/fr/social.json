@@ -276,7 +276,10 @@
     "publishNudgeUnlisted": "Lien uniquement",
     "publishNudgeDismiss": "Pas maintenant",
     "publishNudgeDonePublic": "Publiée — désormais dans la découverte 🎉",
-    "publishNudgeDoneUnlisted": "Terminé — partageable via un lien"
+    "publishNudgeDoneUnlisted": "Terminé — partageable via un lien",
+    "importedNoticeTitle": "Recette importée",
+    "importedNoticeBody": "Cette recette a été importée de {source}. Ne la publiez que s'il s'agit de votre propre adaptation : les photos et le texte peuvent appartenir à la source et être protégés par le droit d'auteur.",
+    "importedConfirm": "Je confirme avoir le droit de publier cette recette."
   },
   "sharing": {
     "manage": "Gérer le partage",

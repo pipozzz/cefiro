@@ -276,7 +276,10 @@
     "publishNudgeUnlisted": "링크로만",
     "publishNudgeDismiss": "나중에",
     "publishNudgeDonePublic": "공개됨 — 이제 탐색에 표시돼요 🎉",
-    "publishNudgeDoneUnlisted": "완료 — 링크로 공유 가능"
+    "publishNudgeDoneUnlisted": "완료 — 링크로 공유 가능",
+    "importedNoticeTitle": "가져온 레시피",
+    "importedNoticeBody": "이 레시피는 {source}에서 가져왔습니다. 본인이 직접 각색한 경우에만 공개하세요 — 사진과 문구는 출처의 것이며 저작권으로 보호될 수 있습니다.",
+    "importedConfirm": "이 레시피를 공개할 권리가 있음을 확인합니다."
   },
   "sharing": {
     "manage": "공유 관리",

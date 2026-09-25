@@ -276,7 +276,10 @@
     "publishNudgeUnlisted": "Tylko z linkiem",
     "publishNudgeDismiss": "Nie teraz",
     "publishNudgeDonePublic": "Opublikowano — już w odkrywaniu 🎉",
-    "publishNudgeDoneUnlisted": "Gotowe — można udostępnić linkiem"
+    "publishNudgeDoneUnlisted": "Gotowe — można udostępnić linkiem",
+    "importedNoticeTitle": "Zaimportowany przepis",
+    "importedNoticeBody": "Ten przepis zaimportowano z {source}. Opublikuj go tylko, jeśli to Twoja własna adaptacja — zdjęcia i tekst mogą należeć do źródła i być chronione prawem autorskim.",
+    "importedConfirm": "Potwierdzam, że mam prawo opublikować ten przepis."
   },
   "sharing": {
     "manage": "Zarządzaj udostępnianiem",

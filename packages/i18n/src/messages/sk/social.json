@@ -276,7 +276,10 @@
     "publishNudgeUnlisted": "Len cez odkaz",
     "publishNudgeDismiss": "Teraz nie",
     "publishNudgeDonePublic": "Zverejnené — už je v objavovaní 🎉",
-    "publishNudgeDoneUnlisted": "Hotovo — zdieľateľné cez odkaz"
+    "publishNudgeDoneUnlisted": "Hotovo — zdieľateľné cez odkaz",
+    "importedNoticeTitle": "Importovaný recept",
+    "importedNoticeBody": "Tento recept bol importovaný z {source}. Zverejni ho len ak je to tvoja vlastná úprava — fotky a text môžu patriť zdroju a podliehať autorským právam.",
+    "importedConfirm": "Potvrdzujem, že mám právo tento recept zverejniť."
   },
   "sharing": {
     "manage": "Spravovať zdieľanie",

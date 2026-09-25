@@ -276,7 +276,10 @@
     "publishNudgeUnlisted": "Alleen via link",
     "publishNudgeDismiss": "Niet nu",
     "publishNudgeDonePublic": "Gepubliceerd — nu in ontdekken 🎉",
-    "publishNudgeDoneUnlisted": "Klaar — deelbaar via link"
+    "publishNudgeDoneUnlisted": "Klaar — deelbaar via link",
+    "importedNoticeTitle": "Geïmporteerd recept",
+    "importedNoticeBody": "Dit recept is geïmporteerd van {source}. Publiceer het alleen als het je eigen bewerking is — de foto's en tekst kunnen van de bron zijn en auteursrechtelijk beschermd.",
+    "importedConfirm": "Ik bevestig dat ik het recht heb dit recept te publiceren."
   },
   "sharing": {
     "manage": "Delen beheren",
