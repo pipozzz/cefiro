@@ -51,10 +51,16 @@ services:
       PLAUSIBLE_SRC: ${PLAUSIBLE_SRC:-}
       # Serve HTTP only; background jobs run in the worker service below.
       CEFIRO_ROLE: web
+      # Cap the V8 heap. Without this, Node grows its heap toward the container
+      # limit and idle RSS creeps up to ~2 GB. 512 MB is ample for SSR at this
+      # scale; raise it if you see out-of-memory restarts under heavy traffic.
+      NODE_OPTIONS: ${WEB_NODE_OPTIONS:---max-old-space-size=512}
     deploy:
       resources:
         limits:
-          memory: 2g
+          # Heap is capped at 512 MB above; 1 GB leaves headroom for native
+          # allocations (libpq, sharp, otel) without letting it balloon.
+          memory: 1g
   # Background worker: same image, processes the queues, CalDAV sync, video
   # transcode and the importer so heavy jobs never block request serving.
   # Shares the uploads volume (it writes imported/generated images) and needs
@@ -93,6 +99,10 @@ services:
       VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
       VAPID_SUBJECT: ${VAPID_SUBJECT:-mailto:admin@nasakuchyna.sk}
       CEFIRO_ROLE: worker
+      # Cap the V8 heap. The worker also shells out to ffmpeg and uses vips/sharp,
+      # whose memory is native (outside the heap), so it keeps a higher cap and a
+      # larger container limit than the web service.
+      NODE_OPTIONS: ${WORKER_NODE_OPTIONS:---max-old-space-size=768}
     deploy:
       resources:
         limits:
