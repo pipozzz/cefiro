@@ -69,6 +69,38 @@ export function SharingManager() {
     })
   );
 
+  const unpublish = useMutation(
+    trpc.social.unpublishImported.mutationOptions({
+      onSuccess: (data) => {
+        void queryClient.invalidateQueries({
+          queryKey: trpc.social.myRecipesForSharing.queryKey(),
+        });
+        toast.success(t("unpublishImportedDone", { count: data.updated }));
+      },
+      onError: (error) => showSafeErrorToast(error, tShare("couldNotSave")),
+    })
+  );
+
+  // Imported recipes that are still publicly reachable — the ones the cleanup
+  // action will pull back to private.
+  const importedVisibleCount = useMemo(
+    () => recipes.filter((r) => r.imported && r.visibility !== "private").length,
+    [recipes]
+  );
+
+  const doUnpublishImported = () => {
+    if (importedVisibleCount === 0) return;
+
+    if (
+      typeof window !== "undefined" &&
+      !window.confirm(t("unpublishImportedConfirm", { count: importedVisibleCount }))
+    ) {
+      return;
+    }
+
+    unpublish.mutate();
+  };
+
   const toggle = (id: string) =>
     setSelected((prev) => {
       const next = new Set(prev);
@@ -120,7 +152,22 @@ export function SharingManager() {
 
       <h1 className="text-foreground text-2xl font-bold">{t("title")}</h1>
       <p className="text-default-500 mt-1 text-sm">{t("subtitle")}</p>
-      <p className="text-default-400 mt-1 mb-6 text-xs">{t("importedNote")}</p>
+      <p className="text-default-400 mt-1 text-xs">{t("importedNote")}</p>
+
+      {importedVisibleCount > 0 ? (
+        <Button
+          className="mt-3 mb-6"
+          isPending={unpublish.isPending}
+          size="sm"
+          startContent={<LockClosedIcon className="h-4 w-4" />}
+          variant="secondary"
+          onPress={doUnpublishImported}
+        >
+          {t("unpublishImported", { count: importedVisibleCount })}
+        </Button>
+      ) : (
+        <div className="mb-6" />
+      )}
 
       {/* Filter chips */}
       <div className="mb-4 flex flex-wrap gap-2">

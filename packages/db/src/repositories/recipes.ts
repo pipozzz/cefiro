@@ -1038,6 +1038,26 @@ export async function getImportedRecipeIds(
   return new Set(rows.map((r) => r.id));
 }
 
+/**
+ * The caller's imported recipes (source `url` set) that are currently publicly
+ * reachable — public or unlisted. Drives the "unpublish imported" cleanup, which
+ * pulls previously-shared external content back to private.
+ */
+export async function listImportedVisibleRecipeIds(userId: string): Promise<string[]> {
+  const rows = await db
+    .select({ id: recipes.id })
+    .from(recipes)
+    .where(
+      and(
+        eq(recipes.userId, userId),
+        isNotNull(recipes.url),
+        inArray(recipes.visibility, ["public", "unlisted"])
+      )
+    );
+
+  return rows.map((r) => r.id);
+}
+
 /** Record that `recipeId` was created by saving (forking) `sourceRecipeId`. */
 export async function setRecipeSavedFrom(recipeId: string, sourceRecipeId: string): Promise<void> {
   await db

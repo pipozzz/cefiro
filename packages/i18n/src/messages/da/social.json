@@ -300,7 +300,10 @@
     "doneWithSkipped": "Published {updated}. Skipped {skipped} imported.",
     "importedBadge": "Imported",
     "importedHint": "Imported recipes can’t be published, to protect copyright.",
-    "importedNote": "Imported recipes can be set to link-only or private, but not published — to protect copyright."
+    "importedNote": "Imported recipes can be set to link-only or private, but not published — to protect copyright.",
+    "unpublishImported": "Unpublish imported ({count})",
+    "unpublishImportedConfirm": "Set {count} imported recipe(s) back to private? They will be removed from discovery and search.",
+    "unpublishImportedDone": "Unpublished {count} imported recipe(s)."
   },
   "categoryPage": {
     "heading": "{category}-opskrifter",

@@ -69,6 +69,7 @@ import {
   getRecipeSourceRoot,
   getSavedForkForUser,
   getSavedFromAttribution,
+  listImportedVisibleRecipeIds,
   listOwnRecipesForSharing,
 } from "@norish/db/repositories/recipes";
 import { getThemeById, listThemes } from "@norish/db/repositories/themes";
@@ -418,6 +419,35 @@ const setVisibilityBulk = authedProcedure
     );
 
     return { updated, skippedImported };
+  });
+
+/**
+ * Unpublish all of the caller's imported recipes — set every imported recipe
+ * that is currently public or unlisted back to private, and drop it from
+ * discovery. The cleanup counterpart to the bulk-publish guardrail: external
+ * content that was shared before the guardrail existed can be pulled back in one
+ * action. Only the caller's own recipes are touched; authored (non-imported)
+ * recipes are never affected.
+ */
+const unpublishImported = authedProcedure
+  .use(rateLimit({ name: "social.unpublishImported", limit: 10, windowSec: 60 }))
+  .mutation(async ({ ctx }): Promise<{ updated: number }> => {
+    const ids = await listImportedVisibleRecipeIds(ctx.user.id);
+
+    let updated = 0;
+
+    for (const recipeId of ids) {
+      const result = await setRecipeVisibility(ctx.user.id, recipeId, "private");
+
+      if (result) {
+        updated += 1;
+        scheduleRecipeEmbedding(recipeId);
+      }
+    }
+
+    log.info({ userId: ctx.user.id, updated }, "Unpublished imported recipes");
+
+    return { updated };
   });
 
 // --- Public reads (unauthenticated) -------------------------------------
@@ -1332,6 +1362,7 @@ export const socialProcedures = router({
   getPublishState,
   setVisibility,
   setVisibilityBulk,
+  unpublishImported,
   myRecipesForSharing,
   getProfile,
   listProfileRecipes,
