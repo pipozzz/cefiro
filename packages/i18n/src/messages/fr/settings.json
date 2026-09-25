@@ -181,6 +181,17 @@
         "message": "Supprimer ce lien de partage pour {recipeName} ? Cette action est irréversible.",
         "confirm": "Supprimer le lien"
       }
+    },
+    "notifications": {
+      "title": "Notifications",
+      "description": "Get a push notification in this browser when someone follows you, likes, comments on or saves your recipe.",
+      "toggleLabel": "Push notifications in this browser",
+      "enabled": "Push notifications enabled",
+      "failed": "Something went wrong. Please try again.",
+      "permissionDenied": "Notifications are blocked in your browser settings.",
+      "sendTest": "Send a test notification",
+      "testSent": "Test notification sent",
+      "testNone": "No subscribed device to send to."
     }
   },
   "household": {

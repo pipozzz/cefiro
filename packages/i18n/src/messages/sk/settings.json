@@ -181,6 +181,17 @@
         "message": "Odstrániť tento odkaz na zdieľanie pre {recipeName}? Túto akciu nie je možné vrátiť späť.",
         "confirm": "Odstrániť odkaz"
       }
+    },
+    "notifications": {
+      "title": "Notifikácie",
+      "description": "Dostávajte push notifikáciu v tomto prehliadači, keď vás niekto začne sledovať, dá like, komentár alebo si uloží váš recept.",
+      "toggleLabel": "Push notifikácie v tomto prehliadači",
+      "enabled": "Push notifikácie zapnuté",
+      "failed": "Niečo sa pokazilo. Skúste to znova.",
+      "permissionDenied": "Notifikácie sú v nastaveniach prehliadača blokované.",
+      "sendTest": "Odoslať testovaciu notifikáciu",
+      "testSent": "Testovacia notifikácia odoslaná",
+      "testNone": "Žiadne prihlásené zariadenie na odoslanie."
     }
   },
   "household": {

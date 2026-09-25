@@ -484,6 +484,13 @@
       "when": 1790317135079,
       "tag": "0068_round_brood",
       "breakpoints": true
+    },
+    {
+      "idx": 69,
+      "version": "7",
+      "when": 1790318298427,
+      "tag": "0069_thin_bug",
+      "breakpoints": true
     }
   ]
 }
