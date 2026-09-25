@@ -22,6 +22,9 @@ export function SignupForm({ callbackUrl = "/" }: SignupFormProps) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Explicit consent to the Terms + Privacy Policy is required to register; the
+  // server also records the accepted version on user creation.
+  const [agreedLegal, setAgreedLegal] = useState(false);
   const passwordsMatch = password === confirmPassword;
   // Field-level rules live on their fields; the alert is for the server's answer.
   const passwordTooShort = password.length > 0 && password.length < 8;
@@ -33,7 +36,8 @@ export function SignupForm({ callbackUrl = "/" }: SignupFormProps) {
     confirmPassword &&
     passwordsMatch &&
     !passwordTooShort &&
-    !passwordTooLong;
+    !passwordTooLong &&
+    agreedLegal;
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -165,6 +169,39 @@ export function SignupForm({ callbackUrl = "/" }: SignupFormProps) {
       </TextField>
 
       {error && <AuthAlert description={error} title={t("errors.title")} />}
+
+      <label className="text-muted flex items-start gap-2 text-sm">
+        <input
+          checked={agreedLegal}
+          className="mt-0.5"
+          type="checkbox"
+          onChange={(event) => setAgreedLegal(event.target.checked)}
+        />
+        <span>
+          {t.rich("agreeLegal", {
+            terms: (chunks) => (
+              <a
+                className="text-primary underline"
+                href="/terms"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {chunks}
+              </a>
+            ),
+            privacy: (chunks) => (
+              <a
+                className="text-primary underline"
+                href="/privacy"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {chunks}
+              </a>
+            ),
+          })}
+        </span>
+      </label>
 
       <Button
         className="mt-2"
