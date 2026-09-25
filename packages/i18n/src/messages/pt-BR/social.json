@@ -305,5 +305,14 @@
     "browseAll": "Ver todas as receitas",
     "indexTitle": "Categorias de receitas",
     "indexSubtitle": "Explore receitas públicas por categoria."
+  },
+  "cuisinePage": {
+    "heading": "{cuisine} recipes",
+    "subtitle": "Discover and save public {cuisine} recipes.",
+    "empty": "No public recipes for this cuisine yet.",
+    "browseAll": "Browse all recipes",
+    "indexTitle": "Cuisines",
+    "indexSubtitle": "Browse public recipes by cuisine.",
+    "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
   }
 }

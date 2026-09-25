@@ -305,5 +305,14 @@
     "browseAll": "Se alle opskrifter",
     "indexTitle": "Opskriftskategorier",
     "indexSubtitle": "Gennemse offentlige opskrifter efter kategori."
+  },
+  "cuisinePage": {
+    "heading": "{cuisine} recipes",
+    "subtitle": "Discover and save public {cuisine} recipes.",
+    "empty": "No public recipes for this cuisine yet.",
+    "browseAll": "Browse all recipes",
+    "indexTitle": "Cuisines",
+    "indexSubtitle": "Browse public recipes by cuisine.",
+    "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
   }
 }

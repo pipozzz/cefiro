@@ -3,8 +3,10 @@ import { and, desc, eq, inArray, isNotNull, lt, lte, sql } from "drizzle-orm";
 import { db } from "@norish/db/drizzle";
 
 import {
+  cuisines,
   follows,
   ingredients,
+  recipeCuisines,
   recipeFavorites,
   recipeIngredients,
   recipes,
@@ -147,12 +149,13 @@ export async function listDiscoverRecipes(params: {
   sort: DiscoverSort;
   category?: string;
   tag?: string;
+  cuisine?: string;
   maxMinutes?: number;
   excludeAllergenTags?: string[];
   limit: number;
   cursor?: string;
 }): Promise<{ items: FeedRecipeRow[]; nextCursor: string | null }> {
-  const { sort, category, tag, maxMinutes, excludeAllergenTags, limit } = params;
+  const { sort, category, tag, cuisine, maxMinutes, excludeAllergenTags, limit } = params;
 
   const conditions = [eq(recipes.visibility, "public")];
 
@@ -189,6 +192,14 @@ export async function listDiscoverRecipes(params: {
       SELECT 1 FROM ${recipeTags} rt
       JOIN ${tags} tg ON tg.id = rt.tag_id
       WHERE rt.recipe_id = ${recipes.id} AND lower(tg.name) = ${tag.trim().toLowerCase()}
+    )`);
+  }
+
+  if (cuisine) {
+    conditions.push(sql`EXISTS (
+      SELECT 1 FROM ${recipeCuisines} rc
+      JOIN ${cuisines} cu ON cu.id = rc.cuisine_id
+      WHERE rc.recipe_id = ${recipes.id} AND lower(cu.name) = ${cuisine.trim().toLowerCase()}
     )`);
   }
 

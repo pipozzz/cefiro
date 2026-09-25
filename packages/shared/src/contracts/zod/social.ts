@@ -150,6 +150,8 @@ export const DiscoverInputSchema = z.object({
   sort: DiscoverSortSchema.default("newest"),
   category: z.enum(recipeCategoryValues).optional(),
   tag: z.string().trim().min(1).max(50).optional(),
+  // Cuisine name filter (matched case-insensitively against the vocabulary).
+  cuisine: z.string().trim().min(1).max(80).optional(),
   // "Ready in ≤N minutes" quick filter (total time).
   maxMinutes: z.number().int().min(1).max(1440).optional(),
   // Dietary-aware discovery: when true, the server excludes recipes tagged with

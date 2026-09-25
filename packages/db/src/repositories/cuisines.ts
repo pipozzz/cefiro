@@ -11,11 +11,11 @@
  * or migration composes its own query.
  */
 
-import { asc, eq, inArray, sql } from "drizzle-orm";
+import { asc, desc, eq, inArray, sql } from "drizzle-orm";
 
 import type { CuisineDto, CuisineSummaryDto } from "@norish/shared/contracts";
 import { db } from "@norish/db/drizzle";
-import { cuisines, recipeCuisines } from "@norish/db/schema";
+import { cuisines, recipeCuisines, recipes } from "@norish/db/schema";
 import { stripHtmlTags } from "@norish/shared/lib/helpers";
 
 /** A transaction handle, or the pooled connection when there is no transaction. */
@@ -28,6 +28,25 @@ function cleanName(name: string): string {
   if (cleaned.length === 0) throw new Error("Cuisine name cannot be empty");
 
   return cleaned;
+}
+
+/**
+ * Cuisines that have at least one PUBLIC recipe, with how many — for the
+ * discovery cuisine hubs and the sitemap. Most-used first, then by name.
+ */
+export async function listPublicCuisines(): Promise<{ name: string; recipeCount: number }[]> {
+  const recipeCount = sql<number>`count(distinct ${recipeCuisines.recipeId})`;
+
+  const rows = await db
+    .select({ name: cuisines.name, recipeCount })
+    .from(recipeCuisines)
+    .innerJoin(cuisines, eq(cuisines.id, recipeCuisines.cuisineId))
+    .innerJoin(recipes, eq(recipes.id, recipeCuisines.recipeId))
+    .where(eq(recipes.visibility, "public"))
+    .groupBy(cuisines.name)
+    .orderBy(desc(recipeCount), cuisines.name);
+
+  return rows.map((r) => ({ name: r.name, recipeCount: Number(r.recipeCount) }));
 }
 
 /** The vocabulary in display order. Name order is the only order it has. */
