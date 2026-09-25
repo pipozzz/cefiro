@@ -40,6 +40,11 @@ services:
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASSWORD: ${SMTP_PASSWORD:-}
       EMAIL_FROM: ${EMAIL_FROM:-}
+      # Web Push (VAPID). Optional — unset means push is unavailable and the UI
+      # hides the toggle. Generate once: `npx web-push generate-vapid-keys`.
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
+      VAPID_SUBJECT: ${VAPID_SUBJECT:-mailto:admin@nasakuchyna.sk}
       # Serve HTTP only; background jobs run in the worker service below.
       CEFIRO_ROLE: web
     deploy:
@@ -79,6 +84,10 @@ services:
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASSWORD: ${SMTP_PASSWORD:-}
       EMAIL_FROM: ${EMAIL_FROM:-}
+      # Same VAPID keys as web, so background jobs can send push (Phase 2).
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
+      VAPID_SUBJECT: ${VAPID_SUBJECT:-mailto:admin@nasakuchyna.sk}
       CEFIRO_ROLE: worker
     deploy:
       resources:

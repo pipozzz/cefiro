@@ -11,6 +11,7 @@ import { householdsAppRouter } from "./routers/households";
 import { instanceInvitesRouter } from "./routers/instance-invites";
 import { libraryRouter } from "./routers/library";
 import { permissionsRouter } from "./routers/permissions";
+import { pushRouter } from "./routers/push";
 import { ratingsRouter } from "./routers/ratings";
 import { recipesRouter } from "./routers/recipes";
 import { siteAuthTokensRouter } from "./routers/site-auth-tokens";
@@ -30,6 +31,7 @@ export const appRouter = router({
   billing: billingRouter,
   households: householdsAppRouter,
   instanceInvites: instanceInvitesRouter,
+  push: pushRouter,
   user: userRouter,
   caldav: caldavRouter,
   caldavSubscriptions: caldavSubscriptions,

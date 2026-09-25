@@ -251,6 +251,14 @@ const ServerConfigSchema = z.object({
   VOYAGE_MODEL: z.string().default("voyage-3"),
   VOYAGE_ENDPOINT: z.string().default("https://api.voyageai.com/v1/embeddings"),
 
+  // Web Push (VAPID) — powers browser push notifications. Optional: when the
+  // keys are unset, push is unavailable and the UI hides the toggle. Generate a
+  // key pair once with `npx web-push generate-vapid-keys`. VAPID_SUBJECT is a
+  // mailto: or https URL identifying the sender.
+  VAPID_PUBLIC_KEY: z.string().optional(),
+  VAPID_PRIVATE_KEY: z.string().optional(),
+  VAPID_SUBJECT: z.string().default("mailto:admin@nasakuchyna.sk"),
+
   // Video Processing Configuration
   VIDEO_PARSING_ENABLED: z
     .string()

@@ -217,18 +217,51 @@ self.addEventListener("message", (event) => {
   acceptArchiveDownload(event.data);
 });
 
+// Web Push: render an incoming push as a notification. Payload is the small
+// JSON the server sends (see @norish/shared-server/push/web-push).
+self.addEventListener("push", (event) => {
+  const raw = event.data;
+
+  if (!raw) return;
+
+  let payload: { title?: string; body?: string; url?: string; tag?: string };
+
+  try {
+    payload = raw.json();
+  } catch {
+    payload = { title: "Naša Kuchyňa", body: raw.text() };
+  }
+
+  event.waitUntil(
+    self.registration.showNotification(payload.title || "Naša Kuchyňa", {
+      body: payload.body || "",
+      icon: "/web-app-manifest-192x192.png",
+      badge: "/favicon-96x96.png",
+      tag: payload.tag,
+      data: { url: payload.url || "/" },
+    })
+  );
+});
+
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
+
+  const targetUrl = (event.notification.data as { url?: string } | undefined)?.url ?? "/";
 
   event.waitUntil(
     self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
       for (const client of clientList) {
         if (client.url.startsWith(self.location.origin) && "focus" in client) {
+          // Point the existing tab at the notification's target before focusing.
+          if ("navigate" in client && targetUrl !== "/") {
+            client.navigate(targetUrl).catch(() => undefined);
+          }
+
           return client.focus();
         }
       }
 
-      return self.clients.openWindow("/");
+      return self.clients.openWindow(targetUrl);
     })
   );
 });
