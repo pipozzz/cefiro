@@ -9,6 +9,7 @@ import {
   markInstanceInviteAccepted,
   revokeInstanceInvite,
 } from "@norish/db";
+import { APP_NAME } from "@norish/shared-server/email/branding";
 import { isEmailConfigured, sendEmail } from "@norish/shared-server/email/mailer";
 import { buildInstanceInviteEmail } from "@norish/shared-server/email/templates/instance-invite";
 import { trpcLogger as log } from "@norish/shared-server/logger";
@@ -16,10 +17,6 @@ import { trpcLogger as log } from "@norish/shared-server/logger";
 import { adminProcedure, authedProcedure } from "../middleware";
 import { rateLimit } from "../rate-limit-middleware";
 import { publicProcedure, router } from "../trpc";
-
-// The instance's public name, used in invite copy. Hardcoded to match the
-// household-invite email; a future rebrand updates both in one place.
-const APP_NAME = "Naša Kuchyňa";
 
 /** Absolute URL of the public instance-invite page for a token (signed-out). */
 function instanceInviteUrl(token: string): string {
@@ -42,7 +39,7 @@ const create = adminProcedure
     let emailed = false;
 
     if (isEmailConfigured()) {
-      const { subject, html } = buildInstanceInviteEmail({
+      const { subject, html } = await buildInstanceInviteEmail({
         inviterName: ctx.user.name ?? null,
         acceptUrl,
         appName: APP_NAME,

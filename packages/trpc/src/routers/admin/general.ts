@@ -4,6 +4,7 @@ import type { I18nLocaleConfig } from "@norish/config/zod/server-config";
 import { I18nLocaleConfigSchema, ServerConfigKeys } from "@norish/config/zod/server-config";
 import { configExists, getConfig, setConfig } from "@norish/db/repositories/server-config";
 import { isEmailConfigured, sendEmail } from "@norish/shared-server/email/mailer";
+import { buildTestEmail } from "@norish/shared-server/email/templates/test-email";
 import { trpcLogger as log } from "@norish/shared-server/logger";
 
 import { adminProcedure } from "../../middleware";
@@ -151,11 +152,8 @@ const sendTestEmail = adminProcedure
     }
 
     try {
-      const result = await sendEmail({
-        to: input.to,
-        subject: "Naša Kuchyňa — test email",
-        html: "<p>This is a test email from <strong>Naša Kuchyňa</strong>. If you received it, your SMTP settings are working. 🎉</p>",
-      });
+      const { subject, html } = await buildTestEmail();
+      const result = await sendEmail({ to: input.to, subject, html });
 
       return result.sent ? { status: "sent" as const } : { status: "not_configured" as const };
     } catch (err) {

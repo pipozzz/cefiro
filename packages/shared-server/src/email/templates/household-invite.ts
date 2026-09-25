@@ -1,9 +1,15 @@
+import { APP_NAME } from "@norish/shared-server/email/branding";
+import { emailCopy, fmt, resolveEmailLocale } from "@norish/shared-server/email/i18n";
+import { renderBrandedEmail } from "@norish/shared-server/email/layout";
+
 export interface HouseholdInviteEmailParams {
   householdName: string;
   /** Display name of the person who sent the invite, if known. */
   inviterName: string | null;
   /** Absolute URL that accepts the invite. */
   acceptUrl: string;
+  /** Locale to render in; defaults to the instance default locale. */
+  locale?: string;
 }
 
 function escapeHtml(value: string): string {
@@ -15,41 +21,48 @@ function escapeHtml(value: string): string {
 }
 
 /**
- * The household invite email. Inline styles only (email clients strip <style>),
- * a single clear call-to-action, and the raw link repeated as text for clients
- * that don't render the button.
+ * The household invite email — branded and rendered in the instance default
+ * locale. Inline styles only, a single clear call-to-action, and the raw link
+ * repeated as text for clients that don't render the button.
  */
-export function buildHouseholdInviteEmail(params: HouseholdInviteEmailParams): {
+export async function buildHouseholdInviteEmail(params: HouseholdInviteEmailParams): Promise<{
   subject: string;
   html: string;
-} {
+}> {
+  const locale = await resolveEmailLocale(params.locale);
+  const c = emailCopy(locale);
+
   const household = escapeHtml(params.householdName);
   const inviter = params.inviterName ? escapeHtml(params.inviterName) : null;
   const url = escapeHtml(params.acceptUrl);
 
+  // Subject is plain text (no HTML), so it uses the raw values.
+  const subject = params.inviterName
+    ? fmt(c.householdSubjectFrom, {
+        inviter: params.inviterName,
+        household: params.householdName,
+        app: APP_NAME,
+      })
+    : fmt(c.householdSubjectPlain, { household: params.householdName, app: APP_NAME });
+
   const lead = inviter
-    ? `${inviter} invited you to join their household <strong>${household}</strong> on Naša Kuchyňa.`
-    : `You've been invited to join the household <strong>${household}</strong> on Naša Kuchyňa.`;
+    ? fmt(c.householdLeadFrom, { inviter, household: `<strong>${household}</strong>` })
+    : fmt(c.householdLeadPlain, { household: `<strong>${household}</strong>` });
 
-  const subject = inviter
-    ? `${params.inviterName} invited you to ${params.householdName} on Naša Kuchyňa`
-    : `You're invited to ${params.householdName} on Naša Kuchyňa`;
+  const bodyHtml =
+    `<p style="margin:0 0 24px;font-size:15px;line-height:1.5;color:#44403c;">${lead}</p>` +
+    `<p style="margin:0 0 24px;font-size:15px;line-height:1.5;color:#44403c;">${c.householdBlurb}</p>`;
 
-  const html = `<!doctype html>
-<html>
-  <body style="margin:0;padding:0;background:#f5f5f4;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1c1917;">
-    <div style="max-width:520px;margin:0 auto;padding:32px 24px;">
-      <div style="background:#ffffff;border-radius:16px;padding:32px;border:1px solid #e7e5e4;">
-        <h1 style="margin:0 0 16px;font-size:20px;font-weight:700;">Join ${household}</h1>
-        <p style="margin:0 0 24px;font-size:15px;line-height:1.5;color:#44403c;">${lead}</p>
-        <p style="margin:0 0 24px;font-size:15px;line-height:1.5;color:#44403c;">A household shares recipes, groceries and meal plans. Accept to get in.</p>
-        <a href="${url}" style="display:inline-block;background:#336640;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:12px 20px;border-radius:9999px;">Accept invite</a>
-        <p style="margin:24px 0 0;font-size:13px;line-height:1.5;color:#78716c;">Or paste this link into your browser:<br /><a href="${url}" style="color:#336640;word-break:break-all;">${url}</a></p>
-      </div>
-      <p style="margin:20px 0 0;font-size:12px;color:#a8a29e;text-align:center;">This invite expires in 14 days. If you didn't expect it, you can ignore this email.</p>
-    </div>
-  </body>
-</html>`;
+  const html = renderBrandedEmail({
+    previewText: subject,
+    heading: fmt(c.householdHeading, { household }),
+    bodyHtml,
+    cta: { label: c.householdCta, url },
+    linkFallbackLabel: c.linkFallback,
+    linkUrl: url,
+    note: c.expiry,
+    footer: fmt(c.footer, { app: APP_NAME }),
+  });
 
   return { subject, html };
 }
