@@ -645,7 +645,7 @@
         "themes": {
           "button": "Rebuild discovery themes",
           "description": "Cluster the public recipes by similarity and name each group, rebuilding the discovery theme tiles. New embeddings are picked up automatically each week; run this to seed or refresh them now.",
-          "done": "{themes, plural, =0 {No themes built} one {# theme built} other {# themes built}}",
+          "done": "{themes, plural, =0 {Няма създадени теми} one {Създадена # тема} other {Създадени # теми}} от {recipes, plural, one {# рецепта с вектор} other {# рецепти с вектор}}",
           "notConfigured": "Embeddings are not configured. Set VOYAGE_API_KEY first.",
           "error": "Failed to rebuild themes"
         }
