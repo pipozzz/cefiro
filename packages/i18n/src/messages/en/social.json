@@ -1,7 +1,7 @@
 {
   "discover": {
     "title": "Discover",
-    "subtitle": "Explore recipes and cooks shared by the community.",
+    "subtitle": "Discover and share home recipes from the community — filter by category, time, or ingredient.",
     "metaTitle": "Discover recipes",
     "metaDescription": "Explore recipes shared by the Naša Kuchyňa community.",
     "searchPlaceholder": "Search recipes and people…",
@@ -53,7 +53,9 @@
     "themeQuick": "Quick · under 30 min",
     "themeCount": "{count, plural, one {# recipe} other {# recipes}}",
     "themeBack": "Back to discovery",
-    "modeFollowing": "Following"
+    "modeFollowing": "Following",
+    "emptyColdStart": "New recipes will appear here as the community shares them — check back soon.",
+    "emptyFiltered": "No recipes match these filters. Try clearing a filter or searching instead."
   },
   "categories": {
     "Breakfast": "Breakfast",

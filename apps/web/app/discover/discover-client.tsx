@@ -11,6 +11,7 @@ import { SocialRecipeGrid } from "@/components/social/social-recipe-card";
 import { SuggestedCooks } from "@/components/social/suggested-cooks";
 import { useRecipesContext } from "@/context/recipes-context";
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/16/solid";
+import { SparklesIcon } from "@heroicons/react/24/outline";
 import { Button, Input, Spinner } from "@heroui/react";
 import { keepPreviousData, useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -459,9 +460,13 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
                   <Spinner />
                 </div>
               ) : recipes.length === 0 ? (
-                <p className="bg-content2 text-default-500 rounded-2xl p-10 text-center">
-                  {t("empty")}
-                </p>
+                <div className="bg-content2 flex flex-col items-center gap-2 rounded-2xl p-10 text-center">
+                  <SparklesIcon className="text-default-400 h-8 w-8" />
+                  <p className="text-foreground font-medium">{t("empty")}</p>
+                  <p className="text-default-500 text-sm">
+                    {!category && !tag && !maxMinutes ? t("emptyColdStart") : t("emptyFiltered")}
+                  </p>
+                </div>
               ) : (
                 <>
                   <SocialRecipeGrid recipes={recipes} />
