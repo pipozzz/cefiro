@@ -114,6 +114,15 @@ volumes:
   redis_data:
 ```
 
+## Sites running Cefiro
+
+Public instances built on Cefiro:
+
+- 🇸🇰 **[nasakuchyna.sk](https://nasakuchyna.sk)** — Naša Kuchyňa, a Slovak recipe-sharing community.
+- **[cefiro.spertulo.sk](https://cefiro.spertulo.sk)** — the reference/demo instance.
+
+Running a public Cefiro instance? Open a PR adding it here.
+
 ## Development
 
 This is a pnpm + Turborepo monorepo (Next.js App Router, tRPC, Drizzle/Postgres, next-intl across 15 locales). See [CONTRIBUTING.md](CONTRIBUTING.md) and, for the shared foundation, the upstream [development docs](https://docs.norish.dev/development/setup).
