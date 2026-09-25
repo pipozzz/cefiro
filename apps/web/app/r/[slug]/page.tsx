@@ -156,6 +156,13 @@ function formatAmount(amount: number | null | undefined): string {
   return Number.parseFloat(amount.toFixed(2)).toString();
 }
 
+/** A concise name for a HowToStep: its first sentence, capped in length. */
+function stepName(text: string): string {
+  const firstSentence = text.split(/(?<=[.!?])\s/)[0]?.trim() || text;
+
+  return firstSentence.length > 60 ? `${firstSentence.slice(0, 57)}…` : firstSentence;
+}
+
 /** schema.org/Recipe structured data — powers Google recipe rich results. */
 function buildRecipeJsonLd(
   full: FullRecipeDTO,
@@ -177,9 +184,26 @@ function buildRecipeJsonLd(
     .map((i) => `${formatAmount(i.amount)} ${i.unit ?? ""} ${i.ingredientName}`.trim())
     .filter(Boolean);
 
+  const recipeUrl = origin ? `${origin}/r/${slug}` : undefined;
+
   const instructions = (full.steps ?? [])
     .filter((s) => s.step?.trim())
-    .map((s) => ({ "@type": "HowToStep", text: s.step }));
+    .map((s, index) => {
+      const text = s.step.trim();
+      const stepImage = abs(toSlugMediaPath(s.images?.[0]?.image ?? null, slug));
+
+      return {
+        "@type": "HowToStep",
+        // A short summary (first sentence) as the step name; the full text stays
+        // in `text`. Both `name` and `url` quiet Google's rich-results warnings.
+        name: stepName(text),
+        text,
+        url: recipeUrl ? `${recipeUrl}#krok-${index + 1}` : undefined,
+        image: stepImage,
+      };
+    });
+
+  const cuisines = (full.cuisines ?? []).map((c) => c.name).filter(Boolean);
 
   const hasNutrition = full.calories || full.protein || full.carbs || full.fat;
 
@@ -213,6 +237,7 @@ function buildRecipeJsonLd(
     totalTime: toIsoDuration(full.totalMinutes),
     recipeYield: full.servings ? String(full.servings) : undefined,
     recipeCategory: full.categories?.length ? full.categories.join(", ") : undefined,
+    recipeCuisine: cuisines.length > 0 ? cuisines : undefined,
     keywords: full.tags?.length ? full.tags.map((t) => t.name).join(", ") : undefined,
     recipeIngredient: ingredients.length > 0 ? ingredients : undefined,
     recipeInstructions: instructions.length > 0 ? instructions : undefined,
