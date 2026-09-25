@@ -573,7 +573,7 @@ const inviteByEmail = authedProcedure
     let emailed = false;
 
     if (isEmailConfigured()) {
-      const { subject, html } = buildHouseholdInviteEmail({
+      const { subject, html } = await buildHouseholdInviteEmail({
         householdName: household.name,
         inviterName: ctx.user.name ?? null,
         acceptUrl,

@@ -1,3 +1,6 @@
+import { emailCopy, fmt, resolveEmailLocale } from "@norish/shared-server/email/i18n";
+import { renderBrandedEmail } from "@norish/shared-server/email/layout";
+
 export interface InstanceInviteEmailParams {
   /** Display name of the admin who sent the invite, if known. */
   inviterName: string | null;
@@ -5,6 +8,8 @@ export interface InstanceInviteEmailParams {
   acceptUrl: string;
   /** The instance's public name, shown in copy. */
   appName: string;
+  /** Locale to render in; defaults to the instance default locale. */
+  locale?: string;
 }
 
 function escapeHtml(value: string): string {
@@ -17,40 +22,43 @@ function escapeHtml(value: string): string {
 
 /**
  * The instance-invite email — an invitation to create an account on this server
- * (not to join a household). Inline styles only, a single call-to-action, and
- * the raw link repeated as text for clients that don't render the button.
+ * (not to join a household). Branded and rendered in the instance default locale.
+ * Inline styles only, a single call-to-action, and the raw link repeated as text.
  */
-export function buildInstanceInviteEmail(params: InstanceInviteEmailParams): {
+export async function buildInstanceInviteEmail(params: InstanceInviteEmailParams): Promise<{
   subject: string;
   html: string;
-} {
+}> {
+  const locale = await resolveEmailLocale(params.locale);
+  const c = emailCopy(locale);
+
   const app = escapeHtml(params.appName);
   const inviter = params.inviterName ? escapeHtml(params.inviterName) : null;
   const url = escapeHtml(params.acceptUrl);
 
+  // Subject is plain text (no HTML), so it uses the raw values.
+  const subject = params.inviterName
+    ? fmt(c.instanceSubjectFrom, { inviter: params.inviterName, app: params.appName })
+    : fmt(c.instanceSubjectPlain, { app: params.appName });
+
   const lead = inviter
-    ? `${inviter} invited you to create an account on <strong>${app}</strong>.`
-    : `You've been invited to create an account on <strong>${app}</strong>.`;
+    ? fmt(c.instanceLeadFrom, { inviter, app: `<strong>${app}</strong>` })
+    : fmt(c.instanceLeadPlain, { app: `<strong>${app}</strong>` });
 
-  const subject = inviter
-    ? `${params.inviterName} invited you to ${params.appName}`
-    : `You're invited to ${params.appName}`;
+  const bodyHtml =
+    `<p style="margin:0 0 24px;font-size:15px;line-height:1.5;color:#44403c;">${lead}</p>` +
+    `<p style="margin:0 0 24px;font-size:15px;line-height:1.5;color:#44403c;">${c.instanceBlurb}</p>`;
 
-  const html = `<!doctype html>
-<html>
-  <body style="margin:0;padding:0;background:#f5f5f4;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1c1917;">
-    <div style="max-width:520px;margin:0 auto;padding:32px 24px;">
-      <div style="background:#ffffff;border-radius:16px;padding:32px;border:1px solid #e7e5e4;">
-        <h1 style="margin:0 0 16px;font-size:20px;font-weight:700;">Join ${app}</h1>
-        <p style="margin:0 0 24px;font-size:15px;line-height:1.5;color:#44403c;">${lead}</p>
-        <p style="margin:0 0 24px;font-size:15px;line-height:1.5;color:#44403c;">Set up your own account to discover, save and cook recipes. Accept to get started.</p>
-        <a href="${url}" style="display:inline-block;background:#336640;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:12px 20px;border-radius:9999px;">Create my account</a>
-        <p style="margin:24px 0 0;font-size:13px;line-height:1.5;color:#78716c;">Or paste this link into your browser:<br /><a href="${url}" style="color:#336640;word-break:break-all;">${url}</a></p>
-      </div>
-      <p style="margin:20px 0 0;font-size:12px;color:#a8a29e;text-align:center;">This invite expires in 14 days. If you didn't expect it, you can ignore this email.</p>
-    </div>
-  </body>
-</html>`;
+  const html = renderBrandedEmail({
+    previewText: subject,
+    heading: fmt(c.instanceHeading, { app }),
+    bodyHtml,
+    cta: { label: c.instanceCta, url },
+    linkFallbackLabel: c.linkFallback,
+    linkUrl: url,
+    note: c.expiry,
+    footer: fmt(c.footer, { app: params.appName }),
+  });
 
   return { subject, html };
 }

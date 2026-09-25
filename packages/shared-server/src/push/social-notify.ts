@@ -3,6 +3,7 @@ import { createNotification } from "@norish/db/repositories/notifications";
 import { getRecipeNamesByIds } from "@norish/db/repositories/themes";
 import { getProfileByUserId } from "@norish/db/repositories/user-profiles";
 import { loadLocaleMessages } from "@norish/i18n";
+import { APP_NAME } from "@norish/shared-server/email/branding";
 import { serverLogger as log } from "@norish/shared-server/logger";
 import { isPushConfigured, sendPushToUser } from "@norish/shared-server/push/web-push";
 
@@ -21,8 +22,6 @@ export interface SocialNotificationInput {
   /** Present for like/comment/save/report. */
   recipeId?: string;
 }
-
-const APP_NAME = "Naša Kuchyňa";
 
 /**
  * Create the in-app notification AND, when Web Push is configured, send a push
