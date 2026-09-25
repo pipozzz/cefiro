@@ -978,6 +978,17 @@
       "revoked": "Invite revoked",
       "createError": "Could not create the invite.",
       "revokeError": "Could not revoke the invite."
+    },
+    "emailTest": {
+      "title": "Test email",
+      "description": "Send a test email to confirm your SMTP settings work.",
+      "toLabel": "Send to",
+      "toPlaceholder": "you@example.com",
+      "send": "Send test email",
+      "sent": "Test email sent to {to}.",
+      "notConfigured": "Email is not configured (set SMTP_HOST and EMAIL_FROM).",
+      "failed": "Send failed: {error}",
+      "error": "Could not send the test email"
     }
   },
   "archiveExport": {

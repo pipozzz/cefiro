@@ -6,6 +6,7 @@ import { AdminSettingsProvider, useAdminSettingsContext } from "../context";
 import AIProcessingCard from "./ai-processing-card";
 import { AuthProvidersCard } from "./auth-providers";
 import ContentDetectionCard from "./content-detection-card";
+import EmailTestCard from "./email-test-card";
 import GeneralCard from "./general-card";
 import InstanceInvitesCard from "./instance-invites-card";
 import JobQueueCard from "./job-queue-card";
@@ -25,6 +26,7 @@ function AdminSettingsContent() {
     <div className="flex w-full flex-col gap-6">
       <GeneralCard />
       <InstanceInvitesCard />
+      <EmailTestCard />
       <UsersCard />
       <PermissionPolicyCard />
       <AdminShareLinksCard />

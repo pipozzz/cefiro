@@ -978,6 +978,17 @@
       "revoked": "Pozvánka zrušená",
       "createError": "Pozvánku sa nepodarilo vytvoriť.",
       "revokeError": "Pozvánku sa nepodarilo zrušiť."
+    },
+    "emailTest": {
+      "title": "Testovací email",
+      "description": "Odošlite testovací email na overenie, že vaše SMTP nastavenia fungujú.",
+      "toLabel": "Odoslať na",
+      "toPlaceholder": "ty@example.com",
+      "send": "Odoslať testovací email",
+      "sent": "Testovací email odoslaný na {to}.",
+      "notConfigured": "Email nie je nakonfigurovaný (nastavte SMTP_HOST a EMAIL_FROM).",
+      "failed": "Odoslanie zlyhalo: {error}",
+      "error": "Testovací email sa nepodarilo odoslať"
     }
   },
   "archiveExport": {
