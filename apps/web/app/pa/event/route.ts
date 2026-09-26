@@ -44,9 +44,12 @@ export async function POST(request: NextRequest): Promise<Response> {
     headers: {
       "Content-Type": "application/json",
       "User-Agent": request.headers.get("user-agent") ?? "",
-      // Plausible reads the client IP from the left-most X-Forwarded-For entry, so
-      // send exactly the resolved visitor IP (not a chain that a CDN may reorder).
-      ...(ip ? { "X-Forwarded-For": ip } : {}),
+      // Plausible reads X-Plausible-IP before anything else. A reverse proxy in
+      // front of the instance (Traefik without trusted IPs) replaces an incoming
+      // X-Forwarded-For with our server's address, so geo came out as the
+      // datacenter's country; it leaves a custom header alone. X-Forwarded-For
+      // stays as the fallback for instances that honour it.
+      ...(ip ? { "X-Plausible-IP": ip, "X-Forwarded-For": ip } : {}),
     },
     body,
   });
