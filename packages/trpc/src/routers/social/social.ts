@@ -89,6 +89,11 @@ import {
   upsertProfile,
 } from "@norish/db/repositories/user-profiles";
 import { scheduleRecipeEmbedding } from "@norish/queue";
+import {
+  getTimerKeywords,
+  getUnits,
+  isTimersEnabled,
+} from "@norish/shared-server/config/server-config-loader";
 import { trpcLogger as log } from "@norish/shared-server/logger";
 import { copyRecipeImageByUrl, saveProfileAvatarBytes } from "@norish/shared-server/media/storage";
 import { sendSocialNotification } from "@norish/shared-server/push/social-notify";
@@ -1354,7 +1359,25 @@ const uploadProfileAvatar = authedProcedure
     return { url };
   });
 
+/**
+ * Server-global rendering config for the public recipe view (`/r/[slug]`): the
+ * unit vocabulary, whether timers are on, and the timer keywords. Public and
+ * token-free — a discovered recipe is public — so a signed-out cook's page can
+ * localise units and detect timers. Without this the view falls back to an empty
+ * unit map and shows canonical unit ids (e.g. "head" instead of "hlava").
+ */
+const publicRecipeConfig = publicProcedure.query(async () => {
+  const [units, timersEnabled, timerKeywords] = await Promise.all([
+    getUnits(),
+    isTimersEnabled(),
+    getTimerKeywords(),
+  ]);
+
+  return { units, timersEnabled, timerKeywords };
+});
+
 export const socialProcedures = router({
+  publicRecipeConfig,
   getMyProfile,
   checkHandle,
   upsertMyProfile,
