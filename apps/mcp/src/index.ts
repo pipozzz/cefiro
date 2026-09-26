@@ -262,6 +262,121 @@ server.registerTool(
 );
 
 server.registerTool(
+  "update_recipe",
+  {
+    title: "Update recipe",
+    description:
+      "Edit an existing recipe: fix text, times, categories, tags, ingredients or steps. Only the fields you pass change; tags, ingredients and steps, when passed, replace the whole list. Fetches the current version first.",
+    inputSchema: {
+      id: z.string().describe("Recipe id (uuid)"),
+      name: z.string().min(1).optional().describe("Recipe title"),
+      description: z.string().nullable().optional().describe("Short description"),
+      servings: z.number().int().positive().optional(),
+      prepMinutes: z.number().int().nonnegative().nullable().optional(),
+      cookMinutes: z.number().int().nonnegative().nullable().optional(),
+      categories: z.array(CATEGORY).min(1).optional().describe("Meal categories"),
+      ingredients: z
+        .array(
+          z.object({
+            name: z.string().min(1),
+            amount: z.number().nullable().optional(),
+            unit: z.string().nullable().optional(),
+          })
+        )
+        .optional()
+        .describe("Replaces all ingredient lines"),
+      steps: z
+        .array(z.string().min(1))
+        .optional()
+        .describe("Replaces the method, one string per step"),
+      tags: z.array(z.string().min(1)).optional().describe("Replaces all tags ([] clears them)"),
+      cuisine: z
+        .string()
+        .nullable()
+        .optional()
+        .describe("Cuisine name (must already exist; see list_cuisines); null clears it"),
+    },
+  },
+  async ({ id, ...input }) => {
+    const current = (await api(`/recipes/${encodeURIComponent(id)}`)) as {
+      version?: number;
+      prepMinutes?: number | null;
+      cookMinutes?: number | null;
+    };
+
+    if (typeof current.version !== "number") {
+      throw new Error("Could not read the recipe's version; aborting update.");
+    }
+
+    const data: Record<string, unknown> = {};
+
+    if (input.name !== undefined) data.name = input.name;
+    if (input.description !== undefined) data.description = input.description;
+    if (input.servings !== undefined) data.servings = input.servings;
+    if (input.categories !== undefined) data.categories = input.categories;
+
+    if (input.prepMinutes !== undefined || input.cookMinutes !== undefined) {
+      const prep =
+        input.prepMinutes !== undefined ? input.prepMinutes : (current.prepMinutes ?? null);
+      const cook =
+        input.cookMinutes !== undefined ? input.cookMinutes : (current.cookMinutes ?? null);
+
+      data.prepMinutes = prep;
+      data.cookMinutes = cook;
+      data.totalMinutes = prep != null || cook != null ? (prep ?? 0) + (cook ?? 0) : null;
+    }
+
+    if (input.ingredients !== undefined) {
+      data.recipeIngredients = input.ingredients.map((ing, order) => ({
+        ingredientName: ing.name,
+        ingredientId: null,
+        amount: ing.amount ?? null,
+        unit: ing.unit ?? null,
+        systemUsed: "metric" as const,
+        order,
+      }));
+    }
+
+    if (input.steps !== undefined) {
+      data.steps = input.steps.map((step, order) => ({
+        step,
+        systemUsed: "metric" as const,
+        order,
+        images: [],
+        stepIngredients: [],
+      }));
+    }
+
+    if (input.tags !== undefined) data.tags = input.tags.map((name) => ({ name }));
+
+    let cuisineNote = "";
+
+    if (input.cuisine === null) {
+      data.cuisines = [];
+    } else if (input.cuisine !== undefined) {
+      const cuisineId = await resolveCuisineId(input.cuisine);
+
+      if (cuisineId) {
+        data.cuisines = [cuisineId];
+      } else {
+        cuisineNote = ` (cuisine "${input.cuisine}" not found — left unchanged)`;
+      }
+    }
+
+    if (Object.keys(data).length === 0) {
+      return textResult(`Nothing to update for recipe ${id}${cuisineNote}.`);
+    }
+
+    await api(`/recipes/${encodeURIComponent(id)}`, {
+      method: "PATCH",
+      body: JSON.stringify({ version: current.version, data }),
+    });
+
+    return textResult(`Updated recipe ${id}${cuisineNote}.`);
+  }
+);
+
+server.registerTool(
   "create_cuisine",
   {
     title: "Create cuisine",
