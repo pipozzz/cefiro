@@ -111,7 +111,7 @@ server.registerTool(
   async ({ query, limit }) => {
     const data = await api("/recipes/search", {
       method: "POST",
-      body: JSON.stringify({ query, limit: limit ?? 20 }),
+      body: JSON.stringify({ search: query, limit: limit ?? 20 }),
     });
 
     return textResult(JSON.stringify(data, null, 2));

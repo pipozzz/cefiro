@@ -338,7 +338,7 @@ const deleteGalleryImage = authedProcedure
  * the bytes through the media storage, records the image, and refreshes the dish
  * colour. Only attach images you have the right to publish.
  */
-const addImageApi = authedProcedure
+export const addImageApi = authedProcedure
   .meta({
     openapi: {
       method: "POST",
