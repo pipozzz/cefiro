@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import { getAvailableProviders, isPasswordAuthEnabled } from "@norish/auth/providers";
 import { buildInternalParserApiUrl, SERVER_CONFIG } from "@norish/config/env-config-server";
@@ -245,10 +246,38 @@ export const health = publicProcedure
     return health;
   });
 
+/**
+ * Public API: list the cuisine vocabulary (id + name). A create-recipe caller
+ * (script or the MCP server) needs the id to file a recipe under a cuisine, so
+ * this is the lookup that makes `POST /recipes`'s `cuisines` usable over the API.
+ */
+export const listCuisinesApi = authedProcedure
+  .meta({
+    openapi: {
+      method: "GET",
+      path: "/cuisines",
+      protect: true,
+      tags: ["Recipes"],
+      summary: "List cuisines",
+      description:
+        "Returns the cuisine vocabulary (id and name). Use an id in a recipe's `cuisines` when creating it.",
+      errorResponses: {
+        401: "Missing or invalid API credentials",
+      },
+    },
+  })
+  .output(z.object({ cuisines: z.array(z.object({ id: z.uuid(), name: z.string() })) }))
+  .query(async () => {
+    const rows = await listCuisines();
+
+    return { cuisines: rows.map((c) => ({ id: c.id, name: c.name })) };
+  });
+
 export const configProcedures = router({
   localeConfig,
   tags,
   cuisines,
+  listCuisinesApi,
   units,
   recurrenceConfig,
   uploadLimits,
