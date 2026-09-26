@@ -50,6 +50,12 @@ describe("the shipped auto-tagging prompt", () => {
     }
   });
 
+  it("asks for tags in the recipe's own language", () => {
+    // A Slovak recipe tagged "vegetarian, easy" reads as untranslated UI to a
+    // Slovak visitor; the list names concepts, the recipe decides the words.
+    expect(AUTO_TAGGING_PROMPT).toMatch(/LANGUAGE THE RECIPE ITSELF IS WRITTEN IN/);
+  });
+
   it("tells the model where cuisine lives instead", () => {
     // Without this the model reaches for a cuisine anyway and mints a free-form
     // tag, which is exactly the folksonomy the vocabulary exists to replace.

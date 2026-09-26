@@ -9,6 +9,16 @@ easy, intermediate, advanced, budget-friendly, meal-prep, kid-friendly
 
 Do NOT create new tags outside this list.
 
+WRITE EVERY TAG IN THE LANGUAGE THE RECIPE ITSELF IS WRITTEN IN. Judge that
+language from the title, description, and ingredients, never from the language
+these instructions are written in. The list above names the concepts you may
+tag; writing a listed concept in the recipe's language is not creating a new
+tag. For a Slovak recipe, "vegetarian" becomes "vegetariánske" and "quick meal"
+becomes "rýchle"; for an English recipe the tags stay as listed. When an
+additional allowed tag already expresses the same concept in the recipe's
+language, return that tag exactly as written. Use lowercase unless the language
+requires otherwise.
+
 Do NOT tag a recipe with the culinary tradition it belongs to (Italian, Thai,
 Mexican, and so on). That is recorded as the recipe's Cuisines, from a
 vocabulary the administrator owns, and does not belong in Tags.

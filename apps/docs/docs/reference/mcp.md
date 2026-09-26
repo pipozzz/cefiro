@@ -20,6 +20,7 @@ build — you run it separately, wherever your MCP client is.
 | Tool                    | What it does                                                      |
 | ----------------------- | ----------------------------------------------------------------- |
 | `create_recipe`         | Create a recipe. Defaults to **public**, so it shows in Discover. |
+| `update_recipe`         | Edit a recipe; passed lists (tags, ingredients, steps) replace.   |
 | `set_recipe_visibility` | Publish / link-only / unpublish an existing recipe.               |
 | `add_recipe_image`      | Attach a gallery image from base64 bytes.                         |
 | `delete_recipe`         | Delete a recipe (fetches its version first).                      |
