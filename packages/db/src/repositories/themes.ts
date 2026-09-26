@@ -42,9 +42,25 @@ export async function replaceThemes(rows: ThemeInput[]): Promise<void> {
   });
 }
 
-/** Themes for discovery, largest cluster first. */
+/**
+ * Themes for discovery, largest cluster first.
+ *
+ * `slug` and `image` are a snapshot of the representative recipe taken when the
+ * weekly clustering ran. That recipe may since have been unpublished or deleted,
+ * so they are only returned while it is still public — otherwise a private
+ * recipe's photo and link would keep showing on /discover until the next rebuild.
+ */
 export async function listThemes(limit: number): Promise<ThemeRow[]> {
-  return db.select().from(themes).orderBy(themes.rank).limit(limit);
+  const rows = await db
+    .select({ theme: themes, representativeVisibility: recipes.visibility })
+    .from(themes)
+    .leftJoin(recipes, eq(recipes.id, themes.representativeRecipeId))
+    .orderBy(themes.rank)
+    .limit(limit);
+
+  return rows.map(({ theme, representativeVisibility }) =>
+    representativeVisibility === "public" ? theme : { ...theme, slug: null, image: null }
+  );
 }
 
 /** One theme by id — its centroid drives the similarity search behind a tile. */
