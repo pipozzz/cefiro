@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { SERVER_CONFIG } from "@norish/config/env-config-server";
@@ -331,6 +332,94 @@ const deleteGalleryImage = authedProcedure
     }
   });
 
+/**
+ * Public API: attach a gallery image to a recipe from base64 bytes (JSON, not
+ * multipart), so an HTTP/MCP caller can add a photo without a form upload. Saves
+ * the bytes through the media storage, records the image, and refreshes the dish
+ * colour. Only attach images you have the right to publish.
+ */
+const addImageApi = authedProcedure
+  .meta({
+    openapi: {
+      method: "POST",
+      path: "/recipes/{id}/images",
+      protect: true,
+      tags: ["Recipes"],
+      summary: "Add a recipe image",
+      description:
+        "Attach a gallery image from base64-encoded bytes. Only add images you have the right to publish.",
+      errorResponses: {
+        400: "Invalid image type, empty data, or image limit reached",
+        401: "Missing or invalid API credentials",
+        403: "Not your recipe",
+        404: "Recipe not found",
+        413: "Image too large",
+      },
+    },
+  })
+  .input(
+    z.object({
+      id: z.uuid(),
+      data: z.string().min(1).describe("Base64-encoded image bytes"),
+      mimeType: z.string().describe("image/jpeg, image/png, image/webp or image/avif"),
+      order: z.number().int().nonnegative().optional(),
+    })
+  )
+  .output(z.object({ id: z.uuid(), url: z.string(), order: z.number().int() }))
+  .mutation(async ({ ctx, input }) => {
+    const owner = await getRecipeOwnerId(input.id);
+
+    if (owner === null) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Recipe not found" });
+    }
+
+    if (owner !== ctx.user.id) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "Not your recipe" });
+    }
+
+    if (!ALLOWED_IMAGE_MIME_SET.has(input.mimeType)) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Invalid image type. Allowed: JPEG, PNG, WebP, AVIF.",
+      });
+    }
+
+    const bytes = Buffer.from(input.data, "base64");
+
+    if (bytes.length === 0) {
+      throw new TRPCError({ code: "BAD_REQUEST", message: "Image data is empty or not base64." });
+    }
+
+    if (bytes.length > SERVER_CONFIG.MAX_IMAGE_FILE_SIZE) {
+      const maxMB = Math.round(SERVER_CONFIG.MAX_IMAGE_FILE_SIZE / 1024 / 1024);
+
+      throw new TRPCError({
+        code: "PAYLOAD_TOO_LARGE",
+        message: `Image too large (max ${maxMB}MB).`,
+      });
+    }
+
+    if ((await countRecipeImages(input.id)) >= MAX_RECIPE_IMAGES) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: `Maximum ${MAX_RECIPE_IMAGES} images per recipe.`,
+      });
+    }
+
+    const url = await saveImageBytes(bytes, input.id);
+    const order = input.order ?? (await countRecipeImages(input.id));
+    const [record] = await addRecipeImages(input.id, [{ image: url, order }]);
+
+    if (!record) {
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to record image" });
+    }
+
+    await refreshDishColorForRecipe(input.id);
+    log.info({ userId: ctx.user.id, recipeId: input.id, url }, "Recipe image added (API)");
+
+    return { id: record.id, url, order: Number(record.order) };
+  });
+
 export const imagesProcedures = router({
   uploadImage,
   deleteImage,
@@ -338,4 +427,5 @@ export const imagesProcedures = router({
   deleteStepImage,
   uploadGalleryImage,
   deleteGalleryImage,
+  addImageApi,
 });

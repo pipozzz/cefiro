@@ -279,6 +279,31 @@ server.registerTool(
   }
 );
 
+server.registerTool(
+  "add_recipe_image",
+  {
+    title: "Add recipe image",
+    description:
+      "Attach a gallery image to a recipe from base64 bytes. Only add images you have the right to publish.",
+    inputSchema: {
+      id: z.string().describe("Recipe id (uuid)"),
+      data: z.string().min(1).describe("Base64-encoded image bytes"),
+      mimeType: z
+        .enum(["image/jpeg", "image/png", "image/webp", "image/avif"])
+        .describe("The image's MIME type"),
+      order: z.number().int().nonnegative().optional().describe("Gallery position (default: end)"),
+    },
+  },
+  async ({ id, data, mimeType, order }) => {
+    const res = (await api(`/recipes/${encodeURIComponent(id)}/images`, {
+      method: "POST",
+      body: JSON.stringify({ data, mimeType, order }),
+    })) as { url?: string };
+
+    return textResult(`Added image to recipe ${id}${res.url ? ` (${res.url})` : ""}.`);
+  }
+);
+
 async function main(): Promise<void> {
   const transport = new StdioServerTransport();
 
