@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
-import { cookies, headers } from "next/headers";
-import { AppShell } from "@/app/(app)/app-shell";
+import { headers } from "next/headers";
+import { AuthedAppShell } from "@/app/(app)/authed-app-shell";
 import { PublicHeader } from "@/components/social/public-header";
-import { amountDisplayPreference } from "@/lib/amount-display";
-import { hiddenItemsPreference } from "@/lib/hidden-items";
-import { recipePageColorPreference } from "@/lib/recipe-page-color";
-import { todaysMealsVisibilityPreference } from "@/lib/todays-meals-visibility";
 import { getTranslations } from "next-intl/server";
 
 import { auth } from "@norish/auth/auth";
@@ -43,18 +39,7 @@ export default async function DiscoverLayout({ children }: { children: React.Rea
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (session?.user) {
-    const cookieStore = await cookies();
-
-    return (
-      <AppShell
-        initialAmountDisplayMode={amountDisplayPreference.readFrom(cookieStore)}
-        initialHiddenItems={hiddenItemsPreference.readFrom(cookieStore)}
-        initialRecipePageColor={recipePageColorPreference.readFrom(cookieStore)}
-        initialTodaysMealsVisibility={todaysMealsVisibilityPreference.readFrom(cookieStore)}
-      >
-        {children}
-      </AppShell>
-    );
+    return <AuthedAppShell>{children}</AuthedAppShell>;
   }
 
   return (
