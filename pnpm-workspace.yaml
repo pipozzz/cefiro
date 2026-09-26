@@ -2,6 +2,7 @@ packages:
   - apps/*
   - "!apps/quick-import-extension"
   - "!apps/docs"
+  - "!apps/mcp"
   - packages/*
   - tooling/*
 

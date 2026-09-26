@@ -1,0 +1,5 @@
+# apps/mcp is isolated from the monorepo workspace (mirrors apps/docs).
+# Its own pnpm-workspace.yaml makes this directory its own install root, so the
+# MCP SDK dependency tree never touches the root catalog and it installs/builds
+# fully self-contained.
+onlyBuiltDependencies: []
