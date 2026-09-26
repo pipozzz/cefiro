@@ -247,4 +247,32 @@ describe("openapi health endpoint", () => {
       { BearerAuth: [] },
     ]);
   });
+
+  it("serves the recipe management and cuisine endpoints the MCP server calls", () => {
+    const document = getOpenApiDocument("http://localhost");
+
+    expect(document.paths["/recipes/{id}"]?.patch).toBeDefined();
+    expect(document.paths["/recipes/{id}"]?.delete).toBeDefined();
+    expect(document.paths["/recipes/{id}/visibility"]?.post).toBeDefined();
+    expect(document.paths["/recipes/{id}/images"]?.post).toBeDefined();
+    expect(document.paths["/cuisines"]?.get).toBeDefined();
+    expect(document.paths["/cuisines"]?.post).toBeDefined();
+  });
+
+  it("rejects anonymous requests to the visibility endpoint instead of 404ing", async () => {
+    getSessionMock.mockResolvedValue(null);
+
+    const response = await handleOpenApiRequest(
+      new Request(
+        "http://localhost/api/v1/recipes/00000000-0000-4000-8000-000000000000/visibility",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ visibility: "private" }),
+        }
+      )
+    );
+
+    expect(response.status).toBe(401);
+  });
 });

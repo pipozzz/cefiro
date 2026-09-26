@@ -11,7 +11,7 @@ import {
   listTodayPlannedRecipesProcedure,
   listWeekPlannedRecipesProcedure,
 } from "./routers/calendar/planned-items";
-import { health } from "./routers/config/procedures";
+import { createCuisineApi, health, listCuisinesApi } from "./routers/config/procedures";
 import {
   assignGroceryToStoreProcedure,
   createGroceryProcedure,
@@ -20,12 +20,16 @@ import {
   markGroceryDoneProcedure,
   markGroceryUndoneProcedure,
 } from "./routers/groceries/groceries";
+import { addImageApi } from "./routers/recipes/images";
 import {
   createRecipeProcedure,
+  deleteRecipeApi,
   getProcedure,
   importFromPasteProcedure,
   importFromUrlProcedure,
   listProcedure,
+  setRecipeVisibilityApi,
+  updateRecipeApi,
 } from "./routers/recipes/recipes";
 import { createStoreProcedure, listStoresProcedure } from "./routers/stores/stores";
 import { router } from "./trpc";
@@ -35,6 +39,12 @@ export const openApiRouter = router({
   recipeGet: getProcedure,
   recipeSearch: listProcedure,
   recipeCreate: createRecipeProcedure,
+  recipeUpdate: updateRecipeApi,
+  recipeDelete: deleteRecipeApi,
+  recipeSetVisibility: setRecipeVisibilityApi,
+  recipeAddImage: addImageApi,
+  cuisineList: listCuisinesApi,
+  cuisineCreate: createCuisineApi,
   recipeImportUrl: importFromUrlProcedure,
   recipeImportPaste: importFromPasteProcedure,
   groceryList: listGroceriesProcedure,
