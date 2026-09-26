@@ -42,12 +42,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Report starting free space. The build uses type=gha cache (external) on an
-      # ephemeral runner, so nothing here affects layer caching — this is only to
-      # confirm the runner's default ~14GB free is enough for the image + the
-      # mode=max cache export. If a build ever fails with "no space left", restore
-      # a disk-reclaim step (parallel rm of /usr/local/lib/android,
-      # /opt/hostedtoolcache/CodeQL, /usr/share/dotnet, … + docker image prune).
+      # No disk-reclaim step: an ubuntu-latest runner has ~86GB free on a 145GB
+      # disk, and a measured cold (no-cache) build of this image — deps install +
+      # turbo build + mode=max cache export — uses ~20GB and finishes with ~66GB
+      # to spare. The old "reclaim 20-30GB" step assumed a ~14GB disk that no
+      # longer exists, so it just cost ~1-3.5 min for nothing. If a build ever
+      # fails with "no space left", restore a reclaim step (parallel rm of
+      # /usr/local/lib/android, /opt/hostedtoolcache/CodeQL, /usr/share/dotnet, …
+      # + docker image prune). df is kept as a cheap canary.
       - name: Show disk space
         run: df -h /
 
