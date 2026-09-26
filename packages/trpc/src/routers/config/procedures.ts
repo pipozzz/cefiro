@@ -4,7 +4,7 @@ import { z } from "zod";
 import { getAvailableProviders, isPasswordAuthEnabled } from "@norish/auth/providers";
 import { buildInternalParserApiUrl, SERVER_CONFIG } from "@norish/config/env-config-server";
 import { getDatabaseHealth } from "@norish/db/drizzle";
-import { listCuisines } from "@norish/db/repositories/cuisines";
+import { createCuisine, listCuisines } from "@norish/db/repositories/cuisines";
 import { listAllTagNames, listTagNamesForUsers } from "@norish/db/repositories/tags";
 import { getAppVersions, trpcLogger as log } from "@norish/shared-server";
 import {
@@ -17,7 +17,7 @@ import {
   isTimersEnabled,
 } from "@norish/shared-server/config/server-config-loader";
 
-import { authedProcedure } from "../../middleware";
+import { adminProcedure, authedProcedure } from "../../middleware";
 import { publicProcedure, router } from "../../trpc";
 import { healthyResponseSchema, parserHealthSchema } from "./config-openapi-types";
 
@@ -273,11 +273,52 @@ export const listCuisinesApi = authedProcedure
     return { cuisines: rows.map((c) => ({ id: c.id, name: c.name })) };
   });
 
+/**
+ * Public API (admin): add a cuisine to the governed vocabulary. Cuisines are not
+ * folksonomy — only an administrator mints them (ADR-0012) — so a caller filling
+ * content programmatically can create the cuisines it needs before filing recipes
+ * under them. Conflicts on an existing name.
+ */
+export const createCuisineApi = adminProcedure
+  .meta({
+    openapi: {
+      method: "POST",
+      path: "/cuisines",
+      protect: true,
+      tags: ["Recipes"],
+      summary: "Create a cuisine",
+      description: "Adds a cuisine to the vocabulary (administrator only).",
+      errorResponses: {
+        401: "Missing or invalid API credentials",
+        403: "Not an administrator",
+        409: "A cuisine with this name already exists",
+      },
+    },
+  })
+  .input(z.object({ name: z.string().trim().min(1).max(80) }))
+  .output(z.object({ id: z.uuid(), name: z.string() }))
+  .mutation(async ({ input }) => {
+    try {
+      const created = await createCuisine(input.name);
+
+      return { id: created.id, name: created.name };
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+
+      if (message.includes("already exists")) {
+        throw new TRPCError({ code: "CONFLICT", message });
+      }
+
+      throw err;
+    }
+  });
+
 export const configProcedures = router({
   localeConfig,
   tags,
   cuisines,
   listCuisinesApi,
+  createCuisineApi,
   units,
   recurrenceConfig,
   uploadLimits,

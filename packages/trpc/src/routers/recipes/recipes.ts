@@ -48,7 +48,11 @@ import { withDishColor, withDishColorForUpdate } from "@norish/shared-server/med
 import { deleteRecipeImagesDir } from "@norish/shared-server/media/storage";
 import { selectWeightedRandomRecipe } from "@norish/shared-server/recipes/randomizer";
 import { FilterMode, RecipeCategory, SortOrder } from "@norish/shared/contracts";
-import { FullRecipeSchema, RecipeListResultSchema } from "@norish/shared/contracts/zod";
+import {
+  FullRecipeSchema,
+  RecipeListResultSchema,
+  RecipeVisibilitySchema,
+} from "@norish/shared/contracts/zod";
 import { isVideoUrl } from "@norish/shared/lib/helpers";
 import { ENRICHMENT_KINDS } from "@norish/shared/lib/recipe-enrichment";
 
@@ -381,6 +385,142 @@ const deleteProcedure = authedProcedure
       .catch((err) => handleRecipeError(ctx, err, "delete recipe", { recipeId: id }));
 
     return { success: true };
+  });
+
+/**
+ * Public API: update a recipe. Unlike the realtime `update` above (fire-and-forget
+ * for the web client), this awaits the write and returns the updated recipe, so an
+ * HTTP/MCP caller gets a definite result and a 409 on a stale version.
+ */
+export const updateRecipeApi = authedProcedure
+  .meta({
+    openapi: {
+      method: "PATCH",
+      path: "/recipes/{id}",
+      protect: true,
+      tags: ["Recipes"],
+      summary: "Update a recipe",
+      description:
+        "Replaces a recipe's data. Requires the current `version` for optimistic locking.",
+      errorResponses: {
+        401: "Missing or invalid API credentials",
+        404: "Recipe not found",
+        409: "Stale version — refetch the recipe and retry",
+      },
+    },
+  })
+  .input(RecipeUpdateInputSchema)
+  .output(FullRecipeSchema)
+  .mutation(async ({ ctx, input }) => {
+    await assertRecipeAccess(ctx, input.id, "edit");
+
+    const dto = await withDishColorForUpdate(input.data);
+    const result = await updateRecipeWithRefs(input.id, ctx.user.id, dto, input.version);
+
+    if (result.stale) {
+      throw new TRPCError({
+        code: "CONFLICT",
+        message: "Recipe was modified since you fetched it; refetch and retry",
+      });
+    }
+
+    const updated = await getRecipeFull(input.id);
+
+    if (!updated) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Recipe not found" });
+    }
+
+    log.info({ userId: ctx.user.id, recipeId: input.id }, "Recipe updated (API)");
+
+    return updated;
+  });
+
+/**
+ * Public API: delete a recipe. Awaits the delete (and its image cleanup) so the
+ * caller gets a definite result; requires the current `version`.
+ */
+export const deleteRecipeApi = authedProcedure
+  .meta({
+    openapi: {
+      method: "DELETE",
+      path: "/recipes/{id}",
+      protect: true,
+      tags: ["Recipes"],
+      summary: "Delete a recipe",
+      description: "Permanently deletes a recipe. Requires the current `version`.",
+      errorResponses: {
+        401: "Missing or invalid API credentials",
+        404: "Recipe not found",
+        409: "Stale version — refetch the recipe and retry",
+      },
+    },
+  })
+  .input(RecipeDeleteInputSchema)
+  .output(z.object({ success: z.boolean() }))
+  .mutation(async ({ ctx, input }) => {
+    await assertRecipeAccess(ctx, input.id, "delete");
+
+    await deleteRecipeImagesDir(input.id);
+    const result = await deleteRecipeById(input.id, input.version);
+
+    if (result.stale) {
+      throw new TRPCError({
+        code: "CONFLICT",
+        message: "Recipe was modified since you fetched it; refetch and retry",
+      });
+    }
+
+    log.info({ userId: ctx.user.id, recipeId: input.id }, "Recipe deleted (API)");
+
+    return { success: true };
+  });
+
+/**
+ * Public API: publish or unpublish an existing recipe. Sets visibility (private /
+ * unlisted / public) and reconciles the discovery embedding, so a recipe can be
+ * shared or pulled back without recreating it.
+ */
+export const setRecipeVisibilityApi = authedProcedure
+  .meta({
+    openapi: {
+      method: "POST",
+      path: "/recipes/{id}/visibility",
+      protect: true,
+      tags: ["Recipes"],
+      summary: "Set recipe visibility",
+      description: "Publish (public), share by link (unlisted), or unpublish (private) a recipe.",
+      errorResponses: {
+        401: "Missing or invalid API credentials",
+        404: "Recipe not found or not yours",
+      },
+    },
+  })
+  .input(z.object({ id: z.uuid(), visibility: RecipeVisibilitySchema }))
+  .output(
+    z.object({
+      recipeId: z.uuid(),
+      visibility: RecipeVisibilitySchema,
+      slug: z.string().nullable(),
+      publishedAt: z.date().nullable(),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    const result = await setRecipeVisibility(ctx.user.id, input.id, input.visibility);
+
+    if (!result) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Recipe not found or you do not have permission to publish it",
+      });
+    }
+
+    scheduleRecipeEmbedding(input.id);
+    log.info(
+      { userId: ctx.user.id, recipeId: input.id, visibility: input.visibility },
+      "Set recipe visibility (API)"
+    );
+
+    return result;
   });
 
 export const importFromUrlProcedure = authedProcedure
@@ -873,7 +1013,10 @@ export const recipesProcedures = router({
   getEditable: getEditableProcedure,
   create: createRecipeProcedure,
   update,
+  updateApi: updateRecipeApi,
   delete: deleteProcedure,
+  deleteApi: deleteRecipeApi,
+  setVisibility: setRecipeVisibilityApi,
   importFromUrl: importFromUrlProcedure,
   importFromImages: importFromImagesProcedure,
   importFromPaste: importFromPasteProcedure,

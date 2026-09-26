@@ -219,6 +219,66 @@ server.registerTool(
   }
 );
 
+server.registerTool(
+  "set_recipe_visibility",
+  {
+    title: "Set recipe visibility",
+    description:
+      "Publish (public), share by link (unlisted), or unpublish (private) an existing recipe.",
+    inputSchema: {
+      id: z.string().describe("Recipe id (uuid)"),
+      visibility: VISIBILITY.describe("public, unlisted or private"),
+    },
+  },
+  async ({ id, visibility }) => {
+    await api(`/recipes/${encodeURIComponent(id)}/visibility`, {
+      method: "POST",
+      body: JSON.stringify({ visibility }),
+    });
+
+    return textResult(`Recipe ${id} is now ${visibility}.`);
+  }
+);
+
+server.registerTool(
+  "delete_recipe",
+  {
+    title: "Delete recipe",
+    description: "Permanently delete a recipe. Fetches the current version first, then deletes.",
+    inputSchema: { id: z.string().describe("Recipe id (uuid)") },
+  },
+  async ({ id }) => {
+    const recipe = (await api(`/recipes/${encodeURIComponent(id)}`)) as { version?: number };
+    const version = recipe.version;
+
+    if (typeof version !== "number") {
+      throw new Error("Could not read the recipe's version; aborting delete.");
+    }
+
+    await api(`/recipes/${encodeURIComponent(id)}?version=${version}`, { method: "DELETE" });
+
+    return textResult(`Deleted recipe ${id}.`);
+  }
+);
+
+server.registerTool(
+  "create_cuisine",
+  {
+    title: "Create cuisine",
+    description:
+      "Add a cuisine to the vocabulary (administrator API key required). Use before filing recipes under a new cuisine.",
+    inputSchema: { name: z.string().min(1).describe("Cuisine name, e.g. Talianska") },
+  },
+  async ({ name }) => {
+    const data = (await api("/cuisines", {
+      method: "POST",
+      body: JSON.stringify({ name }),
+    })) as { id?: string; name?: string };
+
+    return textResult(`Created cuisine "${data.name ?? name}" (${data.id ?? "?"}).`);
+  }
+);
+
 async function main(): Promise<void> {
   const transport = new StdioServerTransport();
 
