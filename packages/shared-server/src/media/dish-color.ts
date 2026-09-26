@@ -1,9 +1,7 @@
-import fs from "fs/promises";
-import path from "path";
 import sharp from "sharp";
 
-import { SERVER_CONFIG } from "@norish/config/env-config-server";
 import { serverLogger as log } from "@norish/shared-server/logger";
+import { getObjectStore } from "@norish/shared-server/media/object-store";
 import { oklabFromSrgb, srgbFromOklab } from "@norish/shared/lib/oklab";
 import { primaryRecipeImage } from "@norish/shared/lib/recipe-media";
 
@@ -18,8 +16,6 @@ import { primaryRecipeImage } from "@norish/shared/lib/recipe-media";
  * image must never fail because the colour could not be read from it, so
  * every path out of this module is a hex string or null, never a throw.
  */
-
-const RECIPES_BASE_DIR = path.join(SERVER_CONFIG.UPLOADS_DIR, "recipes");
 
 /** The stored primary-image URL shape, as written by media/storage.ts. */
 const RECIPE_IMAGE_URL_PATTERN = /^\/recipes\/([a-f0-9-]{36})\/([a-zA-Z0-9_-]+\.[a-zA-Z0-9]+)$/i;
@@ -130,10 +126,11 @@ export async function extractDishColor(bytes: Buffer): Promise<string | null> {
 }
 
 /**
- * The Dish Colour for a stored recipe-image URL. Only locally stored images
- * qualify — a remote URL or a legacy shape yields null rather than a fetch,
- * because extraction happens at store time and a URL this cannot resolve is
- * an image Norish is not holding.
+ * The Dish Colour for a stored recipe-image URL. Reads the image through the
+ * media object store, so it works for both the filesystem and an S3/R2 bucket —
+ * reading the local path directly would ENOENT on every S3 deploy. A remote URL
+ * or a legacy shape yields null rather than a fetch, because the store only holds
+ * images written under the recipe key space.
  */
 export async function dishColorForImageUrl(
   imageUrl: string | null | undefined
@@ -145,11 +142,19 @@ export async function dishColorForImageUrl(
   if (!match) return null;
 
   const [, recipeId, filename] = match;
+  // The object-store key is the URL tail without the leading slash.
+  const key = `recipes/${recipeId}/${filename}`;
 
   try {
-    const bytes = await fs.readFile(path.join(RECIPES_BASE_DIR, recipeId!, filename!));
+    const object = await getObjectStore().get(key);
 
-    return await extractDishColor(bytes);
+    if (!object) {
+      log.warn({ imageUrl }, "Dish Colour source image not found in store");
+
+      return null;
+    }
+
+    return await extractDishColor(object.bytes);
   } catch (err) {
     log.warn({ err, imageUrl }, "Dish Colour source image could not be read");
 
