@@ -39,9 +39,16 @@ Notes:
 ### Recipes
 
 - `GET /api/v1/recipes/{id}`
+- `POST /api/v1/recipes` — create a recipe from structured data.
 - `POST /api/v1/recipes/search` — list recipes with optional filters.
 - `POST /api/v1/recipes/import/url`
 - `POST /api/v1/recipes/import/paste`
+- `GET /api/v1/cuisines` — the cuisine vocabulary (`id` + `name`).
+
+`POST /api/v1/recipes` creates a recipe directly from structured data. Set
+`visibility` to `public` to publish it to Discover and search on creation. File
+it under a cuisine by putting a cuisine **id** (from `GET /api/v1/cuisines`) in
+`cuisines`; add free-text `tags` by name.
 
 `POST /api/v1/recipes/search` returns a paginated recipe list. Optional filters
 include `search`, `searchFields`, `tags`, `categories`, `filterMode`,
