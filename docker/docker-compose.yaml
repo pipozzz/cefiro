@@ -49,6 +49,11 @@ services:
       # Optional — both must be set. PLAUSIBLE_SRC's origin is the proxy target.
       PLAUSIBLE_DOMAIN: ${PLAUSIBLE_DOMAIN:-}
       PLAUSIBLE_SRC: ${PLAUSIBLE_SRC:-}
+      # Cold-start only: when "true", seed a curated set of public Slovak demo
+      # recipes under the server owner at startup (idempotent). Turn on for one
+      # boot to give a fresh instance content for discovery/SEO, then set back to
+      # false. Never seeds when unset.
+      SEED_DEMO_RECIPES: ${SEED_DEMO_RECIPES:-false}
       # Serve HTTP only; background jobs run in the worker service below.
       CEFIRO_ROLE: web
       # Cap the V8 heap. Without this, Node grows its heap toward the container
