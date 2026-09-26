@@ -77,6 +77,9 @@ export interface FeedRecipeRow {
   authorDisplayName: string | null;
   authorAvatarUrl: string | null;
   favoriteCount: number;
+  servings: number | null;
+  originCountry: string | null;
+  tags: string[];
 }
 
 const RECIPE_CARD_COLUMNS = {
@@ -94,6 +97,16 @@ const RECIPE_CARD_COLUMNS = {
   authorHandle: userProfiles.handle,
   authorDisplayName: userProfiles.displayName,
   authorAvatarUrl: userProfiles.avatarUrl,
+  // Servings, origin flag and tag names so a public card matches the Library
+  // dashboard card (servings pill, origin flag, tag overlay).
+  servings: recipes.servings,
+  originCountry: recipes.originCountry,
+  tags: sql<string[]>`(
+    SELECT coalesce(array_agg(tg.name ORDER BY rt."order"), '{}')
+    FROM ${recipeTags} rt
+    JOIN ${tags} tg ON tg.id = rt.tag_id
+    WHERE rt.recipe_id = ${recipes.id}
+  )`,
 } as const;
 
 const favoriteCountSql = sql<number>`(

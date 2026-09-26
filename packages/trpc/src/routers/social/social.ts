@@ -249,6 +249,9 @@ function toFeedCard(row: FeedRecipeRow) {
     image: row.slug ? toSlugMediaUrl(row.image, row.slug) : null,
     dishColor: row.dishColor,
     totalMinutes: row.totalMinutes,
+    servings: row.servings,
+    originCountry: row.originCountry,
+    tags: row.tags,
     publishedAt: row.publishedAt,
     favoriteCount: row.favoriteCount,
     author: row.authorHandle
