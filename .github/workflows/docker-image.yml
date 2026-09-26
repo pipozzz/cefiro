@@ -42,20 +42,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # The monorepo image is large; the default runner disk (~14GB free) fills
-      # up mid-build. Reclaim ~20-30GB of preinstalled tooling we don't need.
-      # These deletions are independent, so run them in parallel and wait — the
-      # sequential version (plus `docker image prune`) took ~3.5 min; in parallel
-      # the step is bounded by the single slowest removal instead of their sum.
-      - name: Free disk space
-        run: |
-          { sudo rm -rf /usr/local/lib/android || true; } &
-          { sudo rm -rf /opt/hostedtoolcache/CodeQL || true; } &
-          { sudo rm -rf /usr/share/dotnet || true; } &
-          { sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/share/boost "$AGENT_TOOLSDIRECTORY" || true; } &
-          { sudo docker image prune --all --force || true; } &
-          wait
-          df -h /
+      # Report starting free space. The build uses type=gha cache (external) on an
+      # ephemeral runner, so nothing here affects layer caching — this is only to
+      # confirm the runner's default ~14GB free is enough for the image + the
+      # mode=max cache export. If a build ever fails with "no space left", restore
+      # a disk-reclaim step (parallel rm of /usr/local/lib/android,
+      # /opt/hostedtoolcache/CodeQL, /usr/share/dotnet, … + docker image prune).
+      - name: Show disk space
+        run: df -h /
 
       - name: Setup Node
         uses: actions/setup-node@v4
