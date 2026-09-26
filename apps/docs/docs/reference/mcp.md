@@ -17,20 +17,25 @@ build — you run it separately, wherever your MCP client is.
 
 ## Tools
 
-| Tool             | What it does                                                      |
-| ---------------- | ----------------------------------------------------------------- |
-| `create_recipe`  | Create a recipe. Defaults to **public**, so it shows in Discover. |
-| `list_cuisines`  | List the cuisine vocabulary (names) to use with `create_recipe`.  |
-| `search_recipes` | Search recipes by text.                                           |
-| `get_recipe`     | Fetch one recipe by id.                                           |
+| Tool                    | What it does                                                      |
+| ----------------------- | ----------------------------------------------------------------- |
+| `create_recipe`         | Create a recipe. Defaults to **public**, so it shows in Discover. |
+| `set_recipe_visibility` | Publish / link-only / unpublish an existing recipe.               |
+| `add_recipe_image`      | Attach a gallery image from base64 bytes.                         |
+| `delete_recipe`         | Delete a recipe (fetches its version first).                      |
+| `list_cuisines`         | List the cuisine vocabulary (names) to use with `create_recipe`.  |
+| `create_cuisine`        | Add a cuisine to the vocabulary (needs an admin API key).         |
+| `search_recipes`        | Search recipes by text.                                           |
+| `get_recipe`            | Fetch one recipe by id.                                           |
 
 `create_recipe` accepts name, description, servings, prep/cook minutes,
 categories (`Breakfast` / `Lunch` / `Dinner` / `Snack`), ingredients, steps,
 tags, an optional cuisine **name** (resolved against the vocabulary; unknown
 names are skipped), and `visibility` (default `public`).
 
-New cuisines are added by an administrator in the app (Admin → Cuisines), not
-through the MCP server.
+`create_cuisine` needs an administrator API key; with a regular key, add cuisines
+in the app (Admin → Cuisines) instead. Updating a recipe's data is done over the
+API (`PATCH /recipes/{id}`), not through a tool.
 
 ## Setup
 

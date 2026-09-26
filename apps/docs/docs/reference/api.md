@@ -40,15 +40,26 @@ Notes:
 
 - `GET /api/v1/recipes/{id}`
 - `POST /api/v1/recipes` — create a recipe from structured data.
+- `PATCH /api/v1/recipes/{id}` — update a recipe (requires the current `version`).
+- `DELETE /api/v1/recipes/{id}` — delete a recipe (requires the current `version`).
+- `POST /api/v1/recipes/{id}/visibility` — publish / link-only / unpublish an existing recipe.
+- `POST /api/v1/recipes/{id}/images` — attach a gallery image from base64 bytes.
 - `POST /api/v1/recipes/search` — list recipes with optional filters.
 - `POST /api/v1/recipes/import/url`
 - `POST /api/v1/recipes/import/paste`
 - `GET /api/v1/cuisines` — the cuisine vocabulary (`id` + `name`).
+- `POST /api/v1/cuisines` — create a cuisine (administrator only).
 
 `POST /api/v1/recipes` creates a recipe directly from structured data. Set
 `visibility` to `public` to publish it to Discover and search on creation. File
 it under a cuisine by putting a cuisine **id** (from `GET /api/v1/cuisines`) in
 `cuisines`; add free-text `tags` by name.
+
+`PATCH` and `DELETE` take a `version` for optimistic concurrency — fetch the
+recipe first, send its `version`, and a `409` means it changed meanwhile (refetch
+and retry). `POST /api/v1/recipes/{id}/visibility` takes `{ "visibility": "public"
+| "unlisted" | "private" }`. `POST /api/v1/recipes/{id}/images` takes
+`{ "data": "<base64>", "mimeType": "image/jpeg", "order"?: number }`.
 
 `POST /api/v1/recipes/search` returns a paginated recipe list. Optional filters
 include `search`, `searchFields`, `tags`, `categories`, `filterMode`,
