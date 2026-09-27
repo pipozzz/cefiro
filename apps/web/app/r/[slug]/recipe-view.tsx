@@ -111,7 +111,7 @@ function PublicRecipeBody({ slug, data }: { slug: string; data: PublicRecipeData
   const tCat = useTranslations("social.categories");
   const { units } = usePublicRecipeConfigQuery();
 
-  const { recipe, author, recipeId, favoriteCount, rating } = data;
+  const { recipe, author, recipeId, favoriteCount, rating, savedFrom } = data;
 
   // A recipe may state no yield (null); fall back to 1 so scaling is a no-op
   // rather than dividing by zero.
@@ -185,6 +185,27 @@ function PublicRecipeBody({ slug, data }: { slug: string; data: PublicRecipeData
         {recipe.description ? (
           <p className="text-default-600 mt-6 max-w-3xl text-lg leading-relaxed">
             {recipe.description}
+          </p>
+        ) : null}
+
+        {/* Fork credit: this recipe was saved (forked) from another public one. */}
+        {savedFrom ? (
+          <p className="text-default-500 mt-3 text-sm">
+            <Link className="text-primary hover:underline" href={`/r/${savedFrom.slug}`}>
+              {t("savedFromOriginal")}
+            </Link>
+            {savedFrom.authorHandle ? (
+              <>
+                {" "}
+                {t("savedFromBy")}{" "}
+                <Link
+                  className="text-primary hover:underline"
+                  href={`/u/${savedFrom.authorHandle}`}
+                >
+                  {savedFrom.authorName ?? `@${savedFrom.authorHandle}`}
+                </Link>
+              </>
+            ) : null}
           </p>
         ) : null}
 

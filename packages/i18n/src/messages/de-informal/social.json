@@ -175,7 +175,9 @@
     "cookNext": "Weiter",
     "cookDone": "Fertig",
     "moreLikeThis": "Ähnliche Rezepte",
-    "cookReadyAt": "Fertig gegen {time}"
+    "cookReadyAt": "Fertig gegen {time}",
+    "savedFromOriginal": "Adapted from the original recipe",
+    "savedFromBy": "by"
   },
   "feed": {
     "title": "Your feed",

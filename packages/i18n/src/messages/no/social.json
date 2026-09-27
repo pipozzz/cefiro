@@ -175,7 +175,9 @@
     "cookNext": "Neste",
     "cookDone": "Ferdig",
     "moreLikeThis": "Flere som denne",
-    "cookReadyAt": "Klar rundt {time}"
+    "cookReadyAt": "Klar rundt {time}",
+    "savedFromOriginal": "Adapted from the original recipe",
+    "savedFromBy": "by"
   },
   "feed": {
     "title": "Your feed",

@@ -65,6 +65,7 @@ import { findSimilarPublicRecipes } from "@norish/db/repositories/recipe-embeddi
 import {
   createSavedForkGuarded,
   getImportedRecipeIds,
+  getPublicSavedFromAttribution,
   getRecipeFull,
   getRecipeSourceRoot,
   getSavedForkForUser,
@@ -1082,10 +1083,11 @@ const getPublicRecipe = publicProcedure
       }
     }
 
-    const [favoriteCount, commentCount, ratingStats] = await Promise.all([
+    const [favoriteCount, commentCount, ratingStats, savedFrom] = await Promise.all([
       countRecipeFavorites(ref.recipeId),
       countCommentsForRecipe(ref.recipeId),
       getAverageRating(ref.recipeId),
+      getPublicSavedFromAttribution(ref.recipeId),
     ]);
 
     return {
@@ -1097,6 +1099,9 @@ const getPublicRecipe = publicProcedure
       favoriteCount,
       commentCount,
       rating: toRatingDto(ratingStats),
+      // Fork provenance: when this recipe was saved from another public one, the
+      // source's slug + author, shown as a "forked from" credit.
+      savedFrom,
     };
   });
 
