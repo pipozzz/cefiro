@@ -24,7 +24,8 @@ import { SurpriseDiscovery } from "./surprise-discovery";
 
 type Sort = "newest" | "trending";
 type Category = "Breakfast" | "Lunch" | "Dinner" | "Snack";
-type Mode = "recipes" | "following" | "byIngredient" | "surprise" | "cooks" | "cookbooks";
+type Mode =
+  "forYou" | "recipes" | "following" | "byIngredient" | "surprise" | "cooks" | "cookbooks";
 
 const CATEGORIES: Category[] = ["Breakfast", "Lunch", "Dinner", "Snack"];
 const TIME_OPTIONS = [15, 30, 60] as const;
@@ -47,7 +48,9 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
   const tCat = useTranslations("social.categories");
   const tFeed = useTranslations("social.feed");
 
-  const [mode, setMode] = useState<Mode>("recipes");
+  // Signed-in readers land on their personalised "For you" feed; visitors get the
+  // generic community browse.
+  const [mode, setMode] = useState<Mode>(isAuthed ? "forYou" : "recipes");
   const [sort, setSort] = useState<Sort>("newest");
   const [category, setCategory] = useState<Category | null>(null);
   const [maxMinutes, setMaxMinutes] = useState<number | null>(null);
@@ -134,6 +137,21 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
 
   const cookbookList = cookbooks.data?.pages.flatMap((page) => page.cookbooks) ?? [];
 
+  // "For you" — the personalised default for signed-in readers: recipes from
+  // the cooks they follow blended with the best of the community, dietary-filtered
+  // server-side. Falls back gracefully to the community's newest when they follow
+  // nobody yet, so it is never empty on a young platform.
+  const forYou = useInfiniteQuery({
+    ...trpc.social.forYou.infiniteQueryOptions(
+      { limit: 24 },
+      { getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined }
+    ),
+    enabled: isAuthed && !isSearching && mode === "forYou",
+    retry: false,
+  });
+
+  const forYouRecipes = forYou.data?.pages.flatMap((page) => page.recipes) ?? [];
+
   // "Following" — the former standalone feed, now a discover tab: public
   // recipes from people the signed-in user follows.
   const following = useInfiniteQuery({
@@ -210,8 +228,47 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
         <SearchResults isAuthed={isAuthed} query={searchQuery} term={searchTerm} />
       ) : (
         <>
+          {/* Dynamic food themes + the daily hero, the top-of-discovery entry
+              points. Hoisted above the mode tabs so they frame the personalised
+              "For you" landing as well as the community browse — but only on a
+              recipe-list mode with no active filter, so they never compete with a
+              narrowed result set. Selecting a theme/tag/quick filter drops the
+              reader into the filtered community browse. */}
+          {(mode === "forYou" || mode === "recipes") &&
+          !theme &&
+          !category &&
+          !tag &&
+          !maxMinutes ? (
+            <>
+              <DiscoverThemes
+                onQuick={() => {
+                  setMaxMinutes(30);
+                  setMode("recipes");
+                }}
+                onSelectTag={(next) => {
+                  setTag(next);
+                  setMode("recipes");
+                }}
+                onSelectTheme={(next) => {
+                  setTheme(next);
+                  setMode("recipes");
+                }}
+              />
+              <RecipeOfTheDay />
+            </>
+          ) : null}
+
           {/* Recipes / Cooks toggle */}
           <div className="mb-6 flex flex-wrap gap-2">
+            {isAuthed ? (
+              <button
+                className={pill(mode === "forYou")}
+                type="button"
+                onClick={() => setMode("forYou")}
+              >
+                {t("modeForYou")}
+              </button>
+            ) : null}
             <button
               className={pill(mode === "recipes")}
               type="button"
@@ -258,7 +315,39 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
             </button>
           </div>
 
-          {mode === "following" ? (
+          {mode === "forYou" ? (
+            forYou.isLoading ? (
+              <div className="flex min-h-[30vh] items-center justify-center">
+                <Spinner />
+              </div>
+            ) : forYouRecipes.length === 0 ? (
+              <div className="space-y-8">
+                <div className="bg-content2 rounded-2xl p-10 text-center">
+                  <p className="text-default-600">{t("empty")}</p>
+                  <p className="text-default-500 mt-1 text-sm">{t("emptyColdStart")}</p>
+                </div>
+                <SuggestedCooks />
+              </div>
+            ) : (
+              <>
+                <SocialRecipeGrid recipes={forYouRecipes} />
+                {forYou.hasNextPage ? (
+                  <div className="mt-8 flex justify-center">
+                    <Button
+                      isPending={forYou.isFetchingNextPage}
+                      variant="tertiary"
+                      onPress={() => forYou.fetchNextPage()}
+                    >
+                      {t("loadMore")}
+                    </Button>
+                  </div>
+                ) : null}
+                <div className="mt-12">
+                  <SuggestedCooks limit={6} />
+                </div>
+              </>
+            )
+          ) : mode === "following" ? (
             following.isLoading ? (
               <div className="flex min-h-[30vh] items-center justify-center">
                 <Spinner />
@@ -355,23 +444,6 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
             <ThemeResults theme={theme} onClear={() => setTheme(null)} />
           ) : (
             <>
-              {/* Dynamic food themes, the top-of-discovery entry point. Shown
-                  only on the default landing (no active filter). A semantic
-                  theme opens its own vector-search results; a tag theme drives
-                  the existing tag / time filters. */}
-              {!category && !tag && !maxMinutes ? (
-                <DiscoverThemes
-                  onQuick={() => setMaxMinutes(30)}
-                  onSelectTag={setTag}
-                  onSelectTheme={setTheme}
-                />
-              ) : null}
-
-              {/* Recipe of the day: a curated daily hero, shown only on the
-                  default landing (no active filter) so it never competes with a
-                  narrowed result set. */}
-              {!category && !tag && !maxMinutes ? <RecipeOfTheDay /> : null}
-
               {/* Sort */}
               <div className="mb-3 flex flex-wrap gap-2">
                 <button

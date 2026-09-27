@@ -1,4 +1,4 @@
-import { and, desc, eq, inArray, isNotNull, lt, lte, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, isNotNull, lt, lte, ne, sql } from "drizzle-orm";
 
 import { db } from "@norish/db/drizzle";
 
@@ -154,6 +154,68 @@ export async function listFeedRecipes(
     .limit(limit + 1);
 
   return paginateByPublishedAt(rows, limit);
+}
+
+/**
+ * The personalised "For you" feed: every public recipe, ranked so the cooks the
+ * reader follows come first (their most-loved, newest), then the best of the
+ * wider community. Recipes tagged with the reader's own allergens are dropped,
+ * and the reader's own recipes are excluded (those live in their Library, not in
+ * discovery). Offset-paginated on a deterministic ordering, so it never feels
+ * empty on a young platform: with no follows it degrades gracefully to the
+ * community's newest, dietary-filtered recipes.
+ */
+export async function listForYouRecipes(params: {
+  userId: string;
+  excludeAllergenTags?: string[];
+  limit: number;
+  cursor?: string;
+}): Promise<{ items: FeedRecipeRow[]; nextCursor: string | null }> {
+  const { userId, excludeAllergenTags, limit } = params;
+  const offset = params.cursor ? Number.parseInt(params.cursor, 10) || 0 : 0;
+
+  // Is this recipe's author someone the reader follows? Drives the primary sort
+  // key, so a followed cook's recipes rank ahead of the community tail.
+  const isFollowedSql = sql<boolean>`EXISTS (
+    SELECT 1 FROM ${follows}
+    WHERE ${follows.followerId} = ${userId}
+    AND ${follows.followeeId} = ${recipes.userId}
+  )`;
+
+  const conditions = [eq(recipes.visibility, "public"), ne(recipes.userId, userId)];
+
+  // Dietary-aware: drop recipes tagged with any of the reader's allergen tags
+  // (case-insensitive name match, mirroring listDiscoverRecipes).
+  const allergens = (excludeAllergenTags ?? [])
+    .map((name) => name.trim().toLowerCase())
+    .filter(Boolean);
+
+  if (allergens.length > 0) {
+    conditions.push(sql`NOT EXISTS (
+      SELECT 1 FROM ${recipeTags} rt
+      JOIN ${tags} tg ON tg.id = rt.tag_id
+      WHERE rt.recipe_id = ${recipes.id}
+      AND lower(tg.name) IN (${sql.join(
+        allergens.map((name) => sql`${name}`),
+        sql`, `
+      )})
+    )`);
+  }
+
+  const rows = await db
+    .select({ ...RECIPE_CARD_COLUMNS, favoriteCount: favoriteCountSql })
+    .from(recipes)
+    .leftJoin(userProfiles, eq(userProfiles.userId, recipes.userId))
+    .where(and(...conditions))
+    .orderBy(desc(isFollowedSql), desc(favoriteCountSql), desc(recipes.publishedAt))
+    .limit(limit + 1)
+    .offset(offset);
+
+  const hasMore = rows.length > limit;
+  const items = hasMore ? rows.slice(0, limit) : rows;
+  const nextCursor = hasMore ? String(offset + limit) : null;
+
+  return { items, nextCursor };
 }
 
 type DiscoverSort = "newest" | "trending";
