@@ -261,12 +261,18 @@ server.registerTool(
   }
 );
 
+/** A step as GET /recipes/{id} returns it — the parts update_recipe carries over. */
+interface CurrentStep {
+  images?: { id?: string; image: string; order?: number }[];
+  stepIngredients?: { ingredientOrder: number; share: number; order?: number }[];
+}
+
 server.registerTool(
   "update_recipe",
   {
     title: "Update recipe",
     description:
-      "Edit an existing recipe: fix text, times, categories, tags, ingredients or steps. Only the fields you pass change; tags, ingredients and steps, when passed, replace the whole list. Fetches the current version first.",
+      "Edit an existing recipe: fix text, times, categories, tags, ingredients or steps. Only the fields you pass change; tags, ingredients and steps, when passed, replace the whole list. Steps keep their images and ingredient links by position; changing the number of ingredient lines drops the links. Fetches the current version first.",
     inputSchema: {
       id: z.string().describe("Recipe id (uuid)"),
       name: z.string().min(1).optional().describe("Recipe title"),
@@ -302,11 +308,21 @@ server.registerTool(
       version?: number;
       prepMinutes?: number | null;
       cookMinutes?: number | null;
+      recipeIngredients?: { id: string }[];
+      steps?: CurrentStep[];
     };
 
     if (typeof current.version !== "number") {
       throw new Error("Could not read the recipe's version; aborting update.");
     }
+
+    const currentLines = current.recipeIngredients ?? [];
+    const currentSteps = current.steps ?? [];
+    // Step Ingredient links point at ingredient lines by position. They stay
+    // valid as long as the line list keeps its shape; when the number of lines
+    // changes we can no longer tell which line a link meant, so links drop.
+    const linesKeepShape =
+      input.ingredients === undefined || input.ingredients.length === currentLines.length;
 
     const data: Record<string, unknown> = {};
 
@@ -328,6 +344,9 @@ server.registerTool(
 
     if (input.ingredients !== undefined) {
       data.recipeIngredients = input.ingredients.map((ing, order) => ({
+        // Same shape → update each line in place, so the rows (and the step
+        // links that reference them) survive the save.
+        ...(linesKeepShape && currentLines[order] ? { id: currentLines[order].id } : {}),
         ingredientName: ing.name,
         ingredientId: null,
         amount: ing.amount ?? null,
@@ -338,12 +357,15 @@ server.registerTool(
     }
 
     if (input.steps !== undefined) {
+      // Editing a step's text keeps what hangs off it: the step at the same
+      // position hands over its images and (while the lines keep their shape)
+      // its Step Ingredient links.
       data.steps = input.steps.map((step, order) => ({
         step,
         systemUsed: "metric" as const,
         order,
-        images: [],
-        stepIngredients: [],
+        images: currentSteps[order]?.images ?? [],
+        stepIngredients: linesKeepShape ? (currentSteps[order]?.stepIngredients ?? []) : [],
       }));
     }
 
