@@ -7,6 +7,7 @@ import { PublicSlugSmartInstruction } from "@/components/recipe/public-slug-smar
 import AmountDisplayToggle from "@/components/recipes/amount-display-toggle";
 import { PublicServingsControl } from "@/components/recipes/public-servings-control";
 import { ReadonlyIngredientsList } from "@/components/recipes/readonly-ingredients-list";
+import { ReadonlyNutritionCard } from "@/components/recipes/readonly-nutrition";
 import { ReadonlyStepsList } from "@/components/recipes/readonly-steps-list";
 import { NotFoundView } from "@/components/shared/not-found-view";
 import RecipeSkeleton from "@/components/skeleton/recipe-skeleton";
@@ -293,19 +294,10 @@ function PublicRecipeBody({ slug, data }: { slug: string; data: PublicRecipeData
           </section>
         </div>
 
-        {/* Nutrition */}
-        {(recipe.calories || recipe.protein || recipe.carbs || recipe.fat) && (
-          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {recipe.calories ? (
-              <MetaPill label={t("calories")} value={`${recipe.calories}`} />
-            ) : null}
-            {recipe.protein ? (
-              <MetaPill label={t("protein")} value={`${recipe.protein} g`} />
-            ) : null}
-            {recipe.carbs ? <MetaPill label={t("carbs")} value={`${recipe.carbs} g`} /> : null}
-            {recipe.fat ? <MetaPill label={t("fat")} value={`${recipe.fat} g`} /> : null}
-          </div>
-        )}
+        {/* Nutrition — the same macro-ring card the library and share pages use. */}
+        <div className="mt-10 print:hidden">
+          <ReadonlyNutritionCard recipe={recipe} />
+        </div>
 
         {recipe.url ? (
           <p className="text-default-500 mt-10 text-sm">
