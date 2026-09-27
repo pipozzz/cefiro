@@ -175,7 +175,9 @@
     "cookNext": "Далее",
     "cookDone": "Готово",
     "moreLikeThis": "Похожие рецепты",
-    "cookReadyAt": "Готово около {time}"
+    "cookReadyAt": "Готово около {time}",
+    "savedFromOriginal": "Adapted from the original recipe",
+    "savedFromBy": "by"
   },
   "feed": {
     "title": "Your feed",

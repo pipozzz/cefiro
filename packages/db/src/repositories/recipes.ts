@@ -1215,6 +1215,52 @@ export async function getSavedFromAttribution(
   };
 }
 
+/**
+ * Fork provenance for a PUBLIC recipe page: if this recipe was saved from another
+ * one, the source's slug and (public) author — shown to any viewer as a
+ * "forked from" credit. Unlike {@link getSavedFromAttribution} there is no owner
+ * check: a public recipe's origin is public information. Returns null when the
+ * recipe is not a fork, or the source is no longer publicly reachable.
+ */
+export async function getPublicSavedFromAttribution(
+  recipeId: string
+): Promise<SavedFromAttribution | null> {
+  const [copy] = await db
+    .select({ savedFromRecipeId: recipes.savedFromRecipeId })
+    .from(recipes)
+    .where(eq(recipes.id, recipeId))
+    .limit(1);
+
+  if (!copy?.savedFromRecipeId) {
+    return null;
+  }
+
+  const [source] = await db
+    .select({
+      visibility: recipes.visibility,
+      slug: recipes.slug,
+      authorHandle: userProfiles.handle,
+      authorName: userProfiles.displayName,
+      authorPublic: userProfiles.isPublic,
+    })
+    .from(recipes)
+    .leftJoin(userProfiles, eq(userProfiles.userId, recipes.userId))
+    .where(eq(recipes.id, copy.savedFromRecipeId))
+    .limit(1);
+
+  if (!source || source.visibility === "private" || !source.slug) {
+    return null;
+  }
+
+  const profilePublic = source.authorPublic === true;
+
+  return {
+    slug: source.slug,
+    authorHandle: profilePublic ? source.authorHandle : null,
+    authorName: profilePublic ? source.authorName : null,
+  };
+}
+
 export async function setActiveSystemForRecipe(
   recipeId: string,
   system: MeasurementSystem,

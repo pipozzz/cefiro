@@ -175,7 +175,9 @@
     "cookNext": "다음",
     "cookDone": "완료",
     "moreLikeThis": "비슷한 레시피",
-    "cookReadyAt": "{time}쯤 완성"
+    "cookReadyAt": "{time}쯤 완성",
+    "savedFromOriginal": "Adapted from the original recipe",
+    "savedFromBy": "by"
   },
   "feed": {
     "title": "Your feed",
