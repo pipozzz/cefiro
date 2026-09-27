@@ -24,6 +24,7 @@ import { useTranslations } from "next-intl";
 
 import type { RouterOutputs } from "@norish/trpc/client";
 
+import { RecipePrintView } from "./recipe-print-view";
 import { RelatedRecipes } from "./related-recipes";
 
 function MetaPill({ label, value }: { label: string; value: string }) {
@@ -141,180 +142,196 @@ function PublicRecipeBody({ slug, data }: { slug: string; data: PublicRecipeData
           mounted they never count down — same pattern the share page uses. */}
       <TimerTicker />
 
-      {/* Hero */}
-      <header className="relative mt-4 overflow-hidden rounded-3xl">
-        {recipe.image ? (
-          <div className="relative h-64 w-full md:h-96">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img alt={recipe.name} className="h-full w-full object-cover" src={recipe.image} />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 p-6 md:p-8">
+      {/* Print output: a compact cookbook page (hidden on screen). */}
+      <RecipePrintView
+        ingredients={adjustedIngredients}
+        recipe={recipe}
+        servings={servings}
+        units={units}
+      />
+
+      {/* Interactive screen view — hidden when printing (the cookbook page above
+          is what prints). */}
+      <div className="print:hidden">
+        {/* Hero */}
+        <header className="relative mt-4 overflow-hidden rounded-3xl">
+          {recipe.image ? (
+            <div className="relative h-64 w-full md:h-96">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img alt={recipe.name} className="h-full w-full object-cover" src={recipe.image} />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-6 md:p-8">
+                <div className="mb-3">
+                  <AuthorChip author={author} />
+                </div>
+                <h1 className="text-3xl font-bold text-white drop-shadow md:text-5xl">
+                  {recipe.name}
+                </h1>
+              </div>
+            </div>
+          ) : (
+            <div
+              className="flex h-48 w-full flex-col justify-end p-6 md:h-64 md:p-8"
+              style={{ background: recipe.dishColor ?? undefined }}
+            >
               <div className="mb-3">
                 <AuthorChip author={author} />
               </div>
-              <h1 className="text-3xl font-bold text-white drop-shadow md:text-5xl">
-                {recipe.name}
-              </h1>
+              <h1 className="text-foreground text-3xl font-bold md:text-5xl">{recipe.name}</h1>
             </div>
-          </div>
-        ) : (
-          <div
-            className="flex h-48 w-full flex-col justify-end p-6 md:h-64 md:p-8"
-            style={{ background: recipe.dishColor ?? undefined }}
-          >
-            <div className="mb-3">
-              <AuthorChip author={author} />
-            </div>
-            <h1 className="text-foreground text-3xl font-bold md:text-5xl">{recipe.name}</h1>
+          )}
+        </header>
+
+        {recipe.description ? (
+          <p className="text-default-600 mt-6 max-w-3xl text-lg leading-relaxed">
+            {recipe.description}
+          </p>
+        ) : null}
+
+        {/* Category / tag badges */}
+        {(recipe.categories.length > 0 || recipe.tags.length > 0) && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {recipe.categories.map((cat) => (
+              <Link
+                key={`cat-${cat}`}
+                className="bg-primary/15 text-primary hover:bg-primary/25 rounded-full px-3 py-1 text-xs font-medium transition"
+                href={`/discover/category/${cat.toLowerCase()}`}
+              >
+                {tCat(cat)}
+              </Link>
+            ))}
+            {recipe.tags.map((tag) => (
+              <Link
+                key={`tag-${tag.name}`}
+                className="bg-content2 text-default-600 hover:bg-content3 hover:text-foreground rounded-full px-3 py-1 text-xs font-medium transition"
+                href={`/discover?tag=${encodeURIComponent(tag.name)}`}
+              >
+                #{tag.name}
+              </Link>
+            ))}
           </div>
         )}
-      </header>
 
-      {recipe.description ? (
-        <p className="text-default-600 mt-6 max-w-3xl text-lg leading-relaxed">
-          {recipe.description}
-        </p>
-      ) : null}
-
-      {/* Category / tag badges */}
-      {(recipe.categories.length > 0 || recipe.tags.length > 0) && (
-        <div className="mt-4 flex flex-wrap gap-2">
-          {recipe.categories.map((cat) => (
-            <Link
-              key={`cat-${cat}`}
-              className="bg-primary/15 text-primary hover:bg-primary/25 rounded-full px-3 py-1 text-xs font-medium transition"
-              href={`/discover/category/${cat.toLowerCase()}`}
-            >
-              {tCat(cat)}
-            </Link>
-          ))}
-          {recipe.tags.map((tag) => (
-            <Link
-              key={`tag-${tag.name}`}
-              className="bg-content2 text-default-600 hover:bg-content3 hover:text-foreground rounded-full px-3 py-1 text-xs font-medium transition"
-              href={`/discover?tag=${encodeURIComponent(tag.name)}`}
-            >
-              #{tag.name}
-            </Link>
-          ))}
-        </div>
-      )}
-
-      {/* Meta pills */}
-      {timePills.length > 0 && (
-        <div className="mt-6 flex flex-wrap gap-3">
-          {timePills.map((pill) => (
-            <MetaPill key={pill.label} label={pill.label} value={pill.value} />
-          ))}
-        </div>
-      )}
-
-      <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4 print:hidden">
-        <PublicCookMode
-          categories={recipe.categories}
-          image={recipe.image}
-          ingredients={adjustedIngredients}
-          recipeId={recipeId}
-          recipeName={recipe.name}
-          steps={recipe.steps}
-          systemUsed={recipe.systemUsed}
-          totalMinutes={recipe.totalMinutes}
-          units={units}
-        />
-        <LikeButton initialCount={favoriteCount} recipeId={recipeId} slug={slug} />
-        <SaveRecipeButton recipeId={recipeId} slug={slug} />
-        <ShareRecipeButton slug={slug} title={recipe.name} />
-        <PrintRecipeButton />
-      </div>
-
-      <div className="mt-4 print:hidden">
-        <RecipeRating
-          initialAverage={rating.average}
-          initialCount={rating.count}
-          recipeId={recipeId}
-          slug={slug}
-        />
-      </div>
-
-      {/* Ingredients + steps */}
-      <div className="mt-10 grid gap-10 md:grid-cols-[minmax(0,22rem)_1fr]">
-        <aside className="md:sticky md:top-6 md:self-start">
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <h2 className="text-foreground text-xl font-semibold">{t("ingredients")}</h2>
-            <div className="flex items-center gap-2 print:hidden">
-              <AmountDisplayToggle />
-              <PublicServingsControl servings={servings} onChange={setServings} />
-            </div>
+        {/* Meta pills */}
+        {timePills.length > 0 && (
+          <div className="mt-6 flex flex-wrap gap-3">
+            {timePills.map((pill) => (
+              <MetaPill key={pill.label} label={pill.label} value={pill.value} />
+            ))}
           </div>
-          <ReadonlyIngredientsList
-            interactive
-            ingredients={adjustedIngredients}
-            systemUsed={recipe.systemUsed}
-            units={units}
-          />
-        </aside>
+        )}
 
-        <section>
-          <h2 className="text-foreground mb-4 text-xl font-semibold">{t("steps")}</h2>
-          <ReadonlyStepsList
-            enableTimers
-            interactive
-            InstructionComponent={PublicSlugSmartInstruction}
+        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4 print:hidden">
+          <PublicCookMode
+            categories={recipe.categories}
+            image={recipe.image}
             ingredients={adjustedIngredients}
             recipeId={recipeId}
             recipeName={recipe.name}
             steps={recipe.steps}
             systemUsed={recipe.systemUsed}
+            totalMinutes={recipe.totalMinutes}
             units={units}
           />
-
-          {recipe.notes ? (
-            <div className="bg-content2 mt-8 rounded-2xl p-5">
-              <h3 className="text-default-500 mb-2 text-sm font-semibold tracking-wide uppercase">
-                {t("notes")}
-              </h3>
-              <p className="text-default-700 text-sm leading-relaxed whitespace-pre-line">
-                {recipe.notes}
-              </p>
-            </div>
-          ) : null}
-        </section>
-      </div>
-
-      {/* Nutrition */}
-      {(recipe.calories || recipe.protein || recipe.carbs || recipe.fat) && (
-        <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {recipe.calories ? <MetaPill label={t("calories")} value={`${recipe.calories}`} /> : null}
-          {recipe.protein ? <MetaPill label={t("protein")} value={`${recipe.protein} g`} /> : null}
-          {recipe.carbs ? <MetaPill label={t("carbs")} value={`${recipe.carbs} g`} /> : null}
-          {recipe.fat ? <MetaPill label={t("fat")} value={`${recipe.fat} g`} /> : null}
+          <LikeButton initialCount={favoriteCount} recipeId={recipeId} slug={slug} />
+          <SaveRecipeButton recipeId={recipeId} slug={slug} />
+          <ShareRecipeButton slug={slug} title={recipe.name} />
+          <PrintRecipeButton />
         </div>
-      )}
 
-      {recipe.url ? (
-        <p className="text-default-500 mt-10 text-sm">
-          {t("source")}{" "}
-          <a
-            className="text-primary hover:underline"
-            href={recipe.url}
-            rel="noreferrer noopener nofollow"
-            target="_blank"
-          >
-            {recipe.url}
-          </a>
-        </p>
-      ) : null}
+        <div className="mt-4 print:hidden">
+          <RecipeRating
+            initialAverage={rating.average}
+            initialCount={rating.count}
+            recipeId={recipeId}
+            slug={slug}
+          />
+        </div>
 
-      <div className="print:hidden">
-        <RelatedRecipes recipeId={recipeId} />
-      </div>
+        {/* Ingredients + steps */}
+        <div className="mt-10 grid gap-10 md:grid-cols-[minmax(0,22rem)_1fr]">
+          <aside className="md:sticky md:top-6 md:self-start">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+              <h2 className="text-foreground text-xl font-semibold">{t("ingredients")}</h2>
+              <div className="flex items-center gap-2 print:hidden">
+                <AmountDisplayToggle />
+                <PublicServingsControl servings={servings} onChange={setServings} />
+              </div>
+            </div>
+            <ReadonlyIngredientsList
+              interactive
+              ingredients={adjustedIngredients}
+              systemUsed={recipe.systemUsed}
+              units={units}
+            />
+          </aside>
 
-      <div className="print:hidden">
-        <CommentsSection
-          recipeAuthorHandle={author?.handle ?? null}
-          recipeId={recipeId}
-          slug={slug}
-        />
+          <section>
+            <h2 className="text-foreground mb-4 text-xl font-semibold">{t("steps")}</h2>
+            <ReadonlyStepsList
+              enableTimers
+              interactive
+              InstructionComponent={PublicSlugSmartInstruction}
+              ingredients={adjustedIngredients}
+              recipeId={recipeId}
+              recipeName={recipe.name}
+              steps={recipe.steps}
+              systemUsed={recipe.systemUsed}
+              units={units}
+            />
+
+            {recipe.notes ? (
+              <div className="bg-content2 mt-8 rounded-2xl p-5">
+                <h3 className="text-default-500 mb-2 text-sm font-semibold tracking-wide uppercase">
+                  {t("notes")}
+                </h3>
+                <p className="text-default-700 text-sm leading-relaxed whitespace-pre-line">
+                  {recipe.notes}
+                </p>
+              </div>
+            ) : null}
+          </section>
+        </div>
+
+        {/* Nutrition */}
+        {(recipe.calories || recipe.protein || recipe.carbs || recipe.fat) && (
+          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {recipe.calories ? (
+              <MetaPill label={t("calories")} value={`${recipe.calories}`} />
+            ) : null}
+            {recipe.protein ? (
+              <MetaPill label={t("protein")} value={`${recipe.protein} g`} />
+            ) : null}
+            {recipe.carbs ? <MetaPill label={t("carbs")} value={`${recipe.carbs} g`} /> : null}
+            {recipe.fat ? <MetaPill label={t("fat")} value={`${recipe.fat} g`} /> : null}
+          </div>
+        )}
+
+        {recipe.url ? (
+          <p className="text-default-500 mt-10 text-sm">
+            {t("source")}{" "}
+            <a
+              className="text-primary hover:underline"
+              href={recipe.url}
+              rel="noreferrer noopener nofollow"
+              target="_blank"
+            >
+              {recipe.url}
+            </a>
+          </p>
+        ) : null}
+
+        <div className="print:hidden">
+          <RelatedRecipes recipeId={recipeId} />
+        </div>
+
+        <div className="print:hidden">
+          <CommentsSection
+            recipeAuthorHandle={author?.handle ?? null}
+            recipeId={recipeId}
+            slug={slug}
+          />
+        </div>
       </div>
     </article>
   );
