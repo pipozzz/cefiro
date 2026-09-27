@@ -46,6 +46,10 @@ export function RecipePrintView({
 
   return (
     <div className="recipe-print-view hidden text-black print:block">
+      {/* Brand letterhead — the pot mark + wordmark at the top of the page. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img alt="Naša Kuchyňa" className="mb-3 h-8 w-auto" src="/logo.svg" />
+
       <header className="mb-4 border-b border-black/20 pb-3">
         <h1 className="text-2xl font-bold">
           <OriginFlag className="mr-1.5" originCountry={recipe.originCountry} />
