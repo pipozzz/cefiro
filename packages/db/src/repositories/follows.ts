@@ -82,7 +82,12 @@ export interface FeedRecipeRow {
   tags: string[];
 }
 
-const RECIPE_CARD_COLUMNS = {
+/**
+ * The public recipe-card projection, shared by every discovery surface AND the
+ * public cookbook view — one definition so a new card field (servings, tags, …)
+ * never lands on some surfaces and silently misses others.
+ */
+export const RECIPE_CARD_COLUMNS = {
   id: recipes.id,
   slug: recipes.slug,
   name: recipes.name,

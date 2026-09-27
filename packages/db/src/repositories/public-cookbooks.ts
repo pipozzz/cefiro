@@ -5,6 +5,7 @@ import { db } from "@norish/db/drizzle";
 
 import type { FeedRecipeRow } from "./follows";
 import { cookbookRecipes, cookbooks, recipeFavorites, recipes, userProfiles } from "../schema";
+import { RECIPE_CARD_COLUMNS } from "./follows";
 import { PRIMARY_IMAGE_SQL } from "./recipe-image-sql";
 
 // --- Slug ----------------------------------------------------------------
@@ -29,8 +30,10 @@ function randomSuffix(): string {
 async function generateUniqueSlug(title: string): Promise<string> {
   const base = slugifyBase(title);
 
-  for (let attempt = 0; attempt < 6; attempt++) {
-    const candidate = attempt === 0 ? base : `${base}-${randomSuffix()}`;
+  // Clean numeric suffix for duplicate titles (base, base-2, …); the DB unique
+  // index guards concurrent collisions, and a random suffix is the last resort.
+  for (let n = 1; n <= 50; n++) {
+    const candidate = n === 1 ? base : `${base}-${n}`;
     const [existing] = await db
       .select({ id: cookbooks.id })
       .from(cookbooks)
@@ -42,7 +45,7 @@ async function generateUniqueSlug(title: string): Promise<string> {
     }
   }
 
-  return `${base}-${randomSuffix()}-${randomSuffix()}`;
+  return `${base}-${randomSuffix()}`;
 }
 
 // --- Owner-side publishing -----------------------------------------------
@@ -137,20 +140,6 @@ export async function setCookbookDescription(
 }
 
 // --- Public reads --------------------------------------------------------
-
-const RECIPE_CARD_COLUMNS = {
-  id: recipes.id,
-  slug: recipes.slug,
-  name: recipes.name,
-  description: recipes.description,
-  image: PRIMARY_IMAGE_SQL,
-  dishColor: recipes.dishColor,
-  totalMinutes: recipes.totalMinutes,
-  publishedAt: recipes.publishedAt,
-  authorHandle: userProfiles.handle,
-  authorDisplayName: userProfiles.displayName,
-  authorAvatarUrl: userProfiles.avatarUrl,
-} as const;
 
 const favoriteCountSql = sql<number>`(
   SELECT count(*)::int FROM ${recipeFavorites}
