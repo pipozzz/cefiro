@@ -106,7 +106,10 @@ jobs:
           # code, the build stage re-runs regardless, so max's intermediate cache
           # saved ~1 min while its export cost many — min exports only the final
           # image layers, so the export is quick.
-          cache-to: type=gha,mode=min
+          # ignore-error: a GHA-cache backend hiccup while EXPORTING the cache
+          # (intermittent "BlobNotFound") must never fail an image that already
+          # built — the cache is an optimization, not a build input.
+          cache-to: type=gha,mode=min,ignore-error=true
 
   # Deployment is pull-based: the "nomploy" UI (nomploy.spertulo.sk) runs the
   # Cefiro service on Nomad and pulls ghcr.io/pipozzz/cefiro:latest. GitHub only
