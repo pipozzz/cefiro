@@ -163,8 +163,12 @@ function randomSuffix(): string {
 async function generateUniqueSlug(name: string): Promise<string> {
   const base = slugifyBase(name);
 
-  for (let attempt = 0; attempt < 6; attempt++) {
-    const candidate = attempt === 0 ? base : `${base}-${randomSuffix()}`;
+  // Two recipes can share a name, but `slug` is globally unique. Give the first
+  // the clean base and later ones a readable numeric suffix (base, base-2, …) so
+  // the public URL stays legible. The DB unique index is the real guard against a
+  // concurrent collision; a random suffix is only the last-resort fallback.
+  for (let n = 1; n <= 50; n++) {
+    const candidate = n === 1 ? base : `${base}-${n}`;
 
     const [existing] = await db
       .select({ id: recipes.id })
@@ -177,7 +181,7 @@ async function generateUniqueSlug(name: string): Promise<string> {
     }
   }
 
-  return `${base}-${randomSuffix()}-${randomSuffix()}`;
+  return `${base}-${randomSuffix()}`;
 }
 
 export interface SetVisibilityResult {
