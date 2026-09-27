@@ -8,6 +8,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
 import { createRecipeWithRefs } from "@norish/db/repositories/recipes";
 import { getRecipeNamesByIds, listThemes, replaceThemes } from "@norish/db/repositories/themes";
+import { setRecipeVisibility } from "@norish/db/repositories/user-profiles";
 
 import { createTestUser } from "../helpers/db-test-helpers";
 import { RepositoryTestBase } from "../helpers/repository-test-base";
@@ -105,6 +106,39 @@ describe("themes repository", () => {
 
     await replaceThemes([]);
     expect(await listThemes(10)).toEqual([]);
+  });
+
+  it("hides the snapshot image and slug once the representative recipe is not public", async () => {
+    const publicRep = await seedRecipe("Kapustnica");
+    const privateRep = await seedRecipe("Segedínsky guláš");
+
+    await setRecipeVisibility(userId, publicRep, "public");
+
+    await replaceThemes([
+      {
+        name: "Polievky",
+        recipeCount: 4,
+        centroid: centroid(1, 0),
+        representativeRecipeId: publicRep,
+        slug: "kapustnica",
+        image: "/recipes/kapustnica/hero.jpg",
+        rank: 0,
+      },
+      {
+        name: "Guláše",
+        recipeCount: 3,
+        centroid: centroid(0, 1),
+        representativeRecipeId: privateRep,
+        slug: "segedinsky-gulas",
+        image: "/recipes/segedinsky/hero.jpg",
+        rank: 1,
+      },
+    ]);
+
+    const [soups, goulashes] = await listThemes(10);
+
+    expect(soups).toMatchObject({ slug: "kapustnica", image: "/recipes/kapustnica/hero.jpg" });
+    expect(goulashes).toMatchObject({ name: "Guláše", slug: null, image: null });
   });
 
   it("looks up recipe names by id for cluster titles", async () => {
