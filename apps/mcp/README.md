@@ -18,6 +18,39 @@ and builds on its own and is not part of the app's CI build.
   cuisines are added by an administrator in the app, not here.
 - **`search_recipes`** — search recipes by text.
 - **`get_recipe`** — fetch one recipe by id.
+- **`update_recipe`** — edit an existing recipe; only the fields you pass change.
+  Covers name, description, servings, prep/cook minutes, categories, tags,
+  ingredients, steps, cuisine, and the provenance (`provenanceNote`,
+  `originCountry` as an ISO alpha-2 code, `originCountryName`, `originRegion`;
+  `null` clears a field). Provenance you set is kept: automatic AI enrichment only
+  fills empty provenance fields. Each step is either a string, which keeps the
+  images and ingredient links of the step at that position, or
+  `{ text, ingredients: [{ index, share? }] }`, which sets that step's
+  step↔ingredient links explicitly (`index` is the 0-based position in the
+  ingredient list, `share` the fraction of the line the step uses, default 1;
+  `[]` clears the links).
+- **`set_recipe_visibility`** — publish (public), share by link (unlisted), or
+  unpublish (private) a recipe.
+- **`delete_recipe`** — permanently delete a recipe.
+- **`create_cuisine`** — add a cuisine to the vocabulary (administrator key).
+- **`add_recipe_image`** — attach a gallery image from base64 bytes.
+
+Example — restore a recipe's step links and fix its provenance note:
+
+```json
+{
+  "id": "<recipe-id>",
+  "provenanceNote": "A Liptov shepherds' dish, cooked over an open fire.",
+  "steps": [
+    { "text": "Boil the potatoes.", "ingredients": [{ "index": 0 }] },
+    {
+      "text": "Fry the onion in half the butter.",
+      "ingredients": [{ "index": 1 }, { "index": 2, "share": 0.5 }]
+    },
+    "Serve hot."
+  ]
+}
+```
 
 ## Setup
 

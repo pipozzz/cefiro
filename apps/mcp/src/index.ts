@@ -267,12 +267,62 @@ interface CurrentStep {
   stepIngredients?: { ingredientOrder: number; share: number; order?: number }[];
 }
 
+/** An ingredient line as GET /recipes/{id} returns it. */
+interface CurrentLine {
+  id: string;
+  order?: number | string;
+  systemUsed?: string;
+}
+
+/**
+ * A step for update_recipe: plain text keeps the current step's links, the
+ * object form sets them explicitly (an empty list clears them).
+ */
+const STEP_INPUT = z.union([
+  z.string().min(1),
+  z.object({
+    text: z.string().min(1).describe("The step's text"),
+    ingredients: z
+      .array(
+        z.object({
+          index: z
+            .number()
+            .int()
+            .nonnegative()
+            .describe("0-based position of the ingredient line in the recipe's ingredient list"),
+          share: z
+            .number()
+            .positive()
+            .max(1)
+            .optional()
+            .describe("Fraction of that line used in this step (default 1 = all of it)"),
+        })
+      )
+      .optional()
+      .describe(
+        "Ingredient lines this step uses. When given, replaces the step's links ([] clears them); when omitted, the current links are kept."
+      ),
+  }),
+]);
+
+/** The metric ingredient lines in list order — the lines metric steps link to. */
+function metricLines(lines: CurrentLine[]): CurrentLine[] {
+  const metric = lines.some((line) => line.systemUsed !== undefined)
+    ? lines.filter((line) => line.systemUsed === "metric")
+    : lines;
+
+  return [...metric].sort((a, b) => Number(a.order ?? 0) - Number(b.order ?? 0));
+}
+
 server.registerTool(
   "update_recipe",
   {
     title: "Update recipe",
     description:
-      "Edit an existing recipe: fix text, times, categories, tags, ingredients or steps. Only the fields you pass change; tags, ingredients and steps, when passed, replace the whole list. Steps keep their images and ingredient links by position; changing the number of ingredient lines drops the links. Fetches the current version first.",
+      "Edit an existing recipe: fix text, times, categories, tags, ingredients, steps, the step↔ingredient links, or the provenance (origin country/region and provenance note). Only the fields you pass change; tags, ingredients and steps, when passed, replace the whole list. " +
+      "A step given as a plain string keeps the images and ingredient links of the step at the same position (links drop if the number of ingredient lines changes). " +
+      "To set links, give the step as { text, ingredients: [{ index, share? }] }: index is the 0-based position in the ingredient list (the list passed in this call, if you pass ingredients; otherwise the recipe's current list as get_recipe shows it), share is the fraction of that line the step uses (default 1). Explicit links replace that step's links; [] clears them. " +
+      "Provenance you set is kept: automatic AI enrichment only fills empty provenance fields. Fetches the current version first.",
     inputSchema: {
       id: z.string().describe("Recipe id (uuid)"),
       name: z.string().min(1).optional().describe("Recipe title"),
@@ -292,15 +342,40 @@ server.registerTool(
         .optional()
         .describe("Replaces all ingredient lines"),
       steps: z
-        .array(z.string().min(1))
+        .array(STEP_INPUT)
         .optional()
-        .describe("Replaces the method, one string per step"),
+        .describe(
+          "Replaces the method, one entry per step: a string, or { text, ingredients } to set that step's ingredient links"
+        ),
       tags: z.array(z.string().min(1)).optional().describe("Replaces all tags ([] clears them)"),
       cuisine: z
         .string()
         .nullable()
         .optional()
         .describe("Cuisine name (must already exist; see list_cuisines); null clears it"),
+      provenanceNote: z
+        .string()
+        .nullable()
+        .optional()
+        .describe("The provenance note (where the dish comes from, its story); null clears it"),
+      originCountry: z
+        .string()
+        .regex(/^[A-Za-z]{2}$/, "Use an ISO 3166-1 alpha-2 code, e.g. SK")
+        .nullable()
+        .optional()
+        .describe(
+          "Origin country as an ISO 3166-1 alpha-2 code (e.g. SK); null clears it. Setting it clears originCountryName unless you pass that too"
+        ),
+      originCountryName: z
+        .string()
+        .nullable()
+        .optional()
+        .describe("Written name of the origin country; only kept alongside a valid originCountry"),
+      originRegion: z
+        .string()
+        .nullable()
+        .optional()
+        .describe("Origin region within the country (e.g. Liptov); null clears it"),
     },
   },
   async ({ id, ...input }) => {
@@ -308,7 +383,7 @@ server.registerTool(
       version?: number;
       prepMinutes?: number | null;
       cookMinutes?: number | null;
-      recipeIngredients?: { id: string }[];
+      recipeIngredients?: CurrentLine[];
       steps?: CurrentStep[];
     };
 
@@ -330,6 +405,10 @@ server.registerTool(
     if (input.description !== undefined) data.description = input.description;
     if (input.servings !== undefined) data.servings = input.servings;
     if (input.categories !== undefined) data.categories = input.categories;
+    if (input.provenanceNote !== undefined) data.provenanceNote = input.provenanceNote;
+    if (input.originCountry !== undefined) data.originCountry = input.originCountry;
+    if (input.originCountryName !== undefined) data.originCountryName = input.originCountryName;
+    if (input.originRegion !== undefined) data.originRegion = input.originRegion;
 
     if (input.prepMinutes !== undefined || input.cookMinutes !== undefined) {
       const prep =
@@ -360,13 +439,43 @@ server.registerTool(
       // Editing a step's text keeps what hangs off it: the step at the same
       // position hands over its images and (while the lines keep their shape)
       // its Step Ingredient links.
-      data.steps = input.steps.map((step, order) => ({
-        step,
-        systemUsed: "metric" as const,
-        order,
-        images: currentSteps[order]?.images ?? [],
-        stepIngredients: linesKeepShape ? (currentSteps[order]?.stepIngredients ?? []) : [],
-      }));
+      // Explicit links name a line by its position in the list; the server
+      // resolves a link by the line's stored `order`, so translate position →
+      // order against the lines as this save will leave them.
+      const lineOrders =
+        input.ingredients !== undefined
+          ? input.ingredients.map((_, order) => order)
+          : metricLines(currentLines).map((line, position) => Number(line.order ?? position));
+
+      data.steps = input.steps.map((entry, order) => {
+        const text = typeof entry === "string" ? entry : entry.text;
+        const explicit = typeof entry === "string" ? undefined : entry.ingredients;
+
+        const stepIngredients =
+          explicit !== undefined
+            ? explicit.map((link, linkOrder) => {
+                const ingredientOrder = lineOrders[link.index];
+
+                if (ingredientOrder === undefined) {
+                  throw new Error(
+                    `Step ${order + 1} links ingredient index ${link.index}, but the recipe has ${lineOrders.length} ingredient line(s) (valid indexes: 0–${lineOrders.length - 1}).`
+                  );
+                }
+
+                return { ingredientOrder, share: link.share ?? 1, order: linkOrder };
+              })
+            : linesKeepShape
+              ? (currentSteps[order]?.stepIngredients ?? [])
+              : [];
+
+        return {
+          step: text,
+          systemUsed: "metric" as const,
+          order,
+          images: currentSteps[order]?.images ?? [],
+          stepIngredients,
+        };
+      });
     }
 
     if (input.tags !== undefined) data.tags = input.tags.map((name) => ({ name }));
