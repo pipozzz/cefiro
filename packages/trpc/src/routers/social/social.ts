@@ -28,6 +28,7 @@ import {
   listDiscoverRecipes,
   listDiscoverThemes,
   listFeedRecipes,
+  listForYouRecipes,
   listRelatedPublicRecipes,
   listTrendingTopics,
   searchPublicRecipes,
@@ -534,6 +535,23 @@ const getFollowStatus = publicProcedure
 
 const feed = authedProcedure.input(FeedInputSchema).query(async ({ ctx, input }) => {
   const { items, nextCursor } = await listFeedRecipes(ctx.user.id, input.limit, input.cursor);
+
+  return { recipes: await toFeedCardsWithRatings(items), nextCursor };
+});
+
+// The personalised default for signed-in readers: a blended feed of recipes
+// from the cooks they follow plus the best of the wider community, always
+// filtered by their own dietary profile (allergens resolved server-side from the
+// session, never sent by the client).
+const forYou = authedProcedure.input(FeedInputSchema).query(async ({ ctx, input }) => {
+  const { allergies } = await getUserAllergies(ctx.user.id);
+
+  const { items, nextCursor } = await listForYouRecipes({
+    userId: ctx.user.id,
+    excludeAllergenTags: allergies,
+    limit: input.limit,
+    cursor: input.cursor,
+  });
 
   return { recipes: await toFeedCardsWithRatings(items), nextCursor };
 });
@@ -1402,6 +1420,7 @@ export const socialProcedures = router({
   unfollow,
   getFollowStatus,
   feed,
+  forYou,
   discover,
   search,
   searchByIngredients,
