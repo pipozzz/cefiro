@@ -272,3 +272,40 @@
     --default: oklch(from var(--untinted-default) l calc(var(--dish-c, 0) * 0.5) var(--dish-h, 0));
   }
 }
+
+/* --- Print: show only the cookbook recipe view -----------------------------
+   The recipe page renders a dedicated `.recipe-print-view` (hidden on screen).
+   When printing, hide everything else and reveal just that compact black-on-
+   white layout, with real page margins and colour-accurate photos. */
+@media print {
+  @page {
+    margin: 14mm;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+  }
+
+  /* Hide the whole app, then reveal only the cookbook view. The interactive
+     recipe view is also `print:hidden` (display:none) so it collapses rather
+     than leaving blank space. */
+  body * {
+    visibility: hidden;
+  }
+
+  .recipe-print-view,
+  .recipe-print-view * {
+    visibility: visible !important;
+  }
+
+  .recipe-print-view {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .recipe-print-view img {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
