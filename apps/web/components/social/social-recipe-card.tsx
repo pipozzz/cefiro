@@ -91,6 +91,25 @@ export function SocialRecipeCard({ recipe }: { recipe: SocialRecipeCardData }) {
           <OriginFlag className="mr-1.5" originCountry={recipe.originCountry} />
           {recipe.name}
         </h3>
+        {recipe.author ? (
+          <span className="text-default-500 mt-0.5 flex items-center gap-1 text-xs">
+            {recipe.author.avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                alt=""
+                className="h-4 w-4 shrink-0 rounded-full object-cover"
+                src={recipe.author.avatarUrl}
+              />
+            ) : (
+              <span className="bg-primary text-primary-foreground flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[9px] font-semibold">
+                {(recipe.author.displayName ?? recipe.author.handle).charAt(0).toUpperCase()}
+              </span>
+            )}
+            <span className="truncate">
+              {recipe.author.displayName ?? `@${recipe.author.handle}`}
+            </span>
+          </span>
+        ) : null}
         {recipe.description ? (
           <p
             className="text-muted mt-1 text-sm"
@@ -111,7 +130,7 @@ export function SocialRecipeCard({ recipe }: { recipe: SocialRecipeCardData }) {
 
 export function SocialRecipeGrid({ recipes }: { recipes: SocialRecipeCardData[] }) {
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {recipes.map((recipe) => (
         <SocialRecipeCard key={recipe.slug} recipe={recipe} />
       ))}
