@@ -212,6 +212,12 @@ job "cefiro" {
         {{ if .smtp_user }}SMTP_USER={{ .smtp_user }}{{ end }}
         {{ if .smtp_password }}SMTP_PASSWORD={{ .smtp_password }}{{ end }}
         {{ if .email_from }}EMAIL_FROM={{ .email_from }}{{ end }}
+        {{/* Voyage AI embeddings for semantic discovery (Phase B). Optional —
+             unset means embeddings/themes are skipped. Must be set for BOTH the
+             web and worker tasks: the admin button (web) enqueues the jobs, but
+             the worker task is what calls Voyage, so a key on web alone yields
+             zero vectors. */}}
+        {{ if .voyage_api_key }}VOYAGE_API_KEY={{ .voyage_api_key }}{{ end }}
         {{/* OpenTelemetry → SigNoz. Set otel_endpoint (and otel_headers with the
              SigNoz access token) in the Nomad Variable to turn tracing on;
              leaving them unset keeps it off with zero overhead. e.g.
@@ -277,6 +283,10 @@ job "cefiro" {
         {{ if .smtp_user }}SMTP_USER={{ .smtp_user }}{{ end }}
         {{ if .smtp_password }}SMTP_PASSWORD={{ .smtp_password }}{{ end }}
         {{ if .email_from }}EMAIL_FROM={{ .email_from }}{{ end }}
+        {{/* The worker runs the embedding + theme-clustering jobs, so it needs
+             the Voyage key just as much as web — without it every embedding job
+             fails and discovery has zero vectors. */}}
+        {{ if .voyage_api_key }}VOYAGE_API_KEY={{ .voyage_api_key }}{{ end }}
         {{ if .otel_endpoint }}OTEL_EXPORTER_OTLP_ENDPOINT={{ .otel_endpoint }}{{ end }}
         {{ if .otel_headers }}OTEL_EXPORTER_OTLP_HEADERS={{ .otel_headers }}{{ end }}
         {{ if .otel_endpoint }}OTEL_SERVICE_NAME=cefiro-worker{{ end }}
