@@ -139,13 +139,15 @@ export async function rebuildDiscoverThemes(): Promise<ThemeRebuildResult> {
   return { recipes: items.length, themes: rows.length };
 }
 
-/** A short visual brief for a theme tile, appended to the image-style prompt. */
+/**
+ * The theme subject appended to the theme-style prompt. The prompt owns the
+ * style (a creative flat-lay collage, not a plated dish); this only names the
+ * theme and the ingredients/dishes that characterise it.
+ */
 function themeVisualBrief(name: string, topTags: string[]): string {
   const tags = topTags.slice(0, 5).filter(Boolean).join(", ");
 
-  return tags
-    ? `A vibrant, appetising food-photography scene representing the theme "${name}" — dishes and ingredients such as ${tags}. No text, no logos.`
-    : `A vibrant, appetising food-photography scene representing the theme "${name}". No text, no logos.`;
+  return tags ? `"${name}" — featuring ${tags}.` : `"${name}".`;
 }
 
 /**
@@ -172,7 +174,7 @@ async function generateThemeImageUrl(name: string, topTags: string[]): Promise<s
     }
 
     const image = await generateImage({
-      prompt: "image-generation-style",
+      prompt: "image-generation-theme-style",
       sections: [themeVisualBrief(name, topTags)],
     });
 

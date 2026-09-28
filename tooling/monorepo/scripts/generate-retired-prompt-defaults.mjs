@@ -34,6 +34,7 @@ const PROMPT_FILES = {
   "ingredient-linking": "ingredientLinking",
   "image-generation-brief": "imageGenerationBrief",
   "image-generation-style": "imageGenerationStyle",
+  "image-generation-theme-style": "imageGenerationThemeStyle",
 };
 
 function git(...args) {
