@@ -503,24 +503,42 @@ function escapeLike(value: string): string {
 }
 
 /**
- * Full-text-ish search over PUBLIC recipes by name/description, ranked by
- * favourite count then recency. Case-insensitive substring match; not
- * cursor-paginated (top-N results).
+ * Full-text search over PUBLIC recipes by name/description, ranked by relevance
+ * then favourites then recency. Postgres FTS on the `simple` config with
+ * `f_unaccent` on both sides, so it is diacritics-insensitive (a search for
+ * "strudla" finds "štrúdľa") — important for Slovak. Each word becomes a prefix
+ * term (`:*`) so it matches as the reader types ("kur" finds "kuracie"). Backed
+ * by the `idx_recipes_fts` GIN index (migration 0070). Top-N, not paginated.
  */
 export async function searchPublicRecipes(q: string, limit: number): Promise<FeedRecipeRow[]> {
-  const pattern = `%${escapeLike(q.trim())}%`;
+  const trimmed = q.trim();
+
+  if (!trimmed) {
+    return [];
+  }
+
+  // Build a prefix AND-query from the sanitized words. Words are lowercased,
+  // unaccented and stripped to [a-z0-9] so arbitrary input can never form an
+  // invalid tsquery; when nothing survives, the query is NULL and matches
+  // nothing (an honest empty result).
+  const tsquery = sql`to_tsquery('simple', (
+    SELECT string_agg(w || ':*', ' & ')
+    FROM (
+      SELECT regexp_replace(f_unaccent(lower(word)), '[^a-z0-9]', '', 'g') AS w
+      FROM unnest(regexp_split_to_array(${trimmed}, '[[:space:]]+')) AS word
+    ) t
+    WHERE w <> ''
+  ))`;
+  // Must match the index expression in migration 0070 exactly to use the index.
+  const document = sql`to_tsvector('simple', f_unaccent(coalesce(${recipes.name}, '') || ' ' || coalesce(${recipes.description}, '')))`;
+  const rank = sql<number>`ts_rank(${document}, ${tsquery})`;
 
   return db
     .select({ ...RECIPE_CARD_COLUMNS, favoriteCount: favoriteCountSql })
     .from(recipes)
     .leftJoin(userProfiles, eq(userProfiles.userId, recipes.userId))
-    .where(
-      and(
-        eq(recipes.visibility, "public"),
-        sql`(${recipes.name} ILIKE ${pattern} OR ${recipes.description} ILIKE ${pattern})`
-      )
-    )
-    .orderBy(desc(favoriteCountSql), desc(recipes.publishedAt))
+    .where(and(eq(recipes.visibility, "public"), sql`${document} @@ ${tsquery}`))
+    .orderBy(desc(rank), desc(favoriteCountSql), desc(recipes.publishedAt))
     .limit(limit);
 }
 
