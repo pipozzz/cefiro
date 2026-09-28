@@ -95,6 +95,7 @@ import {
   upsertProfile,
 } from "@norish/db/repositories/user-profiles";
 import { scheduleRecipeEmbedding } from "@norish/queue";
+import { embedText, isEmbeddingConfigured } from "@norish/shared-server/ai/embeddings/voyage";
 import {
   getTimerKeywords,
   getUnits,
@@ -609,8 +610,38 @@ const search = publicProcedure.input(SearchInputSchema).query(async ({ input }) 
     searchPublicProfiles(input.q, input.limit),
   ]);
 
+  let recipes = recipeRows;
+
+  // Hybrid search: full-text is exact and free, but it misses synonyms and
+  // natural-language queries ("something quick with chicken"). When it comes back
+  // short, embed the query and top the results up with the nearest public recipes
+  // by meaning. Bounded to a sparse result set, so the common case never pays the
+  // embedding round-trip, and wrapped so a Voyage hiccup degrades to the
+  // full-text results rather than failing the search.
+  if (isEmbeddingConfigured() && recipeRows.length < input.limit) {
+    try {
+      const seen = new Set(recipeRows.map((row) => row.id));
+      const vector = await embedText(input.q, "query");
+      const neighbors = await findSimilarPublicRecipes(vector, input.limit);
+      const extraIds = neighbors.map((neighbor) => neighbor.recipeId).filter((id) => !seen.has(id));
+
+      if (extraIds.length > 0) {
+        const extras = await getPublicRecipesByIds(extraIds);
+        // getPublicRecipesByIds returns storage order; restore similarity order.
+        const byId = new Map(extras.map((row) => [row.id, row]));
+        const ordered = extraIds
+          .map((id) => byId.get(id))
+          .filter((row): row is (typeof extras)[number] => row !== undefined);
+
+        recipes = [...recipeRows, ...ordered].slice(0, input.limit);
+      }
+    } catch (error) {
+      log.warn({ error }, "Semantic search fallback failed; using full-text results");
+    }
+  }
+
   return {
-    recipes: await toFeedCardsWithRatings(recipeRows),
+    recipes: await toFeedCardsWithRatings(recipes),
     profiles: profileRows.map(toProfileCard),
   };
 });
