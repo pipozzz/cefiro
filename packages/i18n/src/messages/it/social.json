@@ -56,7 +56,9 @@
     "themeBack": "Torna alla scoperta",
     "modeFollowing": "Following",
     "emptyColdStart": "New recipes will appear here as the community shares them — check back soon.",
-    "emptyFiltered": "No recipes match these filters. Try clearing a filter or searching instead."
+    "emptyFiltered": "No recipes match these filters. Try clearing a filter or searching instead.",
+    "browseByCuisine": "Sfoglia per cucina",
+    "browseByCategory": "Sfoglia per categoria"
   },
   "categories": {
     "Breakfast": "Breakfast",
