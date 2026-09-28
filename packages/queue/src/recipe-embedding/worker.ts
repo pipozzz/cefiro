@@ -35,8 +35,14 @@ export async function processRecipeEmbedding(job: Job<RecipeEmbeddingJobData>): 
 
   // Without a Voyage key there is nothing to compute. Leave any existing
   // embedding in place — the key may simply be temporarily unset — and skip.
+  // Logged at WARN, not DEBUG: when an admin has just run the backfill, a whole
+  // queue silently skipping (because VOYAGE_API_KEY is absent from the worker
+  // process's env) is a misconfiguration worth surfacing, not routine noise.
   if (!isEmbeddingConfigured()) {
-    log.debug({ recipeId }, "Embeddings not configured; skipping");
+    log.warn(
+      { recipeId },
+      "Embeddings not configured (VOYAGE_API_KEY missing in the worker process); skipping"
+    );
 
     return;
   }
