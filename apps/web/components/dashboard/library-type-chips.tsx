@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { useRecipesFiltersContext } from "@/context/recipes-filters-context";
+import { HeartIcon } from "@heroicons/react/16/solid";
 import { Chip } from "@heroui/react";
 import { useTranslations } from "next-intl";
 
@@ -27,38 +28,63 @@ export default function LibraryTypeChips() {
   const { filters, setFilters } = useRecipesFiltersContext();
   const [, startTransition] = useTransition();
 
-  return (
-    <div
-      aria-label={t("libraryType.label")}
-      className="scrollbar-hide flex gap-2 overflow-x-auto px-1 pb-1"
-      role="group"
-    >
-      {LIBRARY_TYPE_FILTERS.map((type) => {
-        const isSelected = filters.libraryType === type;
+  const favoritesOn = filters.showFavoritesOnly;
 
-        return (
-          <Chip
-            key={type}
-            aria-pressed={isSelected}
-            as="button"
-            className={`chip--on-ground h-9 shrink-0 cursor-pointer rounded-full border px-4 transition-colors select-none ${
-              isSelected
-                ? "border-accent shadow-surface"
-                : "border-border text-muted hover:border-accent hover:text-foreground"
-            }`}
-            color={isSelected ? "accent" : "default"}
-            data-library-type={type}
-            size="lg"
-            type="button"
-            // Switching the lens re-queries and re-sorts the whole Library.
-            // That is not work the tap should wait on.
-            variant={isSelected ? "primary" : "secondary"}
-            onClick={() => startTransition(() => setFilters({ libraryType: type }))}
-          >
-            {t(`libraryType.${type}`)}
-          </Chip>
-        );
-      })}
+  return (
+    <div className="scrollbar-hide flex items-center gap-2 overflow-x-auto px-1 pb-1">
+      {/* The mutually-exclusive lens: All / Recipes / Cookbooks. */}
+      <div aria-label={t("libraryType.label")} className="flex gap-2" role="group">
+        {LIBRARY_TYPE_FILTERS.map((type) => {
+          const isSelected = filters.libraryType === type;
+
+          return (
+            <Chip
+              key={type}
+              aria-pressed={isSelected}
+              as="button"
+              className={`chip--on-ground h-9 shrink-0 cursor-pointer rounded-full border px-4 transition-colors select-none ${
+                isSelected
+                  ? "border-accent shadow-surface"
+                  : "border-border text-muted hover:border-accent hover:text-foreground"
+              }`}
+              color={isSelected ? "accent" : "default"}
+              data-library-type={type}
+              size="lg"
+              type="button"
+              // Switching the lens re-queries and re-sorts the whole Library.
+              // That is not work the tap should wait on.
+              variant={isSelected ? "primary" : "secondary"}
+              onClick={() => startTransition(() => setFilters({ libraryType: type }))}
+            >
+              {t(`libraryType.${type}`)}
+            </Chip>
+          );
+        })}
+      </div>
+
+      {/* Favourites — a quick toggle, not a lens: it narrows whichever type is
+          lit to the items the reader has hearted, so it sits apart from the
+          exclusive group above. */}
+      <Chip
+        aria-pressed={favoritesOn}
+        as="button"
+        className={`chip--on-ground h-9 shrink-0 cursor-pointer gap-1 rounded-full border px-4 transition-colors select-none ${
+          favoritesOn
+            ? "border-accent shadow-surface"
+            : "border-border text-muted hover:border-accent hover:text-foreground"
+        }`}
+        color={favoritesOn ? "accent" : "default"}
+        data-favorites-only={favoritesOn}
+        size="lg"
+        type="button"
+        variant={favoritesOn ? "primary" : "secondary"}
+        onClick={() =>
+          startTransition(() => setFilters({ showFavoritesOnly: !filters.showFavoritesOnly }))
+        }
+      >
+        <HeartIcon className={`size-4 ${favoritesOn ? "" : "text-danger"}`} />
+        {t("libraryType.favorites")}
+      </Chip>
     </div>
   );
 }

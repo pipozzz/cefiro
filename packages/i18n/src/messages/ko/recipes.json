@@ -26,7 +26,8 @@
       "label": "표시",
       "all": "전체",
       "recipes": "레시피",
-      "cookbooks": "요리책"
+      "cookbooks": "요리책",
+      "favorites": "즐겨찾기"
     },
     "clearSearch": "Clear search"
   },
