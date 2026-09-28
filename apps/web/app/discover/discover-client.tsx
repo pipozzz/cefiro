@@ -12,13 +12,14 @@ import { SuggestedCooks } from "@/components/social/suggested-cooks";
 import { useRecipesContext } from "@/context/recipes-context";
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/16/solid";
 import { SparklesIcon } from "@heroicons/react/24/outline";
-import { Button, Input, Spinner } from "@heroui/react";
+import { Input, Spinner } from "@heroui/react";
 import { keepPreviousData, useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import { DietaryFilterToggle } from "./dietary-filter-toggle";
 import { DiscoverThemes } from "./discover-themes";
 import { IngredientDiscovery } from "./ingredient-discovery";
+import { LoadMoreSentinel } from "./load-more-sentinel";
 import { RecipeOfTheDay } from "./recipe-of-the-day";
 import { SurpriseDiscovery } from "./surprise-discovery";
 
@@ -352,17 +353,11 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
             ) : (
               <>
                 <SocialRecipeGrid recipes={forYouRecipes} />
-                {forYou.hasNextPage ? (
-                  <div className="mt-8 flex justify-center">
-                    <Button
-                      isPending={forYou.isFetchingNextPage}
-                      variant="tertiary"
-                      onPress={() => forYou.fetchNextPage()}
-                    >
-                      {t("loadMore")}
-                    </Button>
-                  </div>
-                ) : null}
+                <LoadMoreSentinel
+                  hasNextPage={forYou.hasNextPage}
+                  isFetchingNextPage={forYou.isFetchingNextPage}
+                  onLoadMore={() => forYou.fetchNextPage()}
+                />
                 <div className="mt-12">
                   <SuggestedCooks limit={6} />
                 </div>
@@ -394,17 +389,11 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
             ) : (
               <>
                 <SocialRecipeGrid recipes={followingRecipes} />
-                {following.hasNextPage ? (
-                  <div className="mt-8 flex justify-center">
-                    <Button
-                      isPending={following.isFetchingNextPage}
-                      variant="tertiary"
-                      onPress={() => following.fetchNextPage()}
-                    >
-                      {t("loadMore")}
-                    </Button>
-                  </div>
-                ) : null}
+                <LoadMoreSentinel
+                  hasNextPage={following.hasNextPage}
+                  isFetchingNextPage={following.isFetchingNextPage}
+                  onLoadMore={() => following.fetchNextPage()}
+                />
               </>
             )
           ) : mode === "byIngredient" ? (
@@ -423,17 +412,11 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
             ) : (
               <>
                 <SocialCookbookGrid cookbooks={cookbookList} />
-                {cookbooks.hasNextPage ? (
-                  <div className="mt-8 flex justify-center">
-                    <Button
-                      isPending={cookbooks.isFetchingNextPage}
-                      variant="tertiary"
-                      onPress={() => cookbooks.fetchNextPage()}
-                    >
-                      {t("loadMore")}
-                    </Button>
-                  </div>
-                ) : null}
+                <LoadMoreSentinel
+                  hasNextPage={cookbooks.hasNextPage}
+                  isFetchingNextPage={cookbooks.isFetchingNextPage}
+                  onLoadMore={() => cookbooks.fetchNextPage()}
+                />
               </>
             )
           ) : mode === "cooks" ? (
@@ -448,17 +431,11 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
             ) : (
               <>
                 <CookGrid cooks={cookList} />
-                {cooks.hasNextPage ? (
-                  <div className="mt-8 flex justify-center">
-                    <Button
-                      isPending={cooks.isFetchingNextPage}
-                      variant="tertiary"
-                      onPress={() => cooks.fetchNextPage()}
-                    >
-                      {t("loadMore")}
-                    </Button>
-                  </div>
-                ) : null}
+                <LoadMoreSentinel
+                  hasNextPage={cooks.hasNextPage}
+                  isFetchingNextPage={cooks.isFetchingNextPage}
+                  onLoadMore={() => cooks.fetchNextPage()}
+                />
               </>
             )
           ) : theme ? (
@@ -564,17 +541,11 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
                 <>
                   <SocialRecipeGrid recipes={recipes} />
 
-                  {browse.hasNextPage ? (
-                    <div className="mt-8 flex justify-center">
-                      <Button
-                        isPending={browse.isFetchingNextPage}
-                        variant="tertiary"
-                        onPress={() => browse.fetchNextPage()}
-                      >
-                        {t("loadMore")}
-                      </Button>
-                    </div>
-                  ) : null}
+                  <LoadMoreSentinel
+                    hasNextPage={browse.hasNextPage}
+                    isFetchingNextPage={browse.isFetchingNextPage}
+                    onLoadMore={() => browse.fetchNextPage()}
+                  />
                 </>
               )}
 
