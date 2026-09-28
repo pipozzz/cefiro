@@ -1,8 +1,8 @@
-import { eq, sql } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 
 import { db } from "@norish/db/drizzle";
 
-import { recipeEmbeddings, recipes } from "../schema";
+import { recipeEmbeddings, recipeFavorites, recipes } from "../schema";
 
 /** pgvector literal for a JS number array, e.g. [1,2,3] → "[1,2,3]". */
 function toVectorLiteral(embedding: number[]): string {
@@ -78,6 +78,45 @@ export async function findSimilarPublicRecipes(
     recipeId: row.recipeId,
     distance: Number(row.distance),
   }));
+}
+
+/**
+ * A reader's "taste vector": the mean embedding of the recipes they have
+ * favourited. A For-You feed ranks recipes by nearness to this vector — closest
+ * in meaning to what they already love. Returns null when they have favourited
+ * nothing that carries an embedding, so the caller can fall back to a
+ * non-personalised ordering. Bounded to a recent window so one prolific
+ * favouriter never loads thousands of vectors.
+ */
+export async function getUserTasteVector(userId: string, sample = 200): Promise<number[] | null> {
+  const rows = await db
+    .select({ embedding: recipeEmbeddings.embedding })
+    .from(recipeEmbeddings)
+    .innerJoin(recipeFavorites, eq(recipeFavorites.recipeId, recipeEmbeddings.recipeId))
+    .where(eq(recipeFavorites.userId, userId))
+    .orderBy(desc(recipeFavorites.createdAt))
+    .limit(sample);
+
+  const first = rows[0];
+
+  if (!first) {
+    return null;
+  }
+
+  const dims = first.embedding.length;
+  const mean = new Array<number>(dims).fill(0);
+
+  for (const { embedding } of rows) {
+    for (let i = 0; i < dims; i += 1) {
+      mean[i] = (mean[i] ?? 0) + (embedding[i] ?? 0);
+    }
+  }
+
+  for (let i = 0; i < dims; i += 1) {
+    mean[i] = (mean[i] ?? 0) / rows.length;
+  }
+
+  return mean;
 }
 
 /**

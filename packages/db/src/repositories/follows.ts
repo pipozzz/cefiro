@@ -7,6 +7,7 @@ import {
   follows,
   ingredients,
   recipeCuisines,
+  recipeEmbeddings,
   recipeFavorites,
   recipeIngredients,
   recipes,
@@ -211,6 +212,77 @@ export async function listForYouRecipes(params: {
     .leftJoin(userProfiles, eq(userProfiles.userId, recipes.userId))
     .where(and(...conditions))
     .orderBy(desc(isFollowedSql), desc(favoriteCountSql), desc(recipes.publishedAt))
+    .limit(limit + 1)
+    .offset(offset);
+
+  const hasMore = rows.length > limit;
+  const items = hasMore ? rows.slice(0, limit) : rows;
+  const nextCursor = hasMore ? String(offset + limit) : null;
+
+  return { items, nextCursor };
+}
+
+/**
+ * The taste-personalised "For you" feed: the same feed as `listForYouRecipes`,
+ * but ordered by how close each recipe is (in embedding space) to the reader's
+ * taste vector — the mean of what they have favourited. Recipes from cooks they
+ * follow still come first; within each block the nearest-in-meaning recipes lead,
+ * then favourites, then recency.
+ *
+ * A LEFT JOIN keeps recipes that carry no embedding yet (they sort last, after
+ * everything with a distance), so a partly-backfilled catalogue never hides
+ * content. Offset-paginated on a deterministic ordering. The caller falls back
+ * to `listForYouRecipes` when the reader has no taste vector (no favourites).
+ */
+export async function listForYouByTaste(params: {
+  userId: string;
+  tasteVector: number[];
+  excludeAllergenTags?: string[];
+  limit: number;
+  cursor?: string;
+}): Promise<{ items: FeedRecipeRow[]; nextCursor: string | null }> {
+  const { userId, tasteVector, excludeAllergenTags, limit } = params;
+  const offset = params.cursor ? Number.parseInt(params.cursor, 10) || 0 : 0;
+  const vec = `[${tasteVector.join(",")}]`;
+
+  const isFollowedSql = sql<boolean>`EXISTS (
+    SELECT 1 FROM ${follows}
+    WHERE ${follows.followerId} = ${userId}
+    AND ${follows.followeeId} = ${recipes.userId}
+  )`;
+  // Cosine distance to the taste vector; NULL for a recipe with no embedding.
+  const distanceSql = sql<number | null>`(${recipeEmbeddings.embedding} <=> ${vec}::vector)`;
+
+  const conditions = [eq(recipes.visibility, "public")];
+
+  const allergens = (excludeAllergenTags ?? [])
+    .map((name) => name.trim().toLowerCase())
+    .filter(Boolean);
+
+  if (allergens.length > 0) {
+    conditions.push(sql`NOT EXISTS (
+      SELECT 1 FROM ${recipeTags} rt
+      JOIN ${tags} tg ON tg.id = rt.tag_id
+      WHERE rt.recipe_id = ${recipes.id}
+      AND lower(tg.name) IN (${sql.join(
+        allergens.map((name) => sql`${name}`),
+        sql`, `
+      )})
+    )`);
+  }
+
+  const rows = await db
+    .select({ ...RECIPE_CARD_COLUMNS, favoriteCount: favoriteCountSql })
+    .from(recipes)
+    .leftJoin(userProfiles, eq(userProfiles.userId, recipes.userId))
+    .leftJoin(recipeEmbeddings, eq(recipeEmbeddings.recipeId, recipes.id))
+    .where(and(...conditions))
+    .orderBy(
+      desc(isFollowedSql),
+      sql`${distanceSql} ASC NULLS LAST`,
+      desc(favoriteCountSql),
+      desc(recipes.publishedAt)
+    )
     .limit(limit + 1)
     .offset(offset);
 
