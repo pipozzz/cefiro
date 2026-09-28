@@ -56,7 +56,9 @@
     "themeBack": "Späť na objavovanie",
     "modeFollowing": "Sledované",
     "emptyColdStart": "Nové recepty sa tu objavia, keď ich komunita zverejní — vráť sa čoskoro.",
-    "emptyFiltered": "Týmto filtrom nezodpovedá žiadny recept. Skús zrušiť filter alebo vyhľadávať."
+    "emptyFiltered": "Týmto filtrom nezodpovedá žiadny recept. Skús zrušiť filter alebo vyhľadávať.",
+    "browseByCuisine": "Prehľadávať podľa kuchyne",
+    "browseByCategory": "Prehľadávať podľa kategórie"
   },
   "categories": {
     "Breakfast": "Raňajky",

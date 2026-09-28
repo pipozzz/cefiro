@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { auth } from "@norish/auth/auth";
 
 import { DiscoverClient } from "./discover-client";
+import { DiscoverHubLinks } from "./hub-links";
 
 // Server wrapper: discovery is public, but a signed-in reader gets a unified
 // search that also covers their own library. `isAuthed` decides whether the
@@ -11,5 +12,11 @@ import { DiscoverClient } from "./discover-client";
 export default async function DiscoverPage() {
   const session = await auth.api.getSession({ headers: await headers() });
 
-  return <DiscoverClient isAuthed={!!session?.user} />;
+  return (
+    <>
+      <DiscoverClient isAuthed={!!session?.user} />
+      {/* Crawlable links to the SSR cuisine/category hubs — see hub-links.tsx. */}
+      <DiscoverHubLinks />
+    </>
+  );
 }
