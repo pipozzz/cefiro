@@ -1,4 +1,4 @@
-import { and, desc, eq, inArray, isNotNull, lt, lte, ne, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, isNotNull, lt, lte, sql } from "drizzle-orm";
 
 import { db } from "@norish/db/drizzle";
 
@@ -159,10 +159,13 @@ export async function listFeedRecipes(
 /**
  * The personalised "For you" feed: every public recipe, ranked so the cooks the
  * reader follows come first (their most-loved, newest), then the best of the
- * wider community. Recipes tagged with the reader's own allergens are dropped,
- * and the reader's own recipes are excluded (those live in their Library, not in
- * discovery). Offset-paginated on a deterministic ordering, so it never feels
- * empty on a young platform: with no follows it degrades gracefully to the
+ * wider community. Recipes tagged with the reader's own allergens are dropped.
+ *
+ * It deliberately does NOT exclude the reader's own public recipes: on a young
+ * platform the reader may be the author of most public content, and excluding
+ * their recipes would leave the feed empty — the opposite of the goal. Their
+ * public recipes are community content like any other here. Offset-paginated on
+ * a deterministic ordering, so with no follows it degrades gracefully to the
  * community's newest, dietary-filtered recipes.
  */
 export async function listForYouRecipes(params: {
@@ -182,7 +185,7 @@ export async function listForYouRecipes(params: {
     AND ${follows.followeeId} = ${recipes.userId}
   )`;
 
-  const conditions = [eq(recipes.visibility, "public"), ne(recipes.userId, userId)];
+  const conditions = [eq(recipes.visibility, "public")];
 
   // Dietary-aware: drop recipes tagged with any of the reader's allergen tags
   // (case-insensitive name match, mirroring listDiscoverRecipes).
