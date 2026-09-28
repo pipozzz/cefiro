@@ -60,7 +60,7 @@ export {
   findActiveEnrichmentJobId,
 } from "./enrichment/identity";
 export { addCaldavSyncJob } from "./caldav-sync/producer";
-export { initializeScheduledJobs } from "./scheduled-tasks/producer";
+export { enqueueThemeRebuild, initializeScheduledJobs } from "./scheduled-tasks/producer";
 export { addStoreMatchJob, addStoreRefreshJob } from "./store-lookup/producer";
 export { addRecipeEmbeddingJob, scheduleRecipeEmbedding } from "./recipe-embedding/producer";
 export { enrollEmbeddingForAllPublicRecipes } from "./recipe-embedding/backfill";

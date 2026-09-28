@@ -10,6 +10,7 @@ import type { Queue } from "bullmq";
 import { createLogger } from "@norish/shared-server/logger";
 
 import type { ScheduledTaskJobData, ScheduledTaskType } from "./queue";
+import { getQueues } from "../registry";
 import { SCHEDULED_TASKS } from "./queue";
 
 const log = createLogger("queue:scheduled-tasks");
@@ -86,4 +87,24 @@ export async function initializeScheduledJobs(queue: Queue<ScheduledTaskJobData>
   }
 
   log.info("Repeatable scheduled jobs initialized");
+}
+
+/**
+ * Enqueue a one-off discovery-theme rebuild to run on the worker, instead of
+ * clustering + naming + tile-image generation inline in the admin request (which
+ * can take a long time and time the request out). Deduped within a short window
+ * so a double-click doesn't stack rebuilds; the jobId is distinct from the
+ * repeatable "theme-clustering" schedule so it never collides with it.
+ */
+export async function enqueueThemeRebuild(): Promise<void> {
+  const queue = getQueues().scheduledTasks;
+  const windowKey = Math.floor(Date.now() / 60_000);
+
+  await queue.add(
+    "theme-clustering",
+    { taskType: "theme-clustering" },
+    { jobId: `theme-clustering-manual-${windowKey}` }
+  );
+
+  log.info("Discover theme rebuild enqueued");
 }

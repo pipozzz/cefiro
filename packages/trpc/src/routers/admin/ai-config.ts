@@ -21,10 +21,10 @@ import {
 } from "@norish/db/repositories/recipes";
 import { getConfig, setConfig } from "@norish/db/repositories/server-config";
 import {
+  enqueueThemeRebuild,
   enrollEmbeddingForAllPublicRecipes,
   enrollEnrichmentForAllRecipes,
   enrollImageGenerationForPublicRecipes,
-  rebuildDiscoverThemes,
 } from "@norish/queue";
 import { isEmbeddingConfigured } from "@norish/shared-server/ai/embeddings/voyage";
 import {
@@ -360,11 +360,13 @@ const rebuildThemes = adminProcedure.mutation(async ({ ctx }) => {
     });
   }
 
-  const result = await rebuildDiscoverThemes();
+  // Enqueue on the worker instead of clustering + naming + tile-image generation
+  // inline: on a real catalogue that is slow enough to time the request out.
+  await enqueueThemeRebuild();
 
-  log.info(result, "Discover themes rebuilt");
+  log.info({ userId: ctx.user.id }, "Discover theme rebuild enqueued");
 
-  return result;
+  return { enqueued: true as const };
 });
 
 /**

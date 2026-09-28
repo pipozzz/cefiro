@@ -155,12 +155,7 @@ export default function BulkEnrichmentForm() {
         <p className="text-muted text-sm">{t("themes.description")}</p>
         <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2">
           {rebuildThemesMutation.isSuccess && (
-            <span className="text-success text-sm">
-              {t("themes.done", {
-                themes: rebuildThemesMutation.data.themes,
-                recipes: rebuildThemesMutation.data.recipes,
-              })}
-            </span>
+            <span className="text-success text-sm">{t("themes.started")}</span>
           )}
           <Button
             isPending={rebuildThemesMutation.isPending}

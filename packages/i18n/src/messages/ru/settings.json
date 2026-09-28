@@ -658,7 +658,8 @@
           "description": "Cluster the public recipes by similarity and name each group, rebuilding the discovery theme tiles. New embeddings are picked up automatically each week; run this to seed or refresh them now.",
           "done": "{themes, plural, =0 {Темы не созданы} one {Создана # тема} few {Создано # темы} other {Создано # тем}} из {recipes, plural, one {# рецепта с вектором} few {# рецептов с вектором} other {# рецептов с вектором}}",
           "notConfigured": "Embeddings are not configured. Set VOYAGE_API_KEY first.",
-          "error": "Failed to rebuild themes"
+          "error": "Failed to rebuild themes",
+          "started": "Пересборка тем запущена в фоне."
         },
         "publicImages": {
           "description": "Generate photos for public recipes that don't have one yet. This runs now regardless of the automatic image-generation setting.",
