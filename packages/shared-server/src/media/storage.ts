@@ -643,6 +643,61 @@ export async function saveGeneratedImageBytes(bytes: Buffer, recipeId: string): 
 }
 
 /**
+ * Save a generated discovery-theme tile image. Unlike recipe media, the file is
+ * keyed by a name-derived `slug` rather than a content hash, so it survives the
+ * wholesale theme rebuild and can be referenced as `/themes/{slug}.jpg` without
+ * re-storing the URL. The same size/format validation and 1280×720 cover-crop
+ * normalisation applies; an existing object is overwritten, so regenerating a
+ * theme replaces its image in place.
+ * Path: uploads/themes/{slug}.jpg   URL: /themes/{slug}.jpg
+ */
+export async function saveGeneratedThemeImageBytes(bytes: Buffer, slug: string): Promise<string> {
+  if (bytes.length > SERVER_CONFIG.MAX_IMAGE_FILE_SIZE) {
+    throw new Error(
+      `Image too large: ${bytes.length} bytes (max: ${SERVER_CONFIG.MAX_IMAGE_FILE_SIZE})`
+    );
+  }
+
+  if (!isValidImageBuffer(bytes)) {
+    throw new Error("Buffer is not a valid image");
+  }
+
+  const detectedExt = extFromBuffer(bytes);
+
+  if (!detectedExt) {
+    throw new Error("Could not detect image format");
+  }
+
+  const convertedBytes = await convertToJpeg(bytes, detectedExt, "cover");
+  const finalBytes = Buffer.from(new Uint8Array(convertedBytes));
+
+  await objectStore.put(`themes/${slug}.jpg`, finalBytes, "image/jpeg");
+
+  return `/themes/${slug}.jpg`;
+}
+
+/**
+ * Serve a generated theme tile image by its filename. Returns null when the name
+ * is unsafe or the file is missing, so the caller can 404. The stored files are
+ * `{slug}.jpg` where slug is a lowercase, hyphenated name slug.
+ */
+export async function readThemeImage(
+  filename: string
+): Promise<{ bytes: Buffer; contentType: string } | null> {
+  if (!/^[a-z0-9-]{1,80}\.jpg$/.test(filename)) {
+    return null;
+  }
+
+  const object = await objectStore.get(`themes/${filename}`);
+
+  if (!object) {
+    return null;
+  }
+
+  return { bytes: object.bytes, contentType: "image/jpeg" };
+}
+
+/**
  * Save step image bytes to recipe steps directory.
  * Path: uploads/recipes/{recipeId}/steps/{hash}.jpg
  * URL: /recipes/{recipeId}/steps/{hash}.jpg

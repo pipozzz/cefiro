@@ -21,13 +21,18 @@ import {
   replaceThemes,
 } from "@norish/db/repositories/themes";
 import { isEmbeddingConfigured } from "@norish/shared-server/ai/embeddings/voyage";
+import { generateImage } from "@norish/shared-server/ai/runtime/runtime";
 import {
   clusterEmbeddings,
   nearestMembers,
   representativeOf,
 } from "@norish/shared-server/ai/themes/cluster";
 import { nameTheme } from "@norish/shared-server/ai/themes/theme-namer";
+import { isImageGenerationConfigured } from "@norish/shared-server/config/server-config-loader";
 import { createLogger } from "@norish/shared-server/logger";
+import { getObjectStore } from "@norish/shared-server/media/object-store";
+import { saveGeneratedThemeImageBytes } from "@norish/shared-server/media/storage";
+import { cuisineSlug } from "@norish/shared/lib/cuisine-slug";
 
 const log = createLogger("scheduler:theme-clustering");
 
@@ -103,6 +108,8 @@ export async function rebuildDiscoverThemes(): Promise<ThemeRebuildResult> {
       ? await getRecipeDisplayById(representativeRecipeId)
       : null;
 
+    const generatedImage = await generateThemeImageUrl(name, topTags);
+
     rows.push({
       name,
       recipeCount: cluster.memberIds.length,
@@ -110,6 +117,7 @@ export async function rebuildDiscoverThemes(): Promise<ThemeRebuildResult> {
       representativeRecipeId,
       slug: display?.slug ?? null,
       image: display?.image ?? null,
+      generatedImage,
       rank: rows.length,
     });
   }
@@ -118,4 +126,49 @@ export async function rebuildDiscoverThemes(): Promise<ThemeRebuildResult> {
   log.info({ recipes: items.length, themes: rows.length }, "Discover themes rebuilt");
 
   return { recipes: items.length, themes: rows.length };
+}
+
+/** A short visual brief for a theme tile, appended to the image-style prompt. */
+function themeVisualBrief(name: string, topTags: string[]): string {
+  const tags = topTags.slice(0, 5).filter(Boolean).join(", ");
+
+  return tags
+    ? `A vibrant, appetising food-photography scene representing the theme "${name}" — dishes and ingredients such as ${tags}. No text, no logos.`
+    : `A vibrant, appetising food-photography scene representing the theme "${name}". No text, no logos.`;
+}
+
+/**
+ * Generate (or reuse) a tile image for a theme and return its public URL, or
+ * null when image generation is off or fails. The file is keyed by a slug of the
+ * theme name, so an unchanged theme reuses its existing image on the next weekly
+ * rebuild instead of re-billing the image model. Never throws — a failed image
+ * just leaves the tile to fall back to the representative recipe's photo.
+ */
+async function generateThemeImageUrl(name: string, topTags: string[]): Promise<string | null> {
+  if (!(await isImageGenerationConfigured())) {
+    return null;
+  }
+
+  const slug = cuisineSlug(name);
+
+  if (!slug) {
+    return null;
+  }
+
+  try {
+    if (await getObjectStore().exists(`themes/${slug}.jpg`)) {
+      return `/themes/${slug}.jpg`;
+    }
+
+    const image = await generateImage({
+      prompt: "image-generation-style",
+      sections: [themeVisualBrief(name, topTags)],
+    });
+
+    return await saveGeneratedThemeImageBytes(image.bytes, slug);
+  } catch (error) {
+    log.warn({ error, name }, "Theme image generation failed; tile falls back to a recipe photo");
+
+    return null;
+  }
 }

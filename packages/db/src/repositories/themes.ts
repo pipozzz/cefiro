@@ -12,6 +12,8 @@ export interface ThemeInput {
   representativeRecipeId: string | null;
   slug: string | null;
   image: string | null;
+  /** A dedicated AI-generated tile image (`/themes/{slug}.jpg`), or null. */
+  generatedImage: string | null;
   rank: number;
 }
 
@@ -24,6 +26,7 @@ export interface ThemeRow {
   representativeRecipeId: string | null;
   slug: string | null;
   image: string | null;
+  generatedImage: string | null;
   rank: number;
 }
 

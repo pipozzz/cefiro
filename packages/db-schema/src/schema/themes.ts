@@ -28,6 +28,13 @@ export const themes = pgTable("themes", {
   /** Representative recipe's slug + primary image, denormalised for the tile. */
   slug: text("slug"),
   image: text("image"),
+  /**
+   * A dedicated, AI-generated tile image for this theme, served from
+   * `/themes/{slug}.jpg`. Keyed by a slug of the theme name so it survives the
+   * wholesale rebuild, and preferred over the representative recipe's photo when
+   * present. Null until image generation is configured and has run.
+   */
+  generatedImage: text("generated_image"),
   /** Display order, largest cluster first. */
   rank: integer("rank").notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
