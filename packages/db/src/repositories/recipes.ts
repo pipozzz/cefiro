@@ -1429,6 +1429,12 @@ export async function getRecipeFull(id: string): Promise<FullRecipeDTO | null> {
       originRegion: true,
       provenanceNote: true,
       categories: true,
+      // visibility is needed by consumers that gate on it — notably the
+      // recipe-embedding worker, which treats a recipe as "not public" (and so
+      // never embeds it) when this is missing. It was absent from this allow-list,
+      // and FullRecipeDTO.visibility being optional meant TypeScript never caught
+      // that every recipe came back with visibility === undefined.
+      visibility: true,
       createdAt: true,
       updatedAt: true,
       version: true,
@@ -1530,6 +1536,7 @@ export async function getRecipeFull(id: string): Promise<FullRecipeDTO | null> {
     originRegion: full.originRegion ?? null,
     provenanceNote: full.provenanceNote ?? null,
     categories: full.categories ?? [],
+    visibility: full.visibility,
     steps: (full.steps ?? []).map((s: any) => ({
       step: s.step,
       systemUsed: s.systemUsed,
