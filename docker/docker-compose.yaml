@@ -31,6 +31,11 @@ services:
       # Voyage AI embeddings for semantic discovery themes (Phase B). Optional —
       # unset means embeddings are skipped.
       VOYAGE_API_KEY: ${VOYAGE_API_KEY:-}
+      # Log level (trace|debug|info|warn|error|fatal; default info). Compose only
+      # forwards vars listed here, so this must be present for LOG_LEVEL in .env to
+      # reach the container. NEXT_PUBLIC_LOG_LEVEL wins over LOG_LEVEL when set.
+      LOG_LEVEL: ${LOG_LEVEL:-}
+      NEXT_PUBLIC_LOG_LEVEL: ${NEXT_PUBLIC_LOG_LEVEL:-}
       # Email (SMTP). Optional — sending is enabled only when SMTP_HOST and
       # EMAIL_FROM are both set; otherwise the mailer is a no-op and features
       # that would email (household + instance invites) fall back to a link.
@@ -87,6 +92,10 @@ services:
       S3_PREFIX: ${S3_PREFIX:-}
       # The worker runs the embedding + clustering jobs, so it needs the key.
       VOYAGE_API_KEY: ${VOYAGE_API_KEY:-}
+      # Log level — forwarded here so LOG_LEVEL from .env reaches the worker
+      # (compose passes only listed vars). NEXT_PUBLIC_LOG_LEVEL wins when set.
+      LOG_LEVEL: ${LOG_LEVEL:-}
+      NEXT_PUBLIC_LOG_LEVEL: ${NEXT_PUBLIC_LOG_LEVEL:-}
       # Same SMTP config as web, so background jobs can also send mail if needed.
       SMTP_HOST: ${SMTP_HOST:-}
       SMTP_PORT: ${SMTP_PORT:-587}

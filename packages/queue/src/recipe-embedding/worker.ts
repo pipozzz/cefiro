@@ -51,9 +51,15 @@ export async function processRecipeEmbedding(job: Job<RecipeEmbeddingJobData>): 
 
   // Deleted, or no longer public: it has no place in public discovery, so drop
   // whatever embedding it had. Idempotent when there was none.
+  // Logged at INFO (not DEBUG) so a backfill that quietly skips is diagnosable
+  // in production without flipping the log level: `exists`/`visibility` say
+  // exactly why the worker declined a recipe an admin asked to embed.
   if (!recipe || recipe.visibility !== "public") {
     await deleteRecipeEmbedding(recipeId);
-    log.debug({ recipeId, exists: Boolean(recipe) }, "Recipe not public; embedding removed");
+    log.info(
+      { recipeId, exists: Boolean(recipe), visibility: recipe?.visibility ?? null },
+      "Recipe embedding skipped: not found or not public"
+    );
 
     return;
   }
@@ -63,7 +69,7 @@ export async function processRecipeEmbedding(job: Job<RecipeEmbeddingJobData>): 
   const contentHash = embeddingContentHash(model, text);
 
   if ((await getRecipeEmbeddingHash(recipeId)) === contentHash) {
-    log.debug({ recipeId }, "Recipe embedding already up to date");
+    log.info({ recipeId }, "Recipe embedding already up to date; skipped");
 
     return;
   }
