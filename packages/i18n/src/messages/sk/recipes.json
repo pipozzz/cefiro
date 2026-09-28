@@ -26,7 +26,8 @@
       "label": "Zobraziť",
       "all": "Všetko",
       "recipes": "Recepty",
-      "cookbooks": "Receptáre"
+      "cookbooks": "Receptáre",
+      "favorites": "Obľúbené"
     },
     "clearSearch": "Vymazať hľadanie"
   },

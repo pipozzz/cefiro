@@ -26,7 +26,8 @@
       "label": "Mostrar",
       "all": "Tudo",
       "recipes": "Receitas",
-      "cookbooks": "Livros de receitas"
+      "cookbooks": "Livros de receitas",
+      "favorites": "Favoritos"
     },
     "clearSearch": "Clear search"
   },

@@ -26,7 +26,8 @@
       "label": "Weergeven",
       "all": "Alles",
       "recipes": "Recepten",
-      "cookbooks": "Kookboeken"
+      "cookbooks": "Kookboeken",
+      "favorites": "Favorieten"
     },
     "clearSearch": "Clear search"
   },
