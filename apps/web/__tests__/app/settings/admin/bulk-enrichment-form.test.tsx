@@ -55,8 +55,16 @@ vi.mock("@heroui/react", () => {
 
   return {
     toast: vi.fn(),
-    Button: ({ children, onPress }: { children?: React.ReactNode; onPress?: () => void }) => (
-      <button type="button" onClick={onPress}>
+    Button: ({
+      children,
+      onPress,
+      isDisabled,
+    }: {
+      children?: React.ReactNode;
+      onPress?: () => void;
+      isDisabled?: boolean;
+    }) => (
+      <button disabled={isDisabled} type="button" onClick={isDisabled ? undefined : onPress}>
         {children}
       </button>
     ),
@@ -91,6 +99,10 @@ beforeEach(() => {
       embedAllPublicRecipes: { mutationOptions: (options: unknown) => options },
       rebuildThemes: { mutationOptions: (options: unknown) => options },
       imageGenerationSweepCount: { queryOptions: (_input: unknown, options: unknown) => options },
+      publicImageGenerationCount: {
+        queryOptions: (_input: unknown, options: unknown) => options,
+      },
+      generateImagesForPublicRecipes: { mutationOptions: (options: unknown) => options },
     },
   });
 });
@@ -156,5 +168,25 @@ describe("the image count the confirmation names", () => {
     openConfirmation();
 
     expect(screen.queryByText(/imageCount/)).not.toBeInTheDocument();
+  });
+});
+
+describe("generating images for public recipes", () => {
+  it("queues a run when the provider is configured and photos are missing", () => {
+    sweepCounts.current = { enabled: true, configured: true, missing: 3 };
+    render(<BulkEnrichmentForm />);
+
+    fireEvent.click(screen.getByText("publicImages.button"));
+
+    expect(mutate).toHaveBeenCalledWith();
+  });
+
+  it("disables the action when the image provider is not configured", () => {
+    sweepCounts.current = { enabled: true, configured: false, missing: 0 };
+    render(<BulkEnrichmentForm />);
+
+    fireEvent.click(screen.getByText("publicImages.button"));
+
+    expect(mutate).not.toHaveBeenCalled();
   });
 });
