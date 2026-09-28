@@ -658,7 +658,8 @@
           "description": "Cluster the public recipes by similarity and name each group, rebuilding the discovery theme tiles. New embeddings are picked up automatically each week; run this to seed or refresh them now.",
           "done": "{recipes, plural, other {임베딩된 레시피 #개}}에서 {themes, plural, =0 {테마가 생성되지 않음} other {테마 #개 생성됨}}",
           "notConfigured": "Embeddings are not configured. Set VOYAGE_API_KEY first.",
-          "error": "Failed to rebuild themes"
+          "error": "Failed to rebuild themes",
+          "started": "테마 재생성이 백그라운드에서 시작되었습니다."
         },
         "publicImages": {
           "description": "Generate photos for public recipes that don't have one yet. This runs now regardless of the automatic image-generation setting.",

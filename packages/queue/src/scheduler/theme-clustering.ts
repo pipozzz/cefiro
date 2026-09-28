@@ -86,6 +86,11 @@ export async function rebuildDiscoverThemes(): Promise<ThemeRebuildResult> {
 
   const embeddingById = new Map(items.map((item) => [item.recipeId, item.embedding]));
   const rows: ThemeInput[] = [];
+  // Distinct labels only. When AI naming is unavailable, several clusters fall
+  // back to their dominant tag and can collide (two "jednoduché" tiles); track
+  // what's used and pick the first non-colliding candidate, disambiguating with a
+  // secondary tag when everything collides.
+  const usedNames = new Set<string>();
 
   for (const cluster of clusters) {
     const nearest = nearestMembers(cluster, embeddingById, TITLES_FOR_NAMING);
@@ -96,19 +101,25 @@ export async function rebuildDiscoverThemes(): Promise<ThemeRebuildResult> {
     const topTags = await getTopTagsForRecipeIds(cluster.memberIds, TAGS_PER_CLUSTER);
 
     const aiName = await nameTheme({ titles, tags: topTags });
-    const name = aiName ?? topTags[0] ?? titles[0] ?? null;
+    const name = pickDistinctThemeName(aiName, topTags, titles, usedNames);
 
     if (!name) {
       // Nothing to label this cluster with; better no tile than a blank one.
       continue;
     }
 
+    usedNames.add(name.toLowerCase());
+
     const representativeRecipeId = representativeOf(cluster, embeddingById);
     const display = representativeRecipeId
       ? await getRecipeDisplayById(representativeRecipeId)
       : null;
 
-    const generatedImage = await generateThemeImageUrl(name, topTags);
+    // Only synthesise a tile image when the cluster's representative recipe has
+    // no real photo. A genuine recipe photo is more distinct and appealing than
+    // an AI scene from a generic brief (those come out looking alike), and this
+    // avoids an image-model call per theme on every rebuild.
+    const generatedImage = display?.image ? null : await generateThemeImageUrl(name, topTags);
 
     rows.push({
       name,
@@ -171,4 +182,40 @@ async function generateThemeImageUrl(name: string, topTags: string[]): Promise<s
 
     return null;
   }
+}
+
+/**
+ * The first candidate name not already used, so no two theme tiles share a
+ * label. Priority: the AI name, then the cluster's top tags, then the nearest
+ * recipe titles. When every candidate collides (e.g. AI naming is down and two
+ * clusters share a dominant tag), the best one is disambiguated with a secondary
+ * tag ("jednoduché · cestoviny"). Returns null only when there is nothing to
+ * label the cluster with at all.
+ */
+function pickDistinctThemeName(
+  aiName: string | null,
+  topTags: string[],
+  titles: string[],
+  used: Set<string>
+): string | null {
+  const candidates = [aiName, ...topTags, ...titles].filter((value): value is string =>
+    Boolean(value && value.trim())
+  );
+
+  const fresh = candidates.find((candidate) => !used.has(candidate.toLowerCase()));
+
+  if (fresh) {
+    return fresh;
+  }
+
+  const base = candidates[0];
+
+  if (!base) {
+    return null;
+  }
+
+  const extra = topTags.find((tag) => tag.toLowerCase() !== base.toLowerCase());
+  const disambiguated = extra ? `${base} · ${extra}` : `${base} (${used.size + 1})`;
+
+  return used.has(disambiguated.toLowerCase()) ? `${base} (${used.size + 1})` : disambiguated;
 }
