@@ -28,6 +28,7 @@ import {
   listDiscoverRecipes,
   listDiscoverThemes,
   listFeedRecipes,
+  listForYouByTaste,
   listForYouRecipes,
   listRelatedPublicRecipes,
   listTrendingTopics,
@@ -62,7 +63,10 @@ import {
   listCommentsForRecipe,
   reportComment,
 } from "@norish/db/repositories/recipe-comments";
-import { findSimilarPublicRecipes } from "@norish/db/repositories/recipe-embeddings";
+import {
+  findSimilarPublicRecipes,
+  getUserTasteVector,
+} from "@norish/db/repositories/recipe-embeddings";
 import {
   createSavedForkGuarded,
   getImportedRecipeIds,
@@ -543,15 +547,30 @@ const feed = authedProcedure.input(FeedInputSchema).query(async ({ ctx, input })
 // from the cooks they follow plus the best of the wider community, always
 // filtered by their own dietary profile (allergens resolved server-side from the
 // session, never sent by the client).
+//
+// When the reader has favourited recipes that carry embeddings, the feed is
+// ranked by nearness to their taste vector (the mean of those embeddings), so it
+// leans towards what they already love; otherwise it falls back to the blended
+// follow/popularity/recency ordering. The taste vector is derived once here and
+// held across the reader's pagination, so pages stay consistent.
 const forYou = authedProcedure.input(FeedInputSchema).query(async ({ ctx, input }) => {
   const { allergies } = await getUserAllergies(ctx.user.id);
+  const tasteVector = await getUserTasteVector(ctx.user.id);
 
-  const { items, nextCursor } = await listForYouRecipes({
-    userId: ctx.user.id,
-    excludeAllergenTags: allergies,
-    limit: input.limit,
-    cursor: input.cursor,
-  });
+  const { items, nextCursor } = tasteVector
+    ? await listForYouByTaste({
+        userId: ctx.user.id,
+        tasteVector,
+        excludeAllergenTags: allergies,
+        limit: input.limit,
+        cursor: input.cursor,
+      })
+    : await listForYouRecipes({
+        userId: ctx.user.id,
+        excludeAllergenTags: allergies,
+        limit: input.limit,
+        cursor: input.cursor,
+      });
 
   return { recipes: await toFeedCardsWithRatings(items), nextCursor };
 });
