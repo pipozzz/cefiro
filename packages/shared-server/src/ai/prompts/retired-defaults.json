@@ -44,5 +44,8 @@
   "imageGenerationStyle": [
     "A photograph of the dish described below, shot for a recipe page.\n\nThree-quarter view of a single serving on a neutral surface in soft natural\ndaylight, realistic colours and textures, the dish filling most of the\nframe but leave some breathing room. Ensure it is an image like the recipe would be served.\nNo people, no hands, no text, no watermarks, no brand packaging.\n\nThe dish:",
     "A photograph of the dish described below, shot for a recipe page.\n\nThree-quarter view of a single serving on a neutral surface in soft natural\ndaylight, realistic colours and textures, the dish filling most of the\nframe. No people, no hands, no text, no watermarks, no brand packaging.\n\nThe dish:"
+  ],
+  "imageGenerationThemeStyle": [
+    "A creative, editorial food-collage image for a discovery \"theme\" tile — not a single plated dish.\n\nAn overhead flat-lay that evokes the theme: several small dishes, raw ingredients and simple props scattered with variety across a textured surface, magazine-style styling, warm natural light, rich appetising colours, a balanced composition that reads well cropped to a wide tile. Suggest the mood and variety of the theme rather than depicting one specific meal.\nNo people, no hands, no text, no lettering, no watermarks, no brand packaging.\n\nThe theme:"
   ]
 }

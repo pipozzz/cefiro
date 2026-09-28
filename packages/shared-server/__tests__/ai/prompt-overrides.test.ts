@@ -27,6 +27,7 @@ const DEFAULTS: PromptValues = {
   ingredientLinking: "Link the ingredients.",
   imageGenerationBrief: "Write the visual brief.",
   imageGenerationStyle: "Draw the dish.",
+  imageGenerationThemeStyle: "Draw the theme collage.",
 };
 
 describe("isSamePromptText", () => {

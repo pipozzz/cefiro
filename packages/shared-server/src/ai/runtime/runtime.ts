@@ -70,7 +70,10 @@ import {
  * prompt and no system turn, so it can never be the base of a structured
  * request and needs no system message.
  */
-export type StructuredPromptName = Exclude<PromptName, "image-generation-style">;
+/** The image-generation prompts — style templates, never a structured request. */
+export type ImagePromptName = "image-generation-style" | "image-generation-theme-style";
+
+export type StructuredPromptName = Exclude<PromptName, ImagePromptName>;
 
 /**
  * System messages are not configuration. They encode invariants the code
@@ -484,7 +487,7 @@ async function transcribeWithProvider(
 
 export interface GenerateImageOptions {
   /** The administrator-editable prompt the request starts from. */
-  prompt: "image-generation-style";
+  prompt: ImagePromptName;
   /** Input blocks appended after the prompt, blank-line separated (ADR-0016). */
   sections?: readonly string[];
 }
