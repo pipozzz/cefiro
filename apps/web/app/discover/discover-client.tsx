@@ -151,6 +151,20 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
   });
 
   const forYouRecipes = forYou.data?.pages.flatMap((page) => page.recipes) ?? [];
+  const forYouEmpty = !forYou.isLoading && forYouRecipes.length === 0;
+
+  // Defensive cold-start: even though the "For you" query itself falls back to
+  // the community's newest, a reader whose dietary profile filters everything (or
+  // a truly empty platform) could still get nothing. Rather than show a bare
+  // "empty" state — which reads as "the whole site is empty" — fill it with
+  // trending public recipes so there is always something to explore.
+  const forYouPopular = useQuery({
+    ...trpc.social.discover.queryOptions({ sort: "trending", limit: 12 }),
+    enabled: mode === "forYou" && forYouEmpty,
+    retry: false,
+  });
+
+  const forYouPopularRecipes = forYouPopular.data?.recipes ?? [];
 
   // "Following" — the former standalone feed, now a discover tab: public
   // recipes from people the signed-in user follows.
@@ -230,15 +244,12 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
         <>
           {/* Dynamic food themes + the daily hero, the top-of-discovery entry
               points. Hoisted above the mode tabs so they frame the personalised
-              "For you" landing as well as the community browse — but only on a
-              recipe-list mode with no active filter, so they never compete with a
-              narrowed result set. Selecting a theme/tag/quick filter drops the
-              reader into the filtered community browse. */}
-          {(mode === "forYou" || mode === "recipes") &&
-          !theme &&
-          !category &&
-          !tag &&
-          !maxMinutes ? (
+              "For you" landing as well as the community browse. They stay mounted
+              across category/time/tag clicks — gating them on the active filter
+              made the whole page mount/unmount this block (and refetch the hero)
+              on every filter tap, which read as a full-page flicker. Selecting a
+              theme opens its own results, so it hides only then. */}
+          {(mode === "forYou" || mode === "recipes") && !theme ? (
             <>
               <DiscoverThemes
                 onQuick={() => {
@@ -322,11 +333,21 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
               </div>
             ) : forYouRecipes.length === 0 ? (
               <div className="space-y-8">
-                <div className="bg-content2 rounded-2xl p-10 text-center">
-                  <p className="text-default-600">{t("empty")}</p>
-                  <p className="text-default-500 mt-1 text-sm">{t("emptyColdStart")}</p>
-                </div>
                 <SuggestedCooks />
+
+                {forYouPopularRecipes.length > 0 ? (
+                  <section>
+                    <h2 className="text-foreground mb-4 text-lg font-semibold">
+                      {tFeed("popularTitle")}
+                    </h2>
+                    <SocialRecipeGrid recipes={forYouPopularRecipes} />
+                  </section>
+                ) : (
+                  <div className="bg-content2 rounded-2xl p-10 text-center">
+                    <p className="text-default-600">{t("empty")}</p>
+                    <p className="text-default-500 mt-1 text-sm">{t("emptyColdStart")}</p>
+                  </div>
+                )}
               </div>
             ) : (
               <>
