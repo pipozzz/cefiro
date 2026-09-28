@@ -80,6 +80,35 @@ export default function BulkEnrichmentForm() {
       },
     })
   );
+  // How many public recipes still have no photo, and whether the image provider
+  // is configured — so the button can name the number and explain when disabled.
+  const publicImagesCountQuery = useQuery(
+    trpc.admin.publicImageGenerationCount.queryOptions(undefined, { refetchOnMount: "always" })
+  );
+  const publicImagesCount = publicImagesCountQuery.data;
+  const publicImagesReady =
+    publicImagesCount?.enabled === true &&
+    publicImagesCount.configured === true &&
+    publicImagesCount.missing > 0;
+  const generatePublicImagesMutation = useMutation(
+    trpc.admin.generateImagesForPublicRecipes.mutationOptions({
+      onSuccess: () => publicImagesCountQuery.refetch(),
+      onError: (error) => {
+        if (error instanceof TRPCClientError && error.data?.code === "PRECONDITION_FAILED") {
+          toast(t("publicImages.notConfigured"), { variant: "warning" });
+
+          return;
+        }
+        showSafeErrorToast({
+          title: t("publicImages.error"),
+          description: tErrors("technicalDetails"),
+          color: "danger",
+          error,
+          context: "admin-ai:public-images",
+        });
+      },
+    })
+  );
   const openConfirm = () => {
     setReplaceExisting(false);
     setIsConfirmOpen(true);
@@ -139,6 +168,37 @@ export default function BulkEnrichmentForm() {
             onPress={() => rebuildThemesMutation.mutate()}
           >
             {t("themes.button")}
+          </Button>
+        </div>
+      </div>
+      <div className="border-default/60 flex flex-col gap-2 border-t pt-4">
+        <p className="text-muted text-sm">{t("publicImages.description")}</p>
+        <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2">
+          {generatePublicImagesMutation.isSuccess ? (
+            <span className="text-success text-sm">
+              {t("publicImages.queued", {
+                recipes: generatePublicImagesMutation.data.recipes,
+                queued: generatePublicImagesMutation.data.queued,
+              })}
+            </span>
+          ) : publicImagesCount?.enabled === false ? (
+            <span className="text-muted text-sm">{t("publicImages.aiDisabled")}</span>
+          ) : publicImagesCount?.configured === false ? (
+            <span className="text-muted text-sm">{t("publicImages.notConfiguredHint")}</span>
+          ) : publicImagesCount?.missing === 0 ? (
+            <span className="text-muted text-sm">{t("publicImages.none")}</span>
+          ) : publicImagesCount ? (
+            <span className="text-muted text-sm">
+              {t("publicImages.count", { missing: publicImagesCount.missing ?? 0 })}
+            </span>
+          ) : null}
+          <Button
+            isDisabled={!publicImagesReady}
+            isPending={generatePublicImagesMutation.isPending}
+            variant="tertiary"
+            onPress={() => generatePublicImagesMutation.mutate()}
+          >
+            {t("publicImages.button")}
           </Button>
         </div>
       </div>

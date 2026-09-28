@@ -659,6 +659,17 @@
           "done": "{themes, plural, =0 {Nevytvorená žiadna téma} one {Vytvorená # téma} few {Vytvorené # témy} other {Vytvorených # tém}} z {recipes, plural, one {# receptu s vektorom} few {# receptov s vektormi} other {# receptov s vektormi}}",
           "notConfigured": "Vektory nie sú nakonfigurované. Najprv nastavte VOYAGE_API_KEY.",
           "error": "Nepodarilo sa prebudovať témy"
+        },
+        "publicImages": {
+          "description": "Vygeneruj fotky pre verejné recepty, ktoré ešte žiadnu nemajú. Spustí sa hneď, bez ohľadu na nastavenie automatického generovania obrázkov.",
+          "button": "Vygenerovať obrázky verejných receptov",
+          "count": "{missing, plural, one {# verejný recept bez fotky} few {# verejné recepty bez fotky} other {# verejných receptov bez fotky}}",
+          "none": "Všetky verejné recepty majú fotku.",
+          "notConfiguredHint": "Najprv nastav poskytovateľa obrázkov.",
+          "aiDisabled": "AI je na tomto serveri vypnuté.",
+          "queued": "{queued, plural, =0 {Žiadne generovania nezaradené} one {# generovanie zaradené} few {# generovania zaradené} other {# generovaní zaradených}} pre {recipes, plural, one {# recept} few {# recepty} other {# receptov}}",
+          "notConfigured": "Generovanie obrázkov nie je nastavené.",
+          "error": "Nepodarilo sa spustiť generovanie obrázkov"
         }
       }
     },

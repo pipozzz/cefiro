@@ -659,6 +659,17 @@
           "done": "{themes, plural, =0 {No se crearon temas} one {# tema creado} other {# temas creados}} de {recipes, plural, one {# receta con vector} other {# recetas con vector}}",
           "notConfigured": "Embeddings are not configured. Set VOYAGE_API_KEY first.",
           "error": "Failed to rebuild themes"
+        },
+        "publicImages": {
+          "description": "Generate photos for public recipes that don't have one yet. This runs now regardless of the automatic image-generation setting.",
+          "button": "Generate public recipe images",
+          "count": "{missing, plural, one {# public recipe without a photo} other {# public recipes without a photo}}",
+          "none": "All public recipes have a photo.",
+          "notConfiguredHint": "Configure an image provider first.",
+          "aiDisabled": "AI is disabled on this server.",
+          "queued": "{queued, plural, =0 {No image runs queued} one {# image run queued} other {# image runs queued}} across {recipes, plural, one {# recipe} other {# recipes}}",
+          "notConfigured": "Image generation is not configured.",
+          "error": "Failed to start image generation"
         }
       }
     },

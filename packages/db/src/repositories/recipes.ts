@@ -1369,6 +1369,40 @@ export async function getImageGenerationSweepCounts(): Promise<{
   };
 }
 
+/**
+ * Public recipes that have no image at all, with the context Recipe Enrichment
+ * enrollment needs (owning user + that user's household). This powers the
+ * administrator's "generate images for public recipes" action: a MANUAL-origin
+ * image-generation run for exactly the recipes a visitor would see without a
+ * photo. The predicate mirrors the coordinator's "missing image" eligibility
+ * (`getImageGenerationSweepCounts`) — no gallery row and a null/blank legacy
+ * scalar — plus the ingredients requirement, since a manual run will otherwise
+ * regenerate over existing photos. DISTINCT ON keeps one row per recipe.
+ */
+export async function getPublicRecipesMissingImageForEnrichment(): Promise<
+  { recipeId: string; userId: string | null; householdId: string | null }[]
+> {
+  const hasIngredients = sql`EXISTS (
+    SELECT 1 FROM ${recipeIngredients} WHERE ${recipeIngredients.recipeId} = ${recipes.id}
+  )`;
+  const hasNoImage = sql`NOT EXISTS (
+    SELECT 1 FROM ${recipeImages} WHERE ${recipeImages.recipeId} = ${recipes.id}
+  ) AND (${recipes.image} IS NULL OR btrim(${recipes.image}) = '')`;
+
+  const rows = await db
+    .selectDistinctOn([recipes.id], {
+      recipeId: recipes.id,
+      userId: recipes.userId,
+      householdId: householdUsers.householdId,
+    })
+    .from(recipes)
+    .leftJoin(householdUsers, eq(householdUsers.userId, recipes.userId))
+    .where(and(eq(recipes.visibility, "public"), hasIngredients, hasNoImage))
+    .orderBy(recipes.id);
+
+  return rows;
+}
+
 export async function getRecipeFull(id: string): Promise<FullRecipeDTO | null> {
   const full = await db.query.recipes.findFirst({
     where: eq(recipes.id, id),

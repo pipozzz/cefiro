@@ -15,11 +15,15 @@ import {
   TranscriptionProviderSchema,
   VideoConfigSchema,
 } from "@norish/config/zod/server-config";
-import { getImageGenerationSweepCounts } from "@norish/db/repositories/recipes";
+import {
+  getImageGenerationSweepCounts,
+  getPublicRecipesMissingImageForEnrichment,
+} from "@norish/db/repositories/recipes";
 import { getConfig, setConfig } from "@norish/db/repositories/server-config";
 import {
   enrollEmbeddingForAllPublicRecipes,
   enrollEnrichmentForAllRecipes,
+  enrollImageGenerationForPublicRecipes,
   rebuildDiscoverThemes,
 } from "@norish/queue";
 import { isEmbeddingConfigured } from "@norish/shared-server/ai/embeddings/voyage";
@@ -389,6 +393,63 @@ const imageGenerationSweepCount = adminProcedure.query(async () => {
   return { enabled: true as const, gapOnly: counts.missingImage, overwrite: counts.eligible };
 });
 
+/**
+ * How many PUBLIC recipes currently have no photo — the target set for
+ * "Generate images for public recipes". Unlike `imageGenerationSweepCount`,
+ * this is NOT gated on the `imageGeneration` automatic switch, because the
+ * action runs with a manual origin that bypasses that switch on purpose. It
+ * reports whether the image provider is configured so the UI can explain a
+ * disabled button instead of silently queuing nothing.
+ */
+const publicImageGenerationCount = adminProcedure.query(async () => {
+  if (!(await isAIEnabled())) {
+    return { enabled: false as const };
+  }
+
+  if (!(await isImageGenerationConfigured())) {
+    return { enabled: true as const, configured: false as const, missing: 0 };
+  }
+
+  const targets = await getPublicRecipesMissingImageForEnrichment();
+
+  return { enabled: true as const, configured: true as const, missing: targets.length };
+});
+
+/**
+ * Generate images for the public recipes that have no photo — a manual-origin
+ * image-generation run that bypasses the `imageGeneration` automatic switch
+ * (off by default). Owner/admin only. Requires AI on and the image provider
+ * configured; the recipe set is already scoped to public recipes missing an
+ * image, so nothing with a stored photo is touched.
+ */
+const generateImagesForPublicRecipes = adminProcedure.mutation(async ({ ctx }) => {
+  log.info({ userId: ctx.user.id }, "Public image generation requested");
+
+  if (!(await isAIEnabled())) {
+    throw new TRPCError({
+      code: "PRECONDITION_FAILED",
+      message: "AI is disabled on this server. Enable AI before generating images.",
+    });
+  }
+
+  if (!(await isImageGenerationConfigured())) {
+    throw new TRPCError({
+      code: "PRECONDITION_FAILED",
+      message:
+        "Image generation is not configured. Set an image provider, model and key before running it.",
+    });
+  }
+
+  const result = await enrollImageGenerationForPublicRecipes({
+    userId: ctx.user.id,
+    householdKey: ctx.household?.id ?? "",
+  });
+
+  log.info(result, "Public image generation jobs queued");
+
+  return result;
+});
+
 export const aiConfigProcedures = router({
   updateAIConfig,
   updateVideoConfig,
@@ -400,4 +461,6 @@ export const aiConfigProcedures = router({
   embedAllPublicRecipes,
   rebuildThemes,
   imageGenerationSweepCount,
+  publicImageGenerationCount,
+  generateImagesForPublicRecipes,
 });
