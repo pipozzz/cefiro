@@ -706,7 +706,10 @@ const discoverThemes = publicProcedure
           tag: null as string | null,
           name: theme.name,
           recipeCount: theme.recipeCount,
-          image: theme.slug ? toSlugMediaUrl(theme.image, theme.slug) : null,
+          // Prefer the theme's own generated tile image; fall back to the
+          // representative recipe's photo (rewritten to its public slug URL).
+          image:
+            theme.generatedImage ?? (theme.slug ? toSlugMediaUrl(theme.image, theme.slug) : null),
         })),
       };
     }

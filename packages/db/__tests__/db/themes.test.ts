@@ -66,6 +66,7 @@ describe("themes repository", () => {
         representativeRecipeId: repA,
         slug: "ramen",
         image: "/recipes/ramen/hero.jpg",
+        generatedImage: null,
         rank: 0,
       },
       {
@@ -75,6 +76,7 @@ describe("themes repository", () => {
         representativeRecipeId: repB,
         slug: "cheesecake",
         image: "/recipes/cheesecake/hero.jpg",
+        generatedImage: null,
         rank: 1,
       },
     ]);
@@ -99,6 +101,7 @@ describe("themes repository", () => {
         representativeRecipeId: null,
         slug: null,
         image: null,
+        generatedImage: null,
         rank: 0,
       },
     ]);
@@ -122,6 +125,7 @@ describe("themes repository", () => {
         representativeRecipeId: publicRep,
         slug: "kapustnica",
         image: "/recipes/kapustnica/hero.jpg",
+        generatedImage: null,
         rank: 0,
       },
       {
@@ -131,6 +135,7 @@ describe("themes repository", () => {
         representativeRecipeId: privateRep,
         slug: "segedinsky-gulas",
         image: "/recipes/segedinsky/hero.jpg",
+        generatedImage: null,
         rank: 1,
       },
     ]);

@@ -1,0 +1,1 @@
+ALTER TABLE "themes" ADD COLUMN "generated_image" text;
