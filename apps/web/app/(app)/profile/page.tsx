@@ -27,6 +27,7 @@ export default function ProfileSettingsPage() {
   const [avatarUrl, setAvatarUrl] = useState("");
   const [location, setLocation] = useState("");
   const [websiteUrl, setWebsiteUrl] = useState("");
+  const [instagramUrl, setInstagramUrl] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const [hydrated, setHydrated] = useState(false);
 
@@ -41,6 +42,7 @@ export default function ProfileSettingsPage() {
         setAvatarUrl(p.avatarUrl ?? "");
         setLocation(p.location ?? "");
         setWebsiteUrl(p.websiteUrl ?? "");
+        setInstagramUrl(p.instagramUrl ?? "");
         setIsPublic(p.isPublic);
       }
 
@@ -69,6 +71,7 @@ export default function ProfileSettingsPage() {
             avatarUrl: data.profile.avatarUrl,
             location: data.profile.location,
             websiteUrl: data.profile.websiteUrl,
+            instagramUrl: data.profile.instagramUrl,
             isPublic: data.profile.isPublic,
             createdAt: data.profile.createdAt,
             version: data.profile.version,
@@ -93,6 +96,7 @@ export default function ProfileSettingsPage() {
       avatarUrl: avatarUrl.trim() || null,
       location: location.trim() || null,
       websiteUrl: websiteUrl.trim() || null,
+      instagramUrl: instagramUrl.trim() || null,
       isPublic,
     });
   };
@@ -195,6 +199,16 @@ export default function ProfileSettingsPage() {
               value={websiteUrl}
               onChange={(e) => setWebsiteUrl(e.target.value)}
               placeholder={t("websitePlaceholder")}
+            />
+          </div>
+          <div>
+            <label className="text-foreground mb-1 block text-sm font-medium">
+              {t("instagram")}
+            </label>
+            <Input
+              value={instagramUrl}
+              onChange={(e) => setInstagramUrl(e.target.value)}
+              placeholder={t("instagramPlaceholder")}
             />
           </div>
         </div>

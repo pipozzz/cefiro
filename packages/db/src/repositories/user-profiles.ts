@@ -14,6 +14,7 @@ export interface PublicProfile {
   avatarUrl: string | null;
   location: string | null;
   websiteUrl: string | null;
+  instagramUrl: string | null;
   isPublic: boolean;
   createdAt: Date;
   version: number;
@@ -26,6 +27,7 @@ export interface UpsertProfileValues {
   avatarUrl?: string | null;
   location?: string | null;
   websiteUrl?: string | null;
+  instagramUrl?: string | null;
   isPublic?: boolean;
 }
 
@@ -49,6 +51,7 @@ const PROFILE_COLUMNS = {
   avatarUrl: userProfiles.avatarUrl,
   location: userProfiles.location,
   websiteUrl: userProfiles.websiteUrl,
+  instagramUrl: userProfiles.instagramUrl,
   isPublic: userProfiles.isPublic,
   createdAt: userProfiles.createdAt,
   version: userProfiles.version,
@@ -118,6 +121,7 @@ export async function upsertProfile(
     avatarUrl: normalizeEmpty(values.avatarUrl),
     location: normalizeEmpty(values.location),
     websiteUrl: normalizeEmpty(values.websiteUrl),
+    instagramUrl: normalizeEmpty(values.instagramUrl),
     ...(values.isPublic === undefined ? {} : { isPublic: values.isPublic }),
   };
 

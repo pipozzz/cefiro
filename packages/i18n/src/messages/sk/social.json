@@ -268,7 +268,9 @@
     "save": "Uložiť profil",
     "saved": "Profil uložený",
     "couldNotSave": "Nepodarilo sa uložiť profil",
-    "avatarLabel": "Profilová fotka"
+    "avatarLabel": "Profilová fotka",
+    "instagram": "Instagram",
+    "instagramPlaceholder": "https://instagram.com/…"
   },
   "recipeShare": {
     "heading": "Zverejniť pre komunitu",
