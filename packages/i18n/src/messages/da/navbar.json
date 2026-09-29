@@ -21,7 +21,11 @@
       "updateAvailable": "v{version} tilgængelig"
     },
     "openMenu": "Open user menu",
-    "menu": "User menu"
+    "menu": "User menu",
+    "publicProfile": {
+      "title": "Offentlig profil",
+      "description": "Se din profil, som andre ser den"
+    }
   },
   "theme": {
     "title": "Tema",

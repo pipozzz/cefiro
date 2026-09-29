@@ -51,9 +51,13 @@ function AuthorChip({
   }
 
   const name = author.displayName ?? `@${author.handle}`;
+  // Avatar initial from the real name/handle, not `name` — a handle-only author's
+  // `name` starts with "@", which rendered a confusing "@" bubble next to "@handle".
+  const initial = (author.displayName ?? author.handle).charAt(0).toUpperCase();
 
   return (
     <Link
+      aria-label={name}
       className="bg-content2 hover:bg-content3 inline-flex items-center gap-2 rounded-full py-1 pr-3 pl-1 transition"
       href={`/u/${author.handle}`}
     >
@@ -62,7 +66,7 @@ function AuthorChip({
         <img alt="" className="h-7 w-7 rounded-full object-cover" src={author.avatarUrl} />
       ) : (
         <span className="bg-primary text-primary-foreground flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold">
-          {name.charAt(0).toUpperCase()}
+          {initial}
         </span>
       )}
       <span className="text-foreground text-sm font-medium">{name}</span>

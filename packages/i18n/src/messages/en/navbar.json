@@ -21,7 +21,11 @@
       "updateAvailable": "v{version} available"
     },
     "openMenu": "Open user menu",
-    "menu": "User menu"
+    "menu": "User menu",
+    "publicProfile": {
+      "title": "Public profile",
+      "description": "View your profile as others see it"
+    }
   },
   "theme": {
     "title": "Theme",

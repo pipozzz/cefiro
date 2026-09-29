@@ -21,7 +21,11 @@
       "updateAvailable": "Налична е v{version}"
     },
     "openMenu": "Open user menu",
-    "menu": "User menu"
+    "menu": "User menu",
+    "publicProfile": {
+      "title": "Публичен профил",
+      "description": "Виж профила си, както го виждат другите"
+    }
   },
   "theme": {
     "title": "Тема",
