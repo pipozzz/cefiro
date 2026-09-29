@@ -21,10 +21,9 @@ export interface AboutDocument {
   sections: AboutSection[];
 }
 
-// Real facts to fill in before launch.
-const OPERATOR_SK = "[Doplniť: kto stojí za projektom — meno alebo tím a pár viet o vás.]";
-const OPERATOR_EN =
-  "[To add: who is behind the project — a name or team and a few words about you.]";
+const OPERATOR_SK = "Naša Kuchyňa je projekt spoločnosti Spertulo s. r. o.";
+const OPERATOR_EN = "Naša Kuchyňa is a project by Spertulo s. r. o.";
+// Contact address still to confirm before launch.
 const CONTACT = "[kontakt@nasakuchyna.sk]";
 
 export const ABOUT: Record<"sk" | "en", AboutDocument> = {
