@@ -35,6 +35,13 @@ describe("proxy share access", () => {
     expect(getSessionMock).not.toHaveBeenCalled();
   });
 
+  it("allows generated discover-theme images without an authenticated session", async () => {
+    const response = await proxy(new NextRequest("http://localhost/themes/quick-weeknight.jpg"));
+
+    expect(response.headers.get("x-middleware-next")).toBe("1");
+    expect(getSessionMock).not.toHaveBeenCalled();
+  });
+
   it("excludes public PWA assets from the Next proxy matcher", () => {
     expect(config.matcher[0]).toContain("manifest\\.webmanifest");
     expect(config.matcher[0]).toContain("sw\\.js");
