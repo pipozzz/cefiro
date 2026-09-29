@@ -223,6 +223,15 @@ export function DiscoverClient({
 
   const pill = pillClass;
 
+  // The mode tabs stay visible during a search (so they never vanish mid-query).
+  // Picking one is a request to browse, so it also clears the search term —
+  // otherwise the search results would linger under the newly selected tab.
+  const selectMode = (next: Mode) => {
+    setQ("");
+    setDebouncedQ("");
+    setMode(next);
+  };
+
   return (
     <div className="mx-auto w-full max-w-7xl px-4 pb-24 md:px-6">
       <header className="mb-6">
@@ -260,21 +269,17 @@ export function DiscoverClient({
         ) : null}
       </div>
 
-      {isSearching ? (
-        <SearchResults isAuthed={isAuthed} query={searchQuery} term={searchTerm} />
-      ) : (
+      {/* Hero — the crawlable browse-by hubs, dynamic themes and the daily pick.
+          Hidden while searching so the results lead. The hubs sit at the top
+          because the browse grid below is an infinite scroll, so a footer block
+          would never be reached. Themes stay mounted across category/time/tag
+          clicks (gating them on the active filter made the whole block
+          mount/unmount and refetch on every tap, a full-page flicker); a
+          selected theme opens its own results, so they hide only then. */}
+      {!isSearching ? (
         <>
-          {/* Crawlable browse-by hubs, hoisted to the top: the grid below is an
-              infinite scroll, so readers would never reach a footer block. */}
           {hubLinks}
 
-          {/* Dynamic food themes + the daily hero, the top-of-discovery entry
-              points. Hoisted above the mode tabs so they frame the personalised
-              "For you" landing as well as the community browse. They stay mounted
-              across category/time/tag clicks — gating them on the active filter
-              made the whole page mount/unmount this block (and refetch the hero)
-              on every filter tap, which read as a full-page flicker. Selecting a
-              theme opens its own results, so it hides only then. */}
           {(mode === "forYou" || mode === "recipes") && !theme ? (
             <>
               <DiscoverThemes
@@ -294,300 +299,301 @@ export function DiscoverClient({
               <RecipeOfTheDay />
             </>
           ) : null}
+        </>
+      ) : null}
 
-          {/* Recipes / Cooks toggle */}
-          <div className="mb-6 flex flex-wrap gap-2">
-            {isAuthed ? (
-              <button
-                className={pill(mode === "forYou")}
-                type="button"
-                onClick={() => setMode("forYou")}
-              >
-                {t("modeForYou")}
-              </button>
+      {/* Recipes / Cooks toggle — kept visible even during a search, so the
+          filters never vanish mid-query; tapping one clears the search. */}
+      <div className="mb-6 flex flex-wrap gap-2">
+        {isAuthed ? (
+          <button
+            className={pill(mode === "forYou")}
+            type="button"
+            onClick={() => selectMode("forYou")}
+          >
+            {t("modeForYou")}
+          </button>
+        ) : null}
+        <button
+          className={pill(mode === "recipes")}
+          type="button"
+          onClick={() => selectMode("recipes")}
+        >
+          {t("modeRecipes")}
+        </button>
+        {isAuthed ? (
+          <button
+            className={pill(mode === "following")}
+            type="button"
+            onClick={() => selectMode("following")}
+          >
+            {t("modeFollowing")}
+          </button>
+        ) : null}
+        <button
+          className={pill(mode === "byIngredient")}
+          type="button"
+          onClick={() => selectMode("byIngredient")}
+        >
+          {t("modeByIngredient")}
+        </button>
+        <button
+          className={pill(mode === "surprise")}
+          type="button"
+          onClick={() => selectMode("surprise")}
+        >
+          {t("modeSurprise")}
+        </button>
+        <button
+          className={pill(mode === "cooks")}
+          type="button"
+          onClick={() => selectMode("cooks")}
+        >
+          {t("modeCooks")}
+        </button>
+        <button
+          className={pill(mode === "cookbooks")}
+          type="button"
+          onClick={() => selectMode("cookbooks")}
+        >
+          {t("modeCookbooks")}
+        </button>
+      </div>
+
+      {isSearching ? (
+        <SearchResults isAuthed={isAuthed} query={searchQuery} term={searchTerm} />
+      ) : mode === "forYou" ? (
+        forYou.isLoading ? (
+          <div className="flex min-h-[30vh] items-center justify-center">
+            <Spinner />
+          </div>
+        ) : forYouRecipes.length === 0 ? (
+          <div className="space-y-8">
+            <SuggestedCooks />
+
+            {forYouPopularRecipes.length > 0 ? (
+              <section>
+                <h2 className="text-foreground mb-4 text-lg font-semibold">
+                  {tFeed("popularTitle")}
+                </h2>
+                <SocialRecipeGrid recipes={forYouPopularRecipes} />
+              </section>
+            ) : (
+              <div className="bg-content2 rounded-2xl p-10 text-center">
+                <p className="text-default-600">{t("empty")}</p>
+                <p className="text-default-500 mt-1 text-sm">{t("emptyColdStart")}</p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <>
+            <SocialRecipeGrid recipes={forYouRecipes} />
+            <LoadMoreSentinel
+              hasNextPage={forYou.hasNextPage}
+              isFetchingNextPage={forYou.isFetchingNextPage}
+              onLoadMore={() => forYou.fetchNextPage()}
+            />
+            <div className="mt-12">
+              <SuggestedCooks limit={6} />
+            </div>
+          </>
+        )
+      ) : mode === "following" ? (
+        following.isLoading ? (
+          <div className="flex min-h-[30vh] items-center justify-center">
+            <Spinner />
+          </div>
+        ) : followingEmpty ? (
+          <div className="space-y-8">
+            <div className="bg-content2 rounded-2xl p-10 text-center">
+              <p className="text-default-600">{tFeed("emptyTitle")}</p>
+              <p className="text-default-500 mt-1 text-sm">{tFeed("emptyBody")}</p>
+            </div>
+
+            <SuggestedCooks />
+
+            {followingPopularRecipes.length > 0 ? (
+              <section>
+                <h2 className="text-foreground mb-4 text-lg font-semibold">
+                  {tFeed("popularTitle")}
+                </h2>
+                <SocialRecipeGrid recipes={followingPopularRecipes} />
+              </section>
             ) : null}
+          </div>
+        ) : (
+          <>
+            <SocialRecipeGrid recipes={followingRecipes} />
+            <LoadMoreSentinel
+              hasNextPage={following.hasNextPage}
+              isFetchingNextPage={following.isFetchingNextPage}
+              onLoadMore={() => following.fetchNextPage()}
+            />
+          </>
+        )
+      ) : mode === "byIngredient" ? (
+        <IngredientDiscovery />
+      ) : mode === "surprise" ? (
+        <SurpriseDiscovery />
+      ) : mode === "cookbooks" ? (
+        cookbooks.isLoading ? (
+          <div className="flex min-h-[30vh] items-center justify-center">
+            <Spinner />
+          </div>
+        ) : cookbookList.length === 0 ? (
+          <p className="bg-content2 text-default-500 rounded-2xl p-10 text-center">
+            {t("noCookbooks")}
+          </p>
+        ) : (
+          <>
+            <SocialCookbookGrid cookbooks={cookbookList} />
+            <LoadMoreSentinel
+              hasNextPage={cookbooks.hasNextPage}
+              isFetchingNextPage={cookbooks.isFetchingNextPage}
+              onLoadMore={() => cookbooks.fetchNextPage()}
+            />
+          </>
+        )
+      ) : mode === "cooks" ? (
+        cooks.isLoading ? (
+          <div className="flex min-h-[30vh] items-center justify-center">
+            <Spinner />
+          </div>
+        ) : cookList.length === 0 ? (
+          <p className="bg-content2 text-default-500 rounded-2xl p-10 text-center">
+            {t("noCooks")}
+          </p>
+        ) : (
+          <>
+            <CookGrid cooks={cookList} />
+            <LoadMoreSentinel
+              hasNextPage={cooks.hasNextPage}
+              isFetchingNextPage={cooks.isFetchingNextPage}
+              onLoadMore={() => cooks.fetchNextPage()}
+            />
+          </>
+        )
+      ) : theme ? (
+        <ThemeResults theme={theme} onClear={() => setTheme(null)} />
+      ) : (
+        <>
+          {/* Sort */}
+          <div className="mb-3 flex flex-wrap gap-2">
             <button
-              className={pill(mode === "recipes")}
+              className={pill(sort === "newest")}
               type="button"
-              onClick={() => setMode("recipes")}
+              onClick={() => setSort("newest")}
             >
-              {t("modeRecipes")}
+              {t("sortNewest")}
             </button>
-            {isAuthed ? (
-              <button
-                className={pill(mode === "following")}
-                type="button"
-                onClick={() => setMode("following")}
-              >
-                {t("modeFollowing")}
-              </button>
-            ) : null}
             <button
-              className={pill(mode === "byIngredient")}
+              className={pill(sort === "trending")}
               type="button"
-              onClick={() => setMode("byIngredient")}
+              onClick={() => setSort("trending")}
             >
-              {t("modeByIngredient")}
-            </button>
-            <button
-              className={pill(mode === "surprise")}
-              type="button"
-              onClick={() => setMode("surprise")}
-            >
-              {t("modeSurprise")}
-            </button>
-            <button
-              className={pill(mode === "cooks")}
-              type="button"
-              onClick={() => setMode("cooks")}
-            >
-              {t("modeCooks")}
-            </button>
-            <button
-              className={pill(mode === "cookbooks")}
-              type="button"
-              onClick={() => setMode("cookbooks")}
-            >
-              {t("modeCookbooks")}
+              {t("sortTrending")}
             </button>
           </div>
 
-          {mode === "forYou" ? (
-            forYou.isLoading ? (
-              <div className="flex min-h-[30vh] items-center justify-center">
-                <Spinner />
-              </div>
-            ) : forYouRecipes.length === 0 ? (
-              <div className="space-y-8">
-                <SuggestedCooks />
+          {/* "Ready in" time filter */}
+          <div className="mb-3 flex flex-wrap items-center gap-2">
+            <span className="text-default-500 mr-1 text-sm">{t("readyInHeading")}</span>
+            <button
+              className={pill(maxMinutes === null)}
+              type="button"
+              onClick={() => setMaxMinutes(null)}
+            >
+              {t("readyInAny")}
+            </button>
+            {TIME_OPTIONS.map((minutes) => (
+              <button
+                key={minutes}
+                className={pill(maxMinutes === minutes)}
+                type="button"
+                onClick={() => setMaxMinutes(minutes)}
+              >
+                {t("readyInUnder", { minutes })}
+              </button>
+            ))}
 
-                {forYouPopularRecipes.length > 0 ? (
-                  <section>
-                    <h2 className="text-foreground mb-4 text-lg font-semibold">
-                      {tFeed("popularTitle")}
-                    </h2>
-                    <SocialRecipeGrid recipes={forYouPopularRecipes} />
-                  </section>
-                ) : (
-                  <div className="bg-content2 rounded-2xl p-10 text-center">
-                    <p className="text-default-600">{t("empty")}</p>
-                    <p className="text-default-500 mt-1 text-sm">{t("emptyColdStart")}</p>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <>
-                <SocialRecipeGrid recipes={forYouRecipes} />
-                <LoadMoreSentinel
-                  hasNextPage={forYou.hasNextPage}
-                  isFetchingNextPage={forYou.isFetchingNextPage}
-                  onLoadMore={() => forYou.fetchNextPage()}
-                />
-                <div className="mt-12">
-                  <SuggestedCooks limit={6} />
-                </div>
-              </>
-            )
-          ) : mode === "following" ? (
-            following.isLoading ? (
-              <div className="flex min-h-[30vh] items-center justify-center">
-                <Spinner />
-              </div>
-            ) : followingEmpty ? (
-              <div className="space-y-8">
-                <div className="bg-content2 rounded-2xl p-10 text-center">
-                  <p className="text-default-600">{tFeed("emptyTitle")}</p>
-                  <p className="text-default-500 mt-1 text-sm">{tFeed("emptyBody")}</p>
-                </div>
+            {/* Dietary-aware: hide recipes with the signed-in reader's
+                    allergens. Renders nothing for anon or allergen-free cooks. */}
+            {isAuthed ? (
+              <DietaryFilterToggle enabled={hideMyAllergens} onChange={setHideMyAllergens} />
+            ) : null}
+          </div>
 
-                <SuggestedCooks />
+          {/* Category filter */}
+          <div className="mb-8 flex flex-wrap gap-2">
+            <button
+              className={pill(category === null)}
+              type="button"
+              onClick={() => setCategory(null)}
+            >
+              {t("categoryAll")}
+              {counts ? <span className="opacity-70"> {counts.total}</span> : null}
+            </button>
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat}
+                className={pill(category === cat)}
+                type="button"
+                onClick={() => setCategory(cat)}
+              >
+                {tCat(cat)}
+                {counts ? <span className="opacity-70"> {counts.byCategory[cat] ?? 0}</span> : null}
+              </button>
+            ))}
+          </div>
 
-                {followingPopularRecipes.length > 0 ? (
-                  <section>
-                    <h2 className="text-foreground mb-4 text-lg font-semibold">
-                      {tFeed("popularTitle")}
-                    </h2>
-                    <SocialRecipeGrid recipes={followingPopularRecipes} />
-                  </section>
-                ) : null}
-              </div>
-            ) : (
-              <>
-                <SocialRecipeGrid recipes={followingRecipes} />
-                <LoadMoreSentinel
-                  hasNextPage={following.hasNextPage}
-                  isFetchingNextPage={following.isFetchingNextPage}
-                  onLoadMore={() => following.fetchNextPage()}
-                />
-              </>
-            )
-          ) : mode === "byIngredient" ? (
-            <IngredientDiscovery />
-          ) : mode === "surprise" ? (
-            <SurpriseDiscovery />
-          ) : mode === "cookbooks" ? (
-            cookbooks.isLoading ? (
-              <div className="flex min-h-[30vh] items-center justify-center">
-                <Spinner />
-              </div>
-            ) : cookbookList.length === 0 ? (
-              <p className="bg-content2 text-default-500 rounded-2xl p-10 text-center">
-                {t("noCookbooks")}
+          {tag ? (
+            <div className="mb-6 flex items-center gap-2">
+              <span className="bg-primary/15 text-primary inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-sm font-medium">
+                #{tag}
+                <button
+                  aria-label={t("clearTag")}
+                  className="hover:text-danger ml-0.5 rounded-full"
+                  type="button"
+                  onClick={() => setTag(null)}
+                >
+                  <XMarkIcon className="h-4 w-4" />
+                </button>
+              </span>
+            </div>
+          ) : null}
+
+          {browse.isLoading ? (
+            <div className="flex min-h-[30vh] items-center justify-center">
+              <Spinner />
+            </div>
+          ) : recipes.length === 0 ? (
+            <div className="bg-content2 flex flex-col items-center gap-2 rounded-2xl p-10 text-center">
+              <SparklesIcon className="text-default-400 h-8 w-8" />
+              <p className="text-foreground font-medium">{t("empty")}</p>
+              <p className="text-default-500 text-sm">
+                {!category && !tag && !maxMinutes ? t("emptyColdStart") : t("emptyFiltered")}
               </p>
-            ) : (
-              <>
-                <SocialCookbookGrid cookbooks={cookbookList} />
-                <LoadMoreSentinel
-                  hasNextPage={cookbooks.hasNextPage}
-                  isFetchingNextPage={cookbooks.isFetchingNextPage}
-                  onLoadMore={() => cookbooks.fetchNextPage()}
-                />
-              </>
-            )
-          ) : mode === "cooks" ? (
-            cooks.isLoading ? (
-              <div className="flex min-h-[30vh] items-center justify-center">
-                <Spinner />
-              </div>
-            ) : cookList.length === 0 ? (
-              <p className="bg-content2 text-default-500 rounded-2xl p-10 text-center">
-                {t("noCooks")}
-              </p>
-            ) : (
-              <>
-                <CookGrid cooks={cookList} />
-                <LoadMoreSentinel
-                  hasNextPage={cooks.hasNextPage}
-                  isFetchingNextPage={cooks.isFetchingNextPage}
-                  onLoadMore={() => cooks.fetchNextPage()}
-                />
-              </>
-            )
-          ) : theme ? (
-            <ThemeResults theme={theme} onClear={() => setTheme(null)} />
+            </div>
           ) : (
             <>
-              {/* Sort */}
-              <div className="mb-3 flex flex-wrap gap-2">
-                <button
-                  className={pill(sort === "newest")}
-                  type="button"
-                  onClick={() => setSort("newest")}
-                >
-                  {t("sortNewest")}
-                </button>
-                <button
-                  className={pill(sort === "trending")}
-                  type="button"
-                  onClick={() => setSort("trending")}
-                >
-                  {t("sortTrending")}
-                </button>
-              </div>
+              <SocialRecipeGrid recipes={recipes} />
 
-              {/* "Ready in" time filter */}
-              <div className="mb-3 flex flex-wrap items-center gap-2">
-                <span className="text-default-500 mr-1 text-sm">{t("readyInHeading")}</span>
-                <button
-                  className={pill(maxMinutes === null)}
-                  type="button"
-                  onClick={() => setMaxMinutes(null)}
-                >
-                  {t("readyInAny")}
-                </button>
-                {TIME_OPTIONS.map((minutes) => (
-                  <button
-                    key={minutes}
-                    className={pill(maxMinutes === minutes)}
-                    type="button"
-                    onClick={() => setMaxMinutes(minutes)}
-                  >
-                    {t("readyInUnder", { minutes })}
-                  </button>
-                ))}
-
-                {/* Dietary-aware: hide recipes with the signed-in reader's
-                    allergens. Renders nothing for anon or allergen-free cooks. */}
-                {isAuthed ? (
-                  <DietaryFilterToggle enabled={hideMyAllergens} onChange={setHideMyAllergens} />
-                ) : null}
-              </div>
-
-              {/* Category filter */}
-              <div className="mb-8 flex flex-wrap gap-2">
-                <button
-                  className={pill(category === null)}
-                  type="button"
-                  onClick={() => setCategory(null)}
-                >
-                  {t("categoryAll")}
-                  {counts ? <span className="opacity-70"> {counts.total}</span> : null}
-                </button>
-                {CATEGORIES.map((cat) => (
-                  <button
-                    key={cat}
-                    className={pill(category === cat)}
-                    type="button"
-                    onClick={() => setCategory(cat)}
-                  >
-                    {tCat(cat)}
-                    {counts ? (
-                      <span className="opacity-70"> {counts.byCategory[cat] ?? 0}</span>
-                    ) : null}
-                  </button>
-                ))}
-              </div>
-
-              {tag ? (
-                <div className="mb-6 flex items-center gap-2">
-                  <span className="bg-primary/15 text-primary inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-sm font-medium">
-                    #{tag}
-                    <button
-                      aria-label={t("clearTag")}
-                      className="hover:text-danger ml-0.5 rounded-full"
-                      type="button"
-                      onClick={() => setTag(null)}
-                    >
-                      <XMarkIcon className="h-4 w-4" />
-                    </button>
-                  </span>
-                </div>
-              ) : null}
-
-              {browse.isLoading ? (
-                <div className="flex min-h-[30vh] items-center justify-center">
-                  <Spinner />
-                </div>
-              ) : recipes.length === 0 ? (
-                <div className="bg-content2 flex flex-col items-center gap-2 rounded-2xl p-10 text-center">
-                  <SparklesIcon className="text-default-400 h-8 w-8" />
-                  <p className="text-foreground font-medium">{t("empty")}</p>
-                  <p className="text-default-500 text-sm">
-                    {!category && !tag && !maxMinutes ? t("emptyColdStart") : t("emptyFiltered")}
-                  </p>
-                </div>
-              ) : (
-                <>
-                  <SocialRecipeGrid recipes={recipes} />
-
-                  <LoadMoreSentinel
-                    hasNextPage={browse.hasNextPage}
-                    isFetchingNextPage={browse.isFetchingNextPage}
-                    onLoadMore={() => browse.fetchNextPage()}
-                  />
-                </>
-              )}
-
-              {/* Personalised "cooks to follow" for signed-in readers, so the
-                  discover page also helps them grow their feed. Renders nothing
-                  for anonymous readers or when there are no suggestions. */}
-              {isAuthed ? (
-                <div className="mt-12">
-                  <SuggestedCooks limit={6} />
-                </div>
-              ) : null}
+              <LoadMoreSentinel
+                hasNextPage={browse.hasNextPage}
+                isFetchingNextPage={browse.isFetchingNextPage}
+                onLoadMore={() => browse.fetchNextPage()}
+              />
             </>
           )}
+
+          {/* Personalised "cooks to follow" for signed-in readers, so the
+                  discover page also helps them grow their feed. Renders nothing
+                  for anonymous readers or when there are no suggestions. */}
+          {isAuthed ? (
+            <div className="mt-12">
+              <SuggestedCooks limit={6} />
+            </div>
+          ) : null}
         </>
       )}
     </div>
