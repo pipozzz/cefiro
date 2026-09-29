@@ -28,11 +28,8 @@ export default async function DiscoverPage() {
     }
   }
 
-  return (
-    <>
-      <DiscoverClient isAuthed={!!session?.user} />
-      {/* Crawlable links to the SSR cuisine/category hubs — see hub-links.tsx. */}
-      <DiscoverHubLinks />
-    </>
-  );
+  // The hub links are a server component passed as a slot so the client can place
+  // them near the top (under the search): the grid is an infinite scroll, so a
+  // footer block would never be reached. See hub-links.tsx.
+  return <DiscoverClient hubLinks={<DiscoverHubLinks />} isAuthed={!!session?.user} />;
 }

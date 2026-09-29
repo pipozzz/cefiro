@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import type { TimerKeywordsConfig } from "@norish/config/zod/server-config";
 import {
+  AboutContentSchema,
   ContentIndicatorsSchema,
   PromptsConfigInputSchema,
   RecurrenceConfigSchema,
@@ -12,6 +13,7 @@ import {
 import { getConfig, setConfig } from "@norish/db/repositories/server-config";
 import { getEffectivePrompts, loadDefaultPrompts } from "@norish/shared-server/ai/prompts/loader";
 import { pruneToOverrides } from "@norish/shared-server/ai/prompts/overrides";
+import { getAboutContent } from "@norish/shared-server/config/server-config-loader";
 import { trpcLogger as log } from "@norish/shared-server/logger";
 
 import { adminProcedure } from "../../middleware";
@@ -166,6 +168,25 @@ const updateTimerKeywords = adminProcedure
     return { success: true };
   });
 
+/**
+ * Get the About page content for the admin editor: the stored value, or the
+ * shipped default when nothing has been set yet.
+ */
+const getAbout = adminProcedure.query(async () => {
+  return await getAboutContent();
+});
+
+/**
+ * Update the About page content. The whole document (per language) is stored.
+ */
+const updateAbout = adminProcedure.input(AboutContentSchema).mutation(async ({ input, ctx }) => {
+  log.info({ userId: ctx.user.id }, "Updating About page content");
+
+  await setConfig(ServerConfigKeys.ABOUT_CONTENT, input, ctx.user.id, false);
+
+  return { success: true };
+});
+
 export const contentConfigProcedures = router({
   updateContentIndicators,
   updateUnits,
@@ -174,4 +195,6 @@ export const contentConfigProcedures = router({
   updatePrompts,
   getTimerKeywords,
   updateTimerKeywords,
+  getAbout,
+  updateAbout,
 });

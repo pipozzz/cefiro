@@ -169,8 +169,10 @@ async function generateThemeImageUrl(name: string, topTags: string[]): Promise<s
   }
 
   try {
-    if (await getObjectStore().exists(`themes/${slug}.jpg`)) {
-      return `/themes/${slug}.jpg`;
+    // Reuse an already-generated tile (WebP). A pre-WebP `.jpg` is intentionally
+    // not reused, so the next rebuild regenerates it as the smaller WebP.
+    if (await getObjectStore().exists(`themes/${slug}.webp`)) {
+      return `/themes/${slug}.webp`;
     }
 
     const image = await generateImage({

@@ -47,6 +47,9 @@ const MAX_WIDTH = 1280;
 const MAX_HEIGHT = 720;
 const FETCH_TIMEOUT = 30000; // 30 seconds
 const JPEG_QUALITY = 80;
+// WebP at q80 is visibly equivalent to our JPEG q80 but ~25–35% smaller — used
+// for generated theme tiles (see saveGeneratedThemeImageBytes).
+const WEBP_QUALITY = 80;
 
 // --- Utility helpers ---
 
@@ -177,7 +180,8 @@ function isValidImageBuffer(buffer: Buffer): boolean {
 async function convertToJpeg(
   buffer: Buffer,
   sourceExt: string,
-  fit: "inside" | "cover" = "inside"
+  fit: "inside" | "cover" = "inside",
+  format: "jpeg" | "webp" = "jpeg"
 ): Promise<Buffer> {
   try {
     // Validate input buffer
@@ -224,23 +228,24 @@ async function convertToJpeg(
       });
     }
 
-    const jpegBuffer = await sharpInstance
-      .jpeg({
-        quality: JPEG_QUALITY,
-        mozjpeg: true,
-        progressive: true,
-        chromaSubsampling: "4:2:0",
-      })
-      .toBuffer();
+    const outputBuffer =
+      format === "webp"
+        ? await sharpInstance.webp({ quality: WEBP_QUALITY }).toBuffer()
+        : await sharpInstance
+            .jpeg({
+              quality: JPEG_QUALITY,
+              mozjpeg: true,
+              progressive: true,
+              chromaSubsampling: "4:2:0",
+            })
+            .toBuffer();
 
-    const _outputMetadata = await sharp(jpegBuffer).metadata();
-
-    return jpegBuffer;
+    return outputBuffer;
   } catch (e) {
     const errorMsg = e instanceof Error ? e.message : String(e);
 
-    log.error({ err: e, sourceExt }, "Conversion failed");
-    throw new Error(`Failed to convert ${sourceExt} to JPEG: ${errorMsg}`, { cause: e });
+    log.error({ err: e, sourceExt, format }, "Conversion failed");
+    throw new Error(`Failed to convert ${sourceExt} to ${format}: ${errorMsg}`, { cause: e });
   }
 }
 
@@ -645,11 +650,12 @@ export async function saveGeneratedImageBytes(bytes: Buffer, recipeId: string): 
 /**
  * Save a generated discovery-theme tile image. Unlike recipe media, the file is
  * keyed by a name-derived `slug` rather than a content hash, so it survives the
- * wholesale theme rebuild and can be referenced as `/themes/{slug}.jpg` without
+ * wholesale theme rebuild and can be referenced as `/themes/{slug}.webp` without
  * re-storing the URL. The same size/format validation and 1280×720 cover-crop
- * normalisation applies; an existing object is overwritten, so regenerating a
- * theme replaces its image in place.
- * Path: uploads/themes/{slug}.jpg   URL: /themes/{slug}.jpg
+ * normalisation applies, encoding to WebP (smaller than JPEG at equal quality);
+ * an existing object is overwritten, so regenerating a theme replaces its image
+ * in place.
+ * Path: uploads/themes/{slug}.webp   URL: /themes/{slug}.webp
  */
 export async function saveGeneratedThemeImageBytes(bytes: Buffer, slug: string): Promise<string> {
   if (bytes.length > SERVER_CONFIG.MAX_IMAGE_FILE_SIZE) {
@@ -668,23 +674,24 @@ export async function saveGeneratedThemeImageBytes(bytes: Buffer, slug: string):
     throw new Error("Could not detect image format");
   }
 
-  const convertedBytes = await convertToJpeg(bytes, detectedExt, "cover");
+  const convertedBytes = await convertToJpeg(bytes, detectedExt, "cover", "webp");
   const finalBytes = Buffer.from(new Uint8Array(convertedBytes));
 
-  await objectStore.put(`themes/${slug}.jpg`, finalBytes, "image/jpeg");
+  await objectStore.put(`themes/${slug}.webp`, finalBytes, "image/webp");
 
-  return `/themes/${slug}.jpg`;
+  return `/themes/${slug}.webp`;
 }
 
 /**
  * Serve a generated theme tile image by its filename. Returns null when the name
- * is unsafe or the file is missing, so the caller can 404. The stored files are
- * `{slug}.jpg` where slug is a lowercase, hyphenated name slug.
+ * is unsafe or the file is missing, so the caller can 404. Files are
+ * `{slug}.webp` (slug = lowercase hyphenated name); `.jpg` is still accepted so
+ * tiles generated before the WebP switch keep serving until the next rebuild.
  */
 export async function readThemeImage(
   filename: string
 ): Promise<{ bytes: Buffer; contentType: string } | null> {
-  if (!/^[a-z0-9-]{1,80}\.jpg$/.test(filename)) {
+  if (!/^[a-z0-9-]{1,80}\.(webp|jpg)$/.test(filename)) {
     return null;
   }
 
@@ -694,7 +701,9 @@ export async function readThemeImage(
     return null;
   }
 
-  return { bytes: object.bytes, contentType: "image/jpeg" };
+  const contentType = filename.endsWith(".webp") ? "image/webp" : "image/jpeg";
+
+  return { bytes: object.bytes, contentType };
 }
 
 /**

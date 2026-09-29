@@ -58,7 +58,12 @@
     "emptyColdStart": "New recipes will appear here as the community shares them — check back soon.",
     "emptyFiltered": "No recipes match these filters. Try clearing a filter or searching instead.",
     "browseByCuisine": "По кухне",
-    "browseByCategory": "По категории"
+    "browseByTag": "По тегу",
+    "browseByCategory": "По категории",
+    "cuisineHeading": "Кухня",
+    "cuisineAll": "All",
+    "browseHeading": "Обзор рецептов",
+    "themesViewAll": "Показать все"
   },
   "categories": {
     "Breakfast": "Breakfast",
@@ -126,7 +131,8 @@
     "noRecipes": "No public recipes yet.",
     "cookbooksHeading": "Cookbooks",
     "metaDescription": "Recipes by @{handle} on Naša Kuchyňa.",
-    "ogTagline": "Recipes on Naša Kuchyňa"
+    "ogTagline": "Recipes on Naša Kuchyňa",
+    "themesHeading": "Темы"
   },
   "cookbook": {
     "notFoundTitle": "Cookbook not found",
@@ -180,7 +186,9 @@
     "moreLikeThis": "Похожие рецепты",
     "cookReadyAt": "Готово около {time}",
     "savedFromOriginal": "Adapted from the original recipe",
-    "savedFromBy": "by"
+    "savedFromBy": "by",
+    "addToGroceries": "Добавить в список",
+    "viewGroceries": "Показать список"
   },
   "feed": {
     "title": "Your feed",
@@ -326,5 +334,80 @@
     "indexTitle": "Cuisines",
     "indexSubtitle": "Browse public recipes by cuisine.",
     "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
+  },
+  "tagPage": {
+    "heading": "Рецепты с тегом #{tag}",
+    "subtitle": "Открывайте и сохраняйте публичные рецепты с тегом #{tag}.",
+    "empty": "Публичных рецептов с этим тегом пока нет.",
+    "browseAll": "Browse all recipes",
+    "indexTitle": "Теги",
+    "indexSubtitle": "Просматривайте публичные рецепты по тегу.",
+    "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
+  },
+  "themesPage": {
+    "indexTitle": "Откройте темы",
+    "indexSubtitle": "Просматривайте рецепты, сгруппированные по темам.",
+    "heading": "{theme}",
+    "subtitle": "Рецепты в теме {theme}.",
+    "searchPlaceholder": "Поиск тем…",
+    "searchAria": "Поиск тем",
+    "clearSearch": "Очистить поиск",
+    "sortLabel": "Сортировка:",
+    "sortPopular": "Популярные",
+    "sortName": "А–Я",
+    "empty": "Пока нет тем.",
+    "noneMatch": "Нет тем, соответствующих запросу.",
+    "browseAll": "Смотреть рецепты",
+    "allThemes": "Все темы"
+  },
+  "cuisineNames": {
+    "American": "American",
+    "Argentinian": "Argentinian",
+    "Asian": "Asian",
+    "Australian": "Australian",
+    "Austrian": "Austrian",
+    "Brazilian": "Brazilian",
+    "British": "British",
+    "Cajun": "Cajun",
+    "Caribbean": "Caribbean",
+    "Chinese": "Chinese",
+    "Cuban": "Cuban",
+    "Czech": "Czech",
+    "Ethiopian": "Ethiopian",
+    "Filipino": "Filipino",
+    "French": "French",
+    "German": "German",
+    "Greek": "Greek",
+    "Hungarian": "Hungarian",
+    "Indian": "Indian",
+    "Indonesian": "Indonesian",
+    "Irish": "Irish",
+    "Italian": "Italian",
+    "Japanese": "Japanese",
+    "Korean": "Korean",
+    "Lebanese": "Lebanese",
+    "Malaysian": "Malaysian",
+    "Mediterranean": "Mediterranean",
+    "Mexican": "Mexican",
+    "Middle Eastern": "Middle Eastern",
+    "Moroccan": "Moroccan",
+    "Nordic": "Nordic",
+    "Peruvian": "Peruvian",
+    "Polish": "Polish",
+    "Portuguese": "Portuguese",
+    "Russian": "Russian",
+    "Slovak": "Slovak",
+    "Slovenská": "Slovak",
+    "Spanish": "Spanish",
+    "Swedish": "Swedish",
+    "Swiss": "Swiss",
+    "Thai": "Thai",
+    "Turkish": "Turkish",
+    "Vietnamese": "Vietnamese"
+  },
+  "footer": {
+    "about": "О нас",
+    "terms": "Условия",
+    "privacy": "Конфиденциальность"
   }
 }

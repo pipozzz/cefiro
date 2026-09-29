@@ -4,6 +4,7 @@ import type { ServerConfigKey } from "@norish/config/zod/server-config";
 import { ServerConfigKeys } from "@norish/config/zod/server-config";
 import { getAllConfigs, getConfigSecret } from "@norish/db/repositories/server-config";
 import { getEffectivePrompts } from "@norish/shared-server/ai/prompts/loader";
+import { getAboutContent } from "@norish/shared-server/config/server-config-loader";
 import { trpcLogger as log } from "@norish/shared-server/logger";
 
 import { adminProcedure } from "../../middleware";
@@ -23,6 +24,10 @@ const getAllConfigsProcedure = adminProcedure.query(async ({ ctx }) => {
   const { values, overriddenFields } = await getEffectivePrompts();
 
   configs[ServerConfigKeys.PROMPTS] = { ...values, isOverridden: overriddenFields.length > 0 };
+
+  // About content falls back to the shipped default when unset; surface the
+  // effective value so the editor always has something to load.
+  configs[ServerConfigKeys.ABOUT_CONTENT] = await getAboutContent();
 
   return configs;
 });

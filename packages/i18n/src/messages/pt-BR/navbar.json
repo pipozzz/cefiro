@@ -21,7 +21,11 @@
       "updateAvailable": "v{version} disponível"
     },
     "openMenu": "Open user menu",
-    "menu": "User menu"
+    "menu": "User menu",
+    "publicProfile": {
+      "title": "Perfil público",
+      "description": "Veja seu perfil como os outros o veem"
+    }
   },
   "theme": {
     "title": "Tema",

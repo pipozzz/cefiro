@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { AuthedAppShell } from "@/app/(app)/authed-app-shell";
+import { PublicFooter } from "@/components/social/public-footer";
 import { PublicHeader } from "@/components/social/public-header";
 import { getTranslations } from "next-intl/server";
 
@@ -13,13 +14,23 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = t("metaTitle");
   const description = t("metaDescription");
 
+  // Absolute canonical for discovery. The proxy also serves this page at the bare
+  // root ("/") as an alias, so pinning the canonical to /discover keeps the root
+  // and /discover from competing as duplicate content while both share the card.
+  const h = await headers();
+  const proto = h.get("x-forwarded-proto") ?? "https";
+  const host = h.get("x-forwarded-host") ?? h.get("host");
+  const url = host ? `${proto}://${host}/discover` : undefined;
+
   return {
     title,
     description,
+    alternates: url ? { canonical: url } : undefined,
     openGraph: {
       type: "website",
       title,
       description,
+      url,
       siteName: "Naša Kuchyňa",
       images: [{ url: "/og-default.png", width: 1200, height: 630, alt: "Naša Kuchyňa" }],
     },
@@ -44,9 +55,10 @@ export default async function DiscoverLayout({ children }: { children: React.Rea
 
   return (
     <BaseProviders>
-      <div className="min-h-dvh">
+      <div className="flex min-h-dvh flex-col">
         <PublicHeader />
-        {children}
+        <div className="flex-1">{children}</div>
+        <PublicFooter />
       </div>
     </BaseProviders>
   );

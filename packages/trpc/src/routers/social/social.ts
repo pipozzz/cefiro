@@ -18,6 +18,8 @@ import {
   removeFavorite,
 } from "@norish/db/repositories/favorites";
 import {
+  countPublicRecipesByCategory,
+  countPublicRecipesByCuisine,
   followUser,
   getFollowCounts,
   getPublicRecipesByIds,
@@ -78,7 +80,7 @@ import {
   listImportedVisibleRecipeIds,
   listOwnRecipesForSharing,
 } from "@norish/db/repositories/recipes";
-import { getThemeById, listThemes } from "@norish/db/repositories/themes";
+import { getThemeById, listThemes, listThemesForUser } from "@norish/db/repositories/themes";
 import { getUserAllergies } from "@norish/db/repositories/user-allergies";
 import {
   getProfileByHandle,
@@ -141,6 +143,7 @@ import {
   UpsertProfileInputSchema,
 } from "@norish/shared/contracts/zod";
 import { PublicRecipeViewSchema } from "@norish/shared/contracts/zod/recipe-shares";
+import { cuisineSlug } from "@norish/shared/lib/cuisine-slug";
 
 import { formDataInputSchema, getUploadedFile } from "../../form-data";
 import { authedProcedure } from "../../middleware";
@@ -479,6 +482,69 @@ const getProfile = publicProcedure.input(GetProfileByHandleInputSchema).query(as
   return { profile: toPublicProfileDto(profile), counts };
 });
 
+/**
+ * The discovery themes a public profile's recipes fall into, each with a
+ * name-slug link to its theme page. Empty (not an error) for a private/missing
+ * profile, or when the cook has no embedded recipes / no themes exist yet.
+ */
+const profileThemes = publicProcedure
+  .input(GetProfileByHandleInputSchema)
+  .query(async ({ input }) => {
+    type ProfileTheme = { name: string; slug: string; recipeCount: number; image: string | null };
+
+    const profile = await getProfileByHandle(input.handle);
+
+    if (!profile || !profile.isPublic) {
+      return { themes: [] as ProfileTheme[] };
+    }
+
+    const [rows, catalog] = await Promise.all([
+      listThemesForUser(profile.userId),
+      // The theme catalog carries the tile image; index it by slug so the
+      // profile chips can show the same image as the discover theme tiles.
+      listThemes(200),
+    ]);
+
+    const imageBySlug = new Map<string, string | null>();
+
+    for (const theme of catalog) {
+      const slug = cuisineSlug(theme.name);
+
+      if (!slug || imageBySlug.has(slug)) {
+        continue;
+      }
+
+      imageBySlug.set(
+        slug,
+        (theme.image && theme.slug ? toSlugMediaUrl(theme.image, theme.slug) : null) ??
+          theme.generatedImage ??
+          null
+      );
+    }
+
+    const seen = new Set<string>();
+    const themesOut: ProfileTheme[] = [];
+
+    // Themes can share a name; merge by slug (the page key) keeping the largest.
+    for (const row of rows) {
+      const slug = cuisineSlug(row.name);
+
+      if (!slug || seen.has(slug)) {
+        continue;
+      }
+
+      seen.add(slug);
+      themesOut.push({
+        name: row.name,
+        slug,
+        recipeCount: row.recipeCount,
+        image: imageBySlug.get(slug) ?? null,
+      });
+    }
+
+    return { themes: themesOut };
+  });
+
 // --- Follow graph (authenticated) ---------------------------------------
 
 async function resolveFolloweeId(handle: string): Promise<{ userId: string }> {
@@ -601,6 +667,65 @@ const discover = publicProcedure.input(DiscoverInputSchema).query(async ({ ctx, 
 
   return { recipes: await toFeedCardsWithRatings(items), nextCursor };
 });
+
+/**
+ * Category facet counts for /discover: how many public recipes are in each meal
+ * category under the reader's current tag / "ready in" / dietary filters, so the
+ * category chips can show counts. Dietary is resolved server-side from the
+ * session (never sent in the query string), like `discover`.
+ */
+const discoverCategoryCounts = publicProcedure
+  .input(
+    z.object({
+      tag: z.string().trim().min(1).max(50).optional(),
+      maxMinutes: z.number().int().min(1).max(1440).optional(),
+      hideMyAllergens: z.boolean().optional(),
+    })
+  )
+  .query(async ({ ctx, input }) => {
+    let excludeAllergenTags: string[] | undefined;
+
+    if (input.hideMyAllergens && ctx.user) {
+      const { allergies } = await getUserAllergies(ctx.user.id);
+
+      excludeAllergenTags = allergies;
+    }
+
+    return countPublicRecipesByCategory({
+      tag: input.tag,
+      maxMinutes: input.maxMinutes,
+      excludeAllergenTags,
+    });
+  });
+
+/**
+ * Cuisine facet counts for /discover: how many public recipes carry each cuisine
+ * under the reader's current tag / "ready in" / dietary filters, so the cuisine
+ * chips can show counts. Same server-side allergen resolution as `discover`.
+ */
+const discoverCuisineCounts = publicProcedure
+  .input(
+    z.object({
+      tag: z.string().trim().min(1).max(50).optional(),
+      maxMinutes: z.number().int().min(1).max(1440).optional(),
+      hideMyAllergens: z.boolean().optional(),
+    })
+  )
+  .query(async ({ ctx, input }) => {
+    let excludeAllergenTags: string[] | undefined;
+
+    if (input.hideMyAllergens && ctx.user) {
+      const { allergies } = await getUserAllergies(ctx.user.id);
+
+      excludeAllergenTags = allergies;
+    }
+
+    return countPublicRecipesByCuisine({
+      tag: input.tag,
+      maxMinutes: input.maxMinutes,
+      excludeAllergenTags,
+    });
+  });
 
 // --- Search -------------------------------------------------------------
 
@@ -747,6 +872,70 @@ const themeRecipes = publicProcedure
     const rows = await getPublicRecipesByIds(similar.map((row) => row.recipeId));
 
     // `getPublicRecipesByIds` returns storage order; restore similarity order.
+    const byId = new Map(rows.map((row) => [row.id, row]));
+    const ordered = similar
+      .map((row) => byId.get(row.recipeId))
+      .filter((row): row is (typeof rows)[number] => Boolean(row));
+
+    return { name: theme.name, recipes: await toFeedCardsWithRatings(ordered) };
+  });
+
+// Every semantic theme, for the dedicated themes browse page. Each carries a
+// name-derived `slug` (the stable, shareable key: it survives a rebuild as long
+// as the theme name does, and is the same slug the generated tile image uses).
+// Deduped by slug — clusters occasionally share a name — keeping the highest
+// ranked. Ordered by rank (largest clusters first); the client re-sorts/filters.
+const themesList = publicProcedure
+  .input(z.object({ limit: z.number().int().min(1).max(200).default(120) }))
+  .query(async ({ input }) => {
+    const themes = await listThemes(input.limit);
+    const seen = new Set<string>();
+    const out: { slug: string; name: string; recipeCount: number; image: string | null }[] = [];
+
+    for (const theme of themes) {
+      const slug = cuisineSlug(theme.name);
+
+      if (!slug || seen.has(slug)) {
+        continue;
+      }
+
+      seen.add(slug);
+      out.push({
+        slug,
+        name: theme.name,
+        recipeCount: theme.recipeCount,
+        image:
+          (theme.image && theme.slug ? toSlugMediaUrl(theme.image, theme.slug) : null) ??
+          theme.generatedImage ??
+          null,
+      });
+    }
+
+    return { themes: out };
+  });
+
+// One theme's recipes resolved by its name slug (the stable URL key) rather than
+// the churning id — powers the per-theme page at /discover/themes/[slug]. Same
+// centroid vector search as `themeRecipes`; empty (not an error) when no current
+// theme matches the slug, so a stale link degrades quietly.
+const themeRecipesBySlug = publicProcedure
+  .input(
+    z.object({
+      slug: z.string().trim().min(1).max(80),
+      limit: z.number().int().min(1).max(48).default(24),
+    })
+  )
+  .query(async ({ input }) => {
+    const wanted = input.slug.toLowerCase();
+    const themes = await listThemes(200);
+    const theme = themes.find((row) => cuisineSlug(row.name) === wanted);
+
+    if (!theme) {
+      return { name: null as string | null, recipes: [] };
+    }
+
+    const similar = await findSimilarPublicRecipes(theme.centroid, input.limit);
+    const rows = await getPublicRecipesByIds(similar.map((row) => row.recipeId));
     const byId = new Map(rows.map((row) => [row.id, row]));
     const ordered = similar
       .map((row) => byId.get(row.recipeId))
@@ -1470,6 +1659,7 @@ export const socialProcedures = router({
   unpublishImported,
   myRecipesForSharing,
   getProfile,
+  profileThemes,
   listProfileRecipes,
   getPublicRecipe,
   follow,
@@ -1478,11 +1668,15 @@ export const socialProcedures = router({
   feed,
   forYou,
   discover,
+  discoverCategoryCounts,
+  discoverCuisineCounts,
   search,
   searchByIngredients,
   trendingTopics,
   discoverThemes,
   themeRecipes,
+  themesList,
+  themeRecipesBySlug,
   surpriseRecipes,
   relatedRecipes,
   recipeOfTheDay,

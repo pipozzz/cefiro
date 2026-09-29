@@ -3,67 +3,12 @@
 import Link from "next/link";
 import { useTRPC } from "@/app/providers/trpc-provider";
 import { NotFoundView } from "@/components/shared/not-found-view";
+import { ChefHatIcon } from "@/components/social/chef-hat-icon";
 import { FollowButton } from "@/components/social/follow-button";
 import { ShareLinkButton } from "@/components/social/share-link-button";
-import { StarsDisplay } from "@/components/social/stars-display";
+import { SocialRecipeGrid } from "@/components/social/social-recipe-card";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-
-type RecipeCard = {
-  slug: string | null;
-  name: string;
-  description: string | null;
-  image: string | null;
-  dishColor: string | null;
-  totalMinutes: number | null;
-  publishedAt: Date | null;
-  rating?: { average: number | null; count: number };
-};
-
-function RecipeCardTile({ recipe }: { recipe: RecipeCard }) {
-  if (!recipe.slug) {
-    return null;
-  }
-
-  return (
-    <Link
-      className="group bg-content1 ring-default-100 flex flex-col overflow-hidden rounded-2xl shadow-sm ring-1 transition hover:-translate-y-0.5 hover:shadow-md"
-      href={`/r/${recipe.slug}`}
-    >
-      <div className="bg-content2 relative aspect-[4/3] w-full overflow-hidden">
-        {recipe.image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            alt={recipe.name}
-            className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-            src={recipe.image}
-          />
-        ) : (
-          <div className="h-full w-full" style={{ background: recipe.dishColor ?? undefined }} />
-        )}
-        {recipe.totalMinutes ? (
-          <span className="absolute top-2 right-2 rounded-full bg-black/70 px-2 py-0.5 text-xs font-medium text-white">
-            {recipe.totalMinutes} min
-          </span>
-        ) : null}
-      </div>
-      <div className="flex flex-1 flex-col p-4">
-        <h3 className="text-foreground line-clamp-2 font-semibold">{recipe.name}</h3>
-        {recipe.description ? (
-          <p className="text-default-500 mt-1 line-clamp-2 text-sm">{recipe.description}</p>
-        ) : null}
-        {recipe.rating && recipe.rating.average && recipe.rating.count > 0 ? (
-          <div className="mt-2 flex items-center gap-1.5">
-            <StarsDisplay size={13} value={recipe.rating.average} />
-            <span className="text-default-500 text-xs">
-              {recipe.rating.average.toFixed(1)} ({recipe.rating.count})
-            </span>
-          </div>
-        ) : null}
-      </div>
-    </Link>
-  );
-}
 
 type CookbookCard = {
   slug: string;
@@ -110,6 +55,7 @@ export function PublicProfileView({ handle }: { handle: string }) {
   const trpc = useTRPC();
   const t = useTranslations("social.profile");
   const tCookbook = useTranslations("social.cookbook");
+  const tDiscover = useTranslations("social.discover");
 
   const profileQuery = useQuery({
     ...trpc.social.getProfile.queryOptions({ handle }),
@@ -128,6 +74,12 @@ export function PublicProfileView({ handle }: { handle: string }) {
     enabled: profileQuery.isSuccess,
   });
 
+  const themesQuery = useQuery({
+    ...trpc.social.profileThemes.queryOptions({ handle }),
+    retry: false,
+    enabled: profileQuery.isSuccess,
+  });
+
   if (profileQuery.isLoading) {
     return (
       <div className="mx-auto max-w-5xl animate-pulse px-4 py-10 md:px-6">
@@ -142,9 +94,12 @@ export function PublicProfileView({ handle }: { handle: string }) {
   }
 
   const { profile, counts } = profileQuery.data;
-  const displayName = profile.displayName ?? `@${profile.handle}`;
+  // Fall back to the bare handle (not "@handle") so the name heading doesn't read
+  // "@pipo" directly above the "@pipo" handle line.
+  const displayName = profile.displayName ?? profile.handle;
   const recipes = recipesQuery.data?.recipes ?? [];
   const cookbooks = cookbooksQuery.data?.cookbooks ?? [];
+  const themes = themesQuery.data?.themes ?? [];
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-24 md:px-6">
@@ -158,8 +113,8 @@ export function PublicProfileView({ handle }: { handle: string }) {
             src={profile.avatarUrl}
           />
         ) : (
-          <span className="bg-primary text-primary-foreground flex h-24 w-24 items-center justify-center rounded-full text-3xl font-bold">
-            {displayName.charAt(0).toUpperCase()}
+          <span className="bg-primary text-primary-foreground flex h-24 w-24 items-center justify-center rounded-full">
+            <ChefHatIcon className="h-12 w-12" />
           </span>
         )}
 
@@ -205,6 +160,46 @@ export function PublicProfileView({ handle }: { handle: string }) {
         </div>
       </header>
 
+      {/* Themes this cook's recipes fall into — image tiles linking to each
+          theme's page (same look as the discover themes browse). */}
+      {themes.length > 0 ? (
+        <section className="mt-10">
+          <h2 className="text-foreground mb-4 text-lg font-semibold">{t("themesHeading")}</h2>
+          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {themes.map((theme) => (
+              <li key={theme.slug}>
+                <Link
+                  className="bg-content2 hover:bg-content3 block overflow-hidden rounded-2xl no-underline transition"
+                  href={`/discover/themes/${theme.slug}`}
+                >
+                  <div className="bg-content3 relative h-28 w-full">
+                    {theme.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        alt=""
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                        src={theme.image}
+                      />
+                    ) : (
+                      <div className="text-default-400 flex h-full w-full items-center justify-center text-3xl font-semibold">
+                        {theme.name.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-3">
+                    <span className="text-foreground block truncate font-medium">{theme.name}</span>
+                    <span className="text-default-500 text-xs">
+                      {tDiscover("themeCount", { count: theme.recipeCount })}
+                    </span>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
       {/* Cookbooks */}
       {cookbooks.length > 0 ? (
         <section className="mt-10">
@@ -238,11 +233,7 @@ export function PublicProfileView({ handle }: { handle: string }) {
             {t("noRecipes")}
           </p>
         ) : (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {recipes.map((recipe) => (
-              <RecipeCardTile key={recipe.slug} recipe={recipe} />
-            ))}
-          </div>
+          <SocialRecipeGrid recipes={recipes} />
         )}
       </section>
     </div>

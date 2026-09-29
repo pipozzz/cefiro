@@ -35,6 +35,20 @@ describe("proxy share access", () => {
     expect(getSessionMock).not.toHaveBeenCalled();
   });
 
+  it("allows generated discover-theme images without an authenticated session", async () => {
+    const response = await proxy(new NextRequest("http://localhost/themes/quick-weeknight.jpg"));
+
+    expect(response.headers.get("x-middleware-next")).toBe("1");
+    expect(getSessionMock).not.toHaveBeenCalled();
+  });
+
+  it("allows the About page without an authenticated session", async () => {
+    const response = await proxy(new NextRequest("http://localhost/about"));
+
+    expect(response.headers.get("x-middleware-next")).toBe("1");
+    expect(getSessionMock).not.toHaveBeenCalled();
+  });
+
   it("excludes public PWA assets from the Next proxy matcher", () => {
     expect(config.matcher[0]).toContain("manifest\\.webmanifest");
     expect(config.matcher[0]).toContain("sw\\.js");
@@ -44,6 +58,17 @@ describe("proxy share access", () => {
     // script answered by a redirect is refused, so it can never sit behind
     // the auth redirect.
     expect(config.matcher[0]).toContain("serwist/");
+  });
+
+  it("rewrites the anonymous root to /discover so the bare domain serves OG tags", async () => {
+    getSessionMock.mockResolvedValue(null);
+
+    const response = await proxy(new NextRequest("http://localhost/"));
+
+    // A rewrite (not a redirect): the URL stays "/" and answers 200 with
+    // discovery's HTML, so a shared root link previews like /discover.
+    expect(response.status).not.toBe(307);
+    expect(response.headers.get("x-middleware-rewrite")).toContain("/discover");
   });
 
   it("redirects anonymous private recipe media requests", async () => {

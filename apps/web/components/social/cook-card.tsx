@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 
+import { ChefHatIcon } from "./chef-hat-icon";
 import { FollowButton } from "./follow-button";
 
 export type CookCardData = {
@@ -28,8 +29,8 @@ export function CookCard({ cook }: { cook: CookCardData }) {
             className="h-11 w-11 flex-shrink-0 rounded-full object-cover"
           />
         ) : (
-          <span className="bg-primary text-primary-foreground flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full text-base font-semibold">
-            {name.charAt(0).toUpperCase()}
+          <span className="bg-primary text-primary-foreground flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full">
+            <ChefHatIcon className="h-6 w-6" />
           </span>
         )}
         <span className="min-w-0">

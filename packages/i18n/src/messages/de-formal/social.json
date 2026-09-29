@@ -58,7 +58,12 @@
     "emptyColdStart": "New recipes will appear here as the community shares them — check back soon.",
     "emptyFiltered": "No recipes match these filters. Try clearing a filter or searching instead.",
     "browseByCuisine": "Nach Küche durchsuchen",
-    "browseByCategory": "Nach Kategorie durchsuchen"
+    "browseByTag": "Nach Tag durchsuchen",
+    "browseByCategory": "Nach Kategorie durchsuchen",
+    "cuisineHeading": "Küche",
+    "cuisineAll": "All",
+    "browseHeading": "Rezepte durchsuchen",
+    "themesViewAll": "Alle ansehen"
   },
   "categories": {
     "Breakfast": "Breakfast",
@@ -126,7 +131,8 @@
     "noRecipes": "No public recipes yet.",
     "cookbooksHeading": "Cookbooks",
     "metaDescription": "Recipes by @{handle} on Naša Kuchyňa.",
-    "ogTagline": "Recipes on Naša Kuchyňa"
+    "ogTagline": "Recipes on Naša Kuchyňa",
+    "themesHeading": "Themen"
   },
   "cookbook": {
     "notFoundTitle": "Cookbook not found",
@@ -180,7 +186,9 @@
     "moreLikeThis": "Ähnliche Rezepte",
     "cookReadyAt": "Fertig gegen {time}",
     "savedFromOriginal": "Adapted from the original recipe",
-    "savedFromBy": "by"
+    "savedFromBy": "by",
+    "addToGroceries": "Zur Liste hinzufügen",
+    "viewGroceries": "Liste ansehen"
   },
   "feed": {
     "title": "Your feed",
@@ -326,5 +334,80 @@
     "indexTitle": "Cuisines",
     "indexSubtitle": "Browse public recipes by cuisine.",
     "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
+  },
+  "tagPage": {
+    "heading": "Rezepte mit #{tag}",
+    "subtitle": "Entdecken und speichern Sie öffentliche Rezepte mit #{tag}.",
+    "empty": "Noch keine öffentlichen Rezepte mit diesem Tag.",
+    "browseAll": "Browse all recipes",
+    "indexTitle": "Tags",
+    "indexSubtitle": "Durchsuchen Sie öffentliche Rezepte nach Tag.",
+    "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
+  },
+  "themesPage": {
+    "indexTitle": "Themen entdecken",
+    "indexSubtitle": "Durchsuchen Sie Rezepte nach Themen gruppiert.",
+    "heading": "{theme}",
+    "subtitle": "Rezepte im Thema {theme}.",
+    "searchPlaceholder": "Themen suchen…",
+    "searchAria": "Themen suchen",
+    "clearSearch": "Suche löschen",
+    "sortLabel": "Sortieren:",
+    "sortPopular": "Beliebteste",
+    "sortName": "A–Z",
+    "empty": "Noch keine Themen.",
+    "noneMatch": "Keine Themen entsprechen Ihrer Suche.",
+    "browseAll": "Rezepte durchsuchen",
+    "allThemes": "Alle Themen"
+  },
+  "cuisineNames": {
+    "American": "American",
+    "Argentinian": "Argentinian",
+    "Asian": "Asian",
+    "Australian": "Australian",
+    "Austrian": "Austrian",
+    "Brazilian": "Brazilian",
+    "British": "British",
+    "Cajun": "Cajun",
+    "Caribbean": "Caribbean",
+    "Chinese": "Chinese",
+    "Cuban": "Cuban",
+    "Czech": "Czech",
+    "Ethiopian": "Ethiopian",
+    "Filipino": "Filipino",
+    "French": "French",
+    "German": "German",
+    "Greek": "Greek",
+    "Hungarian": "Hungarian",
+    "Indian": "Indian",
+    "Indonesian": "Indonesian",
+    "Irish": "Irish",
+    "Italian": "Italian",
+    "Japanese": "Japanese",
+    "Korean": "Korean",
+    "Lebanese": "Lebanese",
+    "Malaysian": "Malaysian",
+    "Mediterranean": "Mediterranean",
+    "Mexican": "Mexican",
+    "Middle Eastern": "Middle Eastern",
+    "Moroccan": "Moroccan",
+    "Nordic": "Nordic",
+    "Peruvian": "Peruvian",
+    "Polish": "Polish",
+    "Portuguese": "Portuguese",
+    "Russian": "Russian",
+    "Slovak": "Slovak",
+    "Slovenská": "Slovak",
+    "Spanish": "Spanish",
+    "Swedish": "Swedish",
+    "Swiss": "Swiss",
+    "Thai": "Thai",
+    "Turkish": "Turkish",
+    "Vietnamese": "Vietnamese"
+  },
+  "footer": {
+    "about": "Über uns",
+    "terms": "AGB",
+    "privacy": "Datenschutz"
   }
 }

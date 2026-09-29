@@ -11,6 +11,7 @@ import { ReadonlyNutritionCard } from "@/components/recipes/readonly-nutrition";
 import { ReadonlyStepsList } from "@/components/recipes/readonly-steps-list";
 import { NotFoundView } from "@/components/shared/not-found-view";
 import RecipeSkeleton from "@/components/skeleton/recipe-skeleton";
+import { ChefHatIcon } from "@/components/social/chef-hat-icon";
 import { CommentsSection } from "@/components/social/comments-section";
 import { LikeButton } from "@/components/social/like-button";
 import { PrintRecipeButton } from "@/components/social/print-recipe-button";
@@ -25,6 +26,10 @@ import { useTranslations } from "next-intl";
 
 import type { RouterOutputs } from "@norish/trpc/client";
 
+import {
+  AddToGroceriesPublicButton,
+  AddToGroceriesSignInButton,
+} from "./add-to-groceries-public-button";
 import { RecipePrintView } from "./recipe-print-view";
 import { RelatedRecipes } from "./related-recipes";
 
@@ -54,6 +59,7 @@ function AuthorChip({
 
   return (
     <Link
+      aria-label={name}
       className="bg-content2 hover:bg-content3 inline-flex items-center gap-2 rounded-full py-1 pr-3 pl-1 transition"
       href={`/u/${author.handle}`}
     >
@@ -61,8 +67,8 @@ function AuthorChip({
         // eslint-disable-next-line @next/next/no-img-element
         <img alt="" className="h-7 w-7 rounded-full object-cover" src={author.avatarUrl} />
       ) : (
-        <span className="bg-primary text-primary-foreground flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold">
-          {name.charAt(0).toUpperCase()}
+        <span className="bg-primary text-primary-foreground flex h-7 w-7 items-center justify-center rounded-full">
+          <ChefHatIcon className="h-4 w-4" />
         </span>
       )}
       <span className="text-foreground text-sm font-medium">{name}</span>
@@ -76,9 +82,11 @@ type PublicRecipeData = RouterOutputs["social"]["getPublicRecipe"];
 
 export function PublicRecipeView({
   slug,
+  isAuthed,
   initialData,
 }: {
   slug: string;
+  isAuthed: boolean;
   initialData?: PublicRecipeData;
 }) {
   const trpc = useTRPC();
@@ -97,7 +105,7 @@ export function PublicRecipeView({
     return <NotFoundView message={t("notFoundMessage")} title={t("notFoundTitle")} />;
   }
 
-  return <PublicRecipeBody data={data} slug={slug} />;
+  return <PublicRecipeBody data={data} isAuthed={isAuthed} slug={slug} />;
 }
 
 /**
@@ -107,7 +115,15 @@ export function PublicRecipeView({
  * the yield, tick off ingredients, and cook through timer-aware steps — while
  * keeping the discovery-only social bar (like, save, rate, comment).
  */
-function PublicRecipeBody({ slug, data }: { slug: string; data: PublicRecipeData }) {
+function PublicRecipeBody({
+  slug,
+  isAuthed,
+  data,
+}: {
+  slug: string;
+  isAuthed: boolean;
+  data: PublicRecipeData;
+}) {
   const t = useTranslations("social.recipe");
   const tCat = useTranslations("social.categories");
   const { units } = usePublicRecipeConfigQuery();
@@ -257,6 +273,11 @@ function PublicRecipeBody({ slug, data }: { slug: string; data: PublicRecipeData
           />
           <LikeButton initialCount={favoriteCount} recipeId={recipeId} slug={slug} />
           <SaveRecipeButton recipeId={recipeId} slug={slug} />
+          {isAuthed ? (
+            <AddToGroceriesPublicButton ingredients={adjustedIngredients} slug={slug} />
+          ) : (
+            <AddToGroceriesSignInButton slug={slug} />
+          )}
           <ShareRecipeButton slug={slug} title={recipe.name} />
           <PrintRecipeButton />
         </div>

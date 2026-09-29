@@ -58,7 +58,12 @@
     "emptyColdStart": "Nové recepty sa tu objavia, keď ich komunita zverejní — vráť sa čoskoro.",
     "emptyFiltered": "Týmto filtrom nezodpovedá žiadny recept. Skús zrušiť filter alebo vyhľadávať.",
     "browseByCuisine": "Prehľadávať podľa kuchyne",
-    "browseByCategory": "Prehľadávať podľa kategórie"
+    "browseByTag": "Prehľadávať podľa tagu",
+    "browseByCategory": "Prehľadávať podľa kategórie",
+    "cuisineHeading": "Kuchyňa",
+    "cuisineAll": "Všetko",
+    "browseHeading": "Prehľadávať recepty",
+    "themesViewAll": "Zobraziť všetky"
   },
   "categories": {
     "Breakfast": "Raňajky",
@@ -126,7 +131,8 @@
     "noRecipes": "Zatiaľ žiadne verejné recepty.",
     "cookbooksHeading": "Receptáre",
     "metaDescription": "Recepty od @{handle} na Našej Kuchyni.",
-    "ogTagline": "Recepty na Našej Kuchyni"
+    "ogTagline": "Recepty na Našej Kuchyni",
+    "themesHeading": "Témy"
   },
   "cookbook": {
     "notFoundTitle": "Receptár sa nenašiel",
@@ -180,7 +186,9 @@
     "moreLikeThis": "Podobné recepty",
     "cookReadyAt": "Hotové okolo {time}",
     "savedFromOriginal": "Odvodené z pôvodného receptu",
-    "savedFromBy": "od"
+    "savedFromBy": "od",
+    "addToGroceries": "Pridať do zoznamu",
+    "viewGroceries": "Zobraziť zoznam"
   },
   "feed": {
     "title": "Tvoj feed",
@@ -326,5 +334,80 @@
     "indexTitle": "Kuchyne",
     "indexSubtitle": "Prehliadajte verejné recepty podľa kuchyne.",
     "recipeCount": "{count, plural, one {# recept} few {# recepty} many {# receptu} other {# receptov}}"
+  },
+  "tagPage": {
+    "heading": "Recepty s tagom #{tag}",
+    "subtitle": "Objavujte a ukladajte verejné recepty s tagom #{tag}.",
+    "empty": "Pre tento tag zatiaľ nie sú žiadne verejné recepty.",
+    "browseAll": "Prehliadať všetky recepty",
+    "indexTitle": "Tagy",
+    "indexSubtitle": "Prehliadajte verejné recepty podľa tagu.",
+    "recipeCount": "{count, plural, one {# recept} few {# recepty} many {# receptu} other {# receptov}}"
+  },
+  "themesPage": {
+    "indexTitle": "Objavuj témy",
+    "indexSubtitle": "Prehľadávaj recepty zoskupené do tém.",
+    "heading": "{theme}",
+    "subtitle": "Recepty v téme {theme}.",
+    "searchPlaceholder": "Hľadaj tému…",
+    "searchAria": "Hľadať tému",
+    "clearSearch": "Vymazať hľadanie",
+    "sortLabel": "Zoradiť:",
+    "sortPopular": "Najobľúbenejšie",
+    "sortName": "A–Z",
+    "empty": "Zatiaľ žiadne témy.",
+    "noneMatch": "Hľadaniu nezodpovedá žiadna téma.",
+    "browseAll": "Objavuj recepty",
+    "allThemes": "Všetky témy"
+  },
+  "cuisineNames": {
+    "American": "Americká",
+    "Argentinian": "Argentínska",
+    "Asian": "Ázijská",
+    "Australian": "Austrálska",
+    "Austrian": "Rakúska",
+    "Brazilian": "Brazílska",
+    "British": "Britská",
+    "Cajun": "Cajunská",
+    "Caribbean": "Karibská",
+    "Chinese": "Čínska",
+    "Cuban": "Kubánska",
+    "Czech": "Česká",
+    "Ethiopian": "Etiópska",
+    "Filipino": "Filipínska",
+    "French": "Francúzska",
+    "German": "Nemecká",
+    "Greek": "Grécka",
+    "Hungarian": "Maďarská",
+    "Indian": "Indická",
+    "Indonesian": "Indonézska",
+    "Irish": "Írska",
+    "Italian": "Talianska",
+    "Japanese": "Japonská",
+    "Korean": "Kórejská",
+    "Lebanese": "Libanonská",
+    "Malaysian": "Malajzijská",
+    "Mediterranean": "Stredomorská",
+    "Mexican": "Mexická",
+    "Middle Eastern": "Blízkovýchodná",
+    "Moroccan": "Marocká",
+    "Nordic": "Severská",
+    "Peruvian": "Peruánska",
+    "Polish": "Poľská",
+    "Portuguese": "Portugalská",
+    "Russian": "Ruská",
+    "Slovak": "Slovenská",
+    "Slovenská": "Slovenská",
+    "Spanish": "Španielska",
+    "Swedish": "Švédska",
+    "Swiss": "Švajčiarska",
+    "Thai": "Thajská",
+    "Turkish": "Turecká",
+    "Vietnamese": "Vietnamská"
+  },
+  "footer": {
+    "about": "O nás",
+    "terms": "Podmienky",
+    "privacy": "Súkromie"
   }
 }

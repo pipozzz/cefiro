@@ -11,6 +11,8 @@ import { useTranslations } from "next-intl";
 
 import { useSession } from "@norish/shared/lib/auth/client";
 
+import { ChefHatIcon } from "./chef-hat-icon";
+
 type CommentsTranslator = ReturnType<typeof useTranslations<"social.comments">>;
 
 function timeAgo(date: Date, t: CommentsTranslator): string {
@@ -184,8 +186,8 @@ export function CommentsSection({
                     className="h-8 w-8 rounded-full object-cover"
                   />
                 ) : (
-                  <span className="bg-primary text-primary-foreground flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
-                    {name.charAt(0).toUpperCase()}
+                  <span className="bg-primary text-primary-foreground flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
+                    <ChefHatIcon className="h-4 w-4" />
                   </span>
                 )}
                 <div className="flex-1">

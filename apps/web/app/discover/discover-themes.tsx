@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useTRPC } from "@/app/providers/trpc-provider";
 import { ClockIcon } from "@heroicons/react/24/outline";
 import { useQuery } from "@tanstack/react-query";
@@ -117,7 +118,12 @@ export function DiscoverThemes({
 
   return (
     <div className="mb-6">
-      <h2 className="text-foreground mb-3 text-sm font-semibold">{t("themesHeading")}</h2>
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <h2 className="text-foreground text-sm font-semibold">{t("themesHeading")}</h2>
+        <Link className="text-primary text-xs font-medium hover:underline" href="/discover/themes">
+          {t("themesViewAll")}
+        </Link>
+      </div>
       <div className="-mx-1 flex gap-3 overflow-x-auto px-1 pb-1">
         <button
           className={`${tileClass} bg-accent-soft hover:opacity-90`}

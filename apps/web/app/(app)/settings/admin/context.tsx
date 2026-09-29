@@ -5,6 +5,7 @@ import { createContext, useCallback, useContext } from "react";
 import { useAdminConfigsQuery, useAdminMutations } from "@/hooks/admin";
 
 import type {
+  AboutContent,
   AIConfig,
   AuthProviderGitHub,
   AuthProviderGitHubInput,
@@ -45,6 +46,7 @@ interface AdminSettingsContextValue {
   recipePermissionPolicy: RecipePermissionPolicy | undefined;
   prompts: PromptsConfig | undefined;
   timerKeywords: TimerKeywordsConfig | undefined;
+  aboutContent: AboutContent | undefined;
 
   // Loading states
   isLoading: boolean;
@@ -80,6 +82,7 @@ interface AdminSettingsContextValue {
   updateTimerKeywords: (
     config: TimerKeywordsInput
   ) => Promise<{ success: boolean; error?: string }>;
+  updateAboutContent: (config: AboutContent) => Promise<{ success: boolean; error?: string }>;
   updateSchedulerMonths: (months: number) => Promise<{ success: boolean; error?: string }>;
   updateRecipePermissionPolicy: (
     policy: RecipePermissionPolicy
@@ -136,6 +139,7 @@ export function AdminSettingsProvider({ children }: { children: ReactNode }) {
     RecipePermissionPolicy | undefined;
   const prompts = configs[ServerConfigKeys.PROMPTS] as PromptsConfig | undefined;
   const timerKeywords = configs[ServerConfigKeys.TIMER_KEYWORDS] as TimerKeywordsConfig | undefined;
+  const aboutContent = configs[ServerConfigKeys.ABOUT_CONTENT] as AboutContent | undefined;
 
   // Actions - wrap mutations
   const updateRegistration = useCallback(
@@ -243,6 +247,13 @@ export function AdminSettingsProvider({ children }: { children: ReactNode }) {
     [mutations]
   );
 
+  const updateAbout = useCallback(
+    async (config: AboutContent) => {
+      return mutations.updateAboutContent(config);
+    },
+    [mutations]
+  );
+
   const updateScheduler = useCallback(
     async (months: number) => {
       return mutations.updateSchedulerMonths(months);
@@ -310,6 +321,7 @@ export function AdminSettingsProvider({ children }: { children: ReactNode }) {
     recipePermissionPolicy,
     prompts,
     timerKeywords,
+    aboutContent,
     isLoading,
     updateRegistration,
     updatePasswordAuth,
@@ -326,6 +338,7 @@ export function AdminSettingsProvider({ children }: { children: ReactNode }) {
     updateImageGenerationConfig: updateImageGeneration,
     updatePrompts: updatePromptsConfig,
     updateTimerKeywords: updateTimerKeywordsConfig,
+    updateAboutContent: updateAbout,
     updateSchedulerMonths: updateScheduler,
     updateRecipePermissionPolicy: updatePermissionPolicy,
     restoreDefaultConfig: restoreDefault,

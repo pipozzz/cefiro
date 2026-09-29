@@ -1002,6 +1002,15 @@
       "notConfigured": "Email is not configured (set SMTP_HOST and EMAIL_FROM).",
       "failed": "Send failed: {error}",
       "error": "Could not send the test email"
+    },
+    "aboutContent": {
+      "title": "About page",
+      "description": "Edit the public About page copy shown at /about. The body supports Markdown (headings, links, lists).",
+      "slovak": "Slovak",
+      "english": "English",
+      "titleLabel": "Page title",
+      "bodyLabel": "Body (Markdown)",
+      "bodyHelp": "Supports Markdown: ## heading, **bold**, [link](https://…), - list."
     }
   },
   "archiveExport": {

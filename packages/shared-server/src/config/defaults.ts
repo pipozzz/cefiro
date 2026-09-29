@@ -5,6 +5,7 @@ import defaultRecurrenceConfig from "@norish/config/recurrence-config.default.js
 import defaultTimerKeywords from "@norish/config/timer-keywords.default.json";
 import defaultUnits from "@norish/config/units.default.json";
 import {
+  DEFAULT_ABOUT_CONTENT,
   DEFAULT_JOB_RETENTION,
   DEFAULT_RECIPE_PERMISSION_POLICY,
   ServerConfigKeys,
@@ -51,6 +52,8 @@ export function getDefaultConfigValue(key: ServerConfigKey): unknown {
       return DEFAULT_LOCALE_CONFIG;
     case ServerConfigKeys.TIMER_KEYWORDS:
       return { ...defaultTimerKeywords, isOverridden: false };
+    case ServerConfigKeys.ABOUT_CONTENT:
+      return DEFAULT_ABOUT_CONTENT;
     default:
       return null;
   }
