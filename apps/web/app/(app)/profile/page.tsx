@@ -203,11 +203,7 @@ export default function ProfileSettingsPage() {
           <label className="text-foreground mb-2 block text-sm font-medium">
             {t("avatarLabel")}
           </label>
-          <AvatarUpload
-            value={avatarUrl.trim() || null}
-            onChange={setAvatarUrl}
-            name={displayName || handle}
-          />
+          <AvatarUpload value={avatarUrl.trim() || null} onChange={setAvatarUrl} />
         </div>
 
         {/* Associated via htmlFor + nested control, with visible text below;

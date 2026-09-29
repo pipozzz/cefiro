@@ -11,6 +11,7 @@ import { ReadonlyNutritionCard } from "@/components/recipes/readonly-nutrition";
 import { ReadonlyStepsList } from "@/components/recipes/readonly-steps-list";
 import { NotFoundView } from "@/components/shared/not-found-view";
 import RecipeSkeleton from "@/components/skeleton/recipe-skeleton";
+import { ChefHatIcon } from "@/components/social/chef-hat-icon";
 import { CommentsSection } from "@/components/social/comments-section";
 import { LikeButton } from "@/components/social/like-button";
 import { PrintRecipeButton } from "@/components/social/print-recipe-button";
@@ -55,9 +56,6 @@ function AuthorChip({
   }
 
   const name = author.displayName ?? `@${author.handle}`;
-  // Avatar initial from the real name/handle, not `name` — a handle-only author's
-  // `name` starts with "@", which rendered a confusing "@" bubble next to "@handle".
-  const initial = (author.displayName ?? author.handle).charAt(0).toUpperCase();
 
   return (
     <Link
@@ -69,8 +67,8 @@ function AuthorChip({
         // eslint-disable-next-line @next/next/no-img-element
         <img alt="" className="h-7 w-7 rounded-full object-cover" src={author.avatarUrl} />
       ) : (
-        <span className="bg-primary text-primary-foreground flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold">
-          {initial}
+        <span className="bg-primary text-primary-foreground flex h-7 w-7 items-center justify-center rounded-full">
+          <ChefHatIcon className="h-4 w-4" />
         </span>
       )}
       <span className="text-foreground text-sm font-medium">{name}</span>

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { useTRPC } from "@/app/providers/trpc-provider";
+import { ChefHatIcon } from "@/components/social/chef-hat-icon";
 import { FlagIcon } from "@heroicons/react/24/outline";
 import { Button, Spinner } from "@heroui/react";
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -138,8 +139,8 @@ export default function NotificationsPage() {
                       src={n.actor.avatarUrl}
                     />
                   ) : (
-                    <span className="bg-primary text-primary-foreground flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold">
-                      {name.charAt(0).toUpperCase()}
+                    <span className="bg-primary text-primary-foreground flex h-9 w-9 shrink-0 items-center justify-center rounded-full">
+                      <ChefHatIcon className="h-5 w-5" />
                     </span>
                   )}
                   <span className="text-default-700 flex-1 text-sm">

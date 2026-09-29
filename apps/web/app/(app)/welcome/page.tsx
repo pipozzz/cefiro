@@ -89,11 +89,7 @@ export default function WelcomePage() {
           <p className="text-default-500 mt-2">{t("subtitle")}</p>
 
           <div className="mt-8 flex flex-col gap-5">
-            <AvatarUpload
-              name={displayName || handle}
-              value={avatarUrl.trim() || null}
-              onChange={setAvatarUrl}
-            />
+            <AvatarUpload value={avatarUrl.trim() || null} onChange={setAvatarUrl} />
 
             <div>
               <label className="text-foreground mb-1 block text-sm font-medium">

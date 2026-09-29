@@ -7,6 +7,8 @@ import { Button } from "@heroui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
+import { ChefHatIcon } from "./chef-hat-icon";
+
 /**
  * Public profile avatar: a preview plus an upload button. The upload returns a
  * public `/public-avatars/...` URL, handed back through `onChange` so the
@@ -15,11 +17,9 @@ import { useTranslations } from "next-intl";
 export function AvatarUpload({
   value,
   onChange,
-  name,
 }: {
   value: string | null;
   onChange: (url: string) => void;
-  name: string;
 }) {
   const trpc = useTRPC();
   const t = useTranslations("social.avatar");
@@ -32,8 +32,6 @@ export function AvatarUpload({
     })
   );
 
-  const initial = (name.trim() || "?").charAt(0).toUpperCase();
-
   return (
     <div className="flex items-center gap-4">
       {value ? (
@@ -44,8 +42,8 @@ export function AvatarUpload({
           className="ring-default-200 h-16 w-16 rounded-full object-cover ring-2"
         />
       ) : (
-        <span className="bg-primary text-primary-foreground flex h-16 w-16 items-center justify-center rounded-full text-xl font-semibold">
-          {initial}
+        <span className="bg-primary text-primary-foreground flex h-16 w-16 items-center justify-center rounded-full">
+          <ChefHatIcon className="h-8 w-8" />
         </span>
       )}
 

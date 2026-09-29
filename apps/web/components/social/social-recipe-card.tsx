@@ -8,6 +8,8 @@ import { HeartIcon } from "@heroicons/react/20/solid";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import { Chip } from "@heroui/react";
 
+import { ChefHatIcon } from "./chef-hat-icon";
+
 export type SocialRecipeCardData = {
   slug: string | null;
   name: string;
@@ -101,8 +103,8 @@ export function SocialRecipeCard({ recipe }: { recipe: SocialRecipeCardData }) {
                 src={recipe.author.avatarUrl}
               />
             ) : (
-              <span className="bg-primary text-primary-foreground flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[9px] font-semibold">
-                {(recipe.author.displayName ?? recipe.author.handle).charAt(0).toUpperCase()}
+              <span className="bg-primary text-primary-foreground flex h-4 w-4 shrink-0 items-center justify-center rounded-full">
+                <ChefHatIcon className="h-2.5 w-2.5" />
               </span>
             )}
             <span className="truncate">

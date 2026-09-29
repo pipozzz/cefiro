@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 
+import { ChefHatIcon } from "./chef-hat-icon";
+
 export type SocialCookbookCardData = {
   slug: string;
   title: string;
@@ -66,8 +68,8 @@ function CookbookCard({ cookbook }: { cookbook: SocialCookbookCardData }) {
                 className="h-5 w-5 rounded-full object-cover"
               />
             ) : (
-              <span className="bg-primary text-primary-foreground flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-semibold">
-                {ownerName.charAt(0).toUpperCase()}
+              <span className="bg-primary text-primary-foreground flex h-5 w-5 items-center justify-center rounded-full">
+                <ChefHatIcon className="h-3 w-3" />
               </span>
             )}
             <span className="truncate">{ownerName}</span>
