@@ -181,7 +181,9 @@
     "moreLikeThis": "Altre come questa",
     "cookReadyAt": "Pronto verso le {time}",
     "savedFromOriginal": "Adapted from the original recipe",
-    "savedFromBy": "by"
+    "savedFromBy": "by",
+    "addToGroceries": "Aggiungi alla lista",
+    "viewGroceries": "Vedi lista"
   },
   "feed": {
     "title": "Your feed",

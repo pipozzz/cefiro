@@ -181,7 +181,9 @@
     "moreLikeThis": "Meer zoals dit",
     "cookReadyAt": "Klaar rond {time}",
     "savedFromOriginal": "Adapted from the original recipe",
-    "savedFromBy": "by"
+    "savedFromBy": "by",
+    "addToGroceries": "Aan lijst toevoegen",
+    "viewGroceries": "Lijst bekijken"
   },
   "feed": {
     "title": "Your feed",

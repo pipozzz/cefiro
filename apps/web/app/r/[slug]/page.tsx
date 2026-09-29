@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
 
 import type { FullRecipeDTO } from "@norish/shared/contracts";
+import { auth } from "@norish/auth/auth";
 import { getAverageRating } from "@norish/db/repositories/ratings";
 import { getRecipeFull } from "@norish/db/repositories/recipes";
 import {
@@ -255,7 +256,11 @@ function buildRecipeJsonLd(
 
 export default async function PublicRecipePage({ params }: Props) {
   const { slug } = await params;
-  const [data, initialRecipe] = await Promise.all([loadRecipe(slug), loadPublicRecipeView(slug)]);
+  const [data, initialRecipe, session] = await Promise.all([
+    loadRecipe(slug),
+    loadPublicRecipeView(slug),
+    auth.api.getSession({ headers: await headers() }),
+  ]);
 
   // Structured data only for indexable (public) recipes.
   let jsonLd: string | null = null;
@@ -284,7 +289,11 @@ export default async function PublicRecipePage({ params }: Props) {
           dangerouslySetInnerHTML={{ __html: jsonLd }}
         />
       ) : null}
-      <PublicRecipeView initialData={initialRecipe ?? undefined} slug={slug} />
+      <PublicRecipeView
+        initialData={initialRecipe ?? undefined}
+        isAuthed={!!session?.user}
+        slug={slug}
+      />
     </>
   );
 }

@@ -181,7 +181,9 @@
     "moreLikeThis": "Подобни рецепти",
     "cookReadyAt": "Готово около {time}",
     "savedFromOriginal": "Adapted from the original recipe",
-    "savedFromBy": "by"
+    "savedFromBy": "by",
+    "addToGroceries": "Добави в списъка",
+    "viewGroceries": "Виж списъка"
   },
   "feed": {
     "title": "Your feed",

@@ -181,7 +181,9 @@
     "moreLikeThis": "비슷한 레시피",
     "cookReadyAt": "{time}쯤 완성",
     "savedFromOriginal": "Adapted from the original recipe",
-    "savedFromBy": "by"
+    "savedFromBy": "by",
+    "addToGroceries": "목록에 추가",
+    "viewGroceries": "목록 보기"
   },
   "feed": {
     "title": "Your feed",

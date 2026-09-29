@@ -181,7 +181,9 @@
     "moreLikeThis": "Flere som denne",
     "cookReadyAt": "Klar rundt {time}",
     "savedFromOriginal": "Adapted from the original recipe",
-    "savedFromBy": "by"
+    "savedFromBy": "by",
+    "addToGroceries": "Legg til i liste",
+    "viewGroceries": "Vis liste"
   },
   "feed": {
     "title": "Your feed",
