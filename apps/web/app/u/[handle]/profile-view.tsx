@@ -55,6 +55,7 @@ export function PublicProfileView({ handle }: { handle: string }) {
   const trpc = useTRPC();
   const t = useTranslations("social.profile");
   const tCookbook = useTranslations("social.cookbook");
+  const tDiscover = useTranslations("social.discover");
 
   const profileQuery = useQuery({
     ...trpc.social.getProfile.queryOptions({ handle }),
@@ -159,19 +160,39 @@ export function PublicProfileView({ handle }: { handle: string }) {
         </div>
       </header>
 
-      {/* Themes this cook's recipes fall into — each links to its theme page. */}
+      {/* Themes this cook's recipes fall into — image tiles linking to each
+          theme's page (same look as the discover themes browse). */}
       {themes.length > 0 ? (
         <section className="mt-10">
           <h2 className="text-foreground mb-4 text-lg font-semibold">{t("themesHeading")}</h2>
-          <ul className="flex flex-wrap gap-2">
+          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {themes.map((theme) => (
               <li key={theme.slug}>
                 <Link
-                  className="bg-content2 hover:bg-content3 text-default-600 hover:text-foreground inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm no-underline transition"
+                  className="bg-content2 hover:bg-content3 block overflow-hidden rounded-2xl no-underline transition"
                   href={`/discover/themes/${theme.slug}`}
                 >
-                  <span>{theme.name}</span>
-                  <span className="text-default-400 text-xs">{theme.recipeCount}</span>
+                  <div className="bg-content3 relative h-28 w-full">
+                    {theme.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        alt=""
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                        src={theme.image}
+                      />
+                    ) : (
+                      <div className="text-default-400 flex h-full w-full items-center justify-center text-3xl font-semibold">
+                        {theme.name.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-3">
+                    <span className="text-foreground block truncate font-medium">{theme.name}</span>
+                    <span className="text-default-500 text-xs">
+                      {tDiscover("themeCount", { count: theme.recipeCount })}
+                    </span>
+                  </div>
                 </Link>
               </li>
             ))}
