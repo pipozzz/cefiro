@@ -53,6 +53,17 @@ describe("proxy share access", () => {
     expect(config.matcher[0]).toContain("serwist/");
   });
 
+  it("rewrites the anonymous root to /discover so the bare domain serves OG tags", async () => {
+    getSessionMock.mockResolvedValue(null);
+
+    const response = await proxy(new NextRequest("http://localhost/"));
+
+    // A rewrite (not a redirect): the URL stays "/" and answers 200 with
+    // discovery's HTML, so a shared root link previews like /discover.
+    expect(response.status).not.toBe(307);
+    expect(response.headers.get("x-middleware-rewrite")).toContain("/discover");
+  });
+
   it("redirects anonymous private recipe media requests", async () => {
     getSessionMock.mockResolvedValue(null);
 
