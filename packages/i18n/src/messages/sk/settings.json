@@ -1002,6 +1002,15 @@
       "notConfigured": "Email nie je nakonfigurovaný (nastavte SMTP_HOST a EMAIL_FROM).",
       "failed": "Odoslanie zlyhalo: {error}",
       "error": "Testovací email sa nepodarilo odoslať"
+    },
+    "aboutContent": {
+      "title": "Stránka O nás",
+      "description": "Uprav text verejnej stránky O nás (na /about). Telo podporuje Markdown (nadpisy, odkazy, zoznamy).",
+      "slovak": "Slovenčina",
+      "english": "Angličtina",
+      "titleLabel": "Nadpis stránky",
+      "bodyLabel": "Telo (Markdown)",
+      "bodyHelp": "Podporuje Markdown: ## nadpis, **tučné**, [odkaz](https://…), - zoznam."
     }
   },
   "archiveExport": {

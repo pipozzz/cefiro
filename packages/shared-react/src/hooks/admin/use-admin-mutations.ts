@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import type {
+  AboutContent,
   AIConfig,
   AuthProviderGitHubInput,
   AuthProviderGoogleInput,
@@ -45,6 +46,7 @@ export type AdminMutationsResult = {
   updateTimerKeywords: (
     config: TimerKeywordsInput
   ) => Promise<{ success: boolean; error?: string }>;
+  updateAboutContent: (config: AboutContent) => Promise<{ success: boolean; error?: string }>;
   updateAIConfig: (config: AIConfig) => Promise<{ success: boolean; error?: string }>;
   updateVideoConfig: (config: VideoConfig) => Promise<{ success: boolean; error?: string }>;
   updateImageGenerationConfig: (
@@ -93,6 +95,9 @@ export function createUseAdminMutations({
     const updatePromptsMutation = useMutation(trpc.admin.content.updatePrompts.mutationOptions());
     const updateTimerKeywordsMutation = useMutation(
       trpc.admin.content.updateTimerKeywords.mutationOptions()
+    );
+    const updateAboutContentMutation = useMutation(
+      trpc.admin.content.updateAbout.mutationOptions()
     );
     const updateAIConfigMutation = useMutation(trpc.admin.updateAIConfig.mutationOptions());
     const updateVideoConfigMutation = useMutation(trpc.admin.updateVideoConfig.mutationOptions());
@@ -163,6 +168,9 @@ export function createUseAdminMutations({
       },
       updatePrompts: async (config) => {
         return withInvalidate(updatePromptsMutation.mutateAsync(config));
+      },
+      updateAboutContent: async (config) => {
+        return withInvalidate(updateAboutContentMutation.mutateAsync(config));
       },
       updateTimerKeywords: async (config) => {
         const result = await withInvalidate(updateTimerKeywordsMutation.mutateAsync(config));
