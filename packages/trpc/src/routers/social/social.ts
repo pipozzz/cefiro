@@ -490,15 +490,40 @@ const getProfile = publicProcedure.input(GetProfileByHandleInputSchema).query(as
 const profileThemes = publicProcedure
   .input(GetProfileByHandleInputSchema)
   .query(async ({ input }) => {
+    type ProfileTheme = { name: string; slug: string; recipeCount: number; image: string | null };
+
     const profile = await getProfileByHandle(input.handle);
 
     if (!profile || !profile.isPublic) {
-      return { themes: [] as { name: string; slug: string; recipeCount: number }[] };
+      return { themes: [] as ProfileTheme[] };
     }
 
-    const rows = await listThemesForUser(profile.userId);
+    const [rows, catalog] = await Promise.all([
+      listThemesForUser(profile.userId),
+      // The theme catalog carries the tile image; index it by slug so the
+      // profile chips can show the same image as the discover theme tiles.
+      listThemes(200),
+    ]);
+
+    const imageBySlug = new Map<string, string | null>();
+
+    for (const theme of catalog) {
+      const slug = cuisineSlug(theme.name);
+
+      if (!slug || imageBySlug.has(slug)) {
+        continue;
+      }
+
+      imageBySlug.set(
+        slug,
+        (theme.image && theme.slug ? toSlugMediaUrl(theme.image, theme.slug) : null) ??
+          theme.generatedImage ??
+          null
+      );
+    }
+
     const seen = new Set<string>();
-    const themesOut: { name: string; slug: string; recipeCount: number }[] = [];
+    const themesOut: ProfileTheme[] = [];
 
     // Themes can share a name; merge by slug (the page key) keeping the largest.
     for (const row of rows) {
@@ -509,7 +534,12 @@ const profileThemes = publicProcedure
       }
 
       seen.add(slug);
-      themesOut.push({ name: row.name, slug, recipeCount: row.recipeCount });
+      themesOut.push({
+        name: row.name,
+        slug,
+        recipeCount: row.recipeCount,
+        image: imageBySlug.get(slug) ?? null,
+      });
     }
 
     return { themes: themesOut };
