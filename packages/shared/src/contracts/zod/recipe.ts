@@ -167,8 +167,10 @@ export const RecipeListInputSchema = z.object({
   search: z.string().optional().describe("Optional free-text search term."),
   searchFields: z
     .array(z.enum(["title", "description", "ingredients", "steps", "tags"]))
-    .default(["title", "ingredients"])
-    .describe("Fields searched when `search` is provided. Defaults to `title` and `ingredients`."),
+    .default(["title", "tags", "ingredients", "description"])
+    .describe(
+      "Fields searched when `search` is provided. Defaults to `title`, `tags`, `ingredients` and `description`. Matching ignores diacritics, prefix-matches every term and requires all terms."
+    ),
   tags: z.array(z.string()).optional().describe("Optional tag filter."),
   categories: z
     .array(z.enum(["Breakfast", "Lunch", "Dinner", "Snack"]))

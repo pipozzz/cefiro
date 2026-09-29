@@ -11,6 +11,7 @@ import type {
   SortOrder,
 } from "@norish/shared/contracts";
 import { db } from "@norish/db/drizzle";
+import { DEFAULT_SEARCH_FIELDS } from "@norish/shared/contracts/store-types";
 
 import type { RecipeListContext } from "./recipes";
 import {
@@ -103,7 +104,7 @@ export async function listLibrary(
     limit,
     offset = 0,
     search,
-    searchFields = ["title", "ingredients"],
+    searchFields = [...DEFAULT_SEARCH_FIELDS],
     tags,
     filterMode = "AND",
     sortMode = "dateDesc",

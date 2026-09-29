@@ -92,8 +92,9 @@ export function cookbookOrderBy(sortMode: SortOrder) {
 /**
  * A cookbook title matches on its title alone — a cookbook has nothing else
  * to offer a search, which is why it can never be found by its members'
- * names (ADR-0026). Plain prefix matching rather than a tsvector: one short
- * field, and a rank that could not be compared with a recipe's anyway.
+ * names (ADR-0026). Plain substring matching rather than a tsvector: one
+ * short field, and a rank that could not be compared with a recipe's anyway.
+ * Like the recipe search, it ignores diacritics and needs every term.
  */
 export function cookbookTitleMatch(search: string) {
   const terms = search
@@ -109,8 +110,8 @@ export function cookbookTitleMatch(search: string) {
   );
 
   return sql.join(
-    patterns.map((pattern) => sql`${cookbooks.title} ILIKE ${pattern}`),
-    sql` OR `
+    patterns.map((pattern) => sql`f_unaccent(${cookbooks.title}) ILIKE f_unaccent(${pattern})`),
+    sql` AND `
   );
 }
 

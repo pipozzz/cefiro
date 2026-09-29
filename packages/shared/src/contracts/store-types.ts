@@ -10,7 +10,14 @@ export const SEARCH_FIELDS: readonly SearchField[] = [
   "tags",
 ] as const;
 
-export const DEFAULT_SEARCH_FIELDS: readonly SearchField[] = ["title", "ingredients"] as const;
+// Title, tags, ingredients and description by default, so a plain search
+// reaches at least what the public Discover search does (name + description).
+export const DEFAULT_SEARCH_FIELDS: readonly SearchField[] = [
+  "title",
+  "tags",
+  "ingredients",
+  "description",
+] as const;
 
 /**
  * Which kind of thing the Library is showing: everything, only recipes, or
