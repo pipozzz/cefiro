@@ -397,6 +397,70 @@ export async function listDiscoverRecipes(params: {
 }
 
 /**
+ * A simple discovery facet: how many PUBLIC recipes fall in each meal category,
+ * plus the total, under the reader's current non-category filters (tag, "ready
+ * in" time, dietary allergens). Powers the counts shown on the category chips so
+ * a reader sees where the recipes are before narrowing. One row, four filtered
+ * counts — categories is a text[] so a recipe counts in each of its categories.
+ */
+export async function countPublicRecipesByCategory(params: {
+  tag?: string;
+  maxMinutes?: number;
+  excludeAllergenTags?: string[];
+}): Promise<{ total: number; byCategory: Record<string, number> }> {
+  const conditions = [eq(recipes.visibility, "public")];
+
+  if (params.maxMinutes) {
+    conditions.push(lte(recipes.totalMinutes, params.maxMinutes));
+  }
+
+  const allergens = (params.excludeAllergenTags ?? [])
+    .map((name) => name.trim().toLowerCase())
+    .filter(Boolean);
+
+  if (allergens.length > 0) {
+    conditions.push(sql`NOT EXISTS (
+      SELECT 1 FROM ${recipeTags} rt
+      JOIN ${tags} tg ON tg.id = rt.tag_id
+      WHERE rt.recipe_id = ${recipes.id}
+      AND lower(tg.name) IN (${sql.join(
+        allergens.map((name) => sql`${name}`),
+        sql`, `
+      )})
+    )`);
+  }
+
+  if (params.tag) {
+    conditions.push(sql`EXISTS (
+      SELECT 1 FROM ${recipeTags} rt
+      JOIN ${tags} tg ON tg.id = rt.tag_id
+      WHERE rt.recipe_id = ${recipes.id} AND lower(tg.name) = ${params.tag.trim().toLowerCase()}
+    )`);
+  }
+
+  const [row] = await db
+    .select({
+      breakfast: sql<number>`count(*) FILTER (WHERE 'Breakfast' = ANY(${recipes.categories}))::int`,
+      lunch: sql<number>`count(*) FILTER (WHERE 'Lunch' = ANY(${recipes.categories}))::int`,
+      dinner: sql<number>`count(*) FILTER (WHERE 'Dinner' = ANY(${recipes.categories}))::int`,
+      snack: sql<number>`count(*) FILTER (WHERE 'Snack' = ANY(${recipes.categories}))::int`,
+      total: sql<number>`count(*)::int`,
+    })
+    .from(recipes)
+    .where(and(...conditions));
+
+  return {
+    total: Number(row?.total ?? 0),
+    byCategory: {
+      Breakfast: Number(row?.breakfast ?? 0),
+      Lunch: Number(row?.lunch ?? 0),
+      Dinner: Number(row?.dinner ?? 0),
+      Snack: Number(row?.snack ?? 0),
+    },
+  };
+}
+
+/**
  * Trending discovery topics: the tags used by the most PUBLIC recipes, most
  * used first (ties broken alphabetically for a stable order). Powers the
  * clickable topic chips on /discover, which drive the existing tag filter.
