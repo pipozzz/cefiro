@@ -987,6 +987,7 @@
       "noPending": "No pending invites.",
       "expiresOn": "Expires {date}",
       "revoke": "Revoke",
+      "resend": "초대 다시 보내기",
       "revoked": "Invite revoked",
       "createError": "Could not create the invite.",
       "revokeError": "Could not revoke the invite."

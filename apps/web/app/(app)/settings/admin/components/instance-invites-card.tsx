@@ -159,16 +159,32 @@ export default function InstanceInvitesCard() {
                       })}
                     </span>
                   </div>
-                  <Button
-                    isIconOnly
-                    aria-label={t("revoke")}
-                    size="sm"
-                    variant="tertiary"
-                    isDisabled={revoke.isPending}
-                    onPress={() => revoke.mutate({ inviteId: invite.id })}
-                  >
-                    <TrashIcon className="h-4 w-4" />
-                  </Button>
+                  <div className="flex shrink-0 items-center gap-1">
+                    {/* Resend re-issues the invite for this email: the raw token
+                        lives only in the link (stored hashed), so re-inviting
+                        rotates the token, re-sends the email and surfaces a fresh
+                        copyable link — the only way to "get the link again". */}
+                    <Button
+                      isIconOnly
+                      aria-label={t("resend")}
+                      size="sm"
+                      variant="tertiary"
+                      isDisabled={create.isPending}
+                      onPress={() => create.mutate({ email: invite.email })}
+                    >
+                      <EnvelopeIcon className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      isIconOnly
+                      aria-label={t("revoke")}
+                      size="sm"
+                      variant="tertiary"
+                      isDisabled={revoke.isPending}
+                      onPress={() => revoke.mutate({ inviteId: invite.id })}
+                    >
+                      <TrashIcon className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </li>
               ))}
             </ul>
