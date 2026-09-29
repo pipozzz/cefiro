@@ -54,6 +54,7 @@ const chip =
 export async function DiscoverHubLinks() {
   const t = await getTranslations("social.discover");
   const tCat = await getTranslations("social.categories");
+  const tCuisine = await getTranslations("social.cuisineNames");
   const cuisines = await loadCuisines();
   const tags = await loadTopTags();
 
@@ -91,7 +92,7 @@ export async function DiscoverHubLinks() {
               {cuisines.map((cuisine) => (
                 <li key={cuisine.name}>
                   <Link className={chip} href={`/discover/cuisine/${cuisineSlug(cuisine.name)}`}>
-                    {cuisine.name}
+                    {tCuisine.has(cuisine.name) ? tCuisine(cuisine.name) : cuisine.name}
                   </Link>
                 </li>
               ))}

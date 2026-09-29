@@ -56,6 +56,10 @@ export function DiscoverClient({
   const t = useTranslations("social.discover");
   const tCat = useTranslations("social.categories");
   const tFeed = useTranslations("social.feed");
+  const tCuisine = useTranslations("social.cuisineNames");
+  // Localize a cuisine's display name, falling back to the raw stored name for
+  // any cuisine not in the map (e.g. an admin-added one).
+  const cuisineLabel = (name: string) => (tCuisine.has(name) ? tCuisine(name) : name);
 
   // Signed-in readers land on their personalised "For you" feed; visitors get the
   // generic community browse. But a shared link that carries a filter
@@ -615,7 +619,7 @@ export function DiscoverClient({
                   type="button"
                   onClick={() => setCuisine((prev) => (prev === name ? null : name))}
                 >
-                  {name}
+                  {cuisineLabel(name)}
                   {cuisineList ? (
                     <span className="opacity-70"> {cuisineList.byCuisine[name] ?? 0}</span>
                   ) : null}

@@ -26,6 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
 /** A small crawlable hub that links out to each cuisine landing page. */
 export default async function CuisinesIndexPage() {
   const t = await getTranslations("social.cuisinePage");
+  const tCuisine = await getTranslations("social.cuisineNames");
   const cuisines = await loadCuisines();
 
   return (
@@ -50,7 +51,7 @@ export default async function CuisinesIndexPage() {
                 className="bg-content2 hover:bg-content3 text-foreground flex flex-col items-center justify-center gap-1 rounded-2xl px-4 py-6 text-center font-semibold no-underline transition"
                 href={`/discover/cuisine/${cuisineSlug(cuisine.name)}`}
               >
-                <span>{cuisine.name}</span>
+                <span>{tCuisine.has(cuisine.name) ? tCuisine(cuisine.name) : cuisine.name}</span>
                 <span className="text-default-400 text-xs font-normal">
                   {t("recipeCount", { count: cuisine.recipeCount })}
                 </span>
