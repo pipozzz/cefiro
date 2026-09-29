@@ -403,5 +403,10 @@
     "Thai": "Thajská",
     "Turkish": "Turecká",
     "Vietnamese": "Vietnamská"
+  },
+  "footer": {
+    "about": "O nás",
+    "terms": "Podmienky",
+    "privacy": "Súkromie"
   }
 }

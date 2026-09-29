@@ -403,5 +403,10 @@
     "Thai": "Thai",
     "Turkish": "Turkish",
     "Vietnamese": "Vietnamese"
+  },
+  "footer": {
+    "about": "소개",
+    "terms": "약관",
+    "privacy": "개인정보"
   }
 }

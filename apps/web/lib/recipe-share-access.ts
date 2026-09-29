@@ -29,8 +29,9 @@ export function isPublicSocialPath(pathname: string): boolean {
     // signup is locked; the invitee is signed-out, so this must be reachable
     // without the auth proxy bouncing them to a (locked) login.
     pathname.startsWith("/instance-invite/") ||
-    // Legal pages must be readable signed-out — a visitor reads them before
-    // (and in order to) register.
+    // Legal + about pages must be readable signed-out — a visitor reads them
+    // before (and in order to) register, and About is an E-A-T/SEO surface.
+    pathname === "/about" ||
     pathname === "/terms" ||
     pathname === "/privacy" ||
     pathname === "/sitemap.xml" ||
