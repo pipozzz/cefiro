@@ -18,6 +18,11 @@ export function isPublicSocialPath(pathname: string): boolean {
     pathname.startsWith("/u/") ||
     pathname.startsWith("/@") ||
     pathname.startsWith("/public-avatars/") ||
+    // Generated discover-theme tile images (`/themes/<slug>.jpg`), served to
+    // anonymous visitors on the public /discover page. The route handler is
+    // already public; without this the proxy bounces the anon <img> to /login
+    // and the tile shows a broken image.
+    pathname.startsWith("/themes/") ||
     pathname === "/discover" ||
     pathname.startsWith("/discover/") ||
     // Instance invites let an admin-invited person register while public
