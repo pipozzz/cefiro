@@ -116,6 +116,21 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
     retry: false,
   });
 
+  // Category facet counts, under the active tag / time / dietary filters, so each
+  // category chip can show how many recipes it holds. Only the browse lens uses
+  // the chips, so it is the only place this runs.
+  const categoryCounts = useQuery({
+    ...trpc.social.discoverCategoryCounts.queryOptions({
+      tag: tag ?? undefined,
+      maxMinutes: maxMinutes ?? undefined,
+      hideMyAllergens: hideMyAllergens || undefined,
+    }),
+    enabled: !isSearching && mode === "recipes",
+    placeholderData: keepPreviousData,
+    retry: false,
+  });
+  const counts = categoryCounts.data;
+
   const cooks = useInfiniteQuery({
     ...trpc.social.discoverCooks.infiniteQueryOptions(
       { limit: 24 },
@@ -496,6 +511,7 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
                   onClick={() => setCategory(null)}
                 >
                   {t("categoryAll")}
+                  {counts ? <span className="opacity-70"> {counts.total}</span> : null}
                 </button>
                 {CATEGORIES.map((cat) => (
                   <button
@@ -505,6 +521,9 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
                     onClick={() => setCategory(cat)}
                   >
                     {tCat(cat)}
+                    {counts ? (
+                      <span className="opacity-70"> {counts.byCategory[cat] ?? 0}</span>
+                    ) : null}
                   </button>
                 ))}
               </div>

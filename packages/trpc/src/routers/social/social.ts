@@ -18,6 +18,7 @@ import {
   removeFavorite,
 } from "@norish/db/repositories/favorites";
 import {
+  countPublicRecipesByCategory,
   followUser,
   getFollowCounts,
   getPublicRecipesByIds,
@@ -601,6 +602,36 @@ const discover = publicProcedure.input(DiscoverInputSchema).query(async ({ ctx, 
 
   return { recipes: await toFeedCardsWithRatings(items), nextCursor };
 });
+
+/**
+ * Category facet counts for /discover: how many public recipes are in each meal
+ * category under the reader's current tag / "ready in" / dietary filters, so the
+ * category chips can show counts. Dietary is resolved server-side from the
+ * session (never sent in the query string), like `discover`.
+ */
+const discoverCategoryCounts = publicProcedure
+  .input(
+    z.object({
+      tag: z.string().trim().min(1).max(50).optional(),
+      maxMinutes: z.number().int().min(1).max(1440).optional(),
+      hideMyAllergens: z.boolean().optional(),
+    })
+  )
+  .query(async ({ ctx, input }) => {
+    let excludeAllergenTags: string[] | undefined;
+
+    if (input.hideMyAllergens && ctx.user) {
+      const { allergies } = await getUserAllergies(ctx.user.id);
+
+      excludeAllergenTags = allergies;
+    }
+
+    return countPublicRecipesByCategory({
+      tag: input.tag,
+      maxMinutes: input.maxMinutes,
+      excludeAllergenTags,
+    });
+  });
 
 // --- Search -------------------------------------------------------------
 
@@ -1478,6 +1509,7 @@ export const socialProcedures = router({
   feed,
   forYou,
   discover,
+  discoverCategoryCounts,
   search,
   searchByIngredients,
   trendingTopics,
