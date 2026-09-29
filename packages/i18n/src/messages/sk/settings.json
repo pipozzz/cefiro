@@ -987,6 +987,7 @@
       "noPending": "Žiadne čakajúce pozvánky.",
       "expiresOn": "Platí do {date}",
       "revoke": "Zrušiť",
+      "resend": "Znovu odoslať pozvánku",
       "revoked": "Pozvánka zrušená",
       "createError": "Pozvánku sa nepodarilo vytvoriť.",
       "revokeError": "Pozvánku sa nepodarilo zrušiť."
