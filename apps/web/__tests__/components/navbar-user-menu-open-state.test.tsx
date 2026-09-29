@@ -34,6 +34,19 @@ vi.mock("@/context/user-context", () => ({
   }),
 }));
 
+vi.mock("@/app/providers/trpc-provider", () => ({
+  useTRPC: () => ({
+    social: {
+      getMyProfile: {
+        queryOptions: () => ({
+          queryKey: ["getMyProfile"],
+          queryFn: async () => ({ profile: null }),
+        }),
+      },
+    },
+  }),
+}));
+
 vi.mock("@/hooks/config", () => ({
   useVersionQuery: () => ({
     currentVersion: "1.2.3",

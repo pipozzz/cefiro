@@ -21,7 +21,11 @@
       "updateAvailable": "v{version} verfügbar"
     },
     "openMenu": "Open user menu",
-    "menu": "User menu"
+    "menu": "User menu",
+    "publicProfile": {
+      "title": "Öffentliches Profil",
+      "description": "Sieh dein Profil so, wie andere es sehen"
+    }
   },
   "theme": {
     "title": "Design",

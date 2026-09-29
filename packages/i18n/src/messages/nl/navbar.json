@@ -21,7 +21,11 @@
       "updateAvailable": "v{version} beschikbaar"
     },
     "openMenu": "Open user menu",
-    "menu": "User menu"
+    "menu": "User menu",
+    "publicProfile": {
+      "title": "Openbaar profiel",
+      "description": "Bekijk je profiel zoals anderen het zien"
+    }
   },
   "theme": {
     "title": "Thema",

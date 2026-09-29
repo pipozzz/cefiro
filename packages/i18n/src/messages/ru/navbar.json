@@ -21,7 +21,11 @@
       "updateAvailable": "Доступна версия v{version}"
     },
     "openMenu": "Open user menu",
-    "menu": "User menu"
+    "menu": "User menu",
+    "publicProfile": {
+      "title": "Публичный профиль",
+      "description": "Посмотрите свой профиль глазами других"
+    }
   },
   "theme": {
     "title": "Тема",

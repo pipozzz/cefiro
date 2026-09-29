@@ -21,7 +21,11 @@
       "updateAvailable": "k dispozícii v{version}"
     },
     "openMenu": "Otvoriť menu používateľa",
-    "menu": "Menu používateľa"
+    "menu": "Menu používateľa",
+    "publicProfile": {
+      "title": "Verejný profil",
+      "description": "Zobraz svoj profil, ako ho vidia ostatní"
+    }
   },
   "theme": {
     "title": "Motív",

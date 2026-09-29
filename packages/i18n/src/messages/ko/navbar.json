@@ -21,7 +21,11 @@
       "updateAvailable": "v{version} 사용 가능"
     },
     "openMenu": "Open user menu",
-    "menu": "User menu"
+    "menu": "User menu",
+    "publicProfile": {
+      "title": "공개 프로필",
+      "description": "다른 사람에게 보이는 내 프로필 보기"
+    }
   },
   "theme": {
     "title": "테마",

@@ -3,6 +3,7 @@
 import React, { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useConnectivity } from "@/app/providers/connectivity-provider";
+import { useTRPC } from "@/app/providers/trpc-provider";
 import { NotificationsMenuItemContent } from "@/components/navbar/notifications-menu-item-content";
 import { OfflineStatusModal } from "@/components/navbar/offline-status/offline-status-modal";
 import { SignOutConfirmModal } from "@/components/navbar/sign-out-confirm-modal";
@@ -19,8 +20,10 @@ import {
   Cog6ToothIcon,
   EllipsisVerticalIcon,
   PlusIcon,
+  UserCircleIcon,
 } from "@heroicons/react/16/solid";
 import { Button, Dropdown, Label } from "@heroui/react";
+import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import { cssButtonPill, cssButtonPillDanger } from "@norish/web/config/css-tokens";
@@ -47,6 +50,11 @@ export default function NavbarUserMenu({
   const { user, signOut } = useUserContext();
   const { isOffline } = useConnectivity();
   const router = useRouter();
+  const trpc = useTRPC();
+  // The signed-in reader's own public profile, so the menu can offer a link to
+  // "view as others see me". Only a public profile has a viewable /u/ page.
+  const myProfile = useQuery(trpc.social.getMyProfile.queryOptions()).data?.profile ?? null;
+  const publicHandle = myProfile?.isPublic ? myProfile.handle : null;
   const [localOpen, setLocalOpen] = useState(false);
   const [showUrlModal, setShowUrlModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -225,6 +233,31 @@ export default function NavbarUserMenu({
             >
               <ThemeSwitchContent {...themeSwitch} />
             </Dropdown.Item>
+            {publicHandle ? (
+              <Dropdown.Item
+                key="public-profile"
+                className={`py-3 ${cssButtonPill}`}
+                id="public-profile"
+                textValue={t("publicProfile.title")}
+                onPress={() => {
+                  handleOpenChange(false);
+                  router.push(`/u/${publicHandle}`);
+                }}
+              >
+                <span className="text-muted">
+                  <UserCircleIcon className="size-5" />
+                </span>
+                <div className="flex flex-col items-start">
+                  <Label className="text-base leading-tight font-medium">
+                    {t("publicProfile.title")}
+                  </Label>
+                  <span className="text-muted text-xs leading-tight">
+                    {t("publicProfile.description")}
+                  </span>
+                </div>
+              </Dropdown.Item>
+            ) : null}
+
             <Dropdown.Item
               key="settings"
               className={`py-3 ${cssButtonPill}`}
