@@ -58,6 +58,7 @@
     "emptyColdStart": "New recipes will appear here as the community shares them — check back soon.",
     "emptyFiltered": "No recipes match these filters. Try clearing a filter or searching instead.",
     "browseByCuisine": "Bla etter kjøkken",
+    "browseByTag": "Bla etter tagg",
     "browseByCategory": "Bla etter kategori"
   },
   "categories": {
@@ -325,6 +326,15 @@
     "browseAll": "Browse all recipes",
     "indexTitle": "Cuisines",
     "indexSubtitle": "Browse public recipes by cuisine.",
+    "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
+  },
+  "tagPage": {
+    "heading": "Oppskrifter merket #{tag}",
+    "subtitle": "Oppdag og lagre offentlige oppskrifter merket #{tag}.",
+    "empty": "Ingen offentlige oppskrifter med denne taggen ennå.",
+    "browseAll": "Browse all recipes",
+    "indexTitle": "Tagger",
+    "indexSubtitle": "Bla gjennom offentlige oppskrifter etter tagg.",
     "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
   }
 }

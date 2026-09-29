@@ -58,6 +58,7 @@
     "emptyColdStart": "New recipes will appear here as the community shares them — check back soon.",
     "emptyFiltered": "No recipes match these filters. Try clearing a filter or searching instead.",
     "browseByCuisine": "Bladeren op keuken",
+    "browseByTag": "Bladeren op tag",
     "browseByCategory": "Bladeren op categorie"
   },
   "categories": {
@@ -325,6 +326,15 @@
     "browseAll": "Browse all recipes",
     "indexTitle": "Cuisines",
     "indexSubtitle": "Browse public recipes by cuisine.",
+    "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
+  },
+  "tagPage": {
+    "heading": "Recepten met tag #{tag}",
+    "subtitle": "Ontdek en bewaar openbare recepten met tag #{tag}.",
+    "empty": "Nog geen openbare recepten met dit tag.",
+    "browseAll": "Browse all recipes",
+    "indexTitle": "Tags",
+    "indexSubtitle": "Blader door openbare recepten op tag.",
     "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
   }
 }

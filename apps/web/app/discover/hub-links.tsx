@@ -4,7 +4,12 @@ import { ALL_CATEGORIES, categorySlug } from "@/lib/recipe-categories";
 import { getTranslations } from "next-intl/server";
 
 import { listPublicCuisines } from "@norish/db/repositories/cuisines";
+import { listTrendingTopics } from "@norish/db/repositories/follows";
 import { cuisineSlug } from "@norish/shared/lib/cuisine-slug";
+
+// Keep the landing footer scannable: link the most-used tags here, with the full
+// list one hop away at /discover/tag.
+const TOP_TAGS = 24;
 
 /** Cuisines with public recipes, most-used first. Never throws. */
 const loadCuisines = cache(async () => {
@@ -15,61 +20,92 @@ const loadCuisines = cache(async () => {
   }
 });
 
+/** Most-used tags with public recipes. Never throws. */
+const loadTopTags = cache(async () => {
+  try {
+    return await listTrendingTopics(TOP_TAGS);
+  } catch {
+    return [];
+  }
+});
+
 const chip =
   "bg-content2 hover:bg-content3 text-default-600 hover:text-foreground rounded-full px-4 py-1.5 text-sm no-underline transition";
 
 /**
- * Crawlable internal links from the discovery landing to the SSR cuisine and
- * category hub pages (and their spokes).
+ * Crawlable internal links from the discovery landing to the SSR cuisine,
+ * category and tag hub pages (and their spokes).
  *
  * The discovery grid is a client surface whose filter chips do not change the
  * URL, so without these a crawler reaching /discover would only find the hub
  * pages through the sitemap. Real server-rendered <Link>s give those hubs the
  * internal links that make them rank, and give readers a way in. Rendered by the
  * server page so the links are always in the initial HTML.
+ *
+ * Placed near the top of discovery (under the search bar): the grid is an
+ * infinite scroll, so a footer block would be unreachable in practice — most
+ * readers would never scroll past the recipes to find it.
  */
 export async function DiscoverHubLinks() {
   const t = await getTranslations("social.discover");
   const tCat = await getTranslations("social.categories");
   const cuisines = await loadCuisines();
+  const tags = await loadTopTags();
 
   return (
-    <section className="mx-auto w-full max-w-7xl px-4 pb-16 md:px-6">
-      <div className="border-border border-t pt-8">
-        <h2 className="mb-3 text-sm font-semibold tracking-wide uppercase">
-          <Link className="text-foreground hover:underline" href="/discover/category">
-            {t("browseByCategory")}
-          </Link>
-        </h2>
-        <ul className="mb-8 flex flex-wrap gap-2">
-          {ALL_CATEGORIES.map((category) => (
-            <li key={category}>
-              <Link className={chip} href={`/discover/category/${categorySlug(category)}`}>
-                {tCat(category)}
-              </Link>
-            </li>
-          ))}
-        </ul>
+    <section className="border-border mb-8 rounded-2xl border p-4 md:p-5">
+      <h2 className="mb-2 text-xs font-semibold tracking-wide uppercase">
+        <Link className="text-foreground hover:underline" href="/discover/category">
+          {t("browseByCategory")}
+        </Link>
+      </h2>
+      <ul className="flex flex-wrap gap-2">
+        {ALL_CATEGORIES.map((category) => (
+          <li key={category}>
+            <Link className={chip} href={`/discover/category/${categorySlug(category)}`}>
+              {tCat(category)}
+            </Link>
+          </li>
+        ))}
+      </ul>
 
-        {cuisines.length > 0 ? (
-          <>
-            <h2 className="mb-3 text-sm font-semibold tracking-wide uppercase">
-              <Link className="text-foreground hover:underline" href="/discover/cuisine">
-                {t("browseByCuisine")}
-              </Link>
-            </h2>
-            <ul className="flex flex-wrap gap-2">
-              {cuisines.map((cuisine) => (
-                <li key={cuisine.name}>
-                  <Link className={chip} href={`/discover/cuisine/${cuisineSlug(cuisine.name)}`}>
-                    {cuisine.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </>
-        ) : null}
-      </div>
+      {cuisines.length > 0 ? (
+        <>
+          <h2 className="mt-5 mb-2 text-xs font-semibold tracking-wide uppercase">
+            <Link className="text-foreground hover:underline" href="/discover/cuisine">
+              {t("browseByCuisine")}
+            </Link>
+          </h2>
+          <ul className="flex flex-wrap gap-2">
+            {cuisines.map((cuisine) => (
+              <li key={cuisine.name}>
+                <Link className={chip} href={`/discover/cuisine/${cuisineSlug(cuisine.name)}`}>
+                  {cuisine.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : null}
+
+      {tags.length > 0 ? (
+        <>
+          <h2 className="mt-5 mb-2 text-xs font-semibold tracking-wide uppercase">
+            <Link className="text-foreground hover:underline" href="/discover/tag">
+              {t("browseByTag")}
+            </Link>
+          </h2>
+          <ul className="flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <li key={tag.name}>
+                <Link className={chip} href={`/discover/tag/${cuisineSlug(tag.name)}`}>
+                  #{tag.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : null}
     </section>
   );
 }

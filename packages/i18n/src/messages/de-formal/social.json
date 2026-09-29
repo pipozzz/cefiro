@@ -58,6 +58,7 @@
     "emptyColdStart": "New recipes will appear here as the community shares them — check back soon.",
     "emptyFiltered": "No recipes match these filters. Try clearing a filter or searching instead.",
     "browseByCuisine": "Nach Küche durchsuchen",
+    "browseByTag": "Nach Tag durchsuchen",
     "browseByCategory": "Nach Kategorie durchsuchen"
   },
   "categories": {
@@ -325,6 +326,15 @@
     "browseAll": "Browse all recipes",
     "indexTitle": "Cuisines",
     "indexSubtitle": "Browse public recipes by cuisine.",
+    "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
+  },
+  "tagPage": {
+    "heading": "Rezepte mit #{tag}",
+    "subtitle": "Entdecken und speichern Sie öffentliche Rezepte mit #{tag}.",
+    "empty": "Noch keine öffentlichen Rezepte mit diesem Tag.",
+    "browseAll": "Browse all recipes",
+    "indexTitle": "Tags",
+    "indexSubtitle": "Durchsuchen Sie öffentliche Rezepte nach Tag.",
     "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
   }
 }

@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { ALL_CATEGORY_SLUGS } from "@/lib/recipe-categories";
 
 import { listPublicCuisines } from "@norish/db/repositories/cuisines";
+import { listTrendingTopics } from "@norish/db/repositories/follows";
 import { listPublicCookbookSlugs } from "@norish/db/repositories/public-cookbooks";
 import {
   listPublicProfileHandles,
@@ -28,11 +29,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return [];
   }
 
-  const [recipes, profiles, cookbooks, cuisines] = await Promise.all([
+  const [recipes, profiles, cookbooks, cuisines, tags] = await Promise.all([
     listPublicRecipeSlugs(),
     listPublicProfileHandles(),
     listPublicCookbookSlugs(),
     listPublicCuisines().catch(() => []),
+    // Tags that have public recipes (generous cap). Themes are deliberately not
+    // listed: the themes table is rebuilt wholesale, so their URLs churn and
+    // would leave dead entries in the sitemap.
+    listTrendingTopics(500).catch(() => []),
   ]);
 
   return [
@@ -48,6 +53,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/discover/cuisine`, changeFrequency: "weekly", priority: 0.6 },
     ...cuisines.map((c) => ({
       url: `${base}/discover/cuisine/${cuisineSlug(c.name)}`,
+      changeFrequency: "daily" as const,
+      priority: 0.6,
+    })),
+    // Tag hubs: data-driven long-tail landing pages, one per tag with public recipes.
+    { url: `${base}/discover/tag`, changeFrequency: "weekly", priority: 0.6 },
+    ...tags.map((t) => ({
+      url: `${base}/discover/tag/${cuisineSlug(t.name)}`,
       changeFrequency: "daily" as const,
       priority: 0.6,
     })),

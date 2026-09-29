@@ -58,6 +58,7 @@
     "emptyColdStart": "New recipes will appear here as the community shares them — check back soon.",
     "emptyFiltered": "No recipes match these filters. Try clearing a filter or searching instead.",
     "browseByCuisine": "Разгледай по кухня",
+    "browseByTag": "Разгледай по таг",
     "browseByCategory": "Разгледай по категория"
   },
   "categories": {
@@ -325,6 +326,15 @@
     "browseAll": "Browse all recipes",
     "indexTitle": "Cuisines",
     "indexSubtitle": "Browse public recipes by cuisine.",
+    "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
+  },
+  "tagPage": {
+    "heading": "Рецепти с етикет #{tag}",
+    "subtitle": "Открийте и запазете публични рецепти с етикет #{tag}.",
+    "empty": "Все още няма публични рецепти с този етикет.",
+    "browseAll": "Browse all recipes",
+    "indexTitle": "Етикети",
+    "indexSubtitle": "Разгледайте публични рецепти по етикет.",
     "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
   }
 }

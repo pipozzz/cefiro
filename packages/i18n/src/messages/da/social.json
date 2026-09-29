@@ -58,6 +58,7 @@
     "emptyColdStart": "New recipes will appear here as the community shares them — check back soon.",
     "emptyFiltered": "No recipes match these filters. Try clearing a filter or searching instead.",
     "browseByCuisine": "Gennemse efter køkken",
+    "browseByTag": "Gennemse efter tag",
     "browseByCategory": "Gennemse efter kategori"
   },
   "categories": {
@@ -325,6 +326,15 @@
     "browseAll": "Browse all recipes",
     "indexTitle": "Cuisines",
     "indexSubtitle": "Browse public recipes by cuisine.",
+    "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
+  },
+  "tagPage": {
+    "heading": "Opskrifter tagget #{tag}",
+    "subtitle": "Find og gem offentlige opskrifter tagget #{tag}.",
+    "empty": "Ingen offentlige opskrifter med dette tag endnu.",
+    "browseAll": "Browse all recipes",
+    "indexTitle": "Tags",
+    "indexSubtitle": "Gennemse offentlige opskrifter efter tag.",
     "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
   }
 }
