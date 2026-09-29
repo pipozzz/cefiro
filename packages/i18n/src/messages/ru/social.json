@@ -62,7 +62,8 @@
     "browseByCategory": "По категории",
     "cuisineHeading": "Кухня",
     "cuisineAll": "All",
-    "browseHeading": "Обзор рецептов"
+    "browseHeading": "Обзор рецептов",
+    "themesViewAll": "Показать все"
   },
   "categories": {
     "Breakfast": "Breakfast",
@@ -341,5 +342,21 @@
     "indexTitle": "Теги",
     "indexSubtitle": "Просматривайте публичные рецепты по тегу.",
     "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
+  },
+  "themesPage": {
+    "indexTitle": "Откройте темы",
+    "indexSubtitle": "Просматривайте рецепты, сгруппированные по темам.",
+    "heading": "{theme}",
+    "subtitle": "Рецепты в теме {theme}.",
+    "searchPlaceholder": "Поиск тем…",
+    "searchAria": "Поиск тем",
+    "clearSearch": "Очистить поиск",
+    "sortLabel": "Сортировка:",
+    "sortPopular": "Популярные",
+    "sortName": "А–Я",
+    "empty": "Пока нет тем.",
+    "noneMatch": "Нет тем, соответствующих запросу.",
+    "browseAll": "Смотреть рецепты",
+    "allThemes": "Все темы"
   }
 }

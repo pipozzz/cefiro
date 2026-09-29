@@ -143,6 +143,7 @@ import {
   UpsertProfileInputSchema,
 } from "@norish/shared/contracts/zod";
 import { PublicRecipeViewSchema } from "@norish/shared/contracts/zod/recipe-shares";
+import { cuisineSlug } from "@norish/shared/lib/cuisine-slug";
 
 import { formDataInputSchema, getUploadedFile } from "../../form-data";
 import { authedProcedure } from "../../middleware";
@@ -808,6 +809,70 @@ const themeRecipes = publicProcedure
     const rows = await getPublicRecipesByIds(similar.map((row) => row.recipeId));
 
     // `getPublicRecipesByIds` returns storage order; restore similarity order.
+    const byId = new Map(rows.map((row) => [row.id, row]));
+    const ordered = similar
+      .map((row) => byId.get(row.recipeId))
+      .filter((row): row is (typeof rows)[number] => Boolean(row));
+
+    return { name: theme.name, recipes: await toFeedCardsWithRatings(ordered) };
+  });
+
+// Every semantic theme, for the dedicated themes browse page. Each carries a
+// name-derived `slug` (the stable, shareable key: it survives a rebuild as long
+// as the theme name does, and is the same slug the generated tile image uses).
+// Deduped by slug — clusters occasionally share a name — keeping the highest
+// ranked. Ordered by rank (largest clusters first); the client re-sorts/filters.
+const themesList = publicProcedure
+  .input(z.object({ limit: z.number().int().min(1).max(200).default(120) }))
+  .query(async ({ input }) => {
+    const themes = await listThemes(input.limit);
+    const seen = new Set<string>();
+    const out: { slug: string; name: string; recipeCount: number; image: string | null }[] = [];
+
+    for (const theme of themes) {
+      const slug = cuisineSlug(theme.name);
+
+      if (!slug || seen.has(slug)) {
+        continue;
+      }
+
+      seen.add(slug);
+      out.push({
+        slug,
+        name: theme.name,
+        recipeCount: theme.recipeCount,
+        image:
+          (theme.image && theme.slug ? toSlugMediaUrl(theme.image, theme.slug) : null) ??
+          theme.generatedImage ??
+          null,
+      });
+    }
+
+    return { themes: out };
+  });
+
+// One theme's recipes resolved by its name slug (the stable URL key) rather than
+// the churning id — powers the per-theme page at /discover/themes/[slug]. Same
+// centroid vector search as `themeRecipes`; empty (not an error) when no current
+// theme matches the slug, so a stale link degrades quietly.
+const themeRecipesBySlug = publicProcedure
+  .input(
+    z.object({
+      slug: z.string().trim().min(1).max(80),
+      limit: z.number().int().min(1).max(48).default(24),
+    })
+  )
+  .query(async ({ input }) => {
+    const wanted = input.slug.toLowerCase();
+    const themes = await listThemes(200);
+    const theme = themes.find((row) => cuisineSlug(row.name) === wanted);
+
+    if (!theme) {
+      return { name: null as string | null, recipes: [] };
+    }
+
+    const similar = await findSimilarPublicRecipes(theme.centroid, input.limit);
+    const rows = await getPublicRecipesByIds(similar.map((row) => row.recipeId));
     const byId = new Map(rows.map((row) => [row.id, row]));
     const ordered = similar
       .map((row) => byId.get(row.recipeId))
@@ -1546,6 +1611,8 @@ export const socialProcedures = router({
   trendingTopics,
   discoverThemes,
   themeRecipes,
+  themesList,
+  themeRecipesBySlug,
   surpriseRecipes,
   relatedRecipes,
   recipeOfTheDay,

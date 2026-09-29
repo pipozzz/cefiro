@@ -62,7 +62,8 @@
     "browseByCategory": "Разгледай по категория",
     "cuisineHeading": "Кухня",
     "cuisineAll": "All",
-    "browseHeading": "Разгледай рецепти"
+    "browseHeading": "Разгледай рецепти",
+    "themesViewAll": "Виж всички"
   },
   "categories": {
     "Breakfast": "Breakfast",
@@ -341,5 +342,21 @@
     "indexTitle": "Етикети",
     "indexSubtitle": "Разгледайте публични рецепти по етикет.",
     "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
+  },
+  "themesPage": {
+    "indexTitle": "Открий теми",
+    "indexSubtitle": "Разгледай рецепти, групирани по теми.",
+    "heading": "{theme}",
+    "subtitle": "Рецепти в темата {theme}.",
+    "searchPlaceholder": "Търси тема…",
+    "searchAria": "Търсене на тема",
+    "clearSearch": "Изчисти търсенето",
+    "sortLabel": "Подреди:",
+    "sortPopular": "Най-популярни",
+    "sortName": "А–Я",
+    "empty": "Все още няма теми.",
+    "noneMatch": "Няма тема, отговаряща на търсенето.",
+    "browseAll": "Разгледай рецепти",
+    "allThemes": "Всички теми"
   }
 }

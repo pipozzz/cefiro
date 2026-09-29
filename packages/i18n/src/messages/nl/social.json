@@ -62,7 +62,8 @@
     "browseByCategory": "Bladeren op categorie",
     "cuisineHeading": "Keuken",
     "cuisineAll": "All",
-    "browseHeading": "Recepten bladeren"
+    "browseHeading": "Recepten bladeren",
+    "themesViewAll": "Bekijk alle"
   },
   "categories": {
     "Breakfast": "Breakfast",
@@ -341,5 +342,21 @@
     "indexTitle": "Tags",
     "indexSubtitle": "Blader door openbare recepten op tag.",
     "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
+  },
+  "themesPage": {
+    "indexTitle": "Ontdek thema's",
+    "indexSubtitle": "Blader door recepten gegroepeerd in thema's.",
+    "heading": "{theme}",
+    "subtitle": "Recepten in het thema {theme}.",
+    "searchPlaceholder": "Zoek thema's…",
+    "searchAria": "Zoek thema's",
+    "clearSearch": "Zoekopdracht wissen",
+    "sortLabel": "Sorteren:",
+    "sortPopular": "Populairste",
+    "sortName": "A–Z",
+    "empty": "Nog geen thema's.",
+    "noneMatch": "Geen thema's komen overeen met je zoekopdracht.",
+    "browseAll": "Recepten bladeren",
+    "allThemes": "Alle thema's"
   }
 }
