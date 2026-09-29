@@ -131,7 +131,8 @@
     "noRecipes": "Zatiaľ žiadne verejné recepty.",
     "cookbooksHeading": "Receptáre",
     "metaDescription": "Recepty od @{handle} na Našej Kuchyni.",
-    "ogTagline": "Recepty na Našej Kuchyni"
+    "ogTagline": "Recepty na Našej Kuchyni",
+    "themesHeading": "Témy"
   },
   "cookbook": {
     "notFoundTitle": "Receptár sa nenašiel",

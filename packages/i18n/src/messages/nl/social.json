@@ -131,7 +131,8 @@
     "noRecipes": "No public recipes yet.",
     "cookbooksHeading": "Cookbooks",
     "metaDescription": "Recipes by @{handle} on Naša Kuchyňa.",
-    "ogTagline": "Recipes on Naša Kuchyňa"
+    "ogTagline": "Recipes on Naša Kuchyňa",
+    "themesHeading": "Thema's"
   },
   "cookbook": {
     "notFoundTitle": "Cookbook not found",
