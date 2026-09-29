@@ -36,6 +36,7 @@ import {
 } from "@norish/config/zod/server-config";
 import { db, withTransaction } from "@norish/db/drizzle";
 import { dbLogger } from "@norish/db/logger";
+import { DEFAULT_SEARCH_FIELDS } from "@norish/shared/contracts/store-types";
 import { stripHtmlTags } from "@norish/shared/lib/helpers";
 import { normalizeOriginCountry } from "@norish/shared/lib/recipe-enrichment";
 import { normalizeUnit } from "@norish/shared/lib/unit-localization";
@@ -348,10 +349,13 @@ export { PRIMARY_IMAGE_SQL };
  * The weighted search document and its rank, for whichever fields the reader
  * has chosen.
  *
- * Priority is title (A) > tags (B) > ingredients (C) > description/steps (D),
- * and the terms are prefix-matched so "om" finds "oma". Returns null when
- * there is nothing to search for, either because no term survived
- * sanitisation or because the reader unticked every field.
+ * Priority is title (A) > tags (B) > ingredients (C) > description/steps (D).
+ * Matching follows the public Discover search (migration 0070): both sides go
+ * through `f_unaccent`, so "gulas" finds "guláš"; every term is prefix-matched
+ * so "om" finds "oma"; and every term must match (AND), so adding a word
+ * narrows the list instead of widening it. Returns null when there is nothing
+ * to search for, either because no term survived sanitisation or because the
+ * reader unticked every field.
  *
  * Every reference is spelled `"recipes"."…"` by hand for the same reason
  * PRIMARY_IMAGE_SQL is: an interpolated drizzle column renders unqualified,
@@ -374,7 +378,7 @@ export function recipeSearchSql(
     .map(sanitizeTsqueryTerm)
     .filter((term) => term.length > 0)
     .map((term) => `${term}:*`)
-    .join(" | ");
+    .join(" & ");
 
   if (!searchTerms) return null;
 
@@ -383,40 +387,42 @@ export function recipeSearchSql(
   for (const field of searchFields) {
     switch (field) {
       case "title":
-        parts.push(sql`setweight(to_tsvector('simple', coalesce("recipes"."name", '')), 'A')`);
+        parts.push(
+          sql`setweight(to_tsvector('simple', f_unaccent(coalesce("recipes"."name", ''))), 'A')`
+        );
         break;
       case "tags":
         parts.push(
-          sql`setweight(to_tsvector('simple', coalesce((
+          sql`setweight(to_tsvector('simple', f_unaccent(coalesce((
             SELECT string_agg(search_tag.name, ' ')
             FROM ${recipeTags} search_rt
             INNER JOIN ${tags} search_tag ON search_rt.tag_id = search_tag.id
             WHERE search_rt.recipe_id = "recipes"."id"
-          ), '')), 'B')`
+          ), ''))), 'B')`
         );
         break;
       case "ingredients":
         parts.push(
-          sql`setweight(to_tsvector('simple', coalesce((
+          sql`setweight(to_tsvector('simple', f_unaccent(coalesce((
             SELECT string_agg(search_ingredient.name, ' ')
             FROM ${recipeIngredients} search_ri
             INNER JOIN ${ingredients} search_ingredient ON search_ri.ingredient_id = search_ingredient.id
             WHERE search_ri.recipe_id = "recipes"."id"
-          ), '')), 'C')`
+          ), ''))), 'C')`
         );
         break;
       case "description":
         parts.push(
-          sql`setweight(to_tsvector('simple', coalesce("recipes"."description", '')), 'D')`
+          sql`setweight(to_tsvector('simple', f_unaccent(coalesce("recipes"."description", ''))), 'D')`
         );
         break;
       case "steps":
         parts.push(
-          sql`setweight(to_tsvector('simple', coalesce((
+          sql`setweight(to_tsvector('simple', f_unaccent(coalesce((
             SELECT string_agg(search_step.step, ' ')
             FROM ${stepsTable} search_step
             WHERE search_step.recipe_id = "recipes"."id"
-          ), '')), 'D')`
+          ), ''))), 'D')`
         );
         break;
     }
@@ -425,7 +431,7 @@ export function recipeSearchSql(
   if (parts.length === 0) return null;
 
   const document = sql.join(parts, sql` || `);
-  const query = sql`to_tsquery('simple', ${searchTerms})`;
+  const query = sql`to_tsquery('simple', f_unaccent(${searchTerms}))`;
 
   return {
     match: sql`(${document}) @@ ${query}`,
@@ -538,7 +544,7 @@ export async function listRecipes(
   limit: number,
   offset: number = 0,
   search?: string,
-  searchFields: SearchField[] = ["title", "ingredients"],
+  searchFields: SearchField[] = [...DEFAULT_SEARCH_FIELDS],
   tagNames?: string[],
   filterMode: FilterMode = "OR",
   sortMode: SortOrder = "dateDesc",

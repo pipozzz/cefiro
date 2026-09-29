@@ -247,6 +247,53 @@ describe("the Library union", () => {
     });
   });
 
+  describe("search matching (Discover parity)", () => {
+    it("ignores diacritics on both sides", async () => {
+      await createTestRecipe(ownerId, { name: "Guláš s knedľou" });
+
+      for (const search of ["gulas", "GULÁŠ", "knedlou"]) {
+        const result = await listLibrary(viewer(ownerId), { ...base, search });
+
+        expect(titles(result.items)).toEqual(["Guláš s knedľou"]);
+      }
+    });
+
+    it("requires every term, so a second word narrows the list", async () => {
+      await createTestRecipe(ownerId, { name: "Brunch pancakes" });
+      await createTestRecipe(ownerId, { name: "Brunch eggs" });
+
+      const one = await listLibrary(viewer(ownerId), { ...base, search: "brunch" });
+      const both = await listLibrary(viewer(ownerId), { ...base, search: "brunch pancakes" });
+
+      expect(titles(one.items).sort()).toEqual(["Brunch eggs", "Brunch pancakes"]);
+      expect(titles(both.items)).toEqual(["Brunch pancakes"]);
+    });
+
+    it("finds a recipe by its description with the default fields", async () => {
+      await createTestRecipe(ownerId, {
+        name: "Sunday special",
+        description: "Pomaly dusená kapusta",
+      });
+
+      const result = await listLibrary(viewer(ownerId), {
+        limit: 50,
+        search: "dusena",
+      });
+
+      expect(titles(result.items)).toEqual(["Sunday special"]);
+    });
+
+    it("matches a cookbook title without diacritics and on every term", async () => {
+      await createCookbook({ userId: ownerId, title: "Rýchle večere" });
+
+      const loose = await listLibrary(viewer(ownerId), { ...base, search: "vecere" });
+      const strict = await listLibrary(viewer(ownerId), { ...base, search: "vecere obedy" });
+
+      expect(kinds(loose.items)).toEqual(["cookbook"]);
+      expect(kinds(strict.items)).toEqual([]);
+    });
+  });
+
   describe("recipe-only filters", () => {
     it("restricts the results to recipes", async () => {
       await seedMixedLibrary();
