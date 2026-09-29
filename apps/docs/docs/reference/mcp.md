@@ -26,13 +26,21 @@ build — you run it separately, wherever your MCP client is.
 | `delete_recipe`         | Delete a recipe (fetches its version first).                      |
 | `list_cuisines`         | List the cuisine vocabulary (names) to use with `create_recipe`.  |
 | `create_cuisine`        | Add a cuisine to the vocabulary (needs an admin API key).         |
-| `search_recipes`        | Search recipes by text.                                           |
+| `search_recipes`        | Search or filter recipes, page by page.                           |
 | `get_recipe`            | Fetch one recipe by id.                                           |
 
 `create_recipe` accepts name, description, servings, prep/cook minutes,
 categories (`Breakfast` / `Lunch` / `Dinner` / `Snack`), ingredients, steps,
 tags, an optional cuisine **name** (resolved against the vocabulary; unknown
 names are skipped), and `visibility` (default `public`).
+
+`search_recipes` searches the recipes the key's owner can see. It takes an
+optional `query`, `searchFields` (`title`, `description`, `ingredients`, `steps`,
+`tags`; the server's defaults when omitted), `tags`, `categories`, `filterMode`
+(`AND` / `OR`), `limit` (up to 50) and `cursor`. Each result includes `total`
+and `nextCursor`: pass `nextCursor` back as `cursor` to fetch the next page.
+`null` means there are no more. Omit `query` to list recipes by tag or category
+alone.
 
 `create_cuisine` needs an administrator API key; with a regular key, add cuisines
 in the app (Admin → Cuisines) instead. Updating a recipe's data is done over the

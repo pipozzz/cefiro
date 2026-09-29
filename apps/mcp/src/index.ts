@@ -98,20 +98,48 @@ server.registerTool(
   }
 );
 
+const SEARCH_FIELD = z.enum(["title", "description", "ingredients", "steps", "tags"]);
+
 server.registerTool(
   "search_recipes",
   {
     title: "Search recipes",
-    description: "Search the caller's recipes by text.",
+    description:
+      "Search the recipes the caller can see (own and household), newest first. Text matching ignores diacritics, prefix-matches every word and needs all words. Without `searchFields` the server's default fields are searched. Filter by tags or meal categories, with or without a query. The result carries `total` and `nextCursor`; pass `nextCursor` back as `cursor` for the next page (null means there are no more).",
     inputSchema: {
-      query: z.string().min(1).describe("Search text"),
+      query: z.string().min(1).optional().describe("Search text (omit to list by filters only)"),
+      searchFields: z
+        .array(SEARCH_FIELD)
+        .min(1)
+        .optional()
+        .describe("Fields to search (default: the server's defaults)"),
+      tags: z.array(z.string().min(1)).optional().describe("Only recipes with these tags"),
+      categories: z.array(CATEGORY).optional().describe("Only recipes in these meal categories"),
+      filterMode: z
+        .enum(["AND", "OR"])
+        .optional()
+        .describe("How several tags/categories combine (default OR)"),
+      cursor: z
+        .number()
+        .int()
+        .min(0)
+        .optional()
+        .describe("Offset from a previous result's nextCursor (default 0)"),
       limit: z.number().int().min(1).max(50).optional().describe("Max results (default 20)"),
     },
   },
-  async ({ query, limit }) => {
+  async ({ query, searchFields, tags, categories, filterMode, cursor, limit }) => {
     const data = await api("/recipes/search", {
       method: "POST",
-      body: JSON.stringify({ search: query, limit: limit ?? 20 }),
+      body: JSON.stringify({
+        search: query,
+        searchFields,
+        tags,
+        categories,
+        filterMode,
+        cursor: cursor ?? 0,
+        limit: limit ?? 20,
+      }),
     });
 
     return textResult(JSON.stringify(data, null, 2));
