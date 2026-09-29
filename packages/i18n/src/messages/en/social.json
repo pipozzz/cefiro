@@ -180,7 +180,9 @@
     "moreLikeThis": "More like this",
     "cookReadyAt": "Ready around {time}",
     "savedFromOriginal": "Adapted from the original recipe",
-    "savedFromBy": "by"
+    "savedFromBy": "by",
+    "addToGroceries": "Add to list",
+    "viewGroceries": "View list"
   },
   "feed": {
     "title": "Your feed",

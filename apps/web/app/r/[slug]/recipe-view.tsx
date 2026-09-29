@@ -25,6 +25,10 @@ import { useTranslations } from "next-intl";
 
 import type { RouterOutputs } from "@norish/trpc/client";
 
+import {
+  AddToGroceriesPublicButton,
+  AddToGroceriesSignInButton,
+} from "./add-to-groceries-public-button";
 import { RecipePrintView } from "./recipe-print-view";
 import { RelatedRecipes } from "./related-recipes";
 
@@ -80,9 +84,11 @@ type PublicRecipeData = RouterOutputs["social"]["getPublicRecipe"];
 
 export function PublicRecipeView({
   slug,
+  isAuthed,
   initialData,
 }: {
   slug: string;
+  isAuthed: boolean;
   initialData?: PublicRecipeData;
 }) {
   const trpc = useTRPC();
@@ -101,7 +107,7 @@ export function PublicRecipeView({
     return <NotFoundView message={t("notFoundMessage")} title={t("notFoundTitle")} />;
   }
 
-  return <PublicRecipeBody data={data} slug={slug} />;
+  return <PublicRecipeBody data={data} isAuthed={isAuthed} slug={slug} />;
 }
 
 /**
@@ -111,7 +117,15 @@ export function PublicRecipeView({
  * the yield, tick off ingredients, and cook through timer-aware steps — while
  * keeping the discovery-only social bar (like, save, rate, comment).
  */
-function PublicRecipeBody({ slug, data }: { slug: string; data: PublicRecipeData }) {
+function PublicRecipeBody({
+  slug,
+  isAuthed,
+  data,
+}: {
+  slug: string;
+  isAuthed: boolean;
+  data: PublicRecipeData;
+}) {
   const t = useTranslations("social.recipe");
   const tCat = useTranslations("social.categories");
   const { units } = usePublicRecipeConfigQuery();
@@ -261,6 +275,11 @@ function PublicRecipeBody({ slug, data }: { slug: string; data: PublicRecipeData
           />
           <LikeButton initialCount={favoriteCount} recipeId={recipeId} slug={slug} />
           <SaveRecipeButton recipeId={recipeId} slug={slug} />
+          {isAuthed ? (
+            <AddToGroceriesPublicButton ingredients={adjustedIngredients} slug={slug} />
+          ) : (
+            <AddToGroceriesSignInButton slug={slug} />
+          )}
           <ShareRecipeButton slug={slug} title={recipe.name} />
           <PrintRecipeButton />
         </div>

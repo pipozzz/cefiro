@@ -180,7 +180,9 @@
     "moreLikeThis": "Ähnliche Rezepte",
     "cookReadyAt": "Fertig gegen {time}",
     "savedFromOriginal": "Adapted from the original recipe",
-    "savedFromBy": "by"
+    "savedFromBy": "by",
+    "addToGroceries": "Zur Liste hinzufügen",
+    "viewGroceries": "Liste ansehen"
   },
   "feed": {
     "title": "Your feed",

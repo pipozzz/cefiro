@@ -180,7 +180,9 @@
     "moreLikeThis": "Podobné recepty",
     "cookReadyAt": "Hotové okolo {time}",
     "savedFromOriginal": "Odvodené z pôvodného receptu",
-    "savedFromBy": "od"
+    "savedFromBy": "od",
+    "addToGroceries": "Pridať do zoznamu",
+    "viewGroceries": "Zobraziť zoznam"
   },
   "feed": {
     "title": "Tvoj feed",
