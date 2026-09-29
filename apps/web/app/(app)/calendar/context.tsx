@@ -41,6 +41,20 @@ export function CalendarContextProvider({
   // Track if initial load has completed (only show skeleton on first load)
   const hasLoadedOnceRef = useRef(false);
 
+  // Holds the pending "reset expanding" timer so it can be cleared on unmount —
+  // otherwise it can fire setIsExpandingRange after teardown (a setState-after-
+  // unmount that surfaced as a flaky test failure).
+  const expandTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (expandTimeoutRef.current) {
+        clearTimeout(expandTimeoutRef.current);
+      }
+    },
+    []
+  );
+
   useEffect(() => {
     if (!isQueryLoading && !hasLoadedOnceRef.current) {
       hasLoadedOnceRef.current = true;
@@ -82,8 +96,12 @@ export function CalendarContextProvider({
         };
       });
 
-      // Reset expanding state after a short delay to allow new query to start
-      setTimeout(() => setIsExpandingRange(false), 100);
+      // Reset expanding state after a short delay to allow new query to start.
+      // Tracked so it can be cleared on unmount (see expandTimeoutRef).
+      if (expandTimeoutRef.current) {
+        clearTimeout(expandTimeoutRef.current);
+      }
+      expandTimeoutRef.current = setTimeout(() => setIsExpandingRange(false), 100);
     },
     [isExpandingRange]
   );
