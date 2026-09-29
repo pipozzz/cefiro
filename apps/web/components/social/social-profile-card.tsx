@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 
+import { ChefHatIcon } from "./chef-hat-icon";
+
 export type SocialProfileCardData = {
   handle: string;
   displayName: string | null;
@@ -28,8 +30,8 @@ export function SocialProfileCard({ profile }: { profile: SocialProfileCardData 
           className="h-12 w-12 flex-shrink-0 rounded-full object-cover"
         />
       ) : (
-        <span className="bg-primary text-primary-foreground flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-lg font-semibold">
-          {name.charAt(0).toUpperCase()}
+        <span className="bg-primary text-primary-foreground flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full">
+          <ChefHatIcon className="h-6 w-6" />
         </span>
       )}
 
