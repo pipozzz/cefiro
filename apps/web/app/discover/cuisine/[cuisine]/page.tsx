@@ -66,8 +66,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const t = await getTranslations("social.cuisinePage");
-  const title = t("heading", { cuisine });
-  const description = t("subtitle", { cuisine });
+  const tCuisine = await getTranslations("social.cuisineNames");
+  const label = tCuisine.has(cuisine) ? tCuisine(cuisine) : cuisine;
+  const title = t("heading", { cuisine: label });
+  const description = t("subtitle", { cuisine: label });
   const origin = await siteOrigin();
   const url = origin ? `${origin}/discover/cuisine/${slug}` : undefined;
 
@@ -89,13 +91,15 @@ export default async function CuisineLandingPage({ params }: Props) {
   }
 
   const t = await getTranslations("social.cuisinePage");
+  const tCuisine = await getTranslations("social.cuisineNames");
+  const label = tCuisine.has(cuisine) ? tCuisine(cuisine) : cuisine;
   const recipes = await loadCuisineRecipes(cuisine);
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 pb-24 md:px-6">
       <header className="mt-4 mb-6">
-        <h1 className="text-foreground text-3xl font-bold">{t("heading", { cuisine })}</h1>
-        <p className="text-default-500 mt-1">{t("subtitle", { cuisine })}</p>
+        <h1 className="text-foreground text-3xl font-bold">{t("heading", { cuisine: label })}</h1>
+        <p className="text-default-500 mt-1">{t("subtitle", { cuisine: label })}</p>
       </header>
 
       {recipes.length === 0 ? (
