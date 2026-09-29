@@ -2,7 +2,7 @@ import { desc, eq, inArray, sql } from "drizzle-orm";
 
 import { db } from "@norish/db/drizzle";
 
-import { recipes, recipeTags, tags, themes } from "../schema";
+import { recipeEmbeddings, recipes, recipeTags, tags, themes } from "../schema";
 
 /** One theme row as the clustering job produces it (no id/updatedAt yet). */
 export interface ThemeInput {
@@ -96,6 +96,40 @@ export async function getRecipeDisplayById(
     .limit(1);
 
   return row ?? null;
+}
+
+/**
+ * The discovery themes a user's PUBLIC recipes fall into. Each of the user's
+ * embedded public recipes is assigned to its nearest theme centroid (cosine,
+ * matching findSimilarPublicRecipes), then grouped by theme name — so the result
+ * is the distinct themes with how many of the user's recipes land in each, most
+ * first. Column-to-column vector compare, so no serialization needed.
+ *
+ * Empty (not an error) when the user has no embedded public recipes or no themes
+ * exist yet — embeddings are queued async and themes are rebuilt wholesale.
+ */
+export async function listThemesForUser(
+  userId: string
+): Promise<{ name: string; recipeCount: number }[]> {
+  const result = await db.execute(sql`
+    SELECT t.name AS name, count(*)::int AS "recipeCount"
+    FROM ${recipes} r
+    JOIN ${recipeEmbeddings} re ON re.recipe_id = r.id
+    JOIN LATERAL (
+      SELECT th.name
+      FROM ${themes} th
+      ORDER BY th.centroid <=> re.embedding
+      LIMIT 1
+    ) t ON true
+    WHERE r.user_id = ${userId} AND r.visibility = 'public'
+    GROUP BY t.name
+    ORDER BY count(*) DESC, t.name
+  `);
+
+  return result.rows.map((row) => ({
+    name: String(row.name),
+    recipeCount: Number(row.recipeCount),
+  }));
 }
 
 /**

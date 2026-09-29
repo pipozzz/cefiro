@@ -80,7 +80,7 @@ import {
   listImportedVisibleRecipeIds,
   listOwnRecipesForSharing,
 } from "@norish/db/repositories/recipes";
-import { getThemeById, listThemes } from "@norish/db/repositories/themes";
+import { getThemeById, listThemes, listThemesForUser } from "@norish/db/repositories/themes";
 import { getUserAllergies } from "@norish/db/repositories/user-allergies";
 import {
   getProfileByHandle,
@@ -481,6 +481,39 @@ const getProfile = publicProcedure.input(GetProfileByHandleInputSchema).query(as
 
   return { profile: toPublicProfileDto(profile), counts };
 });
+
+/**
+ * The discovery themes a public profile's recipes fall into, each with a
+ * name-slug link to its theme page. Empty (not an error) for a private/missing
+ * profile, or when the cook has no embedded recipes / no themes exist yet.
+ */
+const profileThemes = publicProcedure
+  .input(GetProfileByHandleInputSchema)
+  .query(async ({ input }) => {
+    const profile = await getProfileByHandle(input.handle);
+
+    if (!profile || !profile.isPublic) {
+      return { themes: [] as { name: string; slug: string; recipeCount: number }[] };
+    }
+
+    const rows = await listThemesForUser(profile.userId);
+    const seen = new Set<string>();
+    const themesOut: { name: string; slug: string; recipeCount: number }[] = [];
+
+    // Themes can share a name; merge by slug (the page key) keeping the largest.
+    for (const row of rows) {
+      const slug = cuisineSlug(row.name);
+
+      if (!slug || seen.has(slug)) {
+        continue;
+      }
+
+      seen.add(slug);
+      themesOut.push({ name: row.name, slug, recipeCount: row.recipeCount });
+    }
+
+    return { themes: themesOut };
+  });
 
 // --- Follow graph (authenticated) ---------------------------------------
 
@@ -1596,6 +1629,7 @@ export const socialProcedures = router({
   unpublishImported,
   myRecipesForSharing,
   getProfile,
+  profileThemes,
   listProfileRecipes,
   getPublicRecipe,
   follow,

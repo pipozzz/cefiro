@@ -73,6 +73,12 @@ export function PublicProfileView({ handle }: { handle: string }) {
     enabled: profileQuery.isSuccess,
   });
 
+  const themesQuery = useQuery({
+    ...trpc.social.profileThemes.queryOptions({ handle }),
+    retry: false,
+    enabled: profileQuery.isSuccess,
+  });
+
   if (profileQuery.isLoading) {
     return (
       <div className="mx-auto max-w-5xl animate-pulse px-4 py-10 md:px-6">
@@ -92,6 +98,7 @@ export function PublicProfileView({ handle }: { handle: string }) {
   const displayName = profile.displayName ?? profile.handle;
   const recipes = recipesQuery.data?.recipes ?? [];
   const cookbooks = cookbooksQuery.data?.cookbooks ?? [];
+  const themes = themesQuery.data?.themes ?? [];
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-24 md:px-6">
@@ -151,6 +158,26 @@ export function PublicProfileView({ handle }: { handle: string }) {
           </div>
         </div>
       </header>
+
+      {/* Themes this cook's recipes fall into — each links to its theme page. */}
+      {themes.length > 0 ? (
+        <section className="mt-10">
+          <h2 className="text-foreground mb-4 text-lg font-semibold">{t("themesHeading")}</h2>
+          <ul className="flex flex-wrap gap-2">
+            {themes.map((theme) => (
+              <li key={theme.slug}>
+                <Link
+                  className="bg-content2 hover:bg-content3 text-default-600 hover:text-foreground inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm no-underline transition"
+                  href={`/discover/themes/${theme.slug}`}
+                >
+                  <span>{theme.name}</span>
+                  <span className="text-default-400 text-xs">{theme.recipeCount}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       {/* Cookbooks */}
       {cookbooks.length > 0 ? (
