@@ -13,13 +13,23 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = t("metaTitle");
   const description = t("metaDescription");
 
+  // Absolute canonical for discovery. The proxy also serves this page at the bare
+  // root ("/") as an alias, so pinning the canonical to /discover keeps the root
+  // and /discover from competing as duplicate content while both share the card.
+  const h = await headers();
+  const proto = h.get("x-forwarded-proto") ?? "https";
+  const host = h.get("x-forwarded-host") ?? h.get("host");
+  const url = host ? `${proto}://${host}/discover` : undefined;
+
   return {
     title,
     description,
+    alternates: url ? { canonical: url } : undefined,
     openGraph: {
       type: "website",
       title,
       description,
+      url,
       siteName: "Naša Kuchyňa",
       images: [{ url: "/og-default.png", width: 1200, height: 630, alt: "Naša Kuchyňa" }],
     },

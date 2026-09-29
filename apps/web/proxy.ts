@@ -33,10 +33,18 @@ export async function proxy(request: NextRequest) {
       : SERVER_CONFIG.AUTH_URL;
 
   // New visitors landing on the root get the public discovery page instead of a
-  // forced sign-in. Deep links to authed pages still go to login with a
-  // callbackUrl so the user returns there after signing in.
+  // forced sign-in. Rewrite (not redirect) so the bare domain
+  // (e.g. https://nasakuchyna.sk/) answers 200 with discovery's real HTML — its
+  // OpenGraph/Twitter tags included — so a shared root link gets the same rich
+  // preview as /discover. A 307 has no body, so link-preview scrapers that don't
+  // follow the redirect showed no card. Discovery's canonical still points at
+  // /discover, so this alias is not indexed as duplicate content.
   if (request.nextUrl.pathname === "/") {
-    return NextResponse.redirect(new URL("/discover", base), 307);
+    const rewriteUrl = request.nextUrl.clone();
+
+    rewriteUrl.pathname = "/discover";
+
+    return NextResponse.rewrite(rewriteUrl);
   }
 
   const loginUrl = new URL("/login", base);
