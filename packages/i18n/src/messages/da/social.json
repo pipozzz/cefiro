@@ -59,7 +59,10 @@
     "emptyFiltered": "No recipes match these filters. Try clearing a filter or searching instead.",
     "browseByCuisine": "Gennemse efter køkken",
     "browseByTag": "Gennemse efter tag",
-    "browseByCategory": "Gennemse efter kategori"
+    "browseByCategory": "Gennemse efter kategori",
+    "cuisineHeading": "Køkken",
+    "cuisineAll": "All",
+    "browseHeading": "Gennemse opskrifter"
   },
   "categories": {
     "Breakfast": "Breakfast",

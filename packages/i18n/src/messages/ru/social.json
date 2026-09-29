@@ -59,7 +59,10 @@
     "emptyFiltered": "No recipes match these filters. Try clearing a filter or searching instead.",
     "browseByCuisine": "По кухне",
     "browseByTag": "По тегу",
-    "browseByCategory": "По категории"
+    "browseByCategory": "По категории",
+    "cuisineHeading": "Кухня",
+    "cuisineAll": "All",
+    "browseHeading": "Обзор рецептов"
   },
   "categories": {
     "Breakfast": "Breakfast",

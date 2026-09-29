@@ -59,7 +59,10 @@
     "emptyFiltered": "No recipes match these filters. Try clearing a filter or searching instead.",
     "browseByCuisine": "Bla etter kjøkken",
     "browseByTag": "Bla etter tagg",
-    "browseByCategory": "Bla etter kategori"
+    "browseByCategory": "Bla etter kategori",
+    "cuisineHeading": "Kjøkken",
+    "cuisineAll": "All",
+    "browseHeading": "Bla i oppskrifter"
   },
   "categories": {
     "Breakfast": "Breakfast",

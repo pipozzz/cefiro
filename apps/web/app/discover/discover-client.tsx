@@ -30,6 +30,8 @@ type Mode =
 
 const CATEGORIES: Category[] = ["Breakfast", "Lunch", "Dinner", "Snack"];
 const TIME_OPTIONS = [15, 30, 60] as const;
+// Cuisine is an open vocabulary; cap the facet row so it never dominates.
+const MAX_CUISINE_CHIPS = 12;
 
 // Active uses the brand accent (a solid green fill + white text), not the
 // theme's pale `primary`, so the selected chip is unmistakable; inactive is a
@@ -63,6 +65,8 @@ export function DiscoverClient({
   const [maxMinutes, setMaxMinutes] = useState<number | null>(null);
   const [hideMyAllergens, setHideMyAllergens] = useState(false);
   const [tag, setTag] = useState<string | null>(() => searchParams.get("tag"));
+  // A selected cuisine facet (matched by name, case-insensitive server-side).
+  const [cuisine, setCuisine] = useState<string | null>(null);
   // A selected semantic theme (Phase B): its own vector-search results view,
   // exclusive with the tag/category/time filters.
   const [theme, setTheme] = useState<{ id: string; name: string } | null>(null);
@@ -107,6 +111,7 @@ export function DiscoverClient({
         sort,
         category: category ?? undefined,
         tag: tag ?? undefined,
+        cuisine: cuisine ?? undefined,
         maxMinutes: maxMinutes ?? undefined,
         hideMyAllergens: hideMyAllergens || undefined,
         limit: 24,
@@ -136,6 +141,36 @@ export function DiscoverClient({
     retry: false,
   });
   const counts = categoryCounts.data;
+
+  // Cuisine facet counts, under the same tag / time / dietary filters (but not the
+  // selected cuisine itself — so the reader can switch between cuisines and still
+  // see each one's size). Drives the cuisine chip row.
+  const cuisineCounts = useQuery({
+    ...trpc.social.discoverCuisineCounts.queryOptions({
+      tag: tag ?? undefined,
+      maxMinutes: maxMinutes ?? undefined,
+      hideMyAllergens: hideMyAllergens || undefined,
+    }),
+    enabled: !isSearching && mode === "recipes",
+    placeholderData: keepPreviousData,
+    retry: false,
+  });
+  // Cuisines that currently have matching recipes, most first (the proc orders
+  // them). Cap the row so a long vocabulary doesn't dominate; always keep the
+  // selected cuisine visible even if it falls outside the top slice.
+  const cuisineList = cuisineCounts.data;
+  const visibleCuisines = (() => {
+    if (!cuisineList) return [] as string[];
+
+    const names = Object.keys(cuisineList.byCuisine);
+    const top = names.slice(0, MAX_CUISINE_CHIPS);
+
+    if (cuisine && !top.includes(cuisine)) {
+      top.push(cuisine);
+    }
+
+    return top;
+  })();
 
   const cooks = useInfiniteQuery({
     ...trpc.social.discoverCooks.infiniteQueryOptions(
@@ -280,7 +315,7 @@ export function DiscoverClient({
         <>
           {hubLinks}
 
-          {(mode === "forYou" || mode === "recipes") && !theme ? (
+          {mode !== "cooks" && mode !== "cookbooks" && !theme ? (
             <>
               <DiscoverThemes
                 onQuick={() => {
@@ -546,6 +581,34 @@ export function DiscoverClient({
             ))}
           </div>
 
+          {/* Cuisine facet — data-driven, most-populated first. Only shown once
+              there are cuisines to offer under the current filters. */}
+          {visibleCuisines.length > 0 ? (
+            <div className="mb-8 flex flex-wrap items-center gap-2">
+              <span className="text-default-500 mr-1 text-sm">{t("cuisineHeading")}</span>
+              <button
+                className={pill(cuisine === null)}
+                type="button"
+                onClick={() => setCuisine(null)}
+              >
+                {t("cuisineAll")}
+              </button>
+              {visibleCuisines.map((name) => (
+                <button
+                  key={name}
+                  className={pill(cuisine === name)}
+                  type="button"
+                  onClick={() => setCuisine((prev) => (prev === name ? null : name))}
+                >
+                  {name}
+                  {cuisineList ? (
+                    <span className="opacity-70"> {cuisineList.byCuisine[name] ?? 0}</span>
+                  ) : null}
+                </button>
+              ))}
+            </div>
+          ) : null}
+
           {tag ? (
             <div className="mb-6 flex items-center gap-2">
               <span className="bg-primary/15 text-primary inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-sm font-medium">
@@ -571,7 +634,9 @@ export function DiscoverClient({
               <SparklesIcon className="text-default-400 h-8 w-8" />
               <p className="text-foreground font-medium">{t("empty")}</p>
               <p className="text-default-500 text-sm">
-                {!category && !tag && !maxMinutes ? t("emptyColdStart") : t("emptyFiltered")}
+                {!category && !tag && !cuisine && !maxMinutes
+                  ? t("emptyColdStart")
+                  : t("emptyFiltered")}
               </p>
             </div>
           ) : (
