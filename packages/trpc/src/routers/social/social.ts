@@ -19,6 +19,7 @@ import {
 } from "@norish/db/repositories/favorites";
 import {
   countPublicRecipesByCategory,
+  countPublicRecipesByCuisine,
   followUser,
   getFollowCounts,
   getPublicRecipesByIds,
@@ -627,6 +628,35 @@ const discoverCategoryCounts = publicProcedure
     }
 
     return countPublicRecipesByCategory({
+      tag: input.tag,
+      maxMinutes: input.maxMinutes,
+      excludeAllergenTags,
+    });
+  });
+
+/**
+ * Cuisine facet counts for /discover: how many public recipes carry each cuisine
+ * under the reader's current tag / "ready in" / dietary filters, so the cuisine
+ * chips can show counts. Same server-side allergen resolution as `discover`.
+ */
+const discoverCuisineCounts = publicProcedure
+  .input(
+    z.object({
+      tag: z.string().trim().min(1).max(50).optional(),
+      maxMinutes: z.number().int().min(1).max(1440).optional(),
+      hideMyAllergens: z.boolean().optional(),
+    })
+  )
+  .query(async ({ ctx, input }) => {
+    let excludeAllergenTags: string[] | undefined;
+
+    if (input.hideMyAllergens && ctx.user) {
+      const { allergies } = await getUserAllergies(ctx.user.id);
+
+      excludeAllergenTags = allergies;
+    }
+
+    return countPublicRecipesByCuisine({
       tag: input.tag,
       maxMinutes: input.maxMinutes,
       excludeAllergenTags,
@@ -1510,6 +1540,7 @@ export const socialProcedures = router({
   forYou,
   discover,
   discoverCategoryCounts,
+  discoverCuisineCounts,
   search,
   searchByIngredients,
   trendingTopics,

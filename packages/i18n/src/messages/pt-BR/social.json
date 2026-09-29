@@ -59,7 +59,10 @@
     "emptyFiltered": "No recipes match these filters. Try clearing a filter or searching instead.",
     "browseByCuisine": "Explorar por culinária",
     "browseByTag": "Explorar por tag",
-    "browseByCategory": "Explorar por categoria"
+    "browseByCategory": "Explorar por categoria",
+    "cuisineHeading": "Culinária",
+    "cuisineAll": "All",
+    "browseHeading": "Explorar receitas"
   },
   "categories": {
     "Breakfast": "Breakfast",

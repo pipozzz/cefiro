@@ -59,7 +59,10 @@
     "emptyFiltered": "No recipes match these filters. Try clearing a filter or searching instead.",
     "browseByCuisine": "Bladeren op keuken",
     "browseByTag": "Bladeren op tag",
-    "browseByCategory": "Bladeren op categorie"
+    "browseByCategory": "Bladeren op categorie",
+    "cuisineHeading": "Keuken",
+    "cuisineAll": "All",
+    "browseHeading": "Recepten bladeren"
   },
   "categories": {
     "Breakfast": "Breakfast",

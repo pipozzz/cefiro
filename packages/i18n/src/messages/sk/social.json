@@ -59,7 +59,10 @@
     "emptyFiltered": "Týmto filtrom nezodpovedá žiadny recept. Skús zrušiť filter alebo vyhľadávať.",
     "browseByCuisine": "Prehľadávať podľa kuchyne",
     "browseByTag": "Prehľadávať podľa tagu",
-    "browseByCategory": "Prehľadávať podľa kategórie"
+    "browseByCategory": "Prehľadávať podľa kategórie",
+    "cuisineHeading": "Kuchyňa",
+    "cuisineAll": "Všetko",
+    "browseHeading": "Prehľadávať recepty"
   },
   "categories": {
     "Breakfast": "Raňajky",

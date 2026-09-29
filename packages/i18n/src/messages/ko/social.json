@@ -59,7 +59,10 @@
     "emptyFiltered": "No recipes match these filters. Try clearing a filter or searching instead.",
     "browseByCuisine": "요리별 보기",
     "browseByTag": "태그별 보기",
-    "browseByCategory": "카테고리별 보기"
+    "browseByCategory": "카테고리별 보기",
+    "cuisineHeading": "요리",
+    "cuisineAll": "All",
+    "browseHeading": "레시피 둘러보기"
   },
   "categories": {
     "Breakfast": "Breakfast",
