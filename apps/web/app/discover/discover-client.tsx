@@ -42,7 +42,13 @@ const pillClass = (active: boolean) =>
       : "border-border bg-content2 text-default-600 hover:bg-content3"
   }`;
 
-export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
+export function DiscoverClient({
+  hubLinks,
+  isAuthed,
+}: {
+  hubLinks?: React.ReactNode;
+  isAuthed: boolean;
+}) {
   const trpc = useTRPC();
   const searchParams = useSearchParams();
   const t = useTranslations("social.discover");
@@ -258,6 +264,10 @@ export function DiscoverClient({ isAuthed }: { isAuthed: boolean }) {
         <SearchResults isAuthed={isAuthed} query={searchQuery} term={searchTerm} />
       ) : (
         <>
+          {/* Crawlable browse-by hubs, hoisted to the top: the grid below is an
+              infinite scroll, so readers would never reach a footer block. */}
+          {hubLinks}
+
           {/* Dynamic food themes + the daily hero, the top-of-discovery entry
               points. Hoisted above the mode tabs so they frame the personalised
               "For you" landing as well as the community browse. They stay mounted

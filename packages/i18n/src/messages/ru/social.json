@@ -58,6 +58,7 @@
     "emptyColdStart": "New recipes will appear here as the community shares them — check back soon.",
     "emptyFiltered": "No recipes match these filters. Try clearing a filter or searching instead.",
     "browseByCuisine": "По кухне",
+    "browseByTag": "По тегу",
     "browseByCategory": "По категории"
   },
   "categories": {
@@ -325,6 +326,15 @@
     "browseAll": "Browse all recipes",
     "indexTitle": "Cuisines",
     "indexSubtitle": "Browse public recipes by cuisine.",
+    "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
+  },
+  "tagPage": {
+    "heading": "Рецепты с тегом #{tag}",
+    "subtitle": "Открывайте и сохраняйте публичные рецепты с тегом #{tag}.",
+    "empty": "Публичных рецептов с этим тегом пока нет.",
+    "browseAll": "Browse all recipes",
+    "indexTitle": "Теги",
+    "indexSubtitle": "Просматривайте публичные рецепты по тегу.",
     "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
   }
 }

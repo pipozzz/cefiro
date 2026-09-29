@@ -58,6 +58,7 @@
     "emptyColdStart": "Nové recepty sa tu objavia, keď ich komunita zverejní — vráť sa čoskoro.",
     "emptyFiltered": "Týmto filtrom nezodpovedá žiadny recept. Skús zrušiť filter alebo vyhľadávať.",
     "browseByCuisine": "Prehľadávať podľa kuchyne",
+    "browseByTag": "Prehľadávať podľa tagu",
     "browseByCategory": "Prehľadávať podľa kategórie"
   },
   "categories": {
@@ -325,6 +326,15 @@
     "browseAll": "Prehliadať všetky recepty",
     "indexTitle": "Kuchyne",
     "indexSubtitle": "Prehliadajte verejné recepty podľa kuchyne.",
+    "recipeCount": "{count, plural, one {# recept} few {# recepty} many {# receptu} other {# receptov}}"
+  },
+  "tagPage": {
+    "heading": "Recepty s tagom #{tag}",
+    "subtitle": "Objavujte a ukladajte verejné recepty s tagom #{tag}.",
+    "empty": "Pre tento tag zatiaľ nie sú žiadne verejné recepty.",
+    "browseAll": "Prehliadať všetky recepty",
+    "indexTitle": "Tagy",
+    "indexSubtitle": "Prehliadajte verejné recepty podľa tagu.",
     "recipeCount": "{count, plural, one {# recept} few {# recepty} many {# receptu} other {# receptov}}"
   }
 }

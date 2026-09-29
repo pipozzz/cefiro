@@ -58,6 +58,7 @@
     "emptyColdStart": "New recipes will appear here as the community shares them — check back soon.",
     "emptyFiltered": "No recipes match these filters. Try clearing a filter or searching instead.",
     "browseByCuisine": "요리별 보기",
+    "browseByTag": "태그별 보기",
     "browseByCategory": "카테고리별 보기"
   },
   "categories": {
@@ -325,6 +326,15 @@
     "browseAll": "Browse all recipes",
     "indexTitle": "Cuisines",
     "indexSubtitle": "Browse public recipes by cuisine.",
+    "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
+  },
+  "tagPage": {
+    "heading": "#{tag} 태그 레시피",
+    "subtitle": "#{tag} 태그가 붙은 공개 레시피를 찾고 저장하세요.",
+    "empty": "아직 이 태그의 공개 레시피가 없습니다.",
+    "browseAll": "Browse all recipes",
+    "indexTitle": "태그",
+    "indexSubtitle": "태그별로 공개 레시피를 둘러보세요.",
     "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
   }
 }
