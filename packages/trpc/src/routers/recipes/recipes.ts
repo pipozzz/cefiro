@@ -432,6 +432,12 @@ export const updateRecipeApi = authedProcedure
 
     log.info({ userId: ctx.user.id, recipeId: input.id }, "Recipe updated (API)");
 
+    // Same rule as the realtime `update`: a public recipe's discovery embedding
+    // is now stale, so re-embed it (the worker skips when the text is unchanged).
+    if (updated.visibility === "public") {
+      scheduleRecipeEmbedding(input.id);
+    }
+
     return updated;
   });
 

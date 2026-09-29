@@ -3,6 +3,8 @@ import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { scheduleRecipeEmbedding } from "@norish/queue";
+
 import { recipesRouter } from "../../src/routers/recipes";
 import { canAccessResource } from "../mocks/permissions";
 import { recipeEmitter } from "../mocks/recipe-emitter";
@@ -52,6 +54,10 @@ vi.mock("@norish/db/repositories/recipes", () => import("../mocks/recipes-reposi
 vi.mock("@norish/auth/permissions", () => import("../mocks/permissions"));
 vi.mock("@norish/trpc/routers/recipes/emitter", () => import("../mocks/recipe-emitter"));
 vi.mock("@norish/shared-server/config/server-config-loader", () => import("../mocks/config"));
+vi.mock("@norish/queue", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@norish/queue")>()),
+  scheduleRecipeEmbedding: vi.fn(),
+}));
 
 // The Dish Colour helpers are pinned by their own suite
 // (shared-server __tests__/media/dish-color.test.ts); here they return a
@@ -807,6 +813,45 @@ describe("recipes procedures", () => {
       const payload = updateRecipeWithRefs.mock.calls[0]?.[2] as Record<string, unknown>;
 
       expect("dishColor" in payload).toBe(false);
+    });
+  });
+
+  describe("updateApi (PATCH /recipes/{id})", () => {
+    const recipeId = "55555555-5555-4555-8555-555555555555";
+
+    function createCaller() {
+      return recipesRouter.createCaller({
+        ...ctx,
+        connectionId: null,
+        multiplexer: null,
+        operationId: null,
+      });
+    }
+
+    beforeEach(() => {
+      getRecipeOwnerId.mockResolvedValue(ctx.user.id);
+      canAccessResource.mockResolvedValue(true);
+      updateRecipeWithRefs.mockResolvedValue({ stale: false });
+    });
+
+    it("re-embeds a public recipe after an API edit", async () => {
+      getRecipeFull.mockResolvedValue(
+        createValidFullRecipe({ id: recipeId, visibility: "public" })
+      );
+
+      await createCaller().updateApi({ id: recipeId, version: 1, data: { name: "Renamed" } });
+
+      expect(scheduleRecipeEmbedding).toHaveBeenCalledWith(recipeId);
+    });
+
+    it("does not embed a private recipe after an API edit", async () => {
+      getRecipeFull.mockResolvedValue(
+        createValidFullRecipe({ id: recipeId, visibility: "private" })
+      );
+
+      await createCaller().updateApi({ id: recipeId, version: 1, data: { name: "Renamed" } });
+
+      expect(scheduleRecipeEmbedding).not.toHaveBeenCalled();
     });
   });
 });
