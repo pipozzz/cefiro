@@ -62,7 +62,8 @@
     "browseByCategory": "Przeglądaj według kategorii",
     "cuisineHeading": "Kuchnia",
     "cuisineAll": "All",
-    "browseHeading": "Przeglądaj przepisy"
+    "browseHeading": "Przeglądaj przepisy",
+    "themesViewAll": "Zobacz wszystkie"
   },
   "categories": {
     "Breakfast": "Breakfast",
@@ -341,5 +342,21 @@
     "indexTitle": "Tagi",
     "indexSubtitle": "Przeglądaj publiczne przepisy według tagu.",
     "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
+  },
+  "themesPage": {
+    "indexTitle": "Odkrywaj tematy",
+    "indexSubtitle": "Przeglądaj przepisy pogrupowane w tematy.",
+    "heading": "{theme}",
+    "subtitle": "Przepisy w temacie {theme}.",
+    "searchPlaceholder": "Szukaj tematów…",
+    "searchAria": "Szukaj tematów",
+    "clearSearch": "Wyczyść wyszukiwanie",
+    "sortLabel": "Sortuj:",
+    "sortPopular": "Najpopularniejsze",
+    "sortName": "A–Z",
+    "empty": "Brak tematów.",
+    "noneMatch": "Żaden temat nie pasuje do wyszukiwania.",
+    "browseAll": "Przeglądaj przepisy",
+    "allThemes": "Wszystkie tematy"
   }
 }

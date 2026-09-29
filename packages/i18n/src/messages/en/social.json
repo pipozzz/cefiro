@@ -62,7 +62,8 @@
     "browseByCategory": "Browse by category",
     "cuisineHeading": "Cuisine",
     "cuisineAll": "All",
-    "browseHeading": "Browse recipes"
+    "browseHeading": "Browse recipes",
+    "themesViewAll": "View all"
   },
   "categories": {
     "Breakfast": "Breakfast",
@@ -341,5 +342,21 @@
     "indexTitle": "Tags",
     "indexSubtitle": "Browse public recipes by tag.",
     "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
+  },
+  "themesPage": {
+    "indexTitle": "Discover themes",
+    "indexSubtitle": "Browse recipes grouped into themes.",
+    "heading": "{theme}",
+    "subtitle": "Recipes in the {theme} theme.",
+    "searchPlaceholder": "Search themes…",
+    "searchAria": "Search themes",
+    "clearSearch": "Clear search",
+    "sortLabel": "Sort:",
+    "sortPopular": "Most popular",
+    "sortName": "A–Z",
+    "empty": "No themes yet.",
+    "noneMatch": "No themes match your search.",
+    "browseAll": "Browse recipes",
+    "allThemes": "All themes"
   }
 }

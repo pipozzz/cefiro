@@ -62,7 +62,8 @@
     "browseByCategory": "카테고리별 보기",
     "cuisineHeading": "요리",
     "cuisineAll": "All",
-    "browseHeading": "레시피 둘러보기"
+    "browseHeading": "레시피 둘러보기",
+    "themesViewAll": "모두 보기"
   },
   "categories": {
     "Breakfast": "Breakfast",
@@ -341,5 +342,21 @@
     "indexTitle": "태그",
     "indexSubtitle": "태그별로 공개 레시피를 둘러보세요.",
     "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
+  },
+  "themesPage": {
+    "indexTitle": "테마 둘러보기",
+    "indexSubtitle": "테마별로 묶인 레시피를 살펴보세요.",
+    "heading": "{theme}",
+    "subtitle": "{theme} 테마의 레시피.",
+    "searchPlaceholder": "테마 검색…",
+    "searchAria": "테마 검색",
+    "clearSearch": "검색 지우기",
+    "sortLabel": "정렬:",
+    "sortPopular": "인기순",
+    "sortName": "가나다",
+    "empty": "아직 테마가 없습니다.",
+    "noneMatch": "검색과 일치하는 테마가 없습니다.",
+    "browseAll": "레시피 둘러보기",
+    "allThemes": "모든 테마"
   }
 }

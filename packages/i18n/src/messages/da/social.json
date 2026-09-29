@@ -62,7 +62,8 @@
     "browseByCategory": "Gennemse efter kategori",
     "cuisineHeading": "Køkken",
     "cuisineAll": "All",
-    "browseHeading": "Gennemse opskrifter"
+    "browseHeading": "Gennemse opskrifter",
+    "themesViewAll": "Se alle"
   },
   "categories": {
     "Breakfast": "Breakfast",
@@ -341,5 +342,21 @@
     "indexTitle": "Tags",
     "indexSubtitle": "Gennemse offentlige opskrifter efter tag.",
     "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
+  },
+  "themesPage": {
+    "indexTitle": "Opdag temaer",
+    "indexSubtitle": "Gennemse opskrifter grupperet i temaer.",
+    "heading": "{theme}",
+    "subtitle": "Opskrifter i temaet {theme}.",
+    "searchPlaceholder": "Søg temaer…",
+    "searchAria": "Søg temaer",
+    "clearSearch": "Ryd søgning",
+    "sortLabel": "Sortér:",
+    "sortPopular": "Mest populære",
+    "sortName": "A–Å",
+    "empty": "Ingen temaer endnu.",
+    "noneMatch": "Ingen temaer matcher din søgning.",
+    "browseAll": "Gennemse opskrifter",
+    "allThemes": "Alle temaer"
   }
 }

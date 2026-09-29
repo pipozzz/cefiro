@@ -62,7 +62,8 @@
     "browseByCategory": "Prehľadávať podľa kategórie",
     "cuisineHeading": "Kuchyňa",
     "cuisineAll": "Všetko",
-    "browseHeading": "Prehľadávať recepty"
+    "browseHeading": "Prehľadávať recepty",
+    "themesViewAll": "Zobraziť všetky"
   },
   "categories": {
     "Breakfast": "Raňajky",
@@ -341,5 +342,21 @@
     "indexTitle": "Tagy",
     "indexSubtitle": "Prehliadajte verejné recepty podľa tagu.",
     "recipeCount": "{count, plural, one {# recept} few {# recepty} many {# receptu} other {# receptov}}"
+  },
+  "themesPage": {
+    "indexTitle": "Objavuj témy",
+    "indexSubtitle": "Prehľadávaj recepty zoskupené do tém.",
+    "heading": "{theme}",
+    "subtitle": "Recepty v téme {theme}.",
+    "searchPlaceholder": "Hľadaj tému…",
+    "searchAria": "Hľadať tému",
+    "clearSearch": "Vymazať hľadanie",
+    "sortLabel": "Zoradiť:",
+    "sortPopular": "Najobľúbenejšie",
+    "sortName": "A–Z",
+    "empty": "Zatiaľ žiadne témy.",
+    "noneMatch": "Hľadaniu nezodpovedá žiadna téma.",
+    "browseAll": "Objavuj recepty",
+    "allThemes": "Všetky témy"
   }
 }
