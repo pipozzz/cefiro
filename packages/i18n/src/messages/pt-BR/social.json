@@ -403,5 +403,10 @@
     "Thai": "Thai",
     "Turkish": "Turkish",
     "Vietnamese": "Vietnamese"
+  },
+  "footer": {
+    "about": "Sobre",
+    "terms": "Termos",
+    "privacy": "Privacidade"
   }
 }

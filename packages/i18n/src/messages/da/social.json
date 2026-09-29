@@ -403,5 +403,10 @@
     "Thai": "Thai",
     "Turkish": "Turkish",
     "Vietnamese": "Vietnamese"
+  },
+  "footer": {
+    "about": "Om os",
+    "terms": "Vilkår",
+    "privacy": "Privatliv"
   }
 }

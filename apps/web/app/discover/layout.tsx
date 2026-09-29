@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { AuthedAppShell } from "@/app/(app)/authed-app-shell";
+import { PublicFooter } from "@/components/social/public-footer";
 import { PublicHeader } from "@/components/social/public-header";
 import { getTranslations } from "next-intl/server";
 
@@ -54,9 +55,10 @@ export default async function DiscoverLayout({ children }: { children: React.Rea
 
   return (
     <BaseProviders>
-      <div className="min-h-dvh">
+      <div className="flex min-h-dvh flex-col">
         <PublicHeader />
-        {children}
+        <div className="flex-1">{children}</div>
+        <PublicFooter />
       </div>
     </BaseProviders>
   );
