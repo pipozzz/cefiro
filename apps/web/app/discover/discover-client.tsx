@@ -58,15 +58,28 @@ export function DiscoverClient({
   const tFeed = useTranslations("social.feed");
 
   // Signed-in readers land on their personalised "For you" feed; visitors get the
-  // generic community browse.
-  const [mode, setMode] = useState<Mode>(isAuthed ? "forYou" : "recipes");
+  // generic community browse. But a shared link that carries a filter
+  // (tag/cuisine/category) opens the browse lens so that filter is actually
+  // applied rather than hidden under "For you".
+  const [mode, setMode] = useState<Mode>(() => {
+    if (searchParams.get("tag") || searchParams.get("cuisine") || searchParams.get("category")) {
+      return "recipes";
+    }
+
+    return isAuthed ? "forYou" : "recipes";
+  });
   const [sort, setSort] = useState<Sort>("newest");
-  const [category, setCategory] = useState<Category | null>(null);
+  const [category, setCategory] = useState<Category | null>(() => {
+    const initial = searchParams.get("category");
+
+    return initial && (CATEGORIES as string[]).includes(initial) ? (initial as Category) : null;
+  });
   const [maxMinutes, setMaxMinutes] = useState<number | null>(null);
   const [hideMyAllergens, setHideMyAllergens] = useState(false);
   const [tag, setTag] = useState<string | null>(() => searchParams.get("tag"));
   // A selected cuisine facet (matched by name, case-insensitive server-side).
-  const [cuisine, setCuisine] = useState<string | null>(null);
+  // Seeded from the URL so a shared /discover?cuisine=… link restores the filter.
+  const [cuisine, setCuisine] = useState<string | null>(() => searchParams.get("cuisine"));
   // A selected semantic theme (Phase B): its own vector-search results view,
   // exclusive with the tag/category/time filters.
   const [theme, setTheme] = useState<{ id: string; name: string } | null>(null);
@@ -93,6 +106,8 @@ export function DiscoverClient({
 
     if (trimmed) params.set("q", trimmed);
     if (tag) params.set("tag", tag);
+    if (cuisine) params.set("cuisine", cuisine);
+    if (category) params.set("category", category);
 
     const query = params.toString();
     const next = query ? `/discover?${query}` : "/discover";
@@ -100,7 +115,7 @@ export function DiscoverClient({
     if (`${window.location.pathname}${window.location.search}` !== next) {
       window.history.replaceState(null, "", next);
     }
-  }, [debouncedQ, tag]);
+  }, [debouncedQ, tag, cuisine, category]);
 
   const searchTerm = debouncedQ.trim();
   const isSearching = searchTerm.length >= 2;
