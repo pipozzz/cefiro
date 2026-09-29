@@ -247,6 +247,7 @@ function toPublicProfileDto(profile: PublicProfile) {
     avatarUrl: profile.avatarUrl,
     location: profile.location,
     websiteUrl: profile.websiteUrl,
+    instagramUrl: profile.instagramUrl,
     memberSince: profile.createdAt,
   };
 }

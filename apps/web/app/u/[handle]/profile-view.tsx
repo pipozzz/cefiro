@@ -10,6 +10,14 @@ import { SocialRecipeGrid } from "@/components/social/social-recipe-card";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
+/** Show an Instagram link as "@handle" when it's an instagram.com URL, else a
+ * plain "Instagram" label. */
+function instagramLabel(url: string): string {
+  const match = /instagram\.com\/([^/?#]+)/i.exec(url);
+
+  return match?.[1] ? `@${match[1]}` : "Instagram";
+}
+
 type CookbookCard = {
   slug: string;
   title: string;
@@ -154,6 +162,16 @@ export function PublicProfileView({ handle }: { handle: string }) {
                 target="_blank"
               >
                 {profile.websiteUrl.replace(/^https?:\/\//, "")}
+              </a>
+            ) : null}
+            {profile.instagramUrl ? (
+              <a
+                className="text-primary hover:underline"
+                href={profile.instagramUrl}
+                rel="noreferrer noopener"
+                target="_blank"
+              >
+                {instagramLabel(profile.instagramUrl)}
               </a>
             ) : null}
           </div>

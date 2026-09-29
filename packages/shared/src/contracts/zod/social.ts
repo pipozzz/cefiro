@@ -65,6 +65,7 @@ export const UpsertProfileInputSchema = z.object({
   avatarUrl: z.string().trim().url().max(2048).optional().nullable().or(z.literal("")),
   location: z.string().trim().max(120).optional().nullable(),
   websiteUrl: z.string().trim().url().max(2048).optional().nullable().or(z.literal("")),
+  instagramUrl: z.string().trim().url().max(2048).optional().nullable().or(z.literal("")),
   isPublic: z.boolean().optional(),
 });
 

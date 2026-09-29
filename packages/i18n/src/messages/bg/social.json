@@ -268,7 +268,9 @@
     "save": "Save profile",
     "saved": "Profile saved",
     "couldNotSave": "Could not save profile",
-    "avatarLabel": "Profile photo"
+    "avatarLabel": "Profile photo",
+    "instagram": "Instagram",
+    "instagramPlaceholder": "https://instagram.com/…"
   },
   "recipeShare": {
     "heading": "Publish to community",

@@ -26,6 +26,7 @@ export const userProfiles = pgTable(
     avatarUrl: text("avatar_url"),
     location: text("location"),
     websiteUrl: text("website_url"),
+    instagramUrl: text("instagram_url"),
     // Whether the profile (and its public recipes) is discoverable/listed.
     isPublic: boolean("is_public").notNull().default(true),
     ...mutableRowColumns,
