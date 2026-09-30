@@ -1009,7 +1009,7 @@
       "headerHeading": "Hlavička",
       "headerHint": "Odkazy zobrazené v hornej navigácii na verejných stránkach.",
       "footerHeading": "Pätička",
-      "footerHint": "Odkazy zobrazené v pätičke na verejných stránkach. Prázdne použije O nás, Podmienky a Ochranu súkromia.",
+      "footerHint": "Odkazy zobrazené v pätičke na verejných stránkach. O nás, Podmienky a Ochrana súkromia sa zobrazujú vždy; odkazy, ktoré pridáte, sa zobrazia za nimi.",
       "emptyMenu": "Zatiaľ žiadne odkazy — používajú sa vstavané predvolené.",
       "labelField": "Popis",
       "urlField": "URL",

@@ -1009,7 +1009,7 @@
       "headerHeading": "Header",
       "headerHint": "Links shown in the top navigation on public pages.",
       "footerHeading": "Footer",
-      "footerHint": "Links shown in the footer on public pages. Empty falls back to About, Terms and Privacy.",
+      "footerHint": "Links shown in the footer on public pages. About, Terms and Privacy always appear; links you add here show after them.",
       "emptyMenu": "No links yet — using the built-in defaults.",
       "labelField": "Label",
       "urlField": "URL",

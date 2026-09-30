@@ -18,14 +18,16 @@ export async function PublicFooter() {
   const { footer } = await getNavigationConfig();
   const year = new Date().getFullYear();
 
-  const links =
-    footer.length > 0
-      ? footer
-      : [
-          { label: t("about"), url: "/about" },
-          { label: t("terms"), url: "/terms" },
-          { label: t("privacy"), url: "/privacy" },
-        ];
+  // The built-in localized links always show; admin-configured links EXTEND them
+  // (rather than replacing), appended after and de-duplicated by URL so adding
+  // one link never drops About/Terms/Privacy.
+  const defaults = [
+    { label: t("about"), url: "/about" },
+    { label: t("terms"), url: "/terms" },
+    { label: t("privacy"), url: "/privacy" },
+  ];
+  const defaultUrls = new Set(defaults.map((link) => link.url));
+  const links = [...defaults, ...footer.filter((link) => !defaultUrls.has(link.url))];
 
   return (
     <footer className="border-border mt-16 border-t px-4 py-8 md:px-6 print:hidden">
