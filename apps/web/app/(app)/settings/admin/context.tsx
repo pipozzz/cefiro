@@ -16,6 +16,7 @@ import type {
   ContentIndicatorsConfig,
   I18nLocaleConfig,
   ImageGenerationConfig,
+  NavigationConfig,
   PromptsConfig,
   PromptsConfigInput,
   RecipePermissionPolicy,
@@ -47,6 +48,7 @@ interface AdminSettingsContextValue {
   prompts: PromptsConfig | undefined;
   timerKeywords: TimerKeywordsConfig | undefined;
   aboutContent: AboutContent | undefined;
+  navigation: NavigationConfig | undefined;
 
   // Loading states
   isLoading: boolean;
@@ -83,6 +85,7 @@ interface AdminSettingsContextValue {
     config: TimerKeywordsInput
   ) => Promise<{ success: boolean; error?: string }>;
   updateAboutContent: (config: AboutContent) => Promise<{ success: boolean; error?: string }>;
+  updateNavigation: (config: NavigationConfig) => Promise<{ success: boolean; error?: string }>;
   updateSchedulerMonths: (months: number) => Promise<{ success: boolean; error?: string }>;
   updateRecipePermissionPolicy: (
     policy: RecipePermissionPolicy
@@ -140,6 +143,7 @@ export function AdminSettingsProvider({ children }: { children: ReactNode }) {
   const prompts = configs[ServerConfigKeys.PROMPTS] as PromptsConfig | undefined;
   const timerKeywords = configs[ServerConfigKeys.TIMER_KEYWORDS] as TimerKeywordsConfig | undefined;
   const aboutContent = configs[ServerConfigKeys.ABOUT_CONTENT] as AboutContent | undefined;
+  const navigation = configs[ServerConfigKeys.NAVIGATION] as NavigationConfig | undefined;
 
   // Actions - wrap mutations
   const updateRegistration = useCallback(
@@ -254,6 +258,13 @@ export function AdminSettingsProvider({ children }: { children: ReactNode }) {
     [mutations]
   );
 
+  const updateNav = useCallback(
+    async (config: NavigationConfig) => {
+      return mutations.updateNavigation(config);
+    },
+    [mutations]
+  );
+
   const updateScheduler = useCallback(
     async (months: number) => {
       return mutations.updateSchedulerMonths(months);
@@ -322,6 +333,7 @@ export function AdminSettingsProvider({ children }: { children: ReactNode }) {
     prompts,
     timerKeywords,
     aboutContent,
+    navigation,
     isLoading,
     updateRegistration,
     updatePasswordAuth,
@@ -339,6 +351,7 @@ export function AdminSettingsProvider({ children }: { children: ReactNode }) {
     updatePrompts: updatePromptsConfig,
     updateTimerKeywords: updateTimerKeywordsConfig,
     updateAboutContent: updateAbout,
+    updateNavigation: updateNav,
     updateSchedulerMonths: updateScheduler,
     updateRecipePermissionPolicy: updatePermissionPolicy,
     restoreDefaultConfig: restoreDefault,

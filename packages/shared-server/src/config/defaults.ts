@@ -7,6 +7,7 @@ import defaultUnits from "@norish/config/units.default.json";
 import {
   DEFAULT_ABOUT_CONTENT,
   DEFAULT_JOB_RETENTION,
+  DEFAULT_NAVIGATION,
   DEFAULT_RECIPE_PERMISSION_POLICY,
   ServerConfigKeys,
 } from "@norish/db/zodSchemas/server-config";
@@ -54,6 +55,8 @@ export function getDefaultConfigValue(key: ServerConfigKey): unknown {
       return { ...defaultTimerKeywords, isOverridden: false };
     case ServerConfigKeys.ABOUT_CONTENT:
       return DEFAULT_ABOUT_CONTENT;
+    case ServerConfigKeys.NAVIGATION:
+      return DEFAULT_NAVIGATION;
     default:
       return null;
   }

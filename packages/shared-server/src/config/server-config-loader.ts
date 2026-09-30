@@ -18,6 +18,7 @@ import type {
   CuisineStrategy,
   I18nLocaleConfig,
   ImageGenerationConfig,
+  NavigationConfig,
   PromptsConfig,
   RecipePermissionPolicy,
   RecurrenceConfig,
@@ -35,6 +36,7 @@ import {
   AIConfigSchema,
   DEFAULT_ABOUT_CONTENT,
   DEFAULT_CUISINE_STRATEGY,
+  DEFAULT_NAVIGATION,
   DEFAULT_RECIPE_PERMISSION_POLICY,
   DEFAULT_TAG_STRATEGY,
   isImageGenerationConfigValid,
@@ -256,6 +258,13 @@ export async function getAboutContent(): Promise<AboutContent> {
   const value = await getConfig<AboutContent>(ServerConfigKeys.ABOUT_CONTENT);
 
   return value ?? DEFAULT_ABOUT_CONTENT;
+}
+
+/** Header/footer navigation (admin-editable). Falls back to the default menus. */
+export async function getNavigationConfig(): Promise<NavigationConfig> {
+  const value = await getConfig<NavigationConfig>(ServerConfigKeys.NAVIGATION);
+
+  return value ?? DEFAULT_NAVIGATION;
 }
 
 /**
