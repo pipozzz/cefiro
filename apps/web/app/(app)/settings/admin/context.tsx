@@ -5,7 +5,6 @@ import { createContext, useCallback, useContext } from "react";
 import { useAdminConfigsQuery, useAdminMutations } from "@/hooks/admin";
 
 import type {
-  AboutContent,
   AIConfig,
   AuthProviderGitHub,
   AuthProviderGitHubInput,
@@ -47,7 +46,6 @@ interface AdminSettingsContextValue {
   recipePermissionPolicy: RecipePermissionPolicy | undefined;
   prompts: PromptsConfig | undefined;
   timerKeywords: TimerKeywordsConfig | undefined;
-  aboutContent: AboutContent | undefined;
   navigation: NavigationConfig | undefined;
 
   // Loading states
@@ -84,7 +82,6 @@ interface AdminSettingsContextValue {
   updateTimerKeywords: (
     config: TimerKeywordsInput
   ) => Promise<{ success: boolean; error?: string }>;
-  updateAboutContent: (config: AboutContent) => Promise<{ success: boolean; error?: string }>;
   updateNavigation: (config: NavigationConfig) => Promise<{ success: boolean; error?: string }>;
   updateSchedulerMonths: (months: number) => Promise<{ success: boolean; error?: string }>;
   updateRecipePermissionPolicy: (
@@ -142,7 +139,6 @@ export function AdminSettingsProvider({ children }: { children: ReactNode }) {
     RecipePermissionPolicy | undefined;
   const prompts = configs[ServerConfigKeys.PROMPTS] as PromptsConfig | undefined;
   const timerKeywords = configs[ServerConfigKeys.TIMER_KEYWORDS] as TimerKeywordsConfig | undefined;
-  const aboutContent = configs[ServerConfigKeys.ABOUT_CONTENT] as AboutContent | undefined;
   const navigation = configs[ServerConfigKeys.NAVIGATION] as NavigationConfig | undefined;
 
   // Actions - wrap mutations
@@ -251,13 +247,6 @@ export function AdminSettingsProvider({ children }: { children: ReactNode }) {
     [mutations]
   );
 
-  const updateAbout = useCallback(
-    async (config: AboutContent) => {
-      return mutations.updateAboutContent(config);
-    },
-    [mutations]
-  );
-
   const updateNav = useCallback(
     async (config: NavigationConfig) => {
       return mutations.updateNavigation(config);
@@ -332,7 +321,6 @@ export function AdminSettingsProvider({ children }: { children: ReactNode }) {
     recipePermissionPolicy,
     prompts,
     timerKeywords,
-    aboutContent,
     navigation,
     isLoading,
     updateRegistration,
@@ -350,7 +338,6 @@ export function AdminSettingsProvider({ children }: { children: ReactNode }) {
     updateImageGenerationConfig: updateImageGeneration,
     updatePrompts: updatePromptsConfig,
     updateTimerKeywords: updateTimerKeywordsConfig,
-    updateAboutContent: updateAbout,
     updateNavigation: updateNav,
     updateSchedulerMonths: updateScheduler,
     updateRecipePermissionPolicy: updatePermissionPolicy,

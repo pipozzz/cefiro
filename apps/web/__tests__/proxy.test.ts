@@ -47,11 +47,15 @@ describe("proxy share access", () => {
     expect(getSessionMock).not.toHaveBeenCalled();
   });
 
-  it("allows the About page without an authenticated session", async () => {
+  it("allows the About page (now a published CMS page) without a session", async () => {
+    // About/Terms/Privacy migrated into the pages CMS: they are reached via the
+    // published-page-slug bypass, like any other custom page, not a static list.
+    getSessionMock.mockResolvedValue(null);
+    publishedSlugsMock.mockResolvedValue(new Set(["about"]));
+
     const response = await proxy(new NextRequest("http://localhost/about"));
 
     expect(response.headers.get("x-middleware-next")).toBe("1");
-    expect(getSessionMock).not.toHaveBeenCalled();
   });
 
   it("excludes public PWA assets from the Next proxy matcher", () => {

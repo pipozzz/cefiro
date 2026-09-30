@@ -1003,15 +1003,6 @@
       "failed": "Odoslanie zlyhalo: {error}",
       "error": "Testovací email sa nepodarilo odoslať"
     },
-    "aboutContent": {
-      "title": "Stránka O nás",
-      "description": "Uprav text verejnej stránky O nás (na /about). Telo podporuje Markdown (nadpisy, odkazy, zoznamy).",
-      "slovak": "Slovenčina",
-      "english": "Angličtina",
-      "titleLabel": "Nadpis stránky",
-      "bodyLabel": "Telo (Markdown)",
-      "bodyHelp": "Podporuje Markdown: ## nadpis, **tučné**, [odkaz](https://…), - zoznam."
-    },
     "navigation": {
       "title": "Navigačné menu",
       "description": "Spravujte odkazy zobrazené v hlavičke a pätičke verejných stránok (ako Ghost). Kým je menu prázdne, použijú sa vstavané preložené odkazy.",

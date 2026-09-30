@@ -1003,15 +1003,6 @@
       "failed": "Send failed: {error}",
       "error": "Could not send the test email"
     },
-    "aboutContent": {
-      "title": "About page",
-      "description": "Edit the public About page copy shown at /about. The body supports Markdown (headings, links, lists).",
-      "slovak": "Slovak",
-      "english": "English",
-      "titleLabel": "Page title",
-      "bodyLabel": "Body (Markdown)",
-      "bodyHelp": "Supports Markdown: ## heading, **bold**, [link](https://…), - list."
-    },
     "navigation": {
       "title": "Navigation menus",
       "description": "Manage the links shown in the public header and footer (Ghost-like). While a menu has no links, the built-in localized links are used.",
