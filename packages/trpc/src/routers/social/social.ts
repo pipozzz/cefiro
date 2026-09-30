@@ -80,7 +80,12 @@ import {
   listImportedVisibleRecipeIds,
   listOwnRecipesForSharing,
 } from "@norish/db/repositories/recipes";
-import { getThemeById, listThemes, listThemesForUser } from "@norish/db/repositories/themes";
+import {
+  getThemeById,
+  listThemes,
+  listThemesForUser,
+  listUserRecipeIdsByThemeName,
+} from "@norish/db/repositories/themes";
 import { getUserAllergies } from "@norish/db/repositories/user-allergies";
 import {
   getProfileByHandle,
@@ -544,6 +549,46 @@ const profileThemes = publicProcedure
     }
 
     return { themes: themesOut };
+  });
+
+/**
+ * A public profile's recipes filtered to one theme (by its name slug) — the
+ * cook's public recipes whose nearest theme matches, newest first. Powers the
+ * in-profile theme filter. Empty for a private/missing profile or an unknown
+ * theme slug.
+ */
+const profileThemeRecipes = publicProcedure
+  .input(
+    z.object({
+      handle: z.string().trim().min(1).max(30),
+      slug: z.string().trim().min(1).max(80),
+      limit: z.number().int().min(1).max(48).default(24),
+    })
+  )
+  .query(async ({ input }) => {
+    const profile = await getProfileByHandle(input.handle);
+
+    if (!profile || !profile.isPublic) {
+      return { recipes: [] as Awaited<ReturnType<typeof toFeedCardsWithRatings>> };
+    }
+
+    const wanted = input.slug.toLowerCase();
+    const themeList = await listThemes(200);
+    const theme = themeList.find((row) => cuisineSlug(row.name) === wanted);
+
+    if (!theme) {
+      return { recipes: [] as Awaited<ReturnType<typeof toFeedCardsWithRatings>> };
+    }
+
+    const ids = await listUserRecipeIdsByThemeName(profile.userId, theme.name, input.limit);
+    const rows = await getPublicRecipesByIds(ids);
+    // getPublicRecipesByIds returns storage order; restore the id (newest-first) order.
+    const byId = new Map(rows.map((row) => [row.id, row]));
+    const ordered = ids
+      .map((id) => byId.get(id))
+      .filter((row): row is (typeof rows)[number] => Boolean(row));
+
+    return { recipes: await toFeedCardsWithRatings(ordered) };
   });
 
 // --- Follow graph (authenticated) ---------------------------------------
@@ -1661,6 +1706,7 @@ export const socialProcedures = router({
   myRecipesForSharing,
   getProfile,
   profileThemes,
+  profileThemeRecipes,
   listProfileRecipes,
   getPublicRecipe,
   follow,
