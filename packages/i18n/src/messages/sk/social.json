@@ -80,7 +80,8 @@
     "following": "Sledované",
     "editProfile": "Upraviť profil",
     "couldNotFollow": "Nepodarilo sa začať sledovať",
-    "couldNotUnfollow": "Nepodarilo sa prestať sledovať"
+    "couldNotUnfollow": "Nepodarilo sa prestať sledovať",
+    "requested": "Požiadané"
   },
   "like": {
     "couldNotUpdate": "Nepodarilo sa upraviť páči sa mi"
@@ -248,7 +249,9 @@
     "saveNamed": "uložil(a) si tvoj recept {name}",
     "save": "uložil(a) si tvoj recept",
     "report": "Komentár na tvojom recepte bol nahlásený.",
-    "loadMore": "Načítať viac"
+    "loadMore": "Načítať viac",
+    "followRequest": "vás požiadal(a) o sledovanie",
+    "followAccept": "prijal(a) vašu žiadosť o sledovanie"
   },
   "profileSettings": {
     "title": "Verejný profil",
@@ -415,5 +418,12 @@
     "about": "O nás",
     "terms": "Podmienky",
     "privacy": "Súkromie"
+  },
+  "followRequests": {
+    "title": "Žiadosti o sledovanie ({count})",
+    "accept": "Prijať",
+    "decline": "Odmietnuť",
+    "requestedToFollow": "požiadal(a) o sledovanie",
+    "couldNotRespond": "Akciu sa nepodarilo vykonať"
   }
 }

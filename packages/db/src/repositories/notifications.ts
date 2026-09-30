@@ -4,7 +4,8 @@ import { db } from "@norish/db/drizzle";
 
 import { notifications, recipes, userProfiles } from "../schema";
 
-export type NotificationType = "follow" | "like" | "comment" | "save" | "report";
+export type NotificationType =
+  "follow" | "follow_request" | "follow_accept" | "like" | "comment" | "save" | "report";
 
 export interface CreateNotificationInput {
   userId: string;

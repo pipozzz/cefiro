@@ -7,6 +7,8 @@ import { Button } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
+type FollowRelation = "none" | "pending" | "accepted";
+
 export function FollowButton({ handle }: { handle: string }) {
   const trpc = useTRPC();
   const router = useRouter();
@@ -20,38 +22,39 @@ export function FollowButton({ handle }: { handle: string }) {
 
   const statusKey = trpc.social.getFollowStatus.queryKey({ handle });
 
+  const setRelation = (relation: FollowRelation) => {
+    queryClient.setQueryData(statusKey, (old) =>
+      old
+        ? { ...(old as Record<string, unknown>), relation, isFollowing: relation === "accepted" }
+        : old
+    );
+  };
+
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: statusKey });
     queryClient.invalidateQueries({ queryKey: trpc.social.getProfile.queryKey({ handle }) });
   };
 
-  // Optimistically flip the follow state so the button responds instantly;
-  // roll back if the mutation fails, then reconcile with the server on settle.
-  const optimisticToggle = (isFollowing: boolean) => async () => {
-    await queryClient.cancelQueries({ queryKey: statusKey });
-    const previous = queryClient.getQueryData(statusKey);
-
-    queryClient.setQueryData(statusKey, (old) =>
-      old ? { ...(old as Record<string, unknown>), isFollowing } : old
-    );
-
-    return { previous };
-  };
-
   const followMutation = useMutation(
     trpc.social.follow.mutationOptions({
-      onMutate: optimisticToggle(true),
-      onError: (error, _vars, context) => {
-        queryClient.setQueryData(statusKey, context?.previous);
-        showSafeErrorToast(error, t("couldNotFollow"));
-      },
+      // The server decides accepted (public) vs pending (private); reflect its
+      // answer, then reconcile the profile (recipe visibility can change).
+      onSuccess: (result) => setRelation(result.relation as FollowRelation),
+      onError: (error) => showSafeErrorToast(error, t("couldNotFollow")),
       onSettled: invalidate,
     })
   );
 
   const unfollowMutation = useMutation(
     trpc.social.unfollow.mutationOptions({
-      onMutate: optimisticToggle(false),
+      onMutate: async () => {
+        await queryClient.cancelQueries({ queryKey: statusKey });
+        const previous = queryClient.getQueryData(statusKey);
+
+        setRelation("none");
+
+        return { previous };
+      },
       onError: (error, _vars, context) => {
         queryClient.setQueryData(statusKey, context?.previous);
         showSafeErrorToast(error, t("couldNotUnfollow"));
@@ -91,19 +94,29 @@ export function FollowButton({ handle }: { handle: string }) {
     );
   }
 
-  const following = statusQuery.data.isFollowing;
+  const relation = statusQuery.data.relation as FollowRelation;
   const pending = followMutation.isPending || unfollowMutation.isPending;
+
+  // pending request → "Requested" (tap to cancel); accepted → "Following" (tap
+  // to unfollow); none → "Follow".
+  const label =
+    relation === "pending"
+      ? t("requested")
+      : relation === "accepted"
+        ? t("following")
+        : t("follow");
+  const active = relation !== "none";
 
   return (
     <Button
       isPending={pending}
       size="sm"
-      variant={following ? "tertiary" : "primary"}
+      variant={active ? "tertiary" : "primary"}
       onPress={() =>
-        following ? unfollowMutation.mutate({ handle }) : followMutation.mutate({ handle })
+        active ? unfollowMutation.mutate({ handle }) : followMutation.mutate({ handle })
       }
     >
-      {following ? t("following") : t("follow")}
+      {label}
     </Button>
   );
 }

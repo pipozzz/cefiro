@@ -71,26 +71,27 @@ export function PublicProfileView({ handle }: { handle: string }) {
     retry: false,
   });
 
-  // A private profile hides its recipes/themes/cookbooks, so don't even fetch
-  // them — the header still renders from getProfile.
-  const isPublicProfile = profileQuery.data?.profile.isPublic ?? false;
+  // A private profile hides its recipes/themes/cookbooks from everyone except
+  // the owner and approved followers (canViewRecipes), so only fetch them then —
+  // the header still renders from getProfile.
+  const canViewRecipes = profileQuery.data?.canViewRecipes ?? false;
 
   const recipesQuery = useQuery({
     ...trpc.social.listProfileRecipes.queryOptions({ handle, limit: 24 }),
     retry: false,
-    enabled: profileQuery.isSuccess && isPublicProfile,
+    enabled: profileQuery.isSuccess && canViewRecipes,
   });
 
   const cookbooksQuery = useQuery({
     ...trpc.social.listPublicCookbooks.queryOptions({ handle }),
     retry: false,
-    enabled: profileQuery.isSuccess && isPublicProfile,
+    enabled: profileQuery.isSuccess && canViewRecipes,
   });
 
   const themesQuery = useQuery({
     ...trpc.social.profileThemes.queryOptions({ handle }),
     retry: false,
-    enabled: profileQuery.isSuccess && isPublicProfile,
+    enabled: profileQuery.isSuccess && canViewRecipes,
   });
 
   // Clicking a theme filters this profile's recipes in place (rather than
@@ -99,7 +100,7 @@ export function PublicProfileView({ handle }: { handle: string }) {
 
   const themeRecipesQuery = useQuery({
     ...trpc.social.profileThemeRecipes.queryOptions({ handle, slug: selectedThemeSlug ?? "" }),
-    enabled: profileQuery.isSuccess && isPublicProfile && !!selectedThemeSlug,
+    enabled: profileQuery.isSuccess && canViewRecipes && !!selectedThemeSlug,
     placeholderData: keepPreviousData,
     retry: false,
   });
@@ -118,7 +119,9 @@ export function PublicProfileView({ handle }: { handle: string }) {
   }
 
   const { profile, counts } = profileQuery.data;
-  const isPrivate = !profile.isPublic;
+  // Show the "private account" panel when this viewer can't see the recipes
+  // (a private profile they don't own and haven't been approved to follow).
+  const isPrivate = !canViewRecipes;
   // Fall back to the bare handle (not "@handle") so the name heading doesn't read
   // "@pipo" directly above the "@pipo" handle line.
   const displayName = profile.displayName ?? profile.handle;

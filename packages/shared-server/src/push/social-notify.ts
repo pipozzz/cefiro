@@ -11,7 +11,8 @@ import { isPushConfigured, sendPushToUser } from "@norish/shared-server/push/web
  * The social events that notify a recipe owner / followee. Mirrors the
  * `notification_type` enum.
  */
-export type SocialNotificationType = "follow" | "like" | "comment" | "save" | "report";
+export type SocialNotificationType =
+  "follow" | "follow_request" | "follow_accept" | "like" | "comment" | "save" | "report";
 
 export interface SocialNotificationInput {
   /** Recipient (recipe owner / followee). */
@@ -66,6 +67,14 @@ async function dispatchPush(input: SocialNotificationInput): Promise<void> {
 
     if (input.type === "follow") {
       body = `${actorName} ${str("follow", "started following you")}`;
+      url = actor?.handle ? `/u/${actor.handle}` : "/discover";
+    } else if (input.type === "follow_request") {
+      // Sent to the private-profile owner; point them at the requests inbox.
+      body = `${actorName} ${str("followRequest", "requested to follow you")}`;
+      url = "/notifications";
+    } else if (input.type === "follow_accept") {
+      // Sent to the requester; point them at the profile that approved them.
+      body = `${actorName} ${str("followAccept", "accepted your follow request")}`;
       url = actor?.handle ? `/u/${actor.handle}` : "/discover";
     } else {
       const name = input.recipeId

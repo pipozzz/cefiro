@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { useTRPC } from "@/app/providers/trpc-provider";
 import { ChefHatIcon } from "@/components/social/chef-hat-icon";
+import { FollowRequestsInbox } from "@/components/social/follow-requests-inbox";
 import { FlagIcon } from "@heroicons/react/24/outline";
 import { Button, Spinner } from "@heroui/react";
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -41,7 +42,7 @@ function timeAgo(date: Date, t: NotificationsTranslator): string {
 
 type Notification = {
   id: string;
-  type: "follow" | "like" | "comment" | "save" | "report";
+  type: "follow" | "follow_request" | "follow_accept" | "like" | "comment" | "save" | "report";
   createdAt: Date;
   read: boolean;
   actor: { handle: string; displayName: string | null; avatarUrl: string | null } | null;
@@ -52,6 +53,10 @@ function actionText(n: Notification, t: NotificationsTranslator): string {
   switch (n.type) {
     case "follow":
       return t("follow");
+    case "follow_request":
+      return t("followRequest");
+    case "follow_accept":
+      return t("followAccept");
     case "like":
       return n.recipe?.name ? t("likeNamed", { name: n.recipe.name }) : t("like");
     case "comment":
@@ -65,7 +70,7 @@ function actionText(n: Notification, t: NotificationsTranslator): string {
 }
 
 function href(n: Notification): string {
-  if (n.type === "follow") {
+  if (n.type === "follow" || n.type === "follow_request" || n.type === "follow_accept") {
     return n.actor ? `/u/${n.actor.handle}` : "#";
   }
 
@@ -110,6 +115,8 @@ export default function NotificationsPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
       <h1 className="text-foreground mb-6 text-2xl font-bold">{t("title")}</h1>
+
+      <FollowRequestsInbox />
 
       {query.isLoading ? (
         <div className="flex min-h-[30vh] items-center justify-center">
