@@ -25,8 +25,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const profile = await loadProfile(handle);
   const t = await getTranslations("social.profile");
 
-  if (!profile || !profile.isPublic) {
+  if (!profile) {
     return { title: t("notFoundTitle"), robots: { index: false, follow: false } };
+  }
+
+  // A private profile has a real (named) page but must never be indexed and
+  // carries no rich preview — its recipes are hidden.
+  if (!profile.isPublic) {
+    const name = profile.displayName ?? `@${profile.handle}`;
+
+    return { title: `${name} (@${profile.handle})`, robots: { index: false, follow: false } };
   }
 
   const origin = await siteOrigin();
@@ -108,6 +116,7 @@ export default async function PublicProfilePage({ params }: Props) {
 
     if (origin) {
       const ld = buildProfileJsonLd(profile, origin);
+
       // Escape `<` so profile content (e.g. a bio containing "</script>") can
       // never break out of the JSON-LD script tag.
       jsonLd = JSON.stringify(ld).replace(/</g, "\\u003c");

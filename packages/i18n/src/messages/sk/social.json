@@ -72,7 +72,8 @@
     "Snack": "Snack"
   },
   "profileCard": {
-    "recipeCount": "{count, plural, one {# recept} few {# recepty} other {# receptov}}"
+    "recipeCount": "{count, plural, one {# recept} few {# recepty} other {# receptov}}",
+    "private": "Súkromný"
   },
   "follow": {
     "follow": "Sledovať",
@@ -132,7 +133,9 @@
     "cookbooksHeading": "Receptáre",
     "metaDescription": "Recepty od @{handle} na Našej Kuchyni.",
     "ogTagline": "Recepty na Našej Kuchyni",
-    "themesHeading": "Témy"
+    "themesHeading": "Témy",
+    "privateTitle": "Tento účet je súkromný",
+    "privateMessage": "Keď je profil súkromný, jeho recepty nie sú verejne zobrazené."
   },
   "cookbook": {
     "notFoundTitle": "Receptár sa nenašiel",

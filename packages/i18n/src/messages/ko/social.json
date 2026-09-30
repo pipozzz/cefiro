@@ -72,7 +72,8 @@
     "Snack": "Snack"
   },
   "profileCard": {
-    "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
+    "recipeCount": "{count, plural, one {# recipe} other {# recipes}}",
+    "private": "Private"
   },
   "follow": {
     "follow": "Follow",
@@ -132,7 +133,9 @@
     "cookbooksHeading": "Cookbooks",
     "metaDescription": "Recipes by @{handle} on Naša Kuchyňa.",
     "ogTagline": "Recipes on Naša Kuchyňa",
-    "themesHeading": "테마"
+    "themesHeading": "테마",
+    "privateTitle": "This account is private",
+    "privateMessage": "When a profile is private, its recipes aren’t shown publicly."
   },
   "cookbook": {
     "notFoundTitle": "Cookbook not found",

@@ -253,6 +253,8 @@ function toPublicProfileDto(profile: PublicProfile) {
     location: profile.location,
     websiteUrl: profile.websiteUrl,
     instagramUrl: profile.instagramUrl,
+    // A private profile shows its identity (name/avatar/bio) but hides recipes.
+    isPublic: profile.isPublic,
     memberSince: profile.createdAt,
   };
 }
@@ -287,6 +289,7 @@ function toProfileCard(row: PublicProfileCard) {
     bio: row.bio,
     avatarUrl: row.avatarUrl,
     recipeCount: row.recipeCount,
+    isPublic: row.isPublic,
   };
 }
 
@@ -479,7 +482,10 @@ const unpublishImported = authedProcedure
 const getProfile = publicProcedure.input(GetProfileByHandleInputSchema).query(async ({ input }) => {
   const profile = await getProfileByHandle(input.handle);
 
-  if (!profile || !profile.isPublic) {
+  // A private profile still resolves — its identity (name/avatar/bio) is public
+  // like Instagram; only its recipes/listings are hidden (the client renders a
+  // "private account" state, and the recipe/theme/cookbook reads return empty).
+  if (!profile) {
     throw new TRPCError({ code: "NOT_FOUND", message: "Profile not found" });
   }
 
@@ -1337,8 +1343,14 @@ const listProfileRecipes = publicProcedure
   .query(async ({ input }) => {
     const profile = await getProfileByHandle(input.handle);
 
-    if (!profile || !profile.isPublic) {
+    // Missing profile is a 404; a private one hides its recipes (empty list, not
+    // an error) so the profile page can still render its header.
+    if (!profile) {
       throw new TRPCError({ code: "NOT_FOUND", message: "Profile not found" });
+    }
+
+    if (!profile.isPublic) {
+      return { recipes: [], nextCursor: null };
     }
 
     const { items, nextCursor } = await listPublicRecipesByUserId(
