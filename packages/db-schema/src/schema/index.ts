@@ -45,3 +45,5 @@ export * from "./user-profiles";
 export * from "./follows";
 export * from "./recipe-comments";
 export * from "./notifications";
+
+export * from "./pages";

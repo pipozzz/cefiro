@@ -3,6 +3,18 @@ import { shouldBypassAuthProxy } from "@/lib/recipe-share-access";
 
 import { getVerifiedSession } from "@norish/auth/session";
 import { SERVER_CONFIG } from "@norish/config/env-config-server";
+import { getCachedPublishedPageSlugs } from "@norish/shared-server/cache/pages";
+import { isUsablePageSlug } from "@norish/shared/lib/reserved-page-slugs";
+
+/** The slug of a candidate root page URL (`/pricing`), or null. Only a single,
+ * valid, non-reserved segment qualifies — so the (cached) page lookup below runs
+ * for very few requests. */
+function rootPageSlugCandidate(pathname: string): string | null {
+  const match = /^\/([^/]+)\/?$/.exec(pathname);
+  const slug = match?.[1];
+
+  return slug && isUsablePageSlug(slug) ? slug : null;
+}
 
 export async function proxy(request: NextRequest) {
   // WebSocket upgrade requests should not be redirected - they'll be handled at the app level
@@ -16,6 +28,18 @@ export async function proxy(request: NextRequest) {
 
   if (shouldBypassAuthProxy(request)) {
     return NextResponse.next();
+  }
+
+  // Custom CMS pages live at root `/{slug}` and are public when published. Only
+  // a valid, non-reserved single segment triggers the (Redis-cached) lookup.
+  const pageSlug = rootPageSlugCandidate(request.nextUrl.pathname);
+
+  if (pageSlug) {
+    const publishedSlugs = await getCachedPublishedPageSlugs();
+
+    if (publishedSlugs.has(pageSlug)) {
+      return NextResponse.next();
+    }
   }
 
   const identity = await getVerifiedSession(request.headers);

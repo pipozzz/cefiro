@@ -4,6 +4,7 @@ import { ALL_CATEGORY_SLUGS } from "@/lib/recipe-categories";
 
 import { listPublicCuisines } from "@norish/db/repositories/cuisines";
 import { listTrendingTopics } from "@norish/db/repositories/follows";
+import { listPublishedPageSlugs } from "@norish/db/repositories/pages";
 import { listPublicCookbookSlugs } from "@norish/db/repositories/public-cookbooks";
 import { listThemes } from "@norish/db/repositories/themes";
 import {
@@ -30,7 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return [];
   }
 
-  const [recipes, profiles, cookbooks, cuisines, tags, themes] = await Promise.all([
+  const [recipes, profiles, cookbooks, cuisines, tags, themes, pages] = await Promise.all([
     listPublicRecipeSlugs(),
     listPublicProfileHandles(),
     listPublicCookbookSlugs(),
@@ -41,6 +42,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // as its name does. This sitemap is force-dynamic (regenerated per request),
     // so it always lists the current theme set rather than stale entries.
     listThemes(200).catch(() => []),
+    // Published custom pages, served at root /{slug}.
+    listPublishedPageSlugs().catch(() => []),
   ]);
 
   // Themes can share a name; dedupe by name slug so each URL appears once.
@@ -97,6 +100,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: c.updatedAt,
       changeFrequency: "weekly" as const,
       priority: 0.5,
+    })),
+    // Published custom pages (privacy, pricing, …) at root /{slug}.
+    ...pages.map((p) => ({
+      url: `${base}/${p.slug}`,
+      lastModified: p.updatedAt,
+      changeFrequency: "monthly" as const,
+      priority: 0.4,
     })),
   ];
 }
