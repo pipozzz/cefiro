@@ -222,6 +222,20 @@ const favoriteCountSql = sql<number>`(
 )`;
 
 /**
+ * A recipe whose author has NOT set their profile private. Private cooks are
+ * not *broadcast* (v3): their recipes are excluded from discovery, search,
+ * trending and the sitemap — but a recipe stays reachable by its direct
+ * `/r/[slug]` link, and an approved follower still sees it (feed / for-you).
+ * Authors without a profile row (NULL) are treated as public, so nothing that
+ * shows today disappears except explicitly-private accounts.
+ */
+export const authorNotPrivateSql = sql`NOT EXISTS (
+  SELECT 1 FROM ${userProfiles}
+  WHERE ${userProfiles.userId} = ${recipes.userId}
+  AND ${userProfiles.isPublic} = false
+)`;
+
+/**
  * Public recipes authored by people `userId` follows, newest first,
  * cursor-paginated by publishedAt (ISO string cursor).
  */
@@ -289,7 +303,12 @@ export async function listForYouRecipes(params: {
     AND ${follows.status} = 'accepted'
   )`;
 
-  const conditions = [eq(recipes.visibility, "public")];
+  // A private cook is not broadcast in the community tail — but an approved
+  // follower still sees them (they're a followed edge), so allow either.
+  const conditions = [
+    eq(recipes.visibility, "public"),
+    sql`(${authorNotPrivateSql} OR ${isFollowedSql})`,
+  ];
 
   // Dietary-aware: drop recipes tagged with any of the reader's allergen tags
   // (case-insensitive name match, mirroring listDiscoverRecipes).
@@ -357,7 +376,11 @@ export async function listForYouByTaste(params: {
   // Cosine distance to the taste vector; NULL for a recipe with no embedding.
   const distanceSql = sql<number | null>`(${recipeEmbeddings.embedding} <=> ${vec}::vector)`;
 
-  const conditions = [eq(recipes.visibility, "public")];
+  // A private cook is not broadcast — but an approved follower still sees them.
+  const conditions = [
+    eq(recipes.visibility, "public"),
+    sql`(${authorNotPrivateSql} OR ${isFollowedSql})`,
+  ];
 
   const allergens = (excludeAllergenTags ?? [])
     .map((name) => name.trim().toLowerCase())
@@ -416,7 +439,7 @@ export async function listDiscoverRecipes(params: {
 }): Promise<{ items: FeedRecipeRow[]; nextCursor: string | null }> {
   const { sort, category, tag, cuisine, maxMinutes, excludeAllergenTags, limit } = params;
 
-  const conditions = [eq(recipes.visibility, "public")];
+  const conditions = [eq(recipes.visibility, "public"), authorNotPrivateSql];
 
   if (category) {
     conditions.push(sql`${category} = ANY(${recipes.categories})`);
@@ -512,7 +535,7 @@ export async function countPublicRecipesByCategory(params: {
   maxMinutes?: number;
   excludeAllergenTags?: string[];
 }): Promise<{ total: number; byCategory: Record<string, number> }> {
-  const conditions = [eq(recipes.visibility, "public")];
+  const conditions = [eq(recipes.visibility, "public"), authorNotPrivateSql];
 
   if (params.maxMinutes) {
     conditions.push(lte(recipes.totalMinutes, params.maxMinutes));
@@ -580,7 +603,7 @@ export async function countPublicRecipesByCuisine(params: {
   maxMinutes?: number;
   excludeAllergenTags?: string[];
 }): Promise<{ total: number; byCuisine: Record<string, number> }> {
-  const conditions = [eq(recipes.visibility, "public")];
+  const conditions = [eq(recipes.visibility, "public"), authorNotPrivateSql];
 
   if (params.maxMinutes) {
     conditions.push(lte(recipes.totalMinutes, params.maxMinutes));
@@ -651,7 +674,7 @@ export async function listTrendingTopics(
     .from(recipeTags)
     .innerJoin(tags, eq(tags.id, recipeTags.tagId))
     .innerJoin(recipes, eq(recipes.id, recipeTags.recipeId))
-    .where(eq(recipes.visibility, "public"))
+    .where(and(eq(recipes.visibility, "public"), authorNotPrivateSql))
     .groupBy(tags.name)
     .orderBy(desc(recipeCount), tags.name)
     .limit(limit);
@@ -675,7 +698,7 @@ export async function listDiscoverThemes(
     .from(recipeTags)
     .innerJoin(tags, eq(tags.id, recipeTags.tagId))
     .innerJoin(recipes, eq(recipes.id, recipeTags.recipeId))
-    .where(eq(recipes.visibility, "public"))
+    .where(and(eq(recipes.visibility, "public"), authorNotPrivateSql))
     .groupBy(tags.name)
     .orderBy(desc(recipeCount), tags.name)
     .limit(limit);
@@ -698,6 +721,7 @@ export async function listDiscoverThemes(
       .where(
         and(
           eq(recipes.visibility, "public"),
+          authorNotPrivateSql,
           inArray(tags.name, names),
           isNotNull(recipes.image),
           isNotNull(recipes.slug)
@@ -728,7 +752,7 @@ export async function getRecipeOfTheDay(): Promise<FeedRecipeRow | null> {
     .select({ ...RECIPE_CARD_COLUMNS, favoriteCount: favoriteCountSql })
     .from(recipes)
     .leftJoin(userProfiles, eq(userProfiles.userId, recipes.userId))
-    .where(eq(recipes.visibility, "public"))
+    .where(and(eq(recipes.visibility, "public"), authorNotPrivateSql))
     .orderBy(sql`md5(${recipes.id}::text || current_date::text)`)
     .limit(1);
 
@@ -760,6 +784,7 @@ export async function listRelatedPublicRecipes(
     .where(
       and(
         eq(recipes.visibility, "public"),
+        authorNotPrivateSql,
         sql`${recipes.id} <> ${recipeId}::uuid`,
         sql`${sharedTagCount} > 0`
       )
@@ -849,7 +874,9 @@ export async function searchPublicRecipes(q: string, limit: number): Promise<Fee
     .select({ ...RECIPE_CARD_COLUMNS, favoriteCount: favoriteCountSql })
     .from(recipes)
     .leftJoin(userProfiles, eq(userProfiles.userId, recipes.userId))
-    .where(and(eq(recipes.visibility, "public"), sql`${document} @@ ${tsquery}`))
+    .where(
+      and(eq(recipes.visibility, "public"), authorNotPrivateSql, sql`${document} @@ ${tsquery}`)
+    )
     .orderBy(desc(rank), desc(favoriteCountSql), desc(recipes.publishedAt))
     .limit(limit);
 }
@@ -895,7 +922,7 @@ export async function searchPublicRecipesByIngredients(
     })
     .from(recipes)
     .leftJoin(userProfiles, eq(userProfiles.userId, recipes.userId))
-    .where(and(eq(recipes.visibility, "public"), sql`${matchedCountSql} > 0`))
+    .where(and(eq(recipes.visibility, "public"), authorNotPrivateSql, sql`${matchedCountSql} > 0`))
     .orderBy(desc(matchedCountSql), desc(favoriteCountSql), desc(recipes.publishedAt))
     .limit(limit);
 }
@@ -910,7 +937,7 @@ export async function getRandomPublicRecipes(limit: number): Promise<FeedRecipeR
     .select({ ...RECIPE_CARD_COLUMNS, favoriteCount: favoriteCountSql })
     .from(recipes)
     .leftJoin(userProfiles, eq(userProfiles.userId, recipes.userId))
-    .where(eq(recipes.visibility, "public"))
+    .where(and(eq(recipes.visibility, "public"), authorNotPrivateSql))
     .orderBy(sql`random()`)
     .limit(limit);
 }
