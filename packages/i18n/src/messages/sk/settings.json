@@ -1011,6 +1011,21 @@
       "titleLabel": "Nadpis stránky",
       "bodyLabel": "Telo (Markdown)",
       "bodyHelp": "Podporuje Markdown: ## nadpis, **tučné**, [odkaz](https://…), - zoznam."
+    },
+    "navigation": {
+      "title": "Navigačné menu",
+      "description": "Spravujte odkazy zobrazené v hlavičke a pätičke verejných stránok (ako Ghost). Kým je menu prázdne, použijú sa vstavané preložené odkazy.",
+      "headerHeading": "Hlavička",
+      "headerHint": "Odkazy zobrazené v hornej navigácii na verejných stránkach.",
+      "footerHeading": "Pätička",
+      "footerHint": "Odkazy zobrazené v pätičke na verejných stránkach. Prázdne použije O nás, Podmienky a Ochranu súkromia.",
+      "emptyMenu": "Zatiaľ žiadne odkazy — používajú sa vstavané predvolené.",
+      "labelField": "Popis",
+      "urlField": "URL",
+      "addLink": "Pridať odkaz",
+      "removeLink": "Odstrániť odkaz",
+      "moveUp": "Posunúť hore",
+      "moveDown": "Posunúť dole"
     }
   },
   "archiveExport": {

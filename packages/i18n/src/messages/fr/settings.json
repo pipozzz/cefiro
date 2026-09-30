@@ -1011,6 +1011,21 @@
       "titleLabel": "Page title",
       "bodyLabel": "Body (Markdown)",
       "bodyHelp": "Supports Markdown: ## heading, **bold**, [link](https://…), - list."
+    },
+    "navigation": {
+      "title": "Navigation menus",
+      "description": "Manage the links shown in the public header and footer (Ghost-like). While a menu has no links, the built-in localized links are used.",
+      "headerHeading": "Header",
+      "headerHint": "Links shown in the top navigation on public pages.",
+      "footerHeading": "Footer",
+      "footerHint": "Links shown in the footer on public pages. Empty falls back to About, Terms and Privacy.",
+      "emptyMenu": "No links yet — using the built-in defaults.",
+      "labelField": "Label",
+      "urlField": "URL",
+      "addLink": "Add link",
+      "removeLink": "Remove link",
+      "moveUp": "Move up",
+      "moveDown": "Move down"
     }
   },
   "archiveExport": {

@@ -4,6 +4,7 @@ import type { TimerKeywordsConfig } from "@norish/config/zod/server-config";
 import {
   AboutContentSchema,
   ContentIndicatorsSchema,
+  NavigationConfigSchema,
   PromptsConfigInputSchema,
   RecurrenceConfigSchema,
   ServerConfigKeys,
@@ -13,7 +14,10 @@ import {
 import { getConfig, setConfig } from "@norish/db/repositories/server-config";
 import { getEffectivePrompts, loadDefaultPrompts } from "@norish/shared-server/ai/prompts/loader";
 import { pruneToOverrides } from "@norish/shared-server/ai/prompts/overrides";
-import { getAboutContent } from "@norish/shared-server/config/server-config-loader";
+import {
+  getAboutContent,
+  getNavigationConfig,
+} from "@norish/shared-server/config/server-config-loader";
 import { trpcLogger as log } from "@norish/shared-server/logger";
 
 import { adminProcedure } from "../../middleware";
@@ -187,6 +191,22 @@ const updateAbout = adminProcedure.input(AboutContentSchema).mutation(async ({ i
   return { success: true };
 });
 
+/** Header/footer navigation for the admin editor (stored value or default). */
+const getNavigation = adminProcedure.query(async () => {
+  return await getNavigationConfig();
+});
+
+/** Update the header/footer navigation menus. */
+const updateNavigation = adminProcedure
+  .input(NavigationConfigSchema)
+  .mutation(async ({ input, ctx }) => {
+    log.info({ userId: ctx.user.id }, "Updating navigation");
+
+    await setConfig(ServerConfigKeys.NAVIGATION, input, ctx.user.id, false);
+
+    return { success: true };
+  });
+
 export const contentConfigProcedures = router({
   updateContentIndicators,
   updateUnits,
@@ -197,4 +217,6 @@ export const contentConfigProcedures = router({
   updateTimerKeywords,
   getAbout,
   updateAbout,
+  getNavigation,
+  updateNavigation,
 });

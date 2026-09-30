@@ -23,6 +23,7 @@ export const ServerConfigKeys = {
   LOCALE_CONFIG: "locale_config",
   TIMER_KEYWORDS: "timer_keywords",
   ABOUT_CONTENT: "about_content",
+  NAVIGATION: "navigation",
 } as const;
 
 export type ServerConfigKey = (typeof ServerConfigKeys)[keyof typeof ServerConfigKeys];
@@ -743,6 +744,34 @@ export const AboutContentSchema = z.object({
 });
 export type AboutContent = z.infer<typeof AboutContentSchema>;
 
+// ============================================================================
+// Navigation (admin-editable header/footer menus, Ghost-like)
+// ============================================================================
+
+/** One navigation link: a label and a URL (internal path or absolute). */
+export const NavLinkSchema = z.object({
+  label: z.string().trim().min(1).max(60),
+  url: z.string().trim().min(1).max(2048),
+});
+export type NavLink = z.infer<typeof NavLinkSchema>;
+
+/** Header (primary) and footer (secondary) menus. */
+export const NavigationConfigSchema = z.object({
+  header: z.array(NavLinkSchema).max(20),
+  footer: z.array(NavLinkSchema).max(20),
+});
+export type NavigationConfig = z.infer<typeof NavigationConfigSchema>;
+
+/**
+ * Shipped default navigation: both menus empty. While empty, the public header
+ * and footer keep their built-in, localized links (brand + About/Terms/Privacy),
+ * so an unconfigured instance is unchanged; adding links here overrides them.
+ */
+export const DEFAULT_NAVIGATION: NavigationConfig = {
+  header: [],
+  footer: [],
+};
+
 /**
  * Shipped default About copy. Editable in the admin panel (stored under the
  * `about_content` key); this is the fallback when nothing is set and the target
@@ -827,6 +856,8 @@ export function getSchemaForConfigKey(key: ServerConfigKey): z.ZodType {
       return TimerKeywordsSchema;
     case ServerConfigKeys.ABOUT_CONTENT:
       return AboutContentSchema;
+    case ServerConfigKeys.NAVIGATION:
+      return NavigationConfigSchema;
     default:
       return z.any();
   }

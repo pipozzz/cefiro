@@ -7,6 +7,7 @@ import type {
   AuthProviderGoogleInput,
   AuthProviderOIDCInput,
   ImageGenerationConfig,
+  NavigationConfig,
   PromptsConfigInput,
   RecipePermissionPolicy,
   ServerConfigKey,
@@ -47,6 +48,7 @@ export type AdminMutationsResult = {
     config: TimerKeywordsInput
   ) => Promise<{ success: boolean; error?: string }>;
   updateAboutContent: (config: AboutContent) => Promise<{ success: boolean; error?: string }>;
+  updateNavigation: (config: NavigationConfig) => Promise<{ success: boolean; error?: string }>;
   updateAIConfig: (config: AIConfig) => Promise<{ success: boolean; error?: string }>;
   updateVideoConfig: (config: VideoConfig) => Promise<{ success: boolean; error?: string }>;
   updateImageGenerationConfig: (
@@ -98,6 +100,9 @@ export function createUseAdminMutations({
     );
     const updateAboutContentMutation = useMutation(
       trpc.admin.content.updateAbout.mutationOptions()
+    );
+    const updateNavigationMutation = useMutation(
+      trpc.admin.content.updateNavigation.mutationOptions()
     );
     const updateAIConfigMutation = useMutation(trpc.admin.updateAIConfig.mutationOptions());
     const updateVideoConfigMutation = useMutation(trpc.admin.updateVideoConfig.mutationOptions());
@@ -171,6 +176,9 @@ export function createUseAdminMutations({
       },
       updateAboutContent: async (config) => {
         return withInvalidate(updateAboutContentMutation.mutateAsync(config));
+      },
+      updateNavigation: async (config) => {
+        return withInvalidate(updateNavigationMutation.mutateAsync(config));
       },
       updateTimerKeywords: async (config) => {
         const result = await withInvalidate(updateTimerKeywordsMutation.mutateAsync(config));
