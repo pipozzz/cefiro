@@ -1,5 +1,7 @@
 import { headers } from "next/headers";
 import { AuthedAppShell } from "@/app/(app)/authed-app-shell";
+import { PublicFooter } from "@/components/social/public-footer";
+import { PublicHeader } from "@/components/social/public-header";
 
 import { auth } from "@norish/auth/auth";
 
@@ -7,7 +9,8 @@ import { BaseProviders } from "../../providers/base-providers";
 
 export default async function PublicProfileLayout({ children }: { children: React.ReactNode }) {
   // Signed in → keep the app navigation (opened from Discover/feed); signed out →
-  // the public layout. /u bypasses the auth proxy, so the cookie reaches getSession.
+  // the public chrome (header + footer). /u bypasses the auth proxy, so the cookie
+  // reaches getSession.
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (session?.user) {
@@ -16,7 +19,11 @@ export default async function PublicProfileLayout({ children }: { children: Reac
 
   return (
     <BaseProviders>
-      <div className="min-h-dvh">{children}</div>
+      <div className="flex min-h-dvh flex-col">
+        <PublicHeader />
+        <div className="flex-1">{children}</div>
+        <PublicFooter />
+      </div>
     </BaseProviders>
   );
 }

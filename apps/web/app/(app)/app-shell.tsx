@@ -1,3 +1,4 @@
+import type { FooterLink } from "@/lib/footer-links";
 import type { RecipePageColorMode } from "@/lib/recipe-page-color";
 import type { TodaySectionVisibility } from "@/lib/todays-meals-visibility";
 import Link from "next/link";
@@ -5,6 +6,7 @@ import { AuthProviders } from "@/app/providers/auth-providers";
 import { OfflineCacheController } from "@/app/providers/offline-cache-controller";
 import { BrandLogo } from "@/components/brand/brand-logo";
 import { Navbar } from "@/components/navbar/navbar";
+import { AppFooter } from "@/components/social/app-footer";
 import { TimerDock } from "@/components/timer-dock";
 import { AmountDisplayProvider } from "@/context/amount-display-context";
 import { ArchiveImportProvider } from "@/context/archive-import-context";
@@ -37,6 +39,7 @@ export function AppShell({
   initialAmountDisplayMode,
   initialHiddenItems,
   initialRecipePageColor,
+  footerLinks,
 }: {
   children: React.ReactNode;
   /** The cookies as the layout's server pass read them; absent offline. */
@@ -44,6 +47,8 @@ export function AppShell({
   initialAmountDisplayMode?: AmountDisplayMode;
   initialHiddenItems?: readonly string[];
   initialRecipePageColor?: RecipePageColorMode;
+  /** Admin-configured footer links; absent offline (falls back to defaults). */
+  footerLinks?: FooterLink[];
 }) {
   return (
     <AuthProviders>
@@ -92,7 +97,10 @@ export function AppShell({
                                   >
                                     <BrandLogo height={26} width={104} />
                                   </Link>
-                                  {children}
+                                  <div className="flex-1">{children}</div>
+                                  {/* Footer inside main so it sits in the padded scroll area
+                                      and clears the fixed mobile bottom nav. */}
+                                  <AppFooter configured={footerLinks} />
                                 </main>
                               </div>
                               <TimerDock />
