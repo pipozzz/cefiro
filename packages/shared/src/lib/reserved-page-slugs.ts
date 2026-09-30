@@ -4,13 +4,12 @@
  * one of these, or it could hide login/settings/etc. Shared by the admin
  * create-validation and the auth proxy's page-bypass so they can never disagree.
  *
- * Keep in sync with apps/web/app routes. `about`/`terms`/`privacy` are reserved
- * for now because they are still hardcoded routes; they'll be freed when those
- * pages move into the CMS.
+ * Keep in sync with apps/web/app routes. `about`/`terms`/`privacy` are NOT
+ * reserved: they moved into the CMS (seeded as pages at those slugs), so they
+ * are ordinary custom pages an admin can edit or rename.
  */
 export const RESERVED_ROOT_SEGMENTS: ReadonlySet<string> = new Set([
   // Static + dynamic root routes
-  "about",
   "api",
   "c",
   "discover",
@@ -19,12 +18,10 @@ export const RESERVED_ROOT_SEGMENTS: ReadonlySet<string> = new Set([
   "invite",
   "pa",
   "p",
-  "privacy",
   "public-avatars",
   "r",
   "serwist",
   "share",
-  "terms",
   "themes",
   "u",
   "~offline",

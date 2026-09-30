@@ -53,8 +53,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     { url: `${base}/discover`, changeFrequency: "daily", priority: 0.8 },
-    // About: an evergreen trust/E-A-T page.
-    { url: `${base}/about`, changeFrequency: "monthly", priority: 0.5 },
+    // About/Terms/Privacy are now CMS pages, emitted in the custom-pages loop below.
     // Category hubs: a small set of evergreen landing pages for long-tail search.
     { url: `${base}/discover/category`, changeFrequency: "weekly", priority: 0.6 },
     ...ALL_CATEGORY_SLUGS.map((slug) => ({

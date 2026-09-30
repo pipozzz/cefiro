@@ -9,6 +9,7 @@ import { runMigrations } from "@norish/api/startup/migrations";
 import { registerApiHandlersForQueue } from "@norish/api/startup/register-queue-api-handlers";
 import { seedServerConfig } from "@norish/api/startup/seed-config";
 import { seedDemoRecipes } from "@norish/api/startup/seed-demo-recipes";
+import { seedStaticPages } from "@norish/api/startup/seed-pages";
 import { registerShutdownHandlers } from "@norish/api/startup/shutdown";
 import { initializeVideoProcessing } from "@norish/api/startup/video-processing";
 import { initializeServerConfig, SERVER_CONFIG } from "@norish/config/env-config-server";
@@ -67,6 +68,11 @@ async function main() {
     log.info("-".repeat(50));
 
     await seedServerConfig();
+    log.info("-".repeat(50));
+
+    // Migrate the former About/Terms/Privacy routes into the pages CMS. Runs
+    // once per fresh slug (idempotent), so it never clobbers edited pages.
+    await seedStaticPages();
     log.info("-".repeat(50));
 
     // Cold-start only (SEED_DEMO_RECIPES): a curated set of public recipes so a

@@ -22,7 +22,6 @@ export const ServerConfigKeys = {
   PROMPTS: "prompts",
   LOCALE_CONFIG: "locale_config",
   TIMER_KEYWORDS: "timer_keywords",
-  ABOUT_CONTENT: "about_content",
   NAVIGATION: "navigation",
 } as const;
 
@@ -726,25 +725,6 @@ function migrateConfigValue(key: ServerConfigKey, value: unknown): unknown {
 }
 
 // ============================================================================
-// About page content (admin-editable)
-// ============================================================================
-
-/** One localized About document: a heading and a Markdown body. */
-export const AboutDocumentSchema = z.object({
-  title: z.string().trim().min(1).max(200),
-  /** Markdown; rendered on /about. Generous cap, but bounded. */
-  body: z.string().max(20000),
-});
-export type AboutDocument = z.infer<typeof AboutDocumentSchema>;
-
-/** The About page content, per supported content language (sk / en fallback). */
-export const AboutContentSchema = z.object({
-  sk: AboutDocumentSchema,
-  en: AboutDocumentSchema,
-});
-export type AboutContent = z.infer<typeof AboutContentSchema>;
-
-// ============================================================================
 // Navigation (admin-editable header/footer menus, Ghost-like)
 // ============================================================================
 
@@ -770,51 +750,6 @@ export type NavigationConfig = z.infer<typeof NavigationConfigSchema>;
 export const DEFAULT_NAVIGATION: NavigationConfig = {
   header: [],
   footer: [],
-};
-
-/**
- * Shipped default About copy. Editable in the admin panel (stored under the
- * `about_content` key); this is the fallback when nothing is set and the target
- * of "restore defaults". The operator name is filled in; the contact address is
- * a placeholder for the admin to replace.
- */
-export const DEFAULT_ABOUT_CONTENT: AboutContent = {
-  sk: {
-    title: "O nás",
-    body: `Naša Kuchyňa je komunitná platforma na objavovanie, zdieľanie a plánovanie domácich receptov. Chceme, aby mali slovenské recepty pekné a prehľadné miesto, kde je jedlo vždy na dosah — a kde varenie spája.
-
-## Prečo Naša Kuchyňa
-
-Dobré recepty často zapadnú v záplave príspevkov na sociálnych sieťach alebo sa stratia v papierových zošitoch. Naša Kuchyňa ich dáva na jedno miesto: objavuj recepty podľa kategórie, kuchyne či tém, plánuj jedlá, tvor nákupné zoznamy a var spolu s domácnosťou.
-
-Zakladáme si na skutočných domácich receptoch od komunity a na tom, aby bol obsah prehľadný a rešpektoval práva autorov.
-
-## Kto za tým stojí
-
-Naša Kuchyňa je projekt spoločnosti Spertulo s. r. o.
-
-## Napíšte nám
-
-Máte otázku, nápad alebo spätnú väzbu? Ozvite sa nám na [kontakt@nasakuchyna.sk].`,
-  },
-  en: {
-    title: "About us",
-    body: `Naša Kuchyňa is a community platform for discovering, sharing and planning home recipes. We want home cooking to have a clean, welcoming place where the food is always front and centre — and where cooking brings people together.
-
-## Why Naša Kuchyňa
-
-Good recipes often get buried in social-media feeds or lost in paper notebooks. Naša Kuchyňa brings them together: discover recipes by category, cuisine or theme, plan your meals, build shopping lists, and cook together with your household.
-
-We are built around real home recipes from the community, and on keeping content clean and respectful of authors' rights.
-
-## Who is behind it
-
-Naša Kuchyňa is a project by Spertulo s. r. o.
-
-## Get in touch
-
-Have a question, an idea or feedback? Reach us at [kontakt@nasakuchyna.sk].`,
-  },
 };
 
 /**
@@ -854,8 +789,6 @@ export function getSchemaForConfigKey(key: ServerConfigKey): z.ZodType {
       return I18nLocaleConfigSchema;
     case ServerConfigKeys.TIMER_KEYWORDS:
       return TimerKeywordsSchema;
-    case ServerConfigKeys.ABOUT_CONTENT:
-      return AboutContentSchema;
     case ServerConfigKeys.NAVIGATION:
       return NavigationConfigSchema;
     default:

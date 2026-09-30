@@ -54,7 +54,7 @@ export async function isPageSlugTaken(slug: string, excludeId?: string): Promise
   return !!row;
 }
 
-export async function createPage(input: PageInput, userId: string): Promise<Page> {
+export async function createPage(input: PageInput, userId: string | null): Promise<Page> {
   const [row] = await db
     .insert(pages)
     .values({

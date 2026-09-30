@@ -11,7 +11,6 @@
 
 // Import defaults for fallback when DB has no value
 import type {
-  AboutContent,
   AIConfig,
   AutomaticEnrichmentConfig,
   ContentIndicatorsConfig,
@@ -34,7 +33,6 @@ import defaultTimerKeywords from "@norish/config/timer-keywords.default.json";
 import defaultUnits from "@norish/config/units.default.json";
 import {
   AIConfigSchema,
-  DEFAULT_ABOUT_CONTENT,
   DEFAULT_CUISINE_STRATEGY,
   DEFAULT_NAVIGATION,
   DEFAULT_RECIPE_PERMISSION_POLICY,
@@ -248,16 +246,6 @@ export async function getPrompts(): Promise<PromptsConfig> {
 
   // The row stores only administrator overrides; no row means no overrides.
   return value ?? {};
-}
-
-/**
- * Get the About page content (admin-editable). The whole document is stored, so
- * an unset key falls back to the shipped default.
- */
-export async function getAboutContent(): Promise<AboutContent> {
-  const value = await getConfig<AboutContent>(ServerConfigKeys.ABOUT_CONTENT);
-
-  return value ?? DEFAULT_ABOUT_CONTENT;
 }
 
 /** Header/footer navigation (admin-editable). Falls back to the default menus. */
