@@ -1,5 +1,6 @@
 import { cookies, headers } from "next/headers";
 import { AuthedAppShell } from "@/app/(app)/authed-app-shell";
+import { PublicFooter } from "@/components/social/public-footer";
 import { PublicHeader } from "@/components/social/public-header";
 import { AmountDisplayProvider } from "@/context/amount-display-context";
 import { RecipePageColorProvider } from "@/context/recipe-page-color-context";
@@ -30,9 +31,10 @@ export default async function PublicRecipeLayout({ children }: { children: React
     <BaseProviders>
       <AmountDisplayProvider initialValue={amountDisplayPreference.readFrom(cookieStore)}>
         <RecipePageColorProvider initialValue={recipePageColorPreference.readFrom(cookieStore)}>
-          <div className="min-h-dvh">
+          <div className="flex min-h-dvh flex-col">
             <PublicHeader />
-            {children}
+            <div className="flex-1">{children}</div>
+            <PublicFooter />
           </div>
         </RecipePageColorProvider>
       </AmountDisplayProvider>

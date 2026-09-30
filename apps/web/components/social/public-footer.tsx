@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { mergeFooterLinks } from "@/lib/footer-links";
 import { getTranslations } from "next-intl/server";
 
 import { getNavigationConfig } from "@norish/shared-server/config/server-config-loader";
@@ -18,16 +19,15 @@ export async function PublicFooter() {
   const { footer } = await getNavigationConfig();
   const year = new Date().getFullYear();
 
-  // The built-in localized links always show; admin-configured links EXTEND them
-  // (rather than replacing), appended after and de-duplicated by URL so adding
-  // one link never drops About/Terms/Privacy.
-  const defaults = [
-    { label: t("about"), url: "/about" },
-    { label: t("terms"), url: "/terms" },
-    { label: t("privacy"), url: "/privacy" },
-  ];
-  const defaultUrls = new Set(defaults.map((link) => link.url));
-  const links = [...defaults, ...footer.filter((link) => !defaultUrls.has(link.url))];
+  // The built-in localized links always show; admin-configured links extend them.
+  const links = mergeFooterLinks(
+    [
+      { label: t("about"), url: "/about" },
+      { label: t("terms"), url: "/terms" },
+      { label: t("privacy"), url: "/privacy" },
+    ],
+    footer
+  );
 
   return (
     <footer className="border-border mt-16 border-t px-4 py-8 md:px-6 print:hidden">

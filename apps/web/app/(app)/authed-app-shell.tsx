@@ -5,6 +5,8 @@ import { hiddenItemsPreference } from "@/lib/hidden-items";
 import { recipePageColorPreference } from "@/lib/recipe-page-color";
 import { todaysMealsVisibilityPreference } from "@/lib/todays-meals-visibility";
 
+import { getNavigationConfig } from "@norish/shared-server/config/server-config-loader";
+
 /**
  * The full signed-in app shell (navbar + every recipe/filter provider), seeded
  * from the device-preference cookies exactly as `(app)/layout.tsx` does.
@@ -16,9 +18,11 @@ import { todaysMealsVisibilityPreference } from "@/lib/todays-meals-visibility";
  */
 export async function AuthedAppShell({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
+  const { footer } = await getNavigationConfig();
 
   return (
     <AppShell
+      footerLinks={footer}
       initialAmountDisplayMode={amountDisplayPreference.readFrom(cookieStore)}
       initialHiddenItems={hiddenItemsPreference.readFrom(cookieStore)}
       initialRecipePageColor={recipePageColorPreference.readFrom(cookieStore)}
