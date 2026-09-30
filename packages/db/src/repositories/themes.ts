@@ -133,6 +133,35 @@ export async function listThemesForUser(
 }
 
 /**
+ * A user's PUBLIC recipe ids that fall into one theme (by exact theme name),
+ * newest first — the same nearest-centroid assignment listThemesForUser uses, so
+ * a theme's filtered list matches the count shown on its chip. Powers filtering
+ * a profile's recipes by theme.
+ */
+export async function listUserRecipeIdsByThemeName(
+  userId: string,
+  themeName: string,
+  limit: number
+): Promise<string[]> {
+  const result = await db.execute(sql`
+    SELECT r.id AS id
+    FROM ${recipes} r
+    JOIN ${recipeEmbeddings} re ON re.recipe_id = r.id
+    JOIN LATERAL (
+      SELECT th.name
+      FROM ${themes} th
+      ORDER BY th.centroid <=> re.embedding
+      LIMIT 1
+    ) t ON true
+    WHERE r.user_id = ${userId} AND r.visibility = 'public' AND t.name = ${themeName}
+    ORDER BY r.published_at DESC NULLS LAST
+    LIMIT ${limit}
+  `);
+
+  return result.rows.map((row) => String(row.id));
+}
+
+/**
  * The most common tag names across a set of recipes, most frequent first. Gives
  * the clustering job a derived label when AI naming is unavailable, and extra
  * signal for the namer when it is.

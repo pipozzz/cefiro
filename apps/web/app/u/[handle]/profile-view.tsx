@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useTRPC } from "@/app/providers/trpc-provider";
 import { NotFoundView } from "@/components/shared/not-found-view";
@@ -7,7 +8,7 @@ import { ChefHatIcon } from "@/components/social/chef-hat-icon";
 import { FollowButton } from "@/components/social/follow-button";
 import { ShareLinkButton } from "@/components/social/share-link-button";
 import { SocialRecipeGrid } from "@/components/social/social-recipe-card";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 /** Show an Instagram link as "@handle" when it's an instagram.com URL, else a
@@ -63,7 +64,6 @@ export function PublicProfileView({ handle }: { handle: string }) {
   const trpc = useTRPC();
   const t = useTranslations("social.profile");
   const tCookbook = useTranslations("social.cookbook");
-  const tDiscover = useTranslations("social.discover");
 
   const profileQuery = useQuery({
     ...trpc.social.getProfile.queryOptions({ handle }),
@@ -88,6 +88,17 @@ export function PublicProfileView({ handle }: { handle: string }) {
     enabled: profileQuery.isSuccess,
   });
 
+  // Clicking a theme filters this profile's recipes in place (rather than
+  // leaving for the global theme page).
+  const [selectedThemeSlug, setSelectedThemeSlug] = useState<string | null>(null);
+
+  const themeRecipesQuery = useQuery({
+    ...trpc.social.profileThemeRecipes.queryOptions({ handle, slug: selectedThemeSlug ?? "" }),
+    enabled: profileQuery.isSuccess && !!selectedThemeSlug,
+    placeholderData: keepPreviousData,
+    retry: false,
+  });
+
   if (profileQuery.isLoading) {
     return (
       <div className="mx-auto max-w-5xl animate-pulse px-4 py-10 md:px-6">
@@ -108,6 +119,11 @@ export function PublicProfileView({ handle }: { handle: string }) {
   const recipes = recipesQuery.data?.recipes ?? [];
   const cookbooks = cookbooksQuery.data?.cookbooks ?? [];
   const themes = themesQuery.data?.themes ?? [];
+
+  // When a theme chip is active, the grid shows that theme's recipes instead.
+  const isThemeFiltered = !!selectedThemeSlug;
+  const shownRecipes = isThemeFiltered ? (themeRecipesQuery.data?.recipes ?? []) : recipes;
+  const recipesLoading = isThemeFiltered ? themeRecipesQuery.isLoading : recipesQuery.isLoading;
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-24 md:px-6">
@@ -178,42 +194,54 @@ export function PublicProfileView({ handle }: { handle: string }) {
         </div>
       </header>
 
-      {/* Themes this cook's recipes fall into — image tiles linking to each
-          theme's page (same look as the discover themes browse). */}
+      {/* Themes this cook's recipes fall into — small blocks that FILTER the
+          recipe grid below (toggle), rather than leaving for the theme page. */}
       {themes.length > 0 ? (
         <section className="mt-10">
           <h2 className="text-foreground mb-4 text-lg font-semibold">{t("themesHeading")}</h2>
-          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {themes.map((theme) => (
-              <li key={theme.slug}>
-                <Link
-                  className="bg-content2 hover:bg-content3 block overflow-hidden rounded-2xl no-underline transition"
-                  href={`/discover/themes/${theme.slug}`}
-                >
-                  <div className="bg-content3 relative h-28 w-full">
-                    {theme.image ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        alt=""
-                        className="h-full w-full object-cover"
-                        loading="lazy"
-                        src={theme.image}
-                      />
-                    ) : (
-                      <div className="text-default-400 flex h-full w-full items-center justify-center text-3xl font-semibold">
-                        {theme.name.charAt(0).toUpperCase()}
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-3">
-                    <span className="text-foreground block truncate font-medium">{theme.name}</span>
-                    <span className="text-default-500 text-xs">
-                      {tDiscover("themeCount", { count: theme.recipeCount })}
-                    </span>
-                  </div>
-                </Link>
-              </li>
-            ))}
+          <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6">
+            {themes.map((theme) => {
+              const active = selectedThemeSlug === theme.slug;
+
+              return (
+                <li key={theme.slug}>
+                  <button
+                    aria-pressed={active}
+                    className={`block w-full overflow-hidden rounded-xl border text-left transition ${
+                      active
+                        ? "border-[var(--accent)] ring-1 ring-[var(--accent)]"
+                        : "border-border hover:border-default-300"
+                    }`}
+                    type="button"
+                    onClick={() =>
+                      setSelectedThemeSlug((prev) => (prev === theme.slug ? null : theme.slug))
+                    }
+                  >
+                    <div className="bg-content3 relative h-16 w-full">
+                      {theme.image ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          alt=""
+                          className="h-full w-full object-cover"
+                          loading="lazy"
+                          src={theme.image}
+                        />
+                      ) : (
+                        <div className="text-default-400 flex h-full w-full items-center justify-center text-xl font-semibold">
+                          {theme.name.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                    </div>
+                    <div className="px-2 py-1.5">
+                      <span className="text-foreground block truncate text-xs font-medium">
+                        {theme.name}
+                      </span>
+                      <span className="text-default-500 text-[11px]">{theme.recipeCount}</span>
+                    </div>
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </section>
       ) : null}
@@ -234,24 +262,38 @@ export function PublicProfileView({ handle }: { handle: string }) {
         </section>
       ) : null}
 
-      {/* Recipes grid */}
+      {/* Recipes grid (filtered to the selected theme when one is active) */}
       <section className="mt-10">
-        <h2 className="text-foreground mb-4 text-lg font-semibold">
-          {t("recipes")} {recipes.length > 0 ? `(${recipes.length})` : ""}
-        </h2>
+        <div className="mb-4 flex flex-wrap items-center gap-3">
+          <h2 className="text-foreground text-lg font-semibold">
+            {t("recipes")} {shownRecipes.length > 0 ? `(${shownRecipes.length})` : ""}
+          </h2>
+          {isThemeFiltered ? (
+            <button
+              className="bg-primary/15 text-primary inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-medium"
+              type="button"
+              onClick={() => setSelectedThemeSlug(null)}
+            >
+              {themes.find((theme) => theme.slug === selectedThemeSlug)?.name ?? ""}
+              <span aria-hidden className="ml-0.5">
+                ✕
+              </span>
+            </button>
+          ) : null}
+        </div>
 
-        {recipesQuery.isLoading ? (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        {recipesLoading ? (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="bg-content2 aspect-[4/3] animate-pulse rounded-2xl" />
             ))}
           </div>
-        ) : recipes.length === 0 ? (
+        ) : shownRecipes.length === 0 ? (
           <p className="bg-content2 text-default-500 rounded-2xl p-8 text-center">
             {t("noRecipes")}
           </p>
         ) : (
-          <SocialRecipeGrid recipes={recipes} />
+          <SocialRecipeGrid recipes={shownRecipes} />
         )}
       </section>
     </div>
