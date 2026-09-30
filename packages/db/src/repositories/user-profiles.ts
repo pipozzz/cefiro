@@ -388,6 +388,8 @@ export interface PublicProfileCard {
   bio: string | null;
   avatarUrl: string | null;
   recipeCount: number;
+  /** A private profile is listed as a shell (recipes hidden), like Instagram. */
+  isPublic: boolean;
 }
 
 /** Escape LIKE/ILIKE wildcards so user input is matched literally. */
@@ -402,11 +404,13 @@ function escapeLike(value: string): string {
 export async function searchPublicProfiles(q: string, limit: number): Promise<PublicProfileCard[]> {
   const pattern = `%${escapeLike(q.trim())}%`;
 
-  const recipeCountSql = sql<number>`(
+  // Private profiles are listed too (as shells), so their public-recipe count is
+  // never surfaced — force it to 0 for them.
+  const recipeCountSql = sql<number>`(CASE WHEN ${userProfiles.isPublic} THEN (
     SELECT count(*)::int FROM ${recipes}
     WHERE ${recipes.userId} = ${userProfiles.userId}
     AND ${recipes.visibility} = 'public'
-  )`;
+  ) ELSE 0 END)`;
 
   return db
     .select({
@@ -415,15 +419,13 @@ export async function searchPublicProfiles(q: string, limit: number): Promise<Pu
       bio: userProfiles.bio,
       avatarUrl: userProfiles.avatarUrl,
       recipeCount: recipeCountSql,
+      isPublic: userProfiles.isPublic,
     })
     .from(userProfiles)
     .where(
-      and(
-        eq(userProfiles.isPublic, true),
-        sql`(${userProfiles.handle} ILIKE ${pattern}
+      sql`(${userProfiles.handle} ILIKE ${pattern}
           OR ${userProfiles.displayName} ILIKE ${pattern}
           OR ${userProfiles.bio} ILIKE ${pattern})`
-      )
     )
     .orderBy(desc(recipeCountSql), userProfiles.handle)
     .limit(limit);
@@ -452,10 +454,13 @@ export async function listSuggestedProfiles(
       bio: userProfiles.bio,
       avatarUrl: userProfiles.avatarUrl,
       recipeCount: recipeCountSql,
+      isPublic: userProfiles.isPublic,
     })
     .from(userProfiles)
     .where(
       and(
+        // Suggestions must be followable-and-useful: public cooks with recipes,
+        // so following them actually fills a feed. Private profiles are excluded.
         eq(userProfiles.isPublic, true),
         ne(userProfiles.userId, userId),
         sql`EXISTS (
@@ -485,12 +490,18 @@ export async function listDiscoverProfiles(
 ): Promise<{ items: PublicProfileCard[]; nextCursor: string | null }> {
   const offset = cursor ? Number.parseInt(cursor, 10) || 0 : 0;
 
-  const recipeCountSql = sql<number>`(
+  // Private profiles are listed as shells (recipes hidden), so their count is
+  // forced to 0 and never surfaced.
+  const recipeCountSql = sql<number>`(CASE WHEN ${userProfiles.isPublic} THEN (
     SELECT count(*)::int FROM ${recipes}
     WHERE ${recipes.userId} = ${userProfiles.userId}
     AND ${recipes.visibility} = 'public'
-  )`;
+  ) ELSE 0 END)`;
 
+  // Every profile shows in the directory (Instagram-like): public cooks with
+  // their recipes, private ones as shells. Public profiles with no public
+  // recipe are the only exclusion — they would be empty cards with nothing to
+  // open. Active cooks rank first (recipe count), then private/empty by handle.
   const rows = await db
     .select({
       handle: userProfiles.handle,
@@ -498,17 +509,15 @@ export async function listDiscoverProfiles(
       bio: userProfiles.bio,
       avatarUrl: userProfiles.avatarUrl,
       recipeCount: recipeCountSql,
+      isPublic: userProfiles.isPublic,
     })
     .from(userProfiles)
     .where(
-      and(
-        eq(userProfiles.isPublic, true),
-        sql`EXISTS (
+      sql`(${userProfiles.isPublic} = false OR EXISTS (
           SELECT 1 FROM ${recipes}
           WHERE ${recipes.userId} = ${userProfiles.userId}
           AND ${recipes.visibility} = 'public'
-        )`
-      )
+        ))`
     )
     .orderBy(desc(recipeCountSql), userProfiles.handle)
     .limit(limit + 1)

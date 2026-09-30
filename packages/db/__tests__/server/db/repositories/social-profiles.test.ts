@@ -77,26 +77,33 @@ describe("social profile discovery", () => {
     expect(suggestions).not.toContain("norecipes"); // no public recipe to fill a feed
   });
 
-  it("searches handle, display name and bio, and never returns private profiles", async () => {
+  it("searches handle, display name and bio", async () => {
     const chef = await createTestUser();
     await createProfile(chef.id, "gordon", {
       displayName: "Gordon Ramsay",
       bio: "angry chef",
     });
 
+    expect((await searchPublicProfiles("gordon", 10)).map((p) => p.handle)).toContain("gordon");
+    expect((await searchPublicProfiles("Ramsay", 10)).map((p) => p.handle)).toContain("gordon");
+    expect((await searchPublicProfiles("angry", 10)).map((p) => p.handle)).toContain("gordon");
+  });
+
+  it("lists private profiles as shells: found, marked private, recipe count hidden", async () => {
+    // v1 private profiles (Instagram-like): they appear in search/directory as a
+    // shell — identity visible, isPublic=false, and their public-recipe count is
+    // never surfaced (forced to 0) so a private cook's recipes stay hidden.
     const hidden = await createTestUser();
     await createProfile(hidden.id, "secret", {
       isPublic: false,
       displayName: "Gordon Hidden",
     });
+    await givePublicRecipe(hidden.id); // even a public recipe must not be counted
 
-    expect((await searchPublicProfiles("gordon", 10)).map((p) => p.handle)).toContain("gordon");
-    expect((await searchPublicProfiles("Ramsay", 10)).map((p) => p.handle)).toContain("gordon");
-    expect((await searchPublicProfiles("angry", 10)).map((p) => p.handle)).toContain("gordon");
+    const [row] = await searchPublicProfiles("Gordon Hidden", 10);
 
-    // A private profile never surfaces, even on an exact match.
-    expect((await searchPublicProfiles("Gordon Hidden", 10)).map((p) => p.handle)).not.toContain(
-      "secret"
-    );
+    expect(row?.handle).toBe("secret");
+    expect(row?.isPublic).toBe(false);
+    expect(row?.recipeCount).toBe(0);
   });
 });

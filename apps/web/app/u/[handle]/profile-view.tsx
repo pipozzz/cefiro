@@ -8,6 +8,7 @@ import { ChefHatIcon } from "@/components/social/chef-hat-icon";
 import { FollowButton } from "@/components/social/follow-button";
 import { ShareLinkButton } from "@/components/social/share-link-button";
 import { SocialRecipeGrid } from "@/components/social/social-recipe-card";
+import { LockClosedIcon } from "@heroicons/react/24/outline";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
@@ -70,22 +71,26 @@ export function PublicProfileView({ handle }: { handle: string }) {
     retry: false,
   });
 
+  // A private profile hides its recipes/themes/cookbooks, so don't even fetch
+  // them — the header still renders from getProfile.
+  const isPublicProfile = profileQuery.data?.profile.isPublic ?? false;
+
   const recipesQuery = useQuery({
     ...trpc.social.listProfileRecipes.queryOptions({ handle, limit: 24 }),
     retry: false,
-    enabled: profileQuery.isSuccess,
+    enabled: profileQuery.isSuccess && isPublicProfile,
   });
 
   const cookbooksQuery = useQuery({
     ...trpc.social.listPublicCookbooks.queryOptions({ handle }),
     retry: false,
-    enabled: profileQuery.isSuccess,
+    enabled: profileQuery.isSuccess && isPublicProfile,
   });
 
   const themesQuery = useQuery({
     ...trpc.social.profileThemes.queryOptions({ handle }),
     retry: false,
-    enabled: profileQuery.isSuccess,
+    enabled: profileQuery.isSuccess && isPublicProfile,
   });
 
   // Clicking a theme filters this profile's recipes in place (rather than
@@ -94,7 +99,7 @@ export function PublicProfileView({ handle }: { handle: string }) {
 
   const themeRecipesQuery = useQuery({
     ...trpc.social.profileThemeRecipes.queryOptions({ handle, slug: selectedThemeSlug ?? "" }),
-    enabled: profileQuery.isSuccess && !!selectedThemeSlug,
+    enabled: profileQuery.isSuccess && isPublicProfile && !!selectedThemeSlug,
     placeholderData: keepPreviousData,
     retry: false,
   });
@@ -113,6 +118,7 @@ export function PublicProfileView({ handle }: { handle: string }) {
   }
 
   const { profile, counts } = profileQuery.data;
+  const isPrivate = !profile.isPublic;
   // Fall back to the bare handle (not "@handle") so the name heading doesn't read
   // "@pipo" directly above the "@pipo" handle line.
   const displayName = profile.displayName ?? profile.handle;
@@ -194,108 +200,124 @@ export function PublicProfileView({ handle }: { handle: string }) {
         </div>
       </header>
 
-      {/* Themes this cook's recipes fall into — small blocks that FILTER the
+      {isPrivate ? (
+        <section className="mt-12">
+          <div className="bg-content2 mx-auto flex max-w-md flex-col items-center gap-3 rounded-2xl px-6 py-12 text-center">
+            <span className="bg-content3 text-default-500 flex h-14 w-14 items-center justify-center rounded-full">
+              <LockClosedIcon className="h-7 w-7" />
+            </span>
+            <h2 className="text-foreground text-lg font-semibold">{t("privateTitle")}</h2>
+            <p className="text-default-500 max-w-sm text-sm">{t("privateMessage")}</p>
+          </div>
+        </section>
+      ) : (
+        <>
+          {/* Themes this cook's recipes fall into — small blocks that FILTER the
           recipe grid below (toggle), rather than leaving for the theme page. */}
-      {themes.length > 0 ? (
-        <section className="mt-10">
-          <h2 className="text-foreground mb-4 text-lg font-semibold">{t("themesHeading")}</h2>
-          <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6">
-            {themes.map((theme) => {
-              const active = selectedThemeSlug === theme.slug;
+          {themes.length > 0 ? (
+            <section className="mt-10">
+              <h2 className="text-foreground mb-4 text-lg font-semibold">{t("themesHeading")}</h2>
+              <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6">
+                {themes.map((theme) => {
+                  const active = selectedThemeSlug === theme.slug;
 
-              return (
-                <li key={theme.slug}>
-                  <button
-                    aria-pressed={active}
-                    className={`block w-full overflow-hidden rounded-xl border text-left transition ${
-                      active
-                        ? "border-[var(--accent)] ring-1 ring-[var(--accent)]"
-                        : "border-border hover:border-default-300"
-                    }`}
-                    type="button"
-                    onClick={() =>
-                      setSelectedThemeSlug((prev) => (prev === theme.slug ? null : theme.slug))
-                    }
-                  >
-                    <div className="bg-content3 relative h-16 w-full">
-                      {theme.image ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          alt=""
-                          className="h-full w-full object-cover"
-                          loading="lazy"
-                          src={theme.image}
-                        />
-                      ) : (
-                        <div className="text-default-400 flex h-full w-full items-center justify-center text-xl font-semibold">
-                          {theme.name.charAt(0).toUpperCase()}
+                  return (
+                    <li key={theme.slug}>
+                      <button
+                        aria-pressed={active}
+                        className={`block w-full overflow-hidden rounded-xl border text-left transition ${
+                          active
+                            ? "border-[var(--accent)] ring-1 ring-[var(--accent)]"
+                            : "border-border hover:border-default-300"
+                        }`}
+                        type="button"
+                        onClick={() =>
+                          setSelectedThemeSlug((prev) => (prev === theme.slug ? null : theme.slug))
+                        }
+                      >
+                        <div className="bg-content3 relative h-16 w-full">
+                          {theme.image ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              alt=""
+                              className="h-full w-full object-cover"
+                              loading="lazy"
+                              src={theme.image}
+                            />
+                          ) : (
+                            <div className="text-default-400 flex h-full w-full items-center justify-center text-xl font-semibold">
+                              {theme.name.charAt(0).toUpperCase()}
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                    <div className="px-2 py-1.5">
-                      <span className="text-foreground block truncate text-xs font-medium">
-                        {theme.name}
-                      </span>
-                      <span className="text-default-500 text-[11px]">{theme.recipeCount}</span>
-                    </div>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      ) : null}
-
-      {/* Cookbooks */}
-      {cookbooks.length > 0 ? (
-        <section className="mt-10">
-          <h2 className="text-foreground mb-4 text-lg font-semibold">{t("cookbooksHeading")}</h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {cookbooks.map((cookbook) => (
-              <CookbookTile
-                key={cookbook.slug}
-                cookbook={cookbook}
-                countLabel={tCookbook("recipesCount", { count: cookbook.recipeCount })}
-              />
-            ))}
-          </div>
-        </section>
-      ) : null}
-
-      {/* Recipes grid (filtered to the selected theme when one is active) */}
-      <section className="mt-10">
-        <div className="mb-4 flex flex-wrap items-center gap-3">
-          <h2 className="text-foreground text-lg font-semibold">
-            {t("recipes")} {shownRecipes.length > 0 ? `(${shownRecipes.length})` : ""}
-          </h2>
-          {isThemeFiltered ? (
-            <button
-              className="bg-primary/15 text-primary inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-medium"
-              type="button"
-              onClick={() => setSelectedThemeSlug(null)}
-            >
-              {themes.find((theme) => theme.slug === selectedThemeSlug)?.name ?? ""}
-              <span aria-hidden className="ml-0.5">
-                ✕
-              </span>
-            </button>
+                        <div className="px-2 py-1.5">
+                          <span className="text-foreground block truncate text-xs font-medium">
+                            {theme.name}
+                          </span>
+                          <span className="text-default-500 text-[11px]">{theme.recipeCount}</span>
+                        </div>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
           ) : null}
-        </div>
 
-        {recipesLoading ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="bg-content2 aspect-[4/3] animate-pulse rounded-2xl" />
-            ))}
-          </div>
-        ) : shownRecipes.length === 0 ? (
-          <p className="bg-content2 text-default-500 rounded-2xl p-8 text-center">
-            {t("noRecipes")}
-          </p>
-        ) : (
-          <SocialRecipeGrid recipes={shownRecipes} />
-        )}
-      </section>
+          {/* Cookbooks */}
+          {cookbooks.length > 0 ? (
+            <section className="mt-10">
+              <h2 className="text-foreground mb-4 text-lg font-semibold">
+                {t("cookbooksHeading")}
+              </h2>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {cookbooks.map((cookbook) => (
+                  <CookbookTile
+                    key={cookbook.slug}
+                    cookbook={cookbook}
+                    countLabel={tCookbook("recipesCount", { count: cookbook.recipeCount })}
+                  />
+                ))}
+              </div>
+            </section>
+          ) : null}
+
+          {/* Recipes grid (filtered to the selected theme when one is active) */}
+          <section className="mt-10">
+            <div className="mb-4 flex flex-wrap items-center gap-3">
+              <h2 className="text-foreground text-lg font-semibold">
+                {t("recipes")} {shownRecipes.length > 0 ? `(${shownRecipes.length})` : ""}
+              </h2>
+              {isThemeFiltered ? (
+                <button
+                  className="bg-primary/15 text-primary inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-medium"
+                  type="button"
+                  onClick={() => setSelectedThemeSlug(null)}
+                >
+                  {themes.find((theme) => theme.slug === selectedThemeSlug)?.name ?? ""}
+                  <span aria-hidden className="ml-0.5">
+                    ✕
+                  </span>
+                </button>
+              ) : null}
+            </div>
+
+            {recipesLoading ? (
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div key={i} className="bg-content2 aspect-[4/3] animate-pulse rounded-2xl" />
+                ))}
+              </div>
+            ) : shownRecipes.length === 0 ? (
+              <p className="bg-content2 text-default-500 rounded-2xl p-8 text-center">
+                {t("noRecipes")}
+              </p>
+            ) : (
+              <SocialRecipeGrid recipes={shownRecipes} />
+            )}
+          </section>
+        </>
+      )}
     </div>
   );
 }
