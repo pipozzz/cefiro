@@ -75,6 +75,7 @@
     "react-aria-components": "1.20.0",
     "react-dom": "catalog:",
     "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
     "server-only": "catalog:",
     "serwist": "^9.5.12",
     "tailwind-merge": "^3.6.0",

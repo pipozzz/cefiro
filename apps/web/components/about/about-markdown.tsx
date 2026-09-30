@@ -1,12 +1,18 @@
 "use client";
 
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 /**
- * Renders the About page body, which admins author as Markdown. Kept minimal
- * (headings, paragraphs, lists, links, emphasis) with the site's typography; it
- * SSRs to real HTML, so the copy is in the initial payload for crawlers. Links
- * are treated as untrusted admin/user input, hence rel="nofollow noopener".
+ * Renders the About page body (and every custom CMS page), which admins author
+ * as Markdown. Kept minimal (headings, paragraphs, lists, links, emphasis) with
+ * the site's typography; it SSRs to real HTML, so the copy is in the initial
+ * payload for crawlers. Links are treated as untrusted admin/user input, hence
+ * rel="nofollow noopener".
+ *
+ * GFM is enabled so that a bare email or URL an admin types (e.g.
+ * `kontakt@nasakuchyna.sk`) becomes a clickable link automatically — as authors
+ * expect from a Ghost-like editor — rather than rendering as plain text.
  */
 export function AboutMarkdown({ children }: { children: string }) {
   return (
@@ -37,6 +43,7 @@ export function AboutMarkdown({ children }: { children: string }) {
           ),
           strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
         }}
+        remarkPlugins={[remarkGfm]}
       >
         {children}
       </ReactMarkdown>

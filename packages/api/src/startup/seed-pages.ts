@@ -40,7 +40,7 @@ Naša Kuchyňa je projekt spoločnosti Spertulo s. r. o.
 
 ## Napíšte nám
 
-Máte otázku, nápad alebo spätnú väzbu? Ozvite sa nám na [kontakt@nasakuchyna.sk].`;
+Máte otázku, nápad alebo spätnú väzbu? Ozvite sa nám na kontakt@nasakuchyna.sk.`;
 
 const UPDATED_LABEL = `_Naposledy aktualizované: ${LEGAL_VERSION}_`;
 
@@ -84,7 +84,7 @@ Tieto podmienky môžeme aktualizovať; na podstatné zmeny upozorníme a označ
 
 ## 8. Kontakt
 
-Otázky k týmto podmienkam: [kontakt@nasakuchyna.sk].`;
+Otázky k týmto podmienkam: kontakt@nasakuchyna.sk.`;
 
 const PRIVACY_BODY = `Tieto zásady opisujú, aké osobné údaje služba Naša Kuchyňa spracúva a ako. Prevádzkovateľom je [Prevádzkovateľ / Operator].
 
@@ -112,7 +112,7 @@ Máte právo na prístup k svojim údajom, ich opravu, vymazanie, prenosnosť a 
 
 ## 6. Kontakt
 
-Otázky k ochrane súkromia: [kontakt@nasakuchyna.sk].`;
+Otázky k ochrane súkromia: kontakt@nasakuchyna.sk.`;
 
 type SeedPage = { slug: string; title: string; body: string; metaDescription: string };
 
