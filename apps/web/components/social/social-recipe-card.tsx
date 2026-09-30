@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import RecipeMetadata, { photoChipClassName } from "@/components/dashboard/recipe-metadata";
 import RecipeTags from "@/components/dashboard/recipe-tags";
@@ -7,10 +8,14 @@ import OriginFlag from "@/components/recipes/origin-flag";
 import { HeartIcon } from "@heroicons/react/20/solid";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import { Chip } from "@heroui/react";
+import { useTranslations } from "next-intl";
 
 import { formatMinutesHM } from "@norish/shared/lib/helpers";
 
 import { ChefHatIcon } from "./chef-hat-icon";
+
+// A recipe counts as "new" for a week after it is published.
+const NEW_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
 
 export type SocialRecipeCardData = {
   slug: string | null;
@@ -22,6 +27,7 @@ export type SocialRecipeCardData = {
   servings?: number | null;
   originCountry?: string | null;
   tags?: string[];
+  publishedAt?: string | Date | null;
   favoriteCount?: number;
   rating?: { average: number | null; count: number };
   author?: {
@@ -39,6 +45,10 @@ export type SocialRecipeCardData = {
  * `/r/[slug]` view and carries the author instead of favourite/edit actions.
  */
 export function SocialRecipeCard({ recipe }: { recipe: SocialRecipeCardData }) {
+  const t = useTranslations("social.recipe");
+  // Capture "now" once at mount — reading the clock during render is impure.
+  const [now] = useState(() => Date.now());
+
   if (!recipe.slug) {
     return null;
   }
@@ -46,6 +56,11 @@ export function SocialRecipeCard({ recipe }: { recipe: SocialRecipeCardData }) {
   // Same time formatting as the Library card ("1 h 20 min"), not raw minutes.
   const timeLabel = formatMinutesHM(recipe.totalMinutes ?? undefined) ?? null;
   const tags = (recipe.tags ?? []).map((name) => ({ name }));
+
+  const publishedTime = recipe.publishedAt ? new Date(recipe.publishedAt).getTime() : NaN;
+  const isNew =
+    !Number.isNaN(publishedTime) && publishedTime <= now && now - publishedTime < NEW_WINDOW_MS;
+  const favoriteCount = typeof recipe.favoriteCount === "number" ? recipe.favoriteCount : 0;
 
   return (
     <Link
@@ -75,13 +90,21 @@ export function SocialRecipeCard({ recipe }: { recipe: SocialRecipeCardData }) {
           timeLabel={timeLabel}
         />
 
-        {/* Community favourite count — top-left, where Library shows the heart */}
-        {typeof recipe.favoriteCount === "number" && recipe.favoriteCount > 0 ? (
-          <div className="absolute top-2 left-2 z-20">
-            <Chip className={photoChipClassName} size="sm" variant="soft">
-              <HeartIcon className="text-danger h-4 w-4" />
-              <Chip.Label>{recipe.favoriteCount}</Chip.Label>
-            </Chip>
+        {/* Top-left overlay: a "new" badge for recently published recipes and the
+            community favourite count (where the Library shows its heart). */}
+        {isNew || favoriteCount > 0 ? (
+          <div className="absolute top-2 left-2 z-20 flex items-center gap-1">
+            {isNew ? (
+              <span className="rounded-full bg-[var(--accent)] px-2 py-0.5 text-[11px] font-semibold text-white shadow">
+                {t("newBadge")}
+              </span>
+            ) : null}
+            {favoriteCount > 0 ? (
+              <Chip className={photoChipClassName} size="sm" variant="soft">
+                <HeartIcon className="text-danger h-4 w-4" />
+                <Chip.Label>{favoriteCount}</Chip.Label>
+              </Chip>
+            ) : null}
           </div>
         ) : null}
 
