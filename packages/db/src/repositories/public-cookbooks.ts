@@ -400,14 +400,29 @@ export async function listDiscoverCookbooks(
   return { items, nextCursor };
 }
 
-/** All PUBLIC cookbook slugs (for the sitemap), newest first. */
+/**
+ * All PUBLIC cookbook slugs (for the sitemap), newest first. Cookbooks by a
+ * private profile are excluded — reachable by direct link but never broadcast,
+ * matching the discovery tab (which already filters private owners) and the
+ * recipe sitemap.
+ */
 export async function listPublicCookbookSlugs(
   limit = 50000
 ): Promise<Array<{ slug: string; updatedAt: Date }>> {
   const rows = await db
     .select({ slug: cookbooks.slug, updatedAt: cookbooks.updatedAt })
     .from(cookbooks)
-    .where(and(eq(cookbooks.visibility, "public"), isNotNull(cookbooks.slug)))
+    .where(
+      and(
+        eq(cookbooks.visibility, "public"),
+        isNotNull(cookbooks.slug),
+        sql`NOT EXISTS (
+          SELECT 1 FROM ${userProfiles}
+          WHERE ${userProfiles.userId} = ${cookbooks.userId}
+          AND ${userProfiles.isPublic} = false
+        )`
+      )
+    )
     .orderBy(desc(cookbooks.updatedAt))
     .limit(limit);
 
