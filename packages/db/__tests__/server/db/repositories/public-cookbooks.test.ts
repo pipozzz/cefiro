@@ -6,7 +6,9 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import {
   getCookbookPublishState,
   getPublicCookbookBySlug,
+  listDiscoverCookbooks,
   listPublicCookbooksByUserId,
+  listPublicCookbookSlugs,
   setCookbookVisibility,
 } from "@norish/db/repositories/public-cookbooks";
 import * as schema from "@norish/db/schema";
@@ -118,5 +120,36 @@ describe("public cookbooks repository", () => {
 
     expect(await getPublicCookbookBySlug(slug)).toBeNull();
     expect((await listPublicCookbooksByUserId(ownerId)).map((c) => c.slug)).not.toContain(slug);
+  });
+
+  async function createProfile(userId: string, handle: string, isPublic: boolean) {
+    await getTestDb().insert(schema.userProfiles).values({ userId, handle, isPublic });
+  }
+
+  it("a private cook's public cookbook is not broadcast, but its link still works", async () => {
+    // Public cook → their published cookbook is broadcast.
+    const publicCook = await createTestUser();
+    await createProfile(publicCook.id, "publiccook", true);
+    const shown = await createCookbook(publicCook.id);
+    const shownSlug = (await setCookbookVisibility(publicCook.id, shown.id, "public"))?.slug;
+
+    // Private cook → published cookbook is hidden from discovery + sitemap.
+    const privateCook = await createTestUser();
+    await createProfile(privateCook.id, "privatecook", false);
+    const hidden = await createCookbook(privateCook.id);
+    const hiddenSlug = (await setCookbookVisibility(privateCook.id, hidden.id, "public"))?.slug;
+
+    const discover = (await listDiscoverCookbooks(50)).items.map((c) => c.slug);
+
+    expect(discover).toContain(shownSlug);
+    expect(discover).not.toContain(hiddenSlug);
+
+    const sitemap = (await listPublicCookbookSlugs()).map((c) => c.slug);
+
+    expect(sitemap).toContain(shownSlug);
+    expect(sitemap).not.toContain(hiddenSlug);
+
+    // The direct /c/[slug] link still resolves for the private cook's cookbook.
+    expect((await getPublicCookbookBySlug(hiddenSlug!))?.slug).toBe(hiddenSlug);
   });
 });
