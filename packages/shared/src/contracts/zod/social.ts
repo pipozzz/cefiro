@@ -137,6 +137,12 @@ export const FollowByHandleInputSchema = z.object({
   handle: z.string().trim().toLowerCase().min(1).max(30),
 });
 
+/** Accept or decline a pending follow request from `handle`. */
+export const RespondFollowRequestInputSchema = z.object({
+  handle: z.string().trim().toLowerCase().min(1).max(30),
+  action: z.enum(["accept", "decline"]),
+});
+
 export const FeedInputSchema = z.object({
   limit: z.number().int().min(1).max(50).default(24),
   cursor: z.string().optional(),

@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import type { FeedRecipeRow } from "@norish/db/repositories/follows";
+import type { FeedRecipeRow, FollowRelation, FollowStatus } from "@norish/db/repositories/follows";
 import type {
   DiscoverCookbookCard,
   PublicCookbookCard,
@@ -18,20 +18,24 @@ import {
   removeFavorite,
 } from "@norish/db/repositories/favorites";
 import {
+  acceptFollowRequest,
+  countPendingFollowRequests,
   countPublicRecipesByCategory,
   countPublicRecipesByCuisine,
+  declineFollowRequest,
   followUser,
   getFollowCounts,
+  getFollowRelation,
   getPublicRecipesByIds,
   getRandomPublicRecipes,
   getRecipeIngredientNamesByRecipeIds,
   getRecipeOfTheDay,
-  isFollowing,
   listDiscoverRecipes,
   listDiscoverThemes,
   listFeedRecipes,
   listForYouByTaste,
   listForYouRecipes,
+  listPendingFollowRequests,
   listRelatedPublicRecipes,
   listTrendingTopics,
   searchPublicRecipes,
@@ -134,6 +138,7 @@ import {
   RateRecipeInputSchema,
   RelatedRecipesInputSchema,
   ReportCommentInputSchema,
+  RespondFollowRequestInputSchema,
   SaveRecipeInputSchema,
   SearchByIngredientsInputSchema,
   SearchInputSchema,
@@ -479,20 +484,46 @@ const unpublishImported = authedProcedure
 
 // --- Public reads (unauthenticated) -------------------------------------
 
-const getProfile = publicProcedure.input(GetProfileByHandleInputSchema).query(async ({ input }) => {
-  const profile = await getProfileByHandle(input.handle);
-
-  // A private profile still resolves — its identity (name/avatar/bio) is public
-  // like Instagram; only its recipes/listings are hidden (the client renders a
-  // "private account" state, and the recipe/theme/cookbook reads return empty).
-  if (!profile) {
-    throw new TRPCError({ code: "NOT_FOUND", message: "Profile not found" });
+/**
+ * Whether `viewerId` may see `profile`'s recipes. A public profile is open to
+ * all; a private one only to its owner and to approved (accepted) followers.
+ */
+async function canViewProfileRecipes(
+  viewerId: string | undefined,
+  profile: PublicProfile
+): Promise<boolean> {
+  if (profile.isPublic) {
+    return true;
   }
 
-  const counts = await getFollowCounts(profile.userId);
+  if (!viewerId) {
+    return false;
+  }
 
-  return { profile: toPublicProfileDto(profile), counts };
-});
+  if (viewerId === profile.userId) {
+    return true;
+  }
+
+  return (await getFollowRelation(viewerId, profile.userId)) === "accepted";
+}
+
+const getProfile = publicProcedure
+  .input(GetProfileByHandleInputSchema)
+  .query(async ({ ctx, input }) => {
+    const profile = await getProfileByHandle(input.handle);
+
+    // A private profile still resolves — its identity (name/avatar/bio) is public
+    // like Instagram; only its recipes/listings are hidden. They open up to the
+    // owner and to approved followers (v2), signalled by `canViewRecipes`.
+    if (!profile) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Profile not found" });
+    }
+
+    const counts = await getFollowCounts(profile.userId);
+    const canViewRecipes = await canViewProfileRecipes(ctx.user?.id, profile);
+
+    return { profile: toPublicProfileDto(profile), counts, canViewRecipes };
+  });
 
 /**
  * The discovery themes a public profile's recipes fall into, each with a
@@ -501,12 +532,12 @@ const getProfile = publicProcedure.input(GetProfileByHandleInputSchema).query(as
  */
 const profileThemes = publicProcedure
   .input(GetProfileByHandleInputSchema)
-  .query(async ({ input }) => {
+  .query(async ({ ctx, input }) => {
     type ProfileTheme = { name: string; slug: string; recipeCount: number; image: string | null };
 
     const profile = await getProfileByHandle(input.handle);
 
-    if (!profile || !profile.isPublic) {
+    if (!profile || !(await canViewProfileRecipes(ctx.user?.id, profile))) {
       return { themes: [] as ProfileTheme[] };
     }
 
@@ -571,10 +602,10 @@ const profileThemeRecipes = publicProcedure
       limit: z.number().int().min(1).max(48).default(24),
     })
   )
-  .query(async ({ input }) => {
+  .query(async ({ ctx, input }) => {
     const profile = await getProfileByHandle(input.handle);
 
-    if (!profile || !profile.isPublic) {
+    if (!profile || !(await canViewProfileRecipes(ctx.user?.id, profile))) {
       return { recipes: [] as Awaited<ReturnType<typeof toFeedCardsWithRatings>> };
     }
 
@@ -613,16 +644,39 @@ const follow = authedProcedure
   .use(rateLimit({ name: "social.follow", limit: 30, windowSec: 60 }))
   .input(FollowByHandleInputSchema)
   .mutation(async ({ ctx, input }) => {
-    const { userId } = await resolveFolloweeId(input.handle);
+    const profile = await getProfileByHandle(input.handle);
 
-    if (userId === ctx.user.id) {
+    if (!profile) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Profile not found" });
+    }
+
+    if (profile.userId === ctx.user.id) {
       throw new TRPCError({ code: "BAD_REQUEST", message: "You cannot follow yourself" });
     }
 
-    await followUser(ctx.user.id, userId);
-    await sendSocialNotification({ userId, actorId: ctx.user.id, type: "follow" });
+    // A private profile turns a follow into a request the owner must approve;
+    // a public one is followed immediately.
+    const desired: FollowStatus = profile.isPublic ? "accepted" : "pending";
+    const relation = await followUser(ctx.user.id, profile.userId, desired);
 
-    return { handle: input.handle, isFollowing: true };
+    // Notify only on a fresh edge in the intended state (a repeat follow is a
+    // no-op that returns the existing relation). A pending request nudges the
+    // owner to review; an accepted follow is the usual "started following you".
+    if (relation === "accepted" && desired === "accepted") {
+      await sendSocialNotification({
+        userId: profile.userId,
+        actorId: ctx.user.id,
+        type: "follow",
+      });
+    } else if (relation === "pending" && desired === "pending") {
+      await sendSocialNotification({
+        userId: profile.userId,
+        actorId: ctx.user.id,
+        type: "follow_request",
+      });
+    }
+
+    return { handle: input.handle, relation, isFollowing: relation === "accepted" };
   });
 
 const unfollow = authedProcedure
@@ -631,14 +685,16 @@ const unfollow = authedProcedure
   .mutation(async ({ ctx, input }) => {
     const { userId } = await resolveFolloweeId(input.handle);
 
+    // Deletes the edge whether it was an accepted follow or a pending request
+    // (so this also cancels a request the viewer sent).
     await unfollowUser(ctx.user.id, userId);
 
-    return { handle: input.handle, isFollowing: false };
+    return { handle: input.handle, relation: "none" as const, isFollowing: false };
   });
 
 /** The current viewer's follow relationship to a handle (self => null). */
 // Public so a signed-out visitor viewing a profile doesn't trigger an
-// UNAUTHORIZED console error; anonymous callers get isFollowing/isSelf false.
+// UNAUTHORIZED console error; anonymous callers get relation "none".
 const getFollowStatus = publicProcedure
   .input(FollowByHandleInputSchema)
   .query(async ({ ctx, input }) => {
@@ -649,9 +705,59 @@ const getFollowStatus = publicProcedure
     }
 
     const isSelf = ctx.user ? profile.userId === ctx.user.id : false;
-    const following = ctx.user && !isSelf ? await isFollowing(ctx.user.id, profile.userId) : false;
+    const relation: FollowRelation =
+      ctx.user && !isSelf ? await getFollowRelation(ctx.user.id, profile.userId) : "none";
 
-    return { handle: input.handle, isSelf, isFollowing: following, isAuthenticated: !!ctx.user };
+    return {
+      handle: input.handle,
+      isSelf,
+      relation,
+      isFollowing: relation === "accepted",
+      isAuthenticated: !!ctx.user,
+    };
+  });
+
+/** Pending follow requests awaiting the signed-in user's approval. */
+const listFollowRequests = authedProcedure.query(async ({ ctx }) => {
+  const requests = await listPendingFollowRequests(ctx.user.id);
+
+  return { requests };
+});
+
+/** Count of pending follow requests, for the requests-inbox badge. */
+const followRequestCount = authedProcedure.query(async ({ ctx }) => {
+  return { count: await countPendingFollowRequests(ctx.user.id) };
+});
+
+/** Accept or decline a pending follow request from `handle`. */
+const respondFollowRequest = authedProcedure
+  .use(rateLimit({ name: "social.respondFollowRequest", limit: 60, windowSec: 60 }))
+  .input(RespondFollowRequestInputSchema)
+  .mutation(async ({ ctx, input }) => {
+    const requester = await getProfileByHandle(input.handle);
+
+    if (!requester) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Profile not found" });
+    }
+
+    if (input.action === "accept") {
+      const accepted = await acceptFollowRequest(ctx.user.id, requester.userId);
+
+      // Let the requester know they were approved (only on a real transition).
+      if (accepted) {
+        await sendSocialNotification({
+          userId: requester.userId,
+          actorId: ctx.user.id,
+          type: "follow_accept",
+        });
+      }
+
+      return { handle: input.handle, action: "accept" as const, ok: accepted };
+    }
+
+    const declined = await declineFollowRequest(ctx.user.id, requester.userId);
+
+    return { handle: input.handle, action: "decline" as const, ok: declined };
   });
 
 // --- Feed & discovery ---------------------------------------------------
@@ -1062,10 +1168,10 @@ const getPublicCookbook = publicProcedure
 
 const listPublicCookbooks = publicProcedure
   .input(ListPublicCookbooksByHandleInputSchema)
-  .query(async ({ input }) => {
+  .query(async ({ ctx, input }) => {
     const profile = await getProfileByHandle(input.handle);
 
-    if (!profile || !profile.isPublic) {
+    if (!profile || !(await canViewProfileRecipes(ctx.user?.id, profile))) {
       return { cookbooks: [] };
     }
 
@@ -1340,16 +1446,16 @@ const markNotificationsRead = authedProcedure.mutation(async ({ ctx }) => {
 
 const listProfileRecipes = publicProcedure
   .input(ListPublicRecipesByHandleInputSchema)
-  .query(async ({ input }) => {
+  .query(async ({ ctx, input }) => {
     const profile = await getProfileByHandle(input.handle);
 
     // Missing profile is a 404; a private one hides its recipes (empty list, not
-    // an error) so the profile page can still render its header.
+    // an error) — except from the owner and approved followers.
     if (!profile) {
       throw new TRPCError({ code: "NOT_FOUND", message: "Profile not found" });
     }
 
-    if (!profile.isPublic) {
+    if (!(await canViewProfileRecipes(ctx.user?.id, profile))) {
       return { recipes: [], nextCursor: null };
     }
 
@@ -1724,6 +1830,9 @@ export const socialProcedures = router({
   follow,
   unfollow,
   getFollowStatus,
+  listFollowRequests,
+  followRequestCount,
+  respondFollowRequest,
   feed,
   forYou,
   discover,

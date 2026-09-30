@@ -80,7 +80,8 @@
     "following": "Following",
     "editProfile": "Edit profile",
     "couldNotFollow": "Could not follow",
-    "couldNotUnfollow": "Could not unfollow"
+    "couldNotUnfollow": "Could not unfollow",
+    "requested": "Requested"
   },
   "like": {
     "couldNotUpdate": "Could not update like"
@@ -248,7 +249,9 @@
     "saveNamed": "saved your recipe {name}",
     "save": "saved your recipe",
     "report": "A comment on your recipe was reported.",
-    "loadMore": "Load more"
+    "loadMore": "Load more",
+    "followRequest": "requested to follow you",
+    "followAccept": "accepted your follow request"
   },
   "profileSettings": {
     "title": "Public profile",
@@ -415,5 +418,12 @@
     "about": "About",
     "terms": "Terms",
     "privacy": "Privacy"
+  },
+  "followRequests": {
+    "title": "Follow requests ({count})",
+    "accept": "Accept",
+    "decline": "Decline",
+    "requestedToFollow": "requested to follow you",
+    "couldNotRespond": "Could not complete that"
   }
 }

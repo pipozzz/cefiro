@@ -519,6 +519,13 @@
       "when": 1790756565269,
       "tag": "0073_pages_cms",
       "breakpoints": true
+    },
+    {
+      "idx": 74,
+      "version": "7",
+      "when": 1790773526955,
+      "tag": "0074_follow_requests",
+      "breakpoints": true
     }
   ]
 }

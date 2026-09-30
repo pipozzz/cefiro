@@ -17,15 +17,31 @@ import {
 } from "../schema";
 import { PRIMARY_IMAGE_SQL } from "./recipe-image-sql";
 
-export async function followUser(followerId: string, followeeId: string): Promise<void> {
+export type FollowStatus = "pending" | "accepted";
+/** The viewer's edge to a followee: none, a pending request, or an active follow. */
+export type FollowRelation = "none" | "pending" | "accepted";
+
+/**
+ * Create (or keep) a follow edge with the given status and return the effective
+ * relation. `accepted` is an immediate follow (public target); `pending` is a
+ * request awaiting approval (private target). An existing edge is never
+ * downgraded or duplicated — its current status is returned unchanged.
+ */
+export async function followUser(
+  followerId: string,
+  followeeId: string,
+  status: FollowStatus = "accepted"
+): Promise<FollowRelation> {
   if (followerId === followeeId) {
-    return;
+    return "none";
   }
 
   await db
     .insert(follows)
-    .values({ followerId, followeeId })
+    .values({ followerId, followeeId, status })
     .onConflictDoNothing({ target: [follows.followerId, follows.followeeId] });
+
+  return getFollowRelation(followerId, followeeId);
 }
 
 export async function unfollowUser(followerId: string, followeeId: string): Promise<void> {
@@ -34,14 +50,98 @@ export async function unfollowUser(followerId: string, followeeId: string): Prom
     .where(and(eq(follows.followerId, followerId), eq(follows.followeeId, followeeId)));
 }
 
-export async function isFollowing(followerId: string, followeeId: string): Promise<boolean> {
+/** The follower's current relation to the followee (accepted / pending / none). */
+export async function getFollowRelation(
+  followerId: string,
+  followeeId: string
+): Promise<FollowRelation> {
   const [row] = await db
-    .select({ id: follows.id })
+    .select({ status: follows.status })
     .from(follows)
     .where(and(eq(follows.followerId, followerId), eq(follows.followeeId, followeeId)))
     .limit(1);
 
-  return !!row;
+  return row ? (row.status as FollowStatus) : "none";
+}
+
+/** True only for an ACTIVE (accepted) follow. */
+export async function isFollowing(followerId: string, followeeId: string): Promise<boolean> {
+  return (await getFollowRelation(followerId, followeeId)) === "accepted";
+}
+
+/** Approve a pending request (followee approves follower). Returns whether one existed. */
+export async function acceptFollowRequest(
+  followeeId: string,
+  followerId: string
+): Promise<boolean> {
+  const updated = await db
+    .update(follows)
+    .set({ status: "accepted" })
+    .where(
+      and(
+        eq(follows.followerId, followerId),
+        eq(follows.followeeId, followeeId),
+        eq(follows.status, "pending")
+      )
+    )
+    .returning({ id: follows.id });
+
+  return updated.length > 0;
+}
+
+/** Decline (delete) a pending request. Returns whether one existed. */
+export async function declineFollowRequest(
+  followeeId: string,
+  followerId: string
+): Promise<boolean> {
+  const deleted = await db
+    .delete(follows)
+    .where(
+      and(
+        eq(follows.followerId, followerId),
+        eq(follows.followeeId, followeeId),
+        eq(follows.status, "pending")
+      )
+    )
+    .returning({ id: follows.id });
+
+  return deleted.length > 0;
+}
+
+export interface FollowRequestCard {
+  handle: string;
+  displayName: string | null;
+  avatarUrl: string | null;
+  requestedAt: Date;
+}
+
+/** Pending follow requests awaiting `followeeId`'s approval, newest first. */
+export async function listPendingFollowRequests(
+  followeeId: string,
+  limit = 100
+): Promise<FollowRequestCard[]> {
+  return db
+    .select({
+      handle: userProfiles.handle,
+      displayName: userProfiles.displayName,
+      avatarUrl: userProfiles.avatarUrl,
+      requestedAt: follows.createdAt,
+    })
+    .from(follows)
+    .innerJoin(userProfiles, eq(userProfiles.userId, follows.followerId))
+    .where(and(eq(follows.followeeId, followeeId), eq(follows.status, "pending")))
+    .orderBy(desc(follows.createdAt))
+    .limit(limit);
+}
+
+/** How many pending follow requests `followeeId` has (for the inbox badge). */
+export async function countPendingFollowRequests(followeeId: string): Promise<number> {
+  const [row] = await db
+    .select({ c: sql<number>`count(*)::int` })
+    .from(follows)
+    .where(and(eq(follows.followeeId, followeeId), eq(follows.status, "pending")));
+
+  return row?.c ?? 0;
 }
 
 export interface FollowCounts {
@@ -50,15 +150,16 @@ export interface FollowCounts {
 }
 
 export async function getFollowCounts(userId: string): Promise<FollowCounts> {
+  // Only active (accepted) edges count; pending requests are not followers yet.
   const [followers] = await db
     .select({ c: sql<number>`count(*)::int` })
     .from(follows)
-    .where(eq(follows.followeeId, userId));
+    .where(and(eq(follows.followeeId, userId), eq(follows.status, "accepted")));
 
   const [following] = await db
     .select({ c: sql<number>`count(*)::int` })
     .from(follows)
-    .where(eq(follows.followerId, userId));
+    .where(and(eq(follows.followerId, userId), eq(follows.status, "accepted")));
 
   return { followers: followers?.c ?? 0, following: following?.c ?? 0 };
 }
@@ -135,6 +236,7 @@ export async function listFeedRecipes(
       SELECT 1 FROM ${follows}
       WHERE ${follows.followerId} = ${userId}
       AND ${follows.followeeId} = ${recipes.userId}
+      AND ${follows.status} = 'accepted'
     )`,
   ];
 
@@ -184,6 +286,7 @@ export async function listForYouRecipes(params: {
     SELECT 1 FROM ${follows}
     WHERE ${follows.followerId} = ${userId}
     AND ${follows.followeeId} = ${recipes.userId}
+    AND ${follows.status} = 'accepted'
   )`;
 
   const conditions = [eq(recipes.visibility, "public")];
@@ -249,6 +352,7 @@ export async function listForYouByTaste(params: {
     SELECT 1 FROM ${follows}
     WHERE ${follows.followerId} = ${userId}
     AND ${follows.followeeId} = ${recipes.userId}
+    AND ${follows.status} = 'accepted'
   )`;
   // Cosine distance to the taste vector; NULL for a recipe with no embedding.
   const distanceSql = sql<number | null>`(${recipeEmbeddings.embedding} <=> ${vec}::vector)`;

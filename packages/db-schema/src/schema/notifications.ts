@@ -6,6 +6,8 @@ import { recipes } from "./recipes";
 
 export const notificationTypeEnum = pgEnum("notification_type", [
   "follow",
+  "follow_request",
+  "follow_accept",
   "like",
   "comment",
   "save",
