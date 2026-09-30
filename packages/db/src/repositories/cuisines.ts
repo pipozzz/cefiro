@@ -11,11 +11,11 @@
  * or migration composes its own query.
  */
 
-import { asc, desc, eq, inArray, sql } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
 
 import type { CuisineDto, CuisineSummaryDto } from "@norish/shared/contracts";
 import { db } from "@norish/db/drizzle";
-import { cuisines, recipeCuisines, recipes } from "@norish/db/schema";
+import { cuisines, recipeCuisines, recipes, userProfiles } from "@norish/db/schema";
 import { stripHtmlTags } from "@norish/shared/lib/helpers";
 
 /** A transaction handle, or the pooled connection when there is no transaction. */
@@ -42,7 +42,17 @@ export async function listPublicCuisines(): Promise<{ name: string; recipeCount:
     .from(recipeCuisines)
     .innerJoin(cuisines, eq(cuisines.id, recipeCuisines.cuisineId))
     .innerJoin(recipes, eq(recipes.id, recipeCuisines.recipeId))
-    .where(eq(recipes.visibility, "public"))
+    .where(
+      and(
+        eq(recipes.visibility, "public"),
+        // Private cooks are not broadcast: keep their recipes out of the facet.
+        sql`NOT EXISTS (
+          SELECT 1 FROM ${userProfiles}
+          WHERE ${userProfiles.userId} = ${recipes.userId}
+          AND ${userProfiles.isPublic} = false
+        )`
+      )
+    )
     .groupBy(cuisines.name)
     .orderBy(desc(recipeCount), cuisines.name);
 

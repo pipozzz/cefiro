@@ -356,14 +356,28 @@ export async function getViewableRecipeRefById(recipeId: string): Promise<Public
   return row;
 }
 
-/** All PUBLIC recipe slugs (for the sitemap), newest first. */
+/**
+ * All PUBLIC recipe slugs (for the sitemap), newest first. Recipes by a private
+ * profile are excluded — they are reachable by direct link but never broadcast,
+ * so they must not be advertised in the sitemap.
+ */
 export async function listPublicRecipeSlugs(
   limit = 50000
 ): Promise<Array<{ slug: string; updatedAt: Date }>> {
   const rows = await db
     .select({ slug: recipes.slug, updatedAt: recipes.updatedAt })
     .from(recipes)
-    .where(and(eq(recipes.visibility, "public"), isNotNull(recipes.slug)))
+    .where(
+      and(
+        eq(recipes.visibility, "public"),
+        isNotNull(recipes.slug),
+        sql`NOT EXISTS (
+          SELECT 1 FROM ${userProfiles}
+          WHERE ${userProfiles.userId} = ${recipes.userId}
+          AND ${userProfiles.isPublic} = false
+        )`
+      )
+    )
     .orderBy(desc(recipes.publishedAt))
     .limit(limit);
 
