@@ -5,6 +5,7 @@ import { config, proxy } from "@/proxy";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const getSessionMock = vi.hoisted(() => vi.fn());
+const publishedSlugsMock = vi.hoisted(() => vi.fn());
 
 vi.mock("@norish/auth/auth", () => ({
   auth: {
@@ -12,6 +13,10 @@ vi.mock("@norish/auth/auth", () => ({
       getSession: getSessionMock,
     },
   },
+}));
+
+vi.mock("@norish/shared-server/cache/pages", () => ({
+  getCachedPublishedPageSlugs: publishedSlugsMock,
 }));
 
 describe("proxy share access", () => {
@@ -69,6 +74,25 @@ describe("proxy share access", () => {
     // discovery's HTML, so a shared root link previews like /discover.
     expect(response.status).not.toBe(307);
     expect(response.headers.get("x-middleware-rewrite")).toContain("/discover");
+  });
+
+  it("allows a published custom page at root /slug without a session", async () => {
+    getSessionMock.mockResolvedValue(null);
+    publishedSlugsMock.mockResolvedValue(new Set(["pricing"]));
+
+    const response = await proxy(new NextRequest("http://localhost/pricing"));
+
+    expect(response.headers.get("x-middleware-next")).toBe("1");
+  });
+
+  it("redirects an anonymous request for an unpublished/unknown root slug to login", async () => {
+    getSessionMock.mockResolvedValue(null);
+    publishedSlugsMock.mockResolvedValue(new Set(["pricing"]));
+
+    const response = await proxy(new NextRequest("http://localhost/not-a-page"));
+
+    expect(response.status).toBe(307);
+    expect(response.headers.get("location")).toContain("/login");
   });
 
   it("redirects anonymous private recipe media requests", async () => {

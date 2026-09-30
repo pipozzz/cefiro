@@ -11,6 +11,7 @@ import EmailTestCard from "./email-test-card";
 import GeneralCard from "./general-card";
 import InstanceInvitesCard from "./instance-invites-card";
 import JobQueueCard from "./job-queue-card";
+import PagesCard from "./pages-card";
 import PermissionPolicyCard from "./permission-policy-card";
 import AdminShareLinksCard from "./share-links-card";
 import SystemCard from "./system-card";
@@ -34,6 +35,7 @@ function AdminSettingsContent() {
       <AuthProvidersCard />
       <ContentDetectionCard />
       <AboutContentCard />
+      <PagesCard />
       <AIProcessingCard />
       <JobQueueCard />
       <SystemCard />

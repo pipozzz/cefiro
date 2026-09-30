@@ -7,6 +7,7 @@ import { contentConfigProcedures } from "./content-config";
 import { cuisinesProcedures } from "./cuisines";
 import { generalProcedures } from "./general";
 import { jobQueueProcedures } from "./job-queue";
+import { pagesProcedures } from "./pages";
 import { permissionsProcedures } from "./permissions";
 import { systemProcedures } from "./system";
 import { usersProcedures } from "./users";
@@ -30,6 +31,9 @@ export const adminRouter = router({
 
   // Job queue monitoring
   jobs: jobQueueProcedures,
+
+  // Custom pages CMS (create/edit static pages served at /{slug})
+  pages: pagesProcedures,
 
   // AI and video
   ...aiConfigProcedures._def.procedures,
