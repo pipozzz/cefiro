@@ -5,18 +5,10 @@ import { useTRPC } from "@/app/providers/trpc-provider";
 import { showSafeErrorToast } from "@/lib/ui/safe-error-toast";
 import { CheckIcon } from "@heroicons/react/16/solid";
 import { ArrowLeftIcon, DocumentTextIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
-import {
-  Button,
-  Card,
-  Description,
-  Input,
-  Label,
-  Spinner,
-  TextArea,
-  TextField,
-  toast,
-} from "@heroui/react";
+import { Button, Card, Description, Input, Label, Spinner, TextField, toast } from "@heroui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { PageEditor } from "./page-editor";
 
 type PageRow = {
   id: string;
@@ -156,11 +148,14 @@ export default function PagesCard() {
               <Input placeholder="pricing" variant="secondary" />
               <Description>Lowercase letters, numbers and hyphens — served at /slug.</Description>
             </TextField>
-            <TextField value={draft.body} onChange={(v) => setDraft({ ...draft, body: v })}>
-              <Label>Body (Markdown)</Label>
-              <TextArea rows={16} variant="secondary" />
-              <Description>Supports ## heading, **bold**, [link](https://…), - list.</Description>
-            </TextField>
+            <div className="flex flex-col gap-1">
+              <span className="text-foreground text-sm font-medium">Body</span>
+              <PageEditor
+                key={draft.id ?? "new"}
+                value={draft.body}
+                onChange={(md) => setDraft((d) => (d ? { ...d, body: md } : d))}
+              />
+            </div>
             <TextField
               value={draft.metaDescription}
               onChange={(v) => setDraft({ ...draft, metaDescription: v })}
