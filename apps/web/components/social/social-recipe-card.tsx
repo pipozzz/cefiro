@@ -8,6 +8,8 @@ import { HeartIcon } from "@heroicons/react/20/solid";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import { Chip } from "@heroui/react";
 
+import { formatMinutesHM } from "@norish/shared/lib/helpers";
+
 import { ChefHatIcon } from "./chef-hat-icon";
 
 export type SocialRecipeCardData = {
@@ -41,12 +43,13 @@ export function SocialRecipeCard({ recipe }: { recipe: SocialRecipeCardData }) {
     return null;
   }
 
-  const timeLabel = recipe.totalMinutes ? `${recipe.totalMinutes} min` : null;
+  // Same time formatting as the Library card ("1 h 20 min"), not raw minutes.
+  const timeLabel = formatMinutesHM(recipe.totalMinutes ?? undefined) ?? null;
   const tags = (recipe.tags ?? []).map((name) => ({ name }));
 
   return (
     <Link
-      className="group border-border bg-surface shadow-surface relative flex h-[340px] w-full flex-col overflow-hidden rounded-3xl border no-underline transition hover:shadow-md"
+      className="group border-border bg-surface shadow-surface relative flex h-[340px] w-full flex-col overflow-hidden rounded-3xl border no-underline transition"
       href={`/r/${recipe.slug}`}
     >
       {/* Photo (236px) with overlaid metadata + tags — same treatment as Library */}
@@ -55,14 +58,13 @@ export function SocialRecipeCard({ recipe }: { recipe: SocialRecipeCardData }) {
           // eslint-disable-next-line @next/next/no-img-element
           <img
             alt={recipe.name}
-            className="h-full w-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
             src={recipe.image}
           />
         ) : (
-          <div
-            className="text-muted flex h-full w-full items-center justify-center"
-            style={{ background: recipe.dishColor ?? undefined }}
-          >
+          // Match the Library empty state exactly: neutral surface + photo icon
+          // (no dish-colour tint), so an image-less card looks the same everywhere.
+          <div className="text-muted flex h-full w-full items-center justify-center">
             <PhotoIcon className="h-12 w-12 opacity-70" />
           </div>
         )}
@@ -132,7 +134,7 @@ export function SocialRecipeCard({ recipe }: { recipe: SocialRecipeCardData }) {
 
 export function SocialRecipeGrid({ recipes }: { recipes: SocialRecipeCardData[] }) {
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {recipes.map((recipe) => (
         <SocialRecipeCard key={recipe.slug} recipe={recipe} />
       ))}
