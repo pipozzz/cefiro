@@ -388,30 +388,6 @@ export function DiscoverClient({
         ) : null}
       </div>
 
-      {/* Hero — crawlable hubs, dynamic themes, daily pick. Only on the Recipes
-          "Všetky" browse view (hidden while searching, in a tool, or in a theme).
-          Kept mounted across filter taps so a tap never remounts the block. */}
-      {!isSearching && whatMode === "recipes" && scope === "all" && !tool && !theme ? (
-        <>
-          {hubLinks}
-          <DiscoverThemes
-            onQuick={() => {
-              setMaxMinutes(30);
-              setScope("all");
-            }}
-            onSelectTag={(next) => {
-              setTag(next);
-              setScope("all");
-            }}
-            onSelectTheme={(next) => {
-              setTheme(next);
-              setScope("all");
-            }}
-          />
-          <RecipeOfTheDay />
-        </>
-      ) : null}
-
       {/* What — the single top-level content switch. */}
       <div className="bg-content2 border-border mb-4 flex gap-1 rounded-full border p-1">
         {(
@@ -649,6 +625,31 @@ export function DiscoverClient({
               {t("modeSurprise")}
             </button>
           </div>
+        </>
+      ) : null}
+
+      {/* Hero — crawlable hubs, dynamic themes, daily pick. Below the controls so
+          the What / scope / Filtre bar is what the reader sees first; only on the
+          Recipes "Všetky" browse view (hidden while searching, in a tool, or in a
+          theme). Kept mounted across filter taps so a tap never remounts it. */}
+      {!isSearching && whatMode === "recipes" && scope === "all" && !tool && !theme ? (
+        <>
+          {hubLinks}
+          <DiscoverThemes
+            onQuick={() => {
+              setMaxMinutes(30);
+              setScope("all");
+            }}
+            onSelectTag={(next) => {
+              setTag(next);
+              setScope("all");
+            }}
+            onSelectTheme={(next) => {
+              setTheme(next);
+              setScope("all");
+            }}
+          />
+          <RecipeOfTheDay />
         </>
       ) : null}
 
