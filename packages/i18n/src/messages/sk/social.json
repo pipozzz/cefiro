@@ -63,7 +63,12 @@
     "cuisineHeading": "Kuchyňa",
     "cuisineAll": "Všetko",
     "browseHeading": "Prehľadávať recepty",
-    "themesViewAll": "Zobraziť všetky"
+    "themesViewAll": "Zobraziť všetky",
+    "scopeAll": "Všetky",
+    "filtersButton": "Filtre",
+    "filtersClearAll": "Zrušiť všetko",
+    "sortHeading": "Zoradiť",
+    "categoryHeading": "Jedlo"
   },
   "categories": {
     "Breakfast": "Raňajky",
