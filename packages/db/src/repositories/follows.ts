@@ -902,14 +902,16 @@ export async function searchPublicRecipesByIngredients(
 
   // One correlated EXISTS per term, summed → how many of the caller's
   // ingredients this recipe uses. Inlined (not a SELECT alias) so it can be
-  // reused in WHERE and ORDER BY.
+  // reused in WHERE and ORDER BY. `f_unaccent` on both sides makes the match
+  // diacritics-insensitive, so "ryza" finds "ryža" (and vice versa) — mirroring
+  // the recipe full-text search.
   const matchedCountSql = sql<number>`(${sql.join(
     terms.map(
       (term) =>
         sql`(EXISTS (SELECT 1 FROM ${recipeIngredients}
           JOIN ${ingredients} ON ${ingredients.id} = ${recipeIngredients.ingredientId}
           WHERE ${recipeIngredients.recipeId} = ${recipes.id}
-          AND ${ingredients.name} ILIKE ${`%${escapeLike(term)}%`}))::int`
+          AND f_unaccent(${ingredients.name}) ILIKE f_unaccent(${`%${escapeLike(term)}%`})))::int`
     ),
     sql` + `
   )})`;
