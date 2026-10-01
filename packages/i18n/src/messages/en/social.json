@@ -63,7 +63,12 @@
     "cuisineHeading": "Cuisine",
     "cuisineAll": "All",
     "browseHeading": "Browse recipes",
-    "themesViewAll": "View all"
+    "themesViewAll": "View all",
+    "scopeAll": "All",
+    "filtersButton": "Filters",
+    "filtersClearAll": "Clear all",
+    "sortHeading": "Sort",
+    "categoryHeading": "Meal"
   },
   "categories": {
     "Breakfast": "Breakfast",

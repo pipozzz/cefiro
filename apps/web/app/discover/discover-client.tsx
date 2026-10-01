@@ -11,7 +11,7 @@ import { SocialRecipeGrid } from "@/components/social/social-recipe-card";
 import { SuggestedCooks } from "@/components/social/suggested-cooks";
 import { useRecipesContext } from "@/context/recipes-context";
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/16/solid";
-import { SparklesIcon } from "@heroicons/react/24/outline";
+import { AdjustmentsHorizontalIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import { Input, Spinner } from "@heroui/react";
 import { keepPreviousData, useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -25,8 +25,11 @@ import { SurpriseDiscovery } from "./surprise-discovery";
 
 type Sort = "newest" | "trending";
 type Category = "Breakfast" | "Lunch" | "Dinner" | "Snack";
-type Mode =
-  "forYou" | "recipes" | "following" | "byIngredient" | "surprise" | "cooks" | "cookbooks";
+// The three orthogonal axes the old 7-pill row conflated: WHAT you browse,
+// WHOSE recipes (recipes only), and a transient TOOL.
+type WhatMode = "recipes" | "cooks" | "cookbooks";
+type Scope = "forYou" | "following" | "all";
+type Tool = "ingredient" | "surprise";
 
 const CATEGORIES: Category[] = ["Breakfast", "Lunch", "Dinner", "Snack"];
 const TIME_OPTIONS = [15, 30, 60] as const;
@@ -43,6 +46,31 @@ const pillClass = (active: boolean) =>
       ? "border-transparent bg-[var(--accent)] text-white shadow-sm"
       : "border-border bg-content2 text-default-600 hover:bg-content3"
   }`;
+
+// The "What" segmented control: equal-width segments inside one pill-shaped
+// track, so the three content types read as a single switch (not three peers of
+// the filters).
+const segClass = (active: boolean) =>
+  `flex-1 rounded-full px-4 py-2 text-sm font-medium transition ${
+    active ? "bg-[var(--accent)] text-white shadow-sm" : "text-default-600 hover:bg-content3"
+  }`;
+
+/** A removable chip for one active filter, shown above the results. */
+function FilterChip({ label, onClear }: { label: string; onClear: () => void }) {
+  return (
+    <span className="bg-primary/15 text-primary inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-sm font-medium">
+      {label}
+      <button
+        aria-label={label}
+        className="hover:text-danger ml-0.5 rounded-full"
+        type="button"
+        onClick={onClear}
+      >
+        <XMarkIcon className="h-3.5 w-3.5" />
+      </button>
+    </span>
+  );
+}
 
 export function DiscoverClient({
   hubLinks,
@@ -65,13 +93,17 @@ export function DiscoverClient({
   // generic community browse. But a shared link that carries a filter
   // (tag/cuisine/category) opens the browse lens so that filter is actually
   // applied rather than hidden under "For you".
-  const [mode, setMode] = useState<Mode>(() => {
-    if (searchParams.get("tag") || searchParams.get("cuisine") || searchParams.get("category")) {
-      return "recipes";
-    }
-
-    return isAuthed ? "forYou" : "recipes";
-  });
+  // A shared link that carries a filter opens the browse ("Všetky") scope so the
+  // filter is actually applied rather than hidden under a personalised feed.
+  const hasUrlFilter = !!(
+    searchParams.get("tag") ||
+    searchParams.get("cuisine") ||
+    searchParams.get("category")
+  );
+  const [whatMode, setWhatMode] = useState<WhatMode>("recipes");
+  const [scope, setScope] = useState<Scope>(() => (isAuthed && !hasUrlFilter ? "forYou" : "all"));
+  const [tool, setTool] = useState<Tool | null>(null);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [sort, setSort] = useState<Sort>("newest");
   const [category, setCategory] = useState<Category | null>(() => {
     const initial = searchParams.get("category");
@@ -137,7 +169,7 @@ export function DiscoverClient({
       },
       { getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined }
     ),
-    enabled: !isSearching && mode === "recipes",
+    enabled: !isSearching && whatMode === "recipes" && scope === "all" && !tool && !theme,
     // Changing sort/category/tag/time makes a new query key; without this the
     // grid would blank to a spinner on every filter tap (a flicker, and the
     // page width jumps as the scrollbar comes and goes). Keep the previous
@@ -155,7 +187,7 @@ export function DiscoverClient({
       maxMinutes: maxMinutes ?? undefined,
       hideMyAllergens: hideMyAllergens || undefined,
     }),
-    enabled: !isSearching && mode === "recipes",
+    enabled: !isSearching && whatMode === "recipes" && scope === "all" && !tool && !theme,
     placeholderData: keepPreviousData,
     retry: false,
   });
@@ -170,7 +202,7 @@ export function DiscoverClient({
       maxMinutes: maxMinutes ?? undefined,
       hideMyAllergens: hideMyAllergens || undefined,
     }),
-    enabled: !isSearching && mode === "recipes",
+    enabled: !isSearching && whatMode === "recipes" && scope === "all" && !tool && !theme,
     placeholderData: keepPreviousData,
     retry: false,
   });
@@ -196,7 +228,7 @@ export function DiscoverClient({
       { limit: 24 },
       { getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined }
     ),
-    enabled: !isSearching && mode === "cooks",
+    enabled: !isSearching && whatMode === "cooks",
     retry: false,
   });
 
@@ -207,7 +239,7 @@ export function DiscoverClient({
       { limit: 24 },
       { getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined }
     ),
-    enabled: !isSearching && mode === "cookbooks",
+    enabled: !isSearching && whatMode === "cookbooks",
     retry: false,
   });
 
@@ -222,7 +254,7 @@ export function DiscoverClient({
       { limit: 24 },
       { getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined }
     ),
-    enabled: isAuthed && !isSearching && mode === "forYou",
+    enabled: isAuthed && !isSearching && whatMode === "recipes" && scope === "forYou" && !tool,
     retry: false,
   });
 
@@ -236,7 +268,7 @@ export function DiscoverClient({
   // trending public recipes so there is always something to explore.
   const forYouPopular = useQuery({
     ...trpc.social.discover.queryOptions({ sort: "trending", limit: 12 }),
-    enabled: mode === "forYou" && forYouEmpty,
+    enabled: whatMode === "recipes" && scope === "forYou" && !tool && forYouEmpty,
     retry: false,
   });
 
@@ -249,7 +281,7 @@ export function DiscoverClient({
       { limit: 24 },
       { getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined }
     ),
-    enabled: isAuthed && !isSearching && mode === "following",
+    enabled: isAuthed && !isSearching && whatMode === "recipes" && scope === "following" && !tool,
     retry: false,
   });
 
@@ -260,7 +292,7 @@ export function DiscoverClient({
   // has real content rather than just a nudge — mirrors the old feed page.
   const followingPopular = useQuery({
     ...trpc.social.discover.queryOptions({ sort: "trending", limit: 12 }),
-    enabled: mode === "following" && followingEmpty,
+    enabled: whatMode === "recipes" && scope === "following" && !tool && followingEmpty,
     retry: false,
   });
 
@@ -277,14 +309,47 @@ export function DiscoverClient({
 
   const pill = pillClass;
 
-  // The mode tabs stay visible during a search (so they never vanish mid-query).
-  // Picking one is a request to browse, so it also clears the search term —
-  // otherwise the search results would linger under the newly selected tab.
-  const selectMode = (next: Mode) => {
+  // Picking any control clears an in-progress search, so results never linger
+  // under the newly selected view.
+  const clearSearch = () => {
     setQ("");
     setDebouncedQ("");
-    setMode(next);
   };
+  const selectWhat = (next: WhatMode) => {
+    clearSearch();
+    setWhatMode(next);
+    setTool(null);
+    setTheme(null);
+  };
+  const selectScope = (next: Scope) => {
+    clearSearch();
+    setScope(next);
+    setTool(null);
+    setTheme(null);
+  };
+  const toggleTool = (next: Tool) => {
+    clearSearch();
+    setTheme(null);
+    setTool((prev) => (prev === next ? null : next));
+  };
+
+  const clearFilters = () => {
+    setSort("newest");
+    setMaxMinutes(null);
+    setCategory(null);
+    setCuisine(null);
+    setTag(null);
+    setHideMyAllergens(false);
+  };
+  // Drives the count badge on the Filtre button (newest sort is the default, so
+  // it doesn't count).
+  const activeFilterCount =
+    (sort !== "newest" ? 1 : 0) +
+    (maxMinutes !== null ? 1 : 0) +
+    (category !== null ? 1 : 0) +
+    (cuisine !== null ? 1 : 0) +
+    (tag !== null ? 1 : 0) +
+    (hideMyAllergens ? 1 : 0);
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 pb-24 md:px-6">
@@ -323,100 +388,273 @@ export function DiscoverClient({
         ) : null}
       </div>
 
-      {/* Hero — the crawlable browse-by hubs, dynamic themes and the daily pick.
-          Hidden while searching so the results lead. The hubs sit at the top
-          because the browse grid below is an infinite scroll, so a footer block
-          would never be reached. Themes stay mounted across category/time/tag
-          clicks (gating them on the active filter made the whole block
-          mount/unmount and refetch on every tap, a full-page flicker); a
-          selected theme opens its own results, so they hide only then. */}
-      {!isSearching ? (
+      {/* Hero — crawlable hubs, dynamic themes, daily pick. Only on the Recipes
+          "Všetky" browse view (hidden while searching, in a tool, or in a theme).
+          Kept mounted across filter taps so a tap never remounts the block. */}
+      {!isSearching && whatMode === "recipes" && scope === "all" && !tool && !theme ? (
         <>
           {hubLinks}
-
-          {mode !== "cooks" && mode !== "cookbooks" && !theme ? (
-            <>
-              <DiscoverThemes
-                onQuick={() => {
-                  setMaxMinutes(30);
-                  setMode("recipes");
-                }}
-                onSelectTag={(next) => {
-                  setTag(next);
-                  setMode("recipes");
-                }}
-                onSelectTheme={(next) => {
-                  setTheme(next);
-                  setMode("recipes");
-                }}
-              />
-              <RecipeOfTheDay />
-            </>
-          ) : null}
+          <DiscoverThemes
+            onQuick={() => {
+              setMaxMinutes(30);
+              setScope("all");
+            }}
+            onSelectTag={(next) => {
+              setTag(next);
+              setScope("all");
+            }}
+            onSelectTheme={(next) => {
+              setTheme(next);
+              setScope("all");
+            }}
+          />
+          <RecipeOfTheDay />
         </>
       ) : null}
 
-      {/* Recipes / Cooks toggle — kept visible even during a search, so the
-          filters never vanish mid-query; tapping one clears the search. */}
-      <div className="mb-6 flex flex-wrap gap-2">
-        {isAuthed ? (
+      {/* What — the single top-level content switch. */}
+      <div className="bg-content2 border-border mb-4 flex gap-1 rounded-full border p-1">
+        {(
+          [
+            ["recipes", t("modeRecipes")],
+            ["cooks", t("modeCooks")],
+            ["cookbooks", t("modeCookbooks")],
+          ] as const
+        ).map(([value, label]) => (
           <button
-            className={pill(mode === "forYou")}
+            key={value}
+            className={segClass(whatMode === value)}
             type="button"
-            onClick={() => selectMode("forYou")}
+            onClick={() => selectWhat(value)}
           >
-            {t("modeForYou")}
+            {label}
           </button>
-        ) : null}
-        <button
-          className={pill(mode === "recipes")}
-          type="button"
-          onClick={() => selectMode("recipes")}
-        >
-          {t("modeRecipes")}
-        </button>
-        {isAuthed ? (
-          <button
-            className={pill(mode === "following")}
-            type="button"
-            onClick={() => selectMode("following")}
-          >
-            {t("modeFollowing")}
-          </button>
-        ) : null}
-        <button
-          className={pill(mode === "byIngredient")}
-          type="button"
-          onClick={() => selectMode("byIngredient")}
-        >
-          {t("modeByIngredient")}
-        </button>
-        <button
-          className={pill(mode === "surprise")}
-          type="button"
-          onClick={() => selectMode("surprise")}
-        >
-          {t("modeSurprise")}
-        </button>
-        <button
-          className={pill(mode === "cooks")}
-          type="button"
-          onClick={() => selectMode("cooks")}
-        >
-          {t("modeCooks")}
-        </button>
-        <button
-          className={pill(mode === "cookbooks")}
-          type="button"
-          onClick={() => selectMode("cookbooks")}
-        >
-          {t("modeCookbooks")}
-        </button>
+        ))}
       </div>
+
+      {/* Recipes sub-controls: scope (signed-in), the Filtre button + panel, and
+          the two tools. Hidden while searching so the search leads. */}
+      {whatMode === "recipes" && !isSearching ? (
+        <>
+          <div className="mb-3 flex flex-wrap items-center gap-2">
+            {isAuthed ? (
+              <div className="flex flex-wrap gap-2">
+                <button
+                  className={pill(scope === "forYou")}
+                  type="button"
+                  onClick={() => selectScope("forYou")}
+                >
+                  {t("modeForYou")}
+                </button>
+                <button
+                  className={pill(scope === "following")}
+                  type="button"
+                  onClick={() => selectScope("following")}
+                >
+                  {t("modeFollowing")}
+                </button>
+                <button
+                  className={pill(scope === "all")}
+                  type="button"
+                  onClick={() => selectScope("all")}
+                >
+                  {t("scopeAll")}
+                </button>
+              </div>
+            ) : null}
+            <div className="flex-1" />
+            {scope === "all" && !tool ? (
+              <button
+                aria-expanded={filtersOpen}
+                className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 text-sm font-medium transition ${
+                  filtersOpen || activeFilterCount > 0
+                    ? "border-transparent bg-[var(--accent)] text-white shadow-sm"
+                    : "border-border bg-content2 text-default-600 hover:bg-content3"
+                }`}
+                type="button"
+                onClick={() => setFiltersOpen((o) => !o)}
+              >
+                <AdjustmentsHorizontalIcon className="h-4 w-4" />
+                {t("filtersButton")}
+                {activeFilterCount > 0 ? (
+                  <span className="ml-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-white/25 px-1 text-xs">
+                    {activeFilterCount}
+                  </span>
+                ) : null}
+              </button>
+            ) : null}
+          </div>
+
+          {/* Active filters as removable chips — always visible, even with the
+              panel closed, so what's applied is never a mystery. */}
+          {scope === "all" && !tool && activeFilterCount > 0 ? (
+            <div className="mb-4 flex flex-wrap items-center gap-2">
+              {sort === "trending" ? (
+                <FilterChip label={t("sortTrending")} onClear={() => setSort("newest")} />
+              ) : null}
+              {maxMinutes !== null ? (
+                <FilterChip
+                  label={t("readyInUnder", { minutes: maxMinutes })}
+                  onClear={() => setMaxMinutes(null)}
+                />
+              ) : null}
+              {category ? (
+                <FilterChip label={tCat(category)} onClear={() => setCategory(null)} />
+              ) : null}
+              {cuisine ? (
+                <FilterChip label={cuisineLabel(cuisine)} onClear={() => setCuisine(null)} />
+              ) : null}
+              {tag ? <FilterChip label={`#${tag}`} onClear={() => setTag(null)} /> : null}
+              {hideMyAllergens ? (
+                <FilterChip label={t("hideAllergens")} onClear={() => setHideMyAllergens(false)} />
+              ) : null}
+              <button
+                className="text-default-500 hover:text-foreground px-1 text-sm"
+                type="button"
+                onClick={clearFilters}
+              >
+                {t("filtersClearAll")}
+              </button>
+            </div>
+          ) : null}
+
+          {/* Filtre panel — every narrowing control in one place, one tap away. */}
+          {scope === "all" && !tool && filtersOpen ? (
+            <div className="border-border bg-content1 mb-6 flex flex-col gap-5 rounded-2xl border p-4">
+              <div>
+                <p className="text-default-500 mb-2 text-xs font-medium tracking-wide uppercase">
+                  {t("sortHeading")}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    className={pill(sort === "newest")}
+                    type="button"
+                    onClick={() => setSort("newest")}
+                  >
+                    {t("sortNewest")}
+                  </button>
+                  <button
+                    className={pill(sort === "trending")}
+                    type="button"
+                    onClick={() => setSort("trending")}
+                  >
+                    {t("sortTrending")}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <p className="text-default-500 mb-2 text-xs font-medium tracking-wide uppercase">
+                  {t("readyInHeading")}
+                </p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    className={pill(maxMinutes === null)}
+                    type="button"
+                    onClick={() => setMaxMinutes(null)}
+                  >
+                    {t("readyInAny")}
+                  </button>
+                  {TIME_OPTIONS.map((minutes) => (
+                    <button
+                      key={minutes}
+                      className={pill(maxMinutes === minutes)}
+                      type="button"
+                      onClick={() => setMaxMinutes(minutes)}
+                    >
+                      {t("readyInUnder", { minutes })}
+                    </button>
+                  ))}
+                  {isAuthed ? (
+                    <DietaryFilterToggle enabled={hideMyAllergens} onChange={setHideMyAllergens} />
+                  ) : null}
+                </div>
+              </div>
+
+              <div>
+                <p className="text-default-500 mb-2 text-xs font-medium tracking-wide uppercase">
+                  {t("categoryHeading")}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    className={pill(category === null)}
+                    type="button"
+                    onClick={() => setCategory(null)}
+                  >
+                    {t("categoryAll")}
+                    {counts ? <span className="opacity-70"> {counts.total}</span> : null}
+                  </button>
+                  {CATEGORIES.map((cat) => (
+                    <button
+                      key={cat}
+                      className={pill(category === cat)}
+                      type="button"
+                      onClick={() => setCategory(cat)}
+                    >
+                      {tCat(cat)}
+                      {counts ? (
+                        <span className="opacity-70"> {counts.byCategory[cat] ?? 0}</span>
+                      ) : null}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {visibleCuisines.length > 0 ? (
+                <div>
+                  <p className="text-default-500 mb-2 text-xs font-medium tracking-wide uppercase">
+                    {t("cuisineHeading")}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      className={pill(cuisine === null)}
+                      type="button"
+                      onClick={() => setCuisine(null)}
+                    >
+                      {t("cuisineAll")}
+                    </button>
+                    {visibleCuisines.map((name) => (
+                      <button
+                        key={name}
+                        className={pill(cuisine === name)}
+                        type="button"
+                        onClick={() => setCuisine((prev) => (prev === name ? null : name))}
+                      >
+                        {cuisineLabel(name)}
+                        {cuisineList ? (
+                          <span className="opacity-70"> {cuisineList.byCuisine[name] ?? 0}</span>
+                        ) : null}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          ) : null}
+
+          {/* Tools — clearly labelled, not peers of the content switch. */}
+          <div className="mb-6 flex flex-wrap gap-2">
+            <button
+              className={pill(tool === "ingredient")}
+              type="button"
+              onClick={() => toggleTool("ingredient")}
+            >
+              {t("modeByIngredient")}
+            </button>
+            <button
+              className={pill(tool === "surprise")}
+              type="button"
+              onClick={() => toggleTool("surprise")}
+            >
+              {t("modeSurprise")}
+            </button>
+          </div>
+        </>
+      ) : null}
 
       {isSearching ? (
         <SearchResults isAuthed={isAuthed} query={searchQuery} term={searchTerm} />
-      ) : mode === "forYou" ? (
+      ) : whatMode === "recipes" && scope === "forYou" && !tool ? (
         forYou.isLoading ? (
           <div className="flex min-h-[30vh] items-center justify-center">
             <Spinner />
@@ -452,7 +690,7 @@ export function DiscoverClient({
             </div>
           </>
         )
-      ) : mode === "following" ? (
+      ) : whatMode === "recipes" && scope === "following" && !tool ? (
         following.isLoading ? (
           <div className="flex min-h-[30vh] items-center justify-center">
             <Spinner />
@@ -485,11 +723,11 @@ export function DiscoverClient({
             />
           </>
         )
-      ) : mode === "byIngredient" ? (
+      ) : tool === "ingredient" ? (
         <IngredientDiscovery />
-      ) : mode === "surprise" ? (
+      ) : tool === "surprise" ? (
         <SurpriseDiscovery />
-      ) : mode === "cookbooks" ? (
+      ) : whatMode === "cookbooks" ? (
         cookbooks.isLoading ? (
           <div className="flex min-h-[30vh] items-center justify-center">
             <Spinner />
@@ -508,7 +746,7 @@ export function DiscoverClient({
             />
           </>
         )
-      ) : mode === "cooks" ? (
+      ) : whatMode === "cooks" ? (
         cooks.isLoading ? (
           <div className="flex min-h-[30vh] items-center justify-center">
             <Spinner />
@@ -531,119 +769,6 @@ export function DiscoverClient({
         <ThemeResults theme={theme} onClear={() => setTheme(null)} />
       ) : (
         <>
-          {/* Sort */}
-          <div className="mb-3 flex flex-wrap gap-2">
-            <button
-              className={pill(sort === "newest")}
-              type="button"
-              onClick={() => setSort("newest")}
-            >
-              {t("sortNewest")}
-            </button>
-            <button
-              className={pill(sort === "trending")}
-              type="button"
-              onClick={() => setSort("trending")}
-            >
-              {t("sortTrending")}
-            </button>
-          </div>
-
-          {/* "Ready in" time filter */}
-          <div className="mb-3 flex flex-wrap items-center gap-2">
-            <span className="text-default-500 mr-1 text-sm">{t("readyInHeading")}</span>
-            <button
-              className={pill(maxMinutes === null)}
-              type="button"
-              onClick={() => setMaxMinutes(null)}
-            >
-              {t("readyInAny")}
-            </button>
-            {TIME_OPTIONS.map((minutes) => (
-              <button
-                key={minutes}
-                className={pill(maxMinutes === minutes)}
-                type="button"
-                onClick={() => setMaxMinutes(minutes)}
-              >
-                {t("readyInUnder", { minutes })}
-              </button>
-            ))}
-
-            {/* Dietary-aware: hide recipes with the signed-in reader's
-                    allergens. Renders nothing for anon or allergen-free cooks. */}
-            {isAuthed ? (
-              <DietaryFilterToggle enabled={hideMyAllergens} onChange={setHideMyAllergens} />
-            ) : null}
-          </div>
-
-          {/* Category filter */}
-          <div className="mb-8 flex flex-wrap gap-2">
-            <button
-              className={pill(category === null)}
-              type="button"
-              onClick={() => setCategory(null)}
-            >
-              {t("categoryAll")}
-              {counts ? <span className="opacity-70"> {counts.total}</span> : null}
-            </button>
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                className={pill(category === cat)}
-                type="button"
-                onClick={() => setCategory(cat)}
-              >
-                {tCat(cat)}
-                {counts ? <span className="opacity-70"> {counts.byCategory[cat] ?? 0}</span> : null}
-              </button>
-            ))}
-          </div>
-
-          {/* Cuisine facet — data-driven, most-populated first. Only shown once
-              there are cuisines to offer under the current filters. */}
-          {visibleCuisines.length > 0 ? (
-            <div className="mb-8 flex flex-wrap items-center gap-2">
-              <span className="text-default-500 mr-1 text-sm">{t("cuisineHeading")}</span>
-              <button
-                className={pill(cuisine === null)}
-                type="button"
-                onClick={() => setCuisine(null)}
-              >
-                {t("cuisineAll")}
-              </button>
-              {visibleCuisines.map((name) => (
-                <button
-                  key={name}
-                  className={pill(cuisine === name)}
-                  type="button"
-                  onClick={() => setCuisine((prev) => (prev === name ? null : name))}
-                >
-                  {cuisineLabel(name)}
-                  {cuisineList ? (
-                    <span className="opacity-70"> {cuisineList.byCuisine[name] ?? 0}</span>
-                  ) : null}
-                </button>
-              ))}
-            </div>
-          ) : null}
-
-          {tag ? (
-            <div className="mb-6 flex items-center gap-2">
-              <span className="bg-primary/15 text-primary inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-sm font-medium">
-                #{tag}
-                <button
-                  aria-label={t("clearTag")}
-                  className="hover:text-danger ml-0.5 rounded-full"
-                  type="button"
-                  onClick={() => setTag(null)}
-                >
-                  <XMarkIcon className="h-4 w-4" />
-                </button>
-              </span>
-            </div>
-          ) : null}
-
           {browse.isLoading ? (
             <div className="flex min-h-[30vh] items-center justify-center">
               <Spinner />
