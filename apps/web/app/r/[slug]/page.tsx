@@ -8,7 +8,7 @@ import { getTranslations } from "next-intl/server";
 import type { FullRecipeDTO } from "@norish/shared/contracts";
 import { auth } from "@norish/auth/auth";
 import { getAverageRating } from "@norish/db/repositories/ratings";
-import { getRecipeFull } from "@norish/db/repositories/recipes";
+import { getPublicSavedFromAttribution, getRecipeFull } from "@norish/db/repositories/recipes";
 import {
   getProfileByUserId,
   getViewableRecipeRefBySlug,
@@ -106,12 +106,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = full.name;
   const description = full.description?.trim() || t("metaDescription");
 
+  // Duplicate-content guard: a public recipe forked from a still-public source is
+  // a near-identical copy, so point its canonical at the source. That consolidates
+  // ranking signals onto the original instead of many copies competing (and a
+  // fork-of-a-fork chains up to the root via each copy's own canonical). The page
+  // itself stays reachable and attributed — gentler than noindex.
+  let canonical = url;
+
+  if (origin && ref.visibility === "public") {
+    const source = await getPublicSavedFromAttribution(ref.recipeId);
+
+    if (source?.slug && source.slug !== slug) {
+      canonical = `${origin}/r/${source.slug}`;
+    }
+  }
+
   return {
     title,
     description,
     alternates: url
       ? {
-          canonical: url,
+          canonical,
           // oEmbed discovery: lets consumers (Ghost, WordPress, …) turn a recipe
           // link into a rich card via /api/oembed.
           types: {
