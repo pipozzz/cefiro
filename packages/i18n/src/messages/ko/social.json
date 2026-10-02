@@ -338,7 +338,11 @@
     "empty": "아직 이 카테고리에 공개된 레시피가 없습니다.",
     "browseAll": "모든 레시피 보기",
     "indexTitle": "레시피 카테고리",
-    "indexSubtitle": "카테고리별로 공개 레시피를 둘러보세요."
+    "indexSubtitle": "카테고리별로 공개 레시피를 둘러보세요.",
+    "introBreakfast": "Start the day right with community breakfast recipes — quick weekday ideas and relaxed weekend brunches, sweet and savoury alike.",
+    "introLunch": "Everyday lunch recipes from home cooks — fast midday meals for work and hearty lunches for the whole family.",
+    "introDinner": "Dinner ideas from the community — from light weeknight meals to weekend cooking and special-occasion menus. Find a recipe by taste, time or what's in your fridge.",
+    "introSnack": "Snack recipes and treats — quick bites, healthy snacks and sweet little somethings for school, work or home."
   },
   "cuisinePage": {
     "heading": "{cuisine} recipes",

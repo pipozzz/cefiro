@@ -111,6 +111,10 @@ export default async function CategoryLandingPage({ params }: Props) {
       <header className="mt-4 mb-6">
         <h1 className="text-foreground text-3xl font-bold">{t("heading", { category: label })}</h1>
         <p className="text-default-500 mt-1">{t("subtitle", { category: label })}</p>
+        {/* A unique, keyword-rich intro per category (only 4, fixed) — real
+            indexable copy for these evergreen terms, without the thin-content
+            risk of templated prose across the open cuisine/tag hubs. */}
+        <p className="text-default-600 mt-4 max-w-3xl leading-relaxed">{t(`intro${category}`)}</p>
       </header>
 
       {recipes.length === 0 ? (
