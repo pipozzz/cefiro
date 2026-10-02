@@ -338,7 +338,11 @@
     "empty": "V tejto kategórii zatiaľ nie sú žiadne verejné recepty.",
     "browseAll": "Objavovať všetky recepty",
     "indexTitle": "Kategórie receptov",
-    "indexSubtitle": "Prezeraj verejné recepty podľa kategórie."
+    "indexSubtitle": "Prezeraj verejné recepty podľa kategórie.",
+    "introBreakfast": "Začnite deň dobrým jedlom — nájdite rýchle aj výdatné raňajkové recepty od komunity, od sladkých po slané. Praktické nápady na všedné rána aj pokojné víkendové raňajky.",
+    "introLunch": "Objavte obedové recepty na každý deň — rýchle jedlá na pracovný obed aj výdatné poludňajšie menu pre celú rodinu. Inšpirácia z domácich kuchýň komunity.",
+    "introDinner": "Nápady na večeru od komunity — od ľahkých jedál cez víkendové varenie až po sviatočné menu. Nájdite recept podľa chuti, času aj surovín, ktoré máte doma.",
+    "introSnack": "Recepty na desiatu a maškrty — rýchle občerstvenie, zdravé snacky aj sladké pochúťky do školy či do práce. Jednoduché nápady od komunity."
   },
   "cuisinePage": {
     "heading": "Recepty: {cuisine}",

@@ -338,7 +338,11 @@
     "empty": "Brak publicznych przepisów w tej kategorii.",
     "browseAll": "Przeglądaj wszystkie przepisy",
     "indexTitle": "Kategorie przepisów",
-    "indexSubtitle": "Przeglądaj publiczne przepisy według kategorii."
+    "indexSubtitle": "Przeglądaj publiczne przepisy według kategorii.",
+    "introBreakfast": "Start the day right with community breakfast recipes — quick weekday ideas and relaxed weekend brunches, sweet and savoury alike.",
+    "introLunch": "Everyday lunch recipes from home cooks — fast midday meals for work and hearty lunches for the whole family.",
+    "introDinner": "Dinner ideas from the community — from light weeknight meals to weekend cooking and special-occasion menus. Find a recipe by taste, time or what's in your fridge.",
+    "introSnack": "Snack recipes and treats — quick bites, healthy snacks and sweet little somethings for school, work or home."
   },
   "cuisinePage": {
     "heading": "{cuisine} recipes",
