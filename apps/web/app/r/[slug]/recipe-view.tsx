@@ -25,6 +25,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import type { RouterOutputs } from "@norish/trpc/client";
+import { cuisineSlug } from "@norish/shared/lib/cuisine-slug";
 
 import {
   AddToGroceriesPublicButton,
@@ -126,6 +127,8 @@ function PublicRecipeBody({
 }) {
   const t = useTranslations("social.recipe");
   const tCat = useTranslations("social.categories");
+  const tCuisine = useTranslations("social.cuisineNames");
+  const cuisineLabel = (name: string) => (tCuisine.has(name) ? tCuisine(name) : name);
   const { units } = usePublicRecipeConfigQuery();
 
   const { recipe, author, recipeId, favoriteCount, rating, savedFrom } = data;
@@ -226,8 +229,9 @@ function PublicRecipeBody({
           </p>
         ) : null}
 
-        {/* Category / tag badges */}
-        {(recipe.categories.length > 0 || recipe.tags.length > 0) && (
+        {/* Category / cuisine / tag badges — each links to its indexable hub so
+            readers (and crawlers) can reach the long-tail landing pages. */}
+        {(recipe.categories.length > 0 || recipe.cuisines.length > 0 || recipe.tags.length > 0) && (
           <div className="mt-4 flex flex-wrap gap-2">
             {recipe.categories.map((cat) => (
               <Link
@@ -238,11 +242,20 @@ function PublicRecipeBody({
                 {tCat(cat)}
               </Link>
             ))}
+            {recipe.cuisines.map((name) => (
+              <Link
+                key={`cuisine-${name}`}
+                className="bg-primary/15 text-primary hover:bg-primary/25 rounded-full px-3 py-1 text-xs font-medium transition"
+                href={`/discover/cuisine/${cuisineSlug(name)}`}
+              >
+                {cuisineLabel(name)}
+              </Link>
+            ))}
             {recipe.tags.map((tag) => (
               <Link
                 key={`tag-${tag.name}`}
                 className="bg-content2 text-default-600 hover:bg-content3 hover:text-foreground rounded-full px-3 py-1 text-xs font-medium transition"
-                href={`/discover?tag=${encodeURIComponent(tag.name)}`}
+                href={`/discover/tag/${cuisineSlug(tag.name)}`}
               >
                 #{tag.name}
               </Link>

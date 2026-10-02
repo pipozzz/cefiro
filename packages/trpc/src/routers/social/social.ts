@@ -215,6 +215,7 @@ function mapRecipeToPublicSlugView(recipe: FullRecipeDTO, slug: string): PublicR
     carbs: recipe.carbs ?? null,
     protein: recipe.protein ?? null,
     categories: recipe.categories ?? [],
+    cuisines: (recipe.cuisines ?? []).map((cuisine) => cuisine.name),
     tags: (recipe.tags ?? []).map((tag) => ({ name: tag.name })),
     recipeIngredients: (recipe.recipeIngredients ?? []).map((ingredient) => ({
       ingredientName: ingredient.ingredientName,

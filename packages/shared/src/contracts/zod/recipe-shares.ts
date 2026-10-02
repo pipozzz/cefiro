@@ -166,6 +166,9 @@ export const PublicRecipeViewSchema = z.object({
   carbs: z.string().nullable(),
   protein: z.string().nullable(),
   categories: z.array(recipeCategorySchema).default([]),
+  // Cuisine names (public). Surfaced so the recipe page can link to the indexable
+  // cuisine hubs — internal links that help crawlers reach the long-tail pages.
+  cuisines: z.array(z.string()).default([]),
   tags: z.array(PublicRecipeTagSchema).default([]),
   recipeIngredients: z.array(PublicRecipeIngredientSchema).default([]),
   steps: z.array(PublicRecipeStepSchema).default([]),
