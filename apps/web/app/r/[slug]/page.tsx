@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { cache } from "react";
 import { headers } from "next/headers";
+import { JsonLd } from "@/components/seo/json-ld";
+import { breadcrumbListLd } from "@/lib/structured-data";
 import { getTranslations } from "next-intl/server";
 
 import type { FullRecipeDTO } from "@norish/shared/contracts";
@@ -264,6 +266,7 @@ export default async function PublicRecipePage({ params }: Props) {
 
   // Structured data only for indexable (public) recipes.
   let jsonLd: string | null = null;
+  let breadcrumb: object | null = null;
 
   if (data && data.ref.visibility === "public") {
     const origin = await siteOrigin();
@@ -278,6 +281,15 @@ export default async function PublicRecipePage({ params }: Props) {
     // Escape `<` so user content (e.g. a recipe name containing "</script>")
     // can never break out of the JSON-LD script tag.
     jsonLd = JSON.stringify(ld).replace(/</g, "\\u003c");
+
+    if (origin) {
+      const tDiscover = await getTranslations("social.discover");
+
+      breadcrumb = breadcrumbListLd([
+        { name: tDiscover("title"), url: `${origin}/discover` },
+        { name: data.full.name, url: `${origin}/r/${slug}` },
+      ]);
+    }
   }
 
   return (
@@ -289,6 +301,7 @@ export default async function PublicRecipePage({ params }: Props) {
           dangerouslySetInnerHTML={{ __html: jsonLd }}
         />
       ) : null}
+      {breadcrumb ? <JsonLd data={breadcrumb} /> : null}
       <PublicRecipeView
         initialData={initialRecipe ?? undefined}
         isAuthed={!!session?.user}

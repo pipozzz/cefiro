@@ -3,8 +3,10 @@ import { cache } from "react";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { JsonLd } from "@/components/seo/json-ld";
 import { SocialRecipeGrid } from "@/components/social/social-recipe-card";
 import { categoryFromSlug } from "@/lib/recipe-categories";
+import { breadcrumbListLd, recipeItemListLd } from "@/lib/structured-data";
 import { getTranslations } from "next-intl/server";
 
 import { appRouter, createHttpContextFromHeaders } from "@norish/trpc/server";
@@ -75,15 +77,37 @@ export default async function CategoryLandingPage({ params }: Props) {
     notFound();
   }
 
-  const [tCat, t] = await Promise.all([
+  const [tCat, t, tDiscover] = await Promise.all([
     getTranslations("social.categories"),
     getTranslations("social.categoryPage"),
+    getTranslations("social.discover"),
   ]);
   const label = tCat(category);
   const recipes = await loadCategoryRecipes(category);
 
+  const origin = await siteOrigin();
+  const url = `${origin}/discover/category/${slug}`;
+  const recipeUrls = origin
+    ? recipes.flatMap((recipe) => (recipe.slug ? [`${origin}/r/${recipe.slug}`] : []))
+    : [];
+
   return (
     <div className="mx-auto w-full max-w-7xl px-4 pb-24 md:px-6">
+      {origin ? (
+        <>
+          <JsonLd
+            data={breadcrumbListLd([
+              { name: tDiscover("title"), url: `${origin}/discover` },
+              { name: label, url },
+            ])}
+          />
+          {recipeUrls.length > 0 ? (
+            <JsonLd
+              data={recipeItemListLd({ name: t("heading", { category: label }), url, recipeUrls })}
+            />
+          ) : null}
+        </>
+      ) : null}
       <header className="mt-4 mb-6">
         <h1 className="text-foreground text-3xl font-bold">{t("heading", { category: label })}</h1>
         <p className="text-default-500 mt-1">{t("subtitle", { category: label })}</p>

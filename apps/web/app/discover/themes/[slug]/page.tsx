@@ -3,7 +3,9 @@ import { cache } from "react";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { JsonLd } from "@/components/seo/json-ld";
 import { SocialRecipeGrid } from "@/components/social/social-recipe-card";
+import { breadcrumbListLd, recipeItemListLd } from "@/lib/structured-data";
 import { getTranslations } from "next-intl/server";
 
 import { appRouter, createHttpContextFromHeaders } from "@norish/trpc/server";
@@ -71,9 +73,32 @@ export default async function ThemeLandingPage({ params }: Props) {
   }
 
   const t = await getTranslations("social.themesPage");
+  const tDiscover = await getTranslations("social.discover");
+
+  const origin = await siteOrigin();
+  const url = `${origin}/discover/themes/${slug}`;
+  const recipeUrls = origin
+    ? recipes.flatMap((recipe) => (recipe.slug ? [`${origin}/r/${recipe.slug}`] : []))
+    : [];
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 pb-24 md:px-6">
+      {origin ? (
+        <>
+          <JsonLd
+            data={breadcrumbListLd([
+              { name: tDiscover("title"), url: `${origin}/discover` },
+              { name: t("allThemes"), url: `${origin}/discover/themes` },
+              { name, url },
+            ])}
+          />
+          {recipeUrls.length > 0 ? (
+            <JsonLd
+              data={recipeItemListLd({ name: t("heading", { theme: name }), url, recipeUrls })}
+            />
+          ) : null}
+        </>
+      ) : null}
       <header className="mt-4 mb-6">
         <Link className="text-primary text-sm hover:underline" href="/discover/themes">
           ← {t("allThemes")}
