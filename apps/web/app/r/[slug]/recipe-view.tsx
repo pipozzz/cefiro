@@ -132,6 +132,10 @@ function PublicRecipeBody({
   const { units } = usePublicRecipeConfigQuery();
 
   const { recipe, author, recipeId, favoriteCount, rating, savedFrom } = data;
+  // Coalesced: a recipe payload cached before `cuisines` existed (persisted
+  // offline query cache, from before the field shipped) arrives without it, so
+  // reading `.length`/`.map` directly would throw and blank the page.
+  const cuisines = recipe.cuisines ?? [];
 
   // A recipe may state no yield (null); fall back to 1 so scaling is a no-op
   // rather than dividing by zero.
@@ -230,8 +234,10 @@ function PublicRecipeBody({
         ) : null}
 
         {/* Category / cuisine / tag badges — each links to its indexable hub so
-            readers (and crawlers) can reach the long-tail landing pages. */}
-        {(recipe.categories.length > 0 || recipe.cuisines.length > 0 || recipe.tags.length > 0) && (
+            readers (and crawlers) can reach the long-tail landing pages. `cuisines`
+            is coalesced because a payload persisted before it was added (offline /
+            stale query cache) can arrive without the field. */}
+        {(recipe.categories.length > 0 || cuisines.length > 0 || recipe.tags.length > 0) && (
           <div className="mt-4 flex flex-wrap gap-2">
             {recipe.categories.map((cat) => (
               <Link
@@ -242,7 +248,7 @@ function PublicRecipeBody({
                 {tCat(cat)}
               </Link>
             ))}
-            {recipe.cuisines.map((name) => (
+            {cuisines.map((name) => (
               <Link
                 key={`cuisine-${name}`}
                 className="bg-primary/15 text-primary hover:bg-primary/25 rounded-full px-3 py-1 text-xs font-medium transition"
