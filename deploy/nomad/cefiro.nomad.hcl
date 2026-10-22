@@ -185,6 +185,12 @@ job "cefiro" {
       env {
         NODE_ENV = "production"
         AUTH_URL = "https://${var.domain}"
+        # Cap V8's heap below the task memory limit (1024 MB) so Node GCs as it
+        # approaches the ceiling instead of growing toward the host's RAM — which
+        # it would otherwise do, since Node sizes the default heap from physical
+        # RAM, not the cgroup limit — and getting OOM-killed by Nomad. ~75% leaves
+        # headroom for V8 overhead, SSR and non-heap allocations.
+        NODE_OPTIONS = "--max-old-space-size=768"
         # Serve HTTP only; background jobs run in the "worker" task below so a
         # heavy import/AI/transcode never blocks request serving.
         CEFIRO_ROLE = "web"
@@ -263,6 +269,10 @@ job "cefiro" {
       env {
         NODE_ENV    = "production"
         AUTH_URL    = "https://${var.domain}"
+        # A lower heap cap than web: the worker's image (sharp) and video (ffmpeg
+        # child) jobs use large OFF-heap native memory and Node Buffers that count
+        # toward the same 1024 MB cgroup, so the JS heap gets less of the budget.
+        NODE_OPTIONS = "--max-old-space-size=640"
         CEFIRO_ROLE = "worker"
         REDIS_URL        = "redis://localhost:6379"
         OBSCURA_ENDPOINT = "ws://localhost:9222"
