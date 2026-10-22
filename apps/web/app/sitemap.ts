@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { unstable_cache } from "next/cache";
 import { headers } from "next/headers";
 import { ALL_CATEGORY_SLUGS } from "@/lib/recipe-categories";
 
@@ -24,6 +25,36 @@ async function siteOrigin(): Promise<string> {
   return host ? `${proto}://${host}` : "";
 }
 
+/**
+ * The public-content reads behind the sitemap, cached for an hour. The route is
+ * force-dynamic (the host is per-request), but these reads materialize up to
+ * ~100k rows, so without caching a burst of crawler hits would each load and
+ * GC its own copy. Caching shares one materialization across requests and cuts
+ * the DB load; an hour of staleness is irrelevant for a sitemap. No per-request
+ * data (headers/cookies) enters the cache — the host is applied outside it.
+ */
+const loadSitemapContent = unstable_cache(
+  async () => {
+    const [recipes, profiles, cookbooks, cuisines, tags, themes, pages] = await Promise.all([
+      listPublicRecipeSlugs(),
+      listPublicProfileHandles(),
+      listPublicCookbookSlugs(),
+      listPublicCuisines().catch(() => []),
+      // Tags that have public recipes (generous cap).
+      listTrendingTopics(500).catch(() => []),
+      // Themes are rebuilt wholesale, so an individual theme URL only lives as
+      // long as its name does; an hour-stale theme set is fine for a sitemap.
+      listThemes(200).catch(() => []),
+      // Published custom pages, served at root /{slug}.
+      listPublishedPageSlugs().catch(() => []),
+    ]);
+
+    return { recipes, profiles, cookbooks, cuisines, tags, themes, pages };
+  },
+  ["sitemap-public-content"],
+  { revalidate: 3600 }
+);
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = await siteOrigin();
 
@@ -31,20 +62,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return [];
   }
 
-  const [recipes, profiles, cookbooks, cuisines, tags, themes, pages] = await Promise.all([
-    listPublicRecipeSlugs(),
-    listPublicProfileHandles(),
-    listPublicCookbookSlugs(),
-    listPublicCuisines().catch(() => []),
-    // Tags that have public recipes (generous cap).
-    listTrendingTopics(500).catch(() => []),
-    // Themes are rebuilt wholesale, so an individual theme URL only lives as long
-    // as its name does. This sitemap is force-dynamic (regenerated per request),
-    // so it always lists the current theme set rather than stale entries.
-    listThemes(200).catch(() => []),
-    // Published custom pages, served at root /{slug}.
-    listPublishedPageSlugs().catch(() => []),
-  ]);
+  const { recipes, profiles, cookbooks, cuisines, tags, themes, pages } =
+    await loadSitemapContent();
 
   // Themes can share a name; dedupe by name slug so each URL appears once.
   const themeSlugs = Array.from(
